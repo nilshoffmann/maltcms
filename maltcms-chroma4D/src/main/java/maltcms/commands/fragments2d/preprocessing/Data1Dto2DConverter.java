@@ -67,6 +67,7 @@ import ucar.nc2.Variable;
  * chromatogram.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -80,6 +81,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
     @Configurable(description = "The modulation period between column switching in seconds.")
     private double modulationTime = 60.0;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
         File f = null;
@@ -330,6 +332,13 @@ public class Data1Dto2DConverter extends AFragmentCommand {
                 new FileFragment(f));
     }
 
+    /**
+     * <p>toArray.</p>
+     *
+     * @param delegate a {@link cross.cache.ICacheDelegate} object.
+     * @param dataType a {@link ucar.ma2.DataType} object.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     protected Array toArray(ICacheDelegate<Integer, ?> delegate, DataType dataType) {
         Array a = Array.factory(dataType, new int[]{delegate.keys().size()});
         for (int i = 0; i < delegate.keys().size(); i++) {
@@ -369,6 +378,12 @@ public class Data1Dto2DConverter extends AFragmentCommand {
         return a;
     }
 
+    /**
+     * <p>getLCP.</p>
+     *
+     * @param strings a {@link java.util.List} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected String getLCP(List<String> strings) {
         if (strings.size() == 1) {
             return strings.get(0);
@@ -385,6 +400,13 @@ public class Data1Dto2DConverter extends AFragmentCommand {
         return lcp;
     }
 
+    /**
+     * <p>getLCP.</p>
+     *
+     * @param a a {@link java.lang.String} object.
+     * @param b a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected String getLCP(String a, String b) {
         for (int i = 0; i < Math.min(a.length(), b.length()); i++) {
             if (!a.substring(0, i).startsWith(b.substring(0, i))) {

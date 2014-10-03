@@ -60,6 +60,7 @@ import ucar.ma2.IndexIterator;
  * Creates an image for a two-dimensional chromatogram.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -103,9 +104,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean substractMean = false;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ColorRampReader crr = new ColorRampReader();
@@ -222,9 +221,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
         return t;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()

@@ -67,7 +67,7 @@ import ucar.ma2.IndexIterator;
  * other IO-Provider Classes and should thus implement IDataSource.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
@@ -77,6 +77,7 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AFragmentCommand.class)
 public class CSVAnchorReader extends AFragmentCommand {
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -108,6 +109,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     private String satVariableName = "scan_acquisition_time";
 
     /**
+     * {@inheritDoc}
+     *
      * Simply return the same FileFragments as were received. apply will add the
      * necessary fragments automatically to those fragments in the tuple which
      * have an associated RI file.
@@ -125,6 +128,12 @@ public class CSVAnchorReader extends AFragmentCommand {
         return t;
     }
 
+    /**
+     * <p>applyCSVReader.</p>
+     *
+     * @param u a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
+     */
     protected TupleND<IFileFragment> applyCSVReader(final List<String> u) {
         if (u != null) {
             log.debug("Setting locations to parameter u");
@@ -259,6 +268,7 @@ public class CSVAnchorReader extends AFragmentCommand {
         parent.removeChild(sat);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         if (cfg.containsKey("csvri.retention.time")) {
@@ -416,6 +426,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>anchorNamesVariableName</code>.</p>
+     *
      * @return the anchorNamesVariableName
      */
     public String getAnchorNamesVariableName() {
@@ -423,6 +435,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>anchorRetentionIndexVariableName</code>.</p>
+     *
      * @return the anchorRetentionIndexVariableName
      */
     public String getAnchorRetentionIndexVariableName() {
@@ -430,6 +444,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>anchorScanIndexVariableName</code>.</p>
+     *
      * @return the anchorScanIndexVariableName
      */
     public String getAnchorScanIndexVariableName() {
@@ -437,6 +453,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>anchorTimesVariableName</code>.</p>
+     *
      * @return the anchorTimesVariableName
      */
     public String getAnchorTimesVariableName() {
@@ -444,18 +462,23 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>basedir</code>.</p>
+     *
      * @return the basedir
      */
     public String getBasedir() {
         return this.basedir;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Reads anchors stored in csv/tsv compatible format.";
     }
 
     /**
+     * <p>Getter for the field <code>fileDesignation</code>.</p>
+     *
      * @return the fileDesignation
      */
     public String getFileDesignation() {
@@ -463,6 +486,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>location</code>.</p>
+     *
      * @return the location
      */
     public List<String> getLocation() {
@@ -474,12 +499,15 @@ public class CSVAnchorReader extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILEIO;
     }
 
     /**
+     * <p>Setter for the field <code>anchorNamesVariableName</code>.</p>
+     *
      * @param anchorNamesVariableName the anchorNamesVariableName to set
      */
     public void setAnchorNamesVariableName(final String anchorNamesVariableName) {
@@ -487,6 +515,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>anchorRetentionIndexVariableName</code>.</p>
+     *
      * @param anchorRetentionIndexVariableName the
      * anchorRetentionIndexVariableName to set
      */
@@ -496,6 +526,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>anchorScanIndexVariableName</code>.</p>
+     *
      * @param anchorScanIndexVariableName the anchorScanIndexVariableName to set
      */
     public void setAnchorScanIndexVariableName(
@@ -504,6 +536,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>anchorTimesVariableName</code>.</p>
+     *
      * @param anchorTimesVariableName the anchorTimesVariableName to set
      */
     public void setAnchorTimesVariableName(final String anchorTimesVariableName) {
@@ -511,6 +545,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>basedir</code>.</p>
+     *
      * @param basedir the basedir to set
      */
     public void setBasedir(final String basedir) {
@@ -518,6 +554,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>fileDesignation</code>.</p>
+     *
      * @param fileDesignation the fileDesignation to set
      */
     public void setFileDesignation(final String fileDesignation) {
@@ -525,6 +563,8 @@ public class CSVAnchorReader extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>location</code>.</p>
+     *
      * @param location the location to set
      */
     public void setLocation(final List<String> location) {

@@ -60,7 +60,7 @@ import ucar.nc2.Dimension;
  * be removed prior to processing or to skip data that was written incorrectly.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -86,6 +86,14 @@ public class ScanExtractor extends AFragmentCommand {
     @Configurable(value = "+Inf")
     private double endTime = Double.POSITIVE_INFINITY;
 
+    /**
+     * <p>get1DArraySubset.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param startIndex a int.
+     * @param endIndex a int.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     protected Array get1DArraySubset(Array a, int startIndex, int endIndex) {
         int scans = endIndex - startIndex + 1;
         try {
@@ -97,6 +105,12 @@ public class ScanExtractor extends AFragmentCommand {
         }
     }
 
+    /**
+     * <p>correctIndex.</p>
+     *
+     * @param indexArray a {@link ucar.ma2.Array} object.
+     * @param startIndex a int.
+     */
     protected void correctIndex(Array indexArray, int startIndex) {
         IndexIterator iter = indexArray.getIndexIterator();
         while (iter.hasNext()) {
@@ -105,6 +119,13 @@ public class ScanExtractor extends AFragmentCommand {
         }
     }
 
+    /**
+     * <p>getLowerIndexForRetentionTime.</p>
+     *
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @param rt a double.
+     * @return a int.
+     */
     protected int getLowerIndexForRetentionTime(Array sat, double rt) {
         for (int i = 0; i < sat.getShape()[0]; i++) {
             double satValue = sat.getDouble(i);
@@ -115,6 +136,13 @@ public class ScanExtractor extends AFragmentCommand {
         return -1;
     }
 
+    /**
+     * <p>getUpperIndexForRetentionTime.</p>
+     *
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @param rt a double.
+     * @return a int.
+     */
     protected int getUpperIndexForRetentionTime(Array sat, double rt) {
         for (int i = 0; i < sat.getShape()[0]; i++) {
             double satValue = sat.getDouble(i);
@@ -125,6 +153,7 @@ public class ScanExtractor extends AFragmentCommand {
         return -1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration config) {
         this.totalIntensityVar = config.getString("var.total_intensity", "total_intensity");
@@ -135,10 +164,10 @@ public class ScanExtractor extends AFragmentCommand {
     /**
      * int[] contains startScan, endScan
      *
-     * @param ff
-     * @param startScan
-     * @param endScan
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param startScan a int.
+     * @param endScan a int.
+     * @return an array of int.
      */
     protected int[] checkRanges(IFileFragment ff, int startScan, int endScan) {
         log.debug("startScan: {}, endScan: {}", startScan, endScan);
@@ -175,6 +204,7 @@ public class ScanExtractor extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final TupleND<IFileFragment> res = new TupleND<>();

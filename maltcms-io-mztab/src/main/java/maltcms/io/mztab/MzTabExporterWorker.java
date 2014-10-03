@@ -16,8 +16,10 @@ import uk.ac.ebi.pride.jmztab.model.MsRun;
 import uk.ac.ebi.pride.jmztab.model.Software;
 
 /**
+ * <p>MzTabExporterWorker class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class MzTabExporterWorker implements Callable<URI>, Serializable {
@@ -27,6 +29,7 @@ public class MzTabExporterWorker implements Callable<URI>, Serializable {
     private final String mzTabId;
     private final List<String> softwareSettings;
 
+    /** {@inheritDoc} */
     @Override
     public URI call() throws Exception {
         MZTabDescription descr = new MZTabDescription("1.0 rc5", MZTabDescription.Mode.Complete, MZTabDescription.Type.Quantification);

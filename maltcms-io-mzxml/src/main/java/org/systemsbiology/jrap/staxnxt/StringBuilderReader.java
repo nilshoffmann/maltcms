@@ -12,6 +12,10 @@ import java.io.Reader;
  *
  * This class exists to stream stringbuilders without copies. Just copied the
  * (open)jdk class and did some alterations.
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 public class StringBuilderReader extends Reader {
 
@@ -41,11 +45,9 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads a single character.
-     *
-     * @return The character read, or -1 if the end of the stream has been
-     * reached
-     *
      * @exception IOException If an I/O error occurs
      */
     @Override
@@ -60,15 +62,9 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Reads characters into a portion of an array.
-     *
-     * @param cbuf Destination buffer
-     * @param off Offset at which to start writing characters
-     * @param len Maximum number of characters to read
-     *
-     * @return The number of characters read, or -1 if the end of the stream has
-     * been reached
-     *
      * @exception IOException If an I/O error occurs
      */
     @Override
@@ -92,6 +88,8 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Skips the specified number of characters in the stream. Returns the
      * number of characters that were skipped.
      *
@@ -106,7 +104,6 @@ public class StringBuilderReader extends Reader {
      * <p>
      * If the entire string has been read or skipped, then this method has no
      * effect and always returns 0.
-     *
      * @exception IOException If an I/O error occurs
      */
     @Override
@@ -125,10 +122,9 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Tells whether this stream is ready to be read.
-     *
-     * @return True if the next read() is guaranteed not to block for input
-     *
      * @exception IOException If the stream is closed
      */
     @Override
@@ -140,6 +136,8 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Tells whether this stream supports the mark() operation, which it does.
      */
     @Override
@@ -148,14 +146,10 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Marks the present position in the stream. Subsequent calls to reset()
      * will reposition the stream to this point.
-     *
-     * @param readAheadLimit Limit on the number of characters that may be read
-     * while still preserving the mark. Because the stream's input comes from a
-     * string, there is no actual limit, so this argument must not be negative,
-     * but is otherwise ignored.
-     *
      * @exception IllegalArgumentException If readAheadLimit is < 0
      * @exception IOException If an I/O error occurs
      */
@@ -171,9 +165,10 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Resets the stream to the most recent mark, or to the beginning of the
      * string if it has never been marked.
-     *
      * @exception IOException If an I/O error occurs
      */
     @Override
@@ -185,6 +180,8 @@ public class StringBuilderReader extends Reader {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Closes the stream and releases any system resources associated with it.
      * Once the stream has been closed, further read(), ready(), mark(), or
      * reset() invocations will throw an IOException. Closing a previously

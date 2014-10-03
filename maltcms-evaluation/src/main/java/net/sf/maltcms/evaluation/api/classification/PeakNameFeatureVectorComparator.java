@@ -28,15 +28,17 @@
 package net.sf.maltcms.evaluation.api.classification;
 
 /**
+ * <p>PeakNameFeatureVectorComparator class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PeakNameFeatureVectorComparator implements IFeatureVectorComparator<INamedPeakFeatureVector> {
 
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isFN(INamedPeakFeatureVector gt, INamedPeakFeatureVector test) {
         final String gtName = gt.getName();
@@ -50,6 +52,7 @@ public class PeakNameFeatureVectorComparator implements IFeatureVectorComparator
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isFP(INamedPeakFeatureVector gt, INamedPeakFeatureVector test) {
         final String gtName = gt.getName();
@@ -67,6 +70,7 @@ public class PeakNameFeatureVectorComparator implements IFeatureVectorComparator
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isTN(INamedPeakFeatureVector gt, INamedPeakFeatureVector test) {
         final String gtName = gt.getName();
@@ -81,6 +85,7 @@ public class PeakNameFeatureVectorComparator implements IFeatureVectorComparator
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isTP(INamedPeakFeatureVector gt, INamedPeakFeatureVector test) {
         final String gtName = gt.getName();
@@ -95,6 +100,7 @@ public class PeakNameFeatureVectorComparator implements IFeatureVectorComparator
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSquaredDiff(INamedPeakFeatureVector gt, INamedPeakFeatureVector test) {
         return Double.NaN;

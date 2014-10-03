@@ -40,8 +40,10 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
+ * <p>PairwiseSimilarityWorker2D class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Value
 @Slf4j
@@ -59,6 +61,7 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
     private final double maxRTDifferenceRt1;
     private final double maxRTDifferenceRt2;
 
+    /** {@inheritDoc} */
     @Override
     public PairwiseSimilarityResult call() {
         log.debug(name);
@@ -115,6 +118,7 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return name;

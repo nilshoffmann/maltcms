@@ -41,6 +41,12 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 @Slf4j
+/**
+ * <p>PartitionCalculator class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @Data
 public class PartitionCalculator implements Callable<Integer>, IConfigurable {
 
@@ -54,6 +60,16 @@ public class PartitionCalculator implements Callable<Integer>, IConfigurable {
     private final ArrayDouble.D1 satRef, satQuery;
     private final List<Array> ref, query;
 
+    /**
+     * <p>Constructor for PartitionCalculator.</p>
+     *
+     * @param shape1 a {@link java.awt.Rectangle} object.
+     * @param pa1 a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param satRef1 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param satQuery1 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param ref1 a {@link java.util.List} object.
+     * @param query1 a {@link java.util.List} object.
+     */
     public PartitionCalculator(final Rectangle shape1,
             final IArrayD2Double pa1, final ArrayDouble.D1 satRef1,
             final ArrayDouble.D1 satQuery1, final List<Array> ref1,
@@ -71,6 +87,7 @@ public class PartitionCalculator implements Callable<Integer>, IConfigurable {
      *
      * @see java.util.concurrent.Callable#call()
      */
+    /** {@inheritDoc} */
     @Override
     public Integer call() throws Exception {
         final Area a = this.pa.getShape();
@@ -106,6 +123,7 @@ public class PartitionCalculator implements Callable<Integer>, IConfigurable {
      * @seecross.IConfigurable#configure(org.apache.commons.configuration.
      * Configuration)
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         final String aldist = "maltcms.commands.distances.ArrayLp";

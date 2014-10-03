@@ -38,8 +38,10 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
+ * <p>PairwiseValueMap class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PairwiseValueMap implements Serializable {
 
@@ -52,10 +54,29 @@ public class PairwiseValueMap implements Serializable {
         DENSE, ROW_COMPRESSED, SPARSE
     };
 
+    /**
+     * <p>Constructor for PairwiseValueMap.</p>
+     *
+     * @param rows a int.
+     * @param columns a int.
+     * @param symmetric a boolean.
+     * @param type a {@link maltcms.datastructures.feature.PairwiseValueMap.StorageType} object.
+     * @param missingValue a double.
+     */
     public PairwiseValueMap(int rows, int columns, boolean symmetric, StorageType type, double missingValue) {
         this(UUID.randomUUID(), rows, columns, symmetric, type, missingValue);
     }
 
+    /**
+     * <p>Constructor for PairwiseValueMap.</p>
+     *
+     * @param id a {@link java.util.UUID} object.
+     * @param rows a int.
+     * @param columns a int.
+     * @param symmetric a boolean.
+     * @param type a {@link maltcms.datastructures.feature.PairwiseValueMap.StorageType} object.
+     * @param missingValue a double.
+     */
     public PairwiseValueMap(UUID id, int rows, int columns, boolean symmetric, StorageType type, double missingValue) {
         switch (type) {
             case DENSE:
@@ -75,10 +96,24 @@ public class PairwiseValueMap implements Serializable {
         this.symmetric = symmetric;
     }
 
+    /**
+     * <p>getValue.</p>
+     *
+     * @param rowIndex a int.
+     * @param columnIndex a int.
+     * @return a double.
+     */
     public double getValue(int rowIndex, int columnIndex) {
         return matrix.getQuick(rowIndex, columnIndex);
     }
 
+    /**
+     * <p>setValue.</p>
+     *
+     * @param rowIndex a int.
+     * @param columnIndex a int.
+     * @param value a double.
+     */
     public void setValue(int rowIndex, int columnIndex, double value) {
         matrix.setQuick(rowIndex, columnIndex, value);
         if (symmetric) {
@@ -86,22 +121,52 @@ public class PairwiseValueMap implements Serializable {
         }
     }
 
+    /**
+     * <p>indexOfMaxInColumn.</p>
+     *
+     * @param columnIndex a int.
+     * @return a int.
+     */
     public int indexOfMaxInColumn(int columnIndex) {
         return indexOfMax(matrix.viewColumn(columnIndex));
     }
 
+    /**
+     * <p>indexOfMinInColumn.</p>
+     *
+     * @param columnIndex a int.
+     * @return a int.
+     */
     public int indexOfMinInColumn(int columnIndex) {
         return indexOfMin(matrix.viewColumn(columnIndex));
     }
 
+    /**
+     * <p>indexOfMaxInRow.</p>
+     *
+     * @param rowIndex a int.
+     * @return a int.
+     */
     public int indexOfMaxInRow(int rowIndex) {
         return indexOfMax(matrix.viewRow(rowIndex));
     }
 
+    /**
+     * <p>indexOfMinInRow.</p>
+     *
+     * @param rowIndex a int.
+     * @return a int.
+     */
     public int indexOfMinInRow(int rowIndex) {
         return indexOfMin(matrix.viewRow(rowIndex));
     }
 
+    /**
+     * <p>indexOfMax.</p>
+     *
+     * @param vector a {@link cern.colt.matrix.DoubleMatrix1D} object.
+     * @return a int.
+     */
     public int indexOfMax(DoubleMatrix1D vector) {
         PermutationSwapper swapper = new PermutationSwapper(vector);
         GenericSorting.mergeSort(0, vector.size(), new ColumnComparator(vector), swapper);
@@ -113,6 +178,12 @@ public class PairwiseValueMap implements Serializable {
         return permutation[permutation.length - 1];
     }
 
+    /**
+     * <p>indexOfMin.</p>
+     *
+     * @param vector a {@link cern.colt.matrix.DoubleMatrix1D} object.
+     * @return a int.
+     */
     public int indexOfMin(DoubleMatrix1D vector) {
         PermutationSwapper swapper = new PermutationSwapper(vector);
         GenericSorting.mergeSort(0, vector.size(), new ColumnComparator(vector), swapper);
@@ -167,6 +238,7 @@ public class PairwiseValueMap implements Serializable {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 7;
@@ -174,6 +246,7 @@ public class PairwiseValueMap implements Serializable {
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -189,10 +262,20 @@ public class PairwiseValueMap implements Serializable {
         return true;
     }
 
+    /**
+     * <p>rows.</p>
+     *
+     * @return a int.
+     */
     public int rows() {
         return matrix.rows();
     }
 
+    /**
+     * <p>columns.</p>
+     *
+     * @return a int.
+     */
     public int columns() {
         return matrix.columns();
     }

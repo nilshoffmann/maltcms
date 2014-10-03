@@ -33,8 +33,11 @@ import java.util.Collection;
 import lombok.Data;
 
 /**
+ * <p>TICPeakFinderWorkerResult class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Data
 public class TICPeakFinderWorkerResult implements Serializable {

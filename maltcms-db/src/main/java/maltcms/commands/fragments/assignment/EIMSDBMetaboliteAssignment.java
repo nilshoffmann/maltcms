@@ -60,9 +60,10 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 
 /**
+ * <p>EIMSDBMetaboliteAssignment class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time"})
@@ -84,6 +85,7 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Putative identification of EI-MS peaks for each chromatogram against the given databases.";
@@ -95,6 +97,7 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
      * @see cross.commands.ICommand#apply(java.lang.Object)FIXME this is all
      * preliminary
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         ChromatogramFactory cf = new ChromatogramFactory();
@@ -161,6 +164,7 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
         return t;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -175,6 +179,7 @@ public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.IDENTIFICATION;

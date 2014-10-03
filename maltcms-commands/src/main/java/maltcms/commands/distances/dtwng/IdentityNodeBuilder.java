@@ -30,6 +30,12 @@ package maltcms.commands.distances.dtwng;
 import java.awt.Point;
 import java.util.List;
 
+/**
+ * <p>IdentityNodeBuilder class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class IdentityNodeBuilder extends NodeBuilder {
 
     /*
@@ -38,6 +44,7 @@ public class IdentityNodeBuilder extends NodeBuilder {
      * @see
      * maltcms.experimental.operations.DTW.NodeBuilder#eval(java.util.List)
      */
+    /** {@inheritDoc} */
     @Override
     public List<Point> eval(List<double[]> points, int polyOrder) {
         setNodes(points);

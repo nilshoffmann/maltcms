@@ -37,15 +37,17 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>MSPExporter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @RequiresOptionalVariables(names = {"var.tic_peaks"})
 @Slf4j
 @Data
 public class MSPExporter extends AFragmentCommand {
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -56,6 +58,7 @@ public class MSPExporter extends AFragmentCommand {
      * 
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         throw new NotImplementedException();
@@ -66,6 +69,7 @@ public class MSPExporter extends AFragmentCommand {
      * 
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         throw new NotImplementedException();
@@ -76,6 +80,7 @@ public class MSPExporter extends AFragmentCommand {
      * 
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         throw new NotImplementedException();

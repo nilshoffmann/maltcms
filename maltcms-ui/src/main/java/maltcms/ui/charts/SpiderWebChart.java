@@ -36,10 +36,18 @@ import org.jfree.data.category.DefaultCategoryDataset;
  * Chart displaying a plot of different variables organized as a spider's web.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 public class SpiderWebChart extends AChart<SpiderWebPlot> {
 
+    /**
+     * <p>createCategoryDataset.</p>
+     *
+     * @param collabels an array of {@link java.lang.String} objects.
+     * @param rowlabels an array of {@link java.lang.String} objects.
+     * @param data an array of double.
+     * @return a {@link org.jfree.data.category.CategoryDataset} object.
+     */
     public static CategoryDataset createCategoryDataset(
             final String[] collabels, final String[] rowlabels,
             final double[][] data) {
@@ -56,28 +64,45 @@ public class SpiderWebChart extends AChart<SpiderWebPlot> {
     private String title = "";
     private CategoryDataset cd = null;
 
+    /**
+     * <p>Constructor for SpiderWebChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param cd1 a {@link org.jfree.data.category.CategoryDataset} object.
+     */
     public SpiderWebChart(final String title1, final CategoryDataset cd1) {
         this.title = title1;
         this.cd = cd1;
     }
 
+    /**
+     * <p>Constructor for SpiderWebChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param collabels an array of {@link java.lang.String} objects.
+     * @param rowlabels an array of {@link java.lang.String} objects.
+     * @param data an array of double.
+     */
     public SpiderWebChart(final String title1, final String[] collabels,
             final String[] rowlabels, final double[][] data) {
         this(title1, SpiderWebChart.createCategoryDataset(collabels, rowlabels,
                 data));
     }
 
+    /** {@inheritDoc} */
     @Override
     public SpiderWebPlot create() {
         final SpiderWebPlot swp = new SpiderWebPlot(this.cd);
         return swp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

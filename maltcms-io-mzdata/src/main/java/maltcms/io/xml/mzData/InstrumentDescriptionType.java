@@ -73,7 +73,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "instrumentDescriptionType", propOrder = {"instrumentName",
@@ -171,8 +172,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Gets the value of the additional property.
      *
-     * @return possible object is {@link ParamType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public ParamType getAdditional() {
         return this.additional;
@@ -183,7 +183,6 @@ public class InstrumentDescriptionType implements Serializable {
      *
      * @return possible object is {@link InstrumentDescriptionType.AnalyzerList
      * }
-     *
      */
     public InstrumentDescriptionType.AnalyzerList getAnalyzerList() {
         return this.analyzerList;
@@ -192,8 +191,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Gets the value of the detector property.
      *
-     * @return possible object is {@link ParamType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public ParamType getDetector() {
         return this.detector;
@@ -202,8 +200,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Gets the value of the instrumentName property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getInstrumentName() {
         return this.instrumentName;
@@ -212,8 +209,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Gets the value of the source property.
      *
-     * @return possible object is {@link ParamType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public ParamType getSource() {
         return this.source;
@@ -222,8 +218,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Sets the value of the additional property.
      *
-     * @param value allowed object is {@link ParamType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public void setAdditional(final ParamType value) {
         this.additional = value;
@@ -233,8 +228,7 @@ public class InstrumentDescriptionType implements Serializable {
      * Sets the value of the analyzerList property.
      *
      * @param value allowed object is
-     *              {@link InstrumentDescriptionType.AnalyzerList }
-     *
+     *              {@link maltcms.io.xml.mzData.InstrumentDescriptionType.AnalyzerList}
      */
     public void setAnalyzerList(
             final InstrumentDescriptionType.AnalyzerList value) {
@@ -244,8 +238,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Sets the value of the detector property.
      *
-     * @param value allowed object is {@link ParamType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public void setDetector(final ParamType value) {
         this.detector = value;
@@ -254,8 +247,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Sets the value of the instrumentName property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setInstrumentName(final String value) {
         this.instrumentName = value;
@@ -264,8 +256,7 @@ public class InstrumentDescriptionType implements Serializable {
     /**
      * Sets the value of the source property.
      *
-     * @param value allowed object is {@link ParamType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public void setSource(final ParamType value) {
         this.source = value;

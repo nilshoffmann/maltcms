@@ -37,23 +37,32 @@ import java.util.List;
 /**
  * Created by IntelliJ IDEA. User: nilshoffmann Date: 10.12.11 Time: 11:00 To
  * change this template use File | Settings | File Templates.
+ *
+ * @author hoffmann
+ * 
  */
 public class DefaultTaskResult implements ITaskResult {
 
     private final List<File> taskInputs;
     private final List<File> taskOutputs;
 
+    /**
+     * <p>Constructor for DefaultTaskResult.</p>
+     */
     public DefaultTaskResult() {
         taskInputs = new LinkedList<>();
         taskOutputs = new LinkedList<>();
     }
+    /** Constant <code>EMPTY</code> */
     public static final ITaskResult EMPTY = new EmptyTaskResult();
 
+    /** {@inheritDoc} */
     @Override
     public List<File> getTaskInputs() {
         return taskInputs;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<File> getTaskOutputs() {
         return taskOutputs;

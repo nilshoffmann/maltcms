@@ -48,9 +48,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>MZXMLDataSource class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -59,6 +60,9 @@ public class MZXMLDataSource implements IDataSource {
     private final List<IDataSource> ds = new ArrayList<>();
     private final WeakHashMap<IFileFragment, IDataSource> fragmentToValidReaderMap = new WeakHashMap<>();
 
+    /**
+     * <p>Constructor for MZXMLDataSource.</p>
+     */
     public MZXMLDataSource() {
         final List<String> dss = Arrays.asList(
                 "maltcms.io.xml.mzXML.MZXMLStaxDataSource");
@@ -75,6 +79,7 @@ public class MZXMLDataSource implements IDataSource {
      * cross.io.IDataSource#canRead(cross.datastructures.fragments.IFileFragment
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public int canRead(final IFileFragment ff) {
 
@@ -112,6 +117,7 @@ public class MZXMLDataSource implements IDataSource {
      * configurationChanged
      * (org.apache.commons.configuration.event.ConfigurationEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
         configure(Factory.getInstance().getConfiguration());
@@ -124,6 +130,7 @@ public class MZXMLDataSource implements IDataSource {
      * cross.io.IDataSource#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration configuration) {
         final List<String> dss = StringTools.toStringList(configuration.getList(getClass().
@@ -167,6 +174,7 @@ public class MZXMLDataSource implements IDataSource {
      * cross.io.IDataSource#readAll(cross.datastructures.fragments.IFileFragment
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -179,6 +187,7 @@ public class MZXMLDataSource implements IDataSource {
      * @seecross.io.IDataSource#readIndexed(cross.datastructures.fragments.
      * IVariableFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -191,6 +200,7 @@ public class MZXMLDataSource implements IDataSource {
      * @seecross.io.IDataSource#readSingle(cross.datastructures.fragments.
      * IVariableFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -203,6 +213,7 @@ public class MZXMLDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException {
@@ -215,6 +226,7 @@ public class MZXMLDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IVariableFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -226,6 +238,7 @@ public class MZXMLDataSource implements IDataSource {
      *
      * @see cross.io.IDataSource#supportedFormats()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         final Set<String> al = new HashSet<>();
@@ -241,6 +254,7 @@ public class MZXMLDataSource implements IDataSource {
      * @see
      * cross.io.IDataSource#write(cross.datastructures.fragments.IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean write(final IFileFragment f) {
         return getValidReader(f).write(f);

@@ -38,14 +38,23 @@ import maltcms.io.xlsx.bridge.ISheet;
 import maltcms.io.xlsx.bridge.IWorkbook;
 
 /**
+ * <p>JXLWorkbook class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Data
 public class JXLWorkbook implements IWorkbook {
 
     private final jxl.Workbook workbook;
 
+    /**
+     * <p>Constructor for JXLWorkbook.</p>
+     *
+     * @param provider a {@link maltcms.io.xlsx.bridge.IInputStreamProvider} object.
+     * @throws java.io.IOException if any.
+     * @throws jxl.read.biff.BiffException if any.
+     */
     public JXLWorkbook(IInputStreamProvider provider) throws IOException, BiffException {
         try {
             WorkbookSettings ws = new WorkbookSettings();
@@ -56,6 +65,7 @@ public class JXLWorkbook implements IWorkbook {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public ISheet getSheet(String name) {
         Sheet sheet = workbook.getSheet(name);

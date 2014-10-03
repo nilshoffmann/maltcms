@@ -39,11 +39,20 @@ import maltcms.datastructures.ms.RetentionInfo;
  * Represents a set of matched pairs of anchors.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class AnchorPairSet extends DefaultPairSet<IAnchor> {
 
+    /**
+     * <p>Constructor for AnchorPairSet.</p>
+     *
+     * @param a1 a {@link java.util.List} object.
+     * @param a2 a {@link java.util.List} object.
+     * @param rows a int.
+     * @param cols a int.
+     * @param minScansBetweenAnchors a int.
+     */
     public AnchorPairSet(final List<IAnchor> a1, final List<IAnchor> a2,
             final int rows, final int cols, final int minScansBetweenAnchors) {
         super(a1, a2);
@@ -54,6 +63,14 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         // checkZeroAndEndPresent(rows, cols, super.al);
     }
 
+    /**
+     * <p>Constructor for AnchorPairSet.</p>
+     *
+     * @param a1 a {@link java.util.List} object.
+     * @param a2 a {@link java.util.List} object.
+     * @param rows a int.
+     * @param cols a int.
+     */
     public AnchorPairSet(final List<IAnchor> a1, final List<IAnchor> a2,
             final int rows, final int cols) {
         super(a1, a2);
@@ -67,6 +84,10 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
 
     /**
      * Ensure, that (0,0) and (m-1,n-1) are included as virtual anchors.
+     *
+     * @param virtual_width a int.
+     * @param virtual_height a int.
+     * @param al1 a {@link java.util.List} object.
      */
     protected void checkZeroAndEndPresent(final int virtual_width,
             final int virtual_height, final List<Tuple2D<IAnchor, IAnchor>> al1) {
@@ -157,6 +178,15 @@ public class AnchorPairSet extends DefaultPairSet<IAnchor> {
         // }
     }
 
+    /**
+     * <p>checkAnchors.</p>
+     *
+     * @param rows a int.
+     * @param cols a int.
+     * @param l a {@link java.util.List} object.
+     * @param minScansBetweenAnchors a int.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<IAnchor, IAnchor>> checkAnchors(int rows, int cols,
             List<Tuple2D<IAnchor, IAnchor>> l, int minScansBetweenAnchors) {
         ArrayList<Tuple2D<IAnchor, IAnchor>> valid = new ArrayList<>();

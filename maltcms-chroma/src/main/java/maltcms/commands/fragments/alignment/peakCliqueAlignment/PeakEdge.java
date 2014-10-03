@@ -33,14 +33,24 @@ import java.util.UUID;
 import maltcms.datastructures.peak.IPeak;
 
 /**
+ * <p>PeakEdge class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public final class PeakEdge implements Serializable {
 
     final UUID sourcePeakId, targetPeakId;
     final double similarity;
 
+    /**
+     * <p>Constructor for PeakEdge.</p>
+     *
+     * @param sourcePeak a {@link maltcms.datastructures.peak.IPeak} object.
+     * @param targetPeak a {@link maltcms.datastructures.peak.IPeak} object.
+     * @param similarity a double.
+     */
     public PeakEdge(IPeak sourcePeak, IPeak targetPeak, double similarity) {
         this.sourcePeakId = sourcePeak.getUniqueId();
         this.targetPeakId = targetPeak.getUniqueId();
@@ -48,6 +58,7 @@ public final class PeakEdge implements Serializable {
 //		System.out.println("Peak Edge from "+sourcePeak.getAssociation()+" at "+sourcePeak.getPeakIndex()+ " to "+targetPeak.getAssociation()+" at "+targetPeak.getPeakIndex()+ " = "+similarity);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 3;
@@ -56,6 +67,7 @@ public final class PeakEdge implements Serializable {
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -74,14 +86,29 @@ public final class PeakEdge implements Serializable {
         return true;
     }
 
+    /**
+     * <p>Getter for the field <code>sourcePeakId</code>.</p>
+     *
+     * @return a {@link java.util.UUID} object.
+     */
     public UUID getSourcePeakId() {
         return sourcePeakId;
     }
 
+    /**
+     * <p>Getter for the field <code>targetPeakId</code>.</p>
+     *
+     * @return a {@link java.util.UUID} object.
+     */
     public UUID getTargetPeakId() {
         return targetPeakId;
     }
 
+    /**
+     * <p>Getter for the field <code>similarity</code>.</p>
+     *
+     * @return a double.
+     */
     public double getSimilarity() {
         return similarity;
     }

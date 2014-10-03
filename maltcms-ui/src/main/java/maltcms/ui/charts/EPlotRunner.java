@@ -40,11 +40,12 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Plot;
 
 /**
- * This class is an extension of the normal {@link PlotRunner} and will generate
- * a serialized file. Do not use the inherit constructor from {@link PlotRunner}
- * . It will throw a {@link RuntimeException}.
+ * This class is an extension of the normal {@link maltcms.ui.charts.PlotRunner} and will generate
+ * a serialized file. Do not use the inherit constructor from {@link maltcms.ui.charts.PlotRunner}
+ * . It will throw a {@link java.lang.RuntimeException}.
  *
  * @author Mathias Wilhelm
+ * @version $Id: $Id
  */
 @Slf4j
 public class EPlotRunner extends PlotRunner {
@@ -71,6 +72,7 @@ public class EPlotRunner extends PlotRunner {
      *
      * @param ichart this chart will be plotted
      * @param ifilename filename of background image
+     * @param outputdir a {@link java.io.File} object.
      */
     public EPlotRunner(final JFreeChart ichart, final String ifilename,
             final File outputdir) {
@@ -79,16 +81,12 @@ public class EPlotRunner extends PlotRunner {
         this.chart = ichart;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public JFreeChart call() throws Exception {
         this.log

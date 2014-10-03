@@ -58,7 +58,7 @@ import ucar.ma2.MAMath;
  * values.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -86,6 +86,7 @@ public class Array1DVisualizer extends AFragmentCommand {
     @Configurable
     private String timeUnit = "s";
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         if (this.pairwise) {
@@ -173,6 +174,7 @@ public class Array1DVisualizer extends AFragmentCommand {
         return t;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.variableName = cfg.getString(this.getClass().getName()
@@ -181,6 +183,11 @@ public class Array1DVisualizer extends AFragmentCommand {
                 "var.scan_acquisition_time", "scan_acquisition_time");
     }
 
+    /**
+     * <p>pairwise.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     */
     protected void pairwise(final TupleND<IFileFragment> t) {
         List<Tuple2D<IFileFragment, IFileFragment>> l = null;
         if (this.pairwiseWithFirst) {
@@ -268,6 +275,11 @@ public class Array1DVisualizer extends AFragmentCommand {
         }
     }
 
+    /**
+     * <p>residual.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     */
     protected void residual(final TupleND<IFileFragment> t) {
         List<Tuple2D<IFileFragment, IFileFragment>> l = null;
         if (this.pairwiseWithFirst) {

@@ -43,59 +43,66 @@ import ucar.ma2.ArrayDouble;
  * alignment with DTW.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IDynamicTimeWarp extends PairwiseFeatureSequenceSimilarity {
 
     /**
+     * <p>align.</p>
      *
-     * @param tuple
-     * @param ris
-     * @param maxdev
+     * @param tuple a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param ris a {@link maltcms.datastructures.alignment.AnchorPairSet} object.
+     * @param maxdev a double.
      * @param sat_ref scan_acquisition_time array for reference
      * @param sat_query scan_acquisition_time array for query
-     * @return
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public abstract IArrayD2Double align(
             Tuple2D<List<Array>, List<Array>> tuple, AnchorPairSet ris,
             double maxdev, ArrayDouble.D1 sat_ref, ArrayDouble.D1 sat_query);
 
     /**
+     * <p>createTuple.</p>
      *
-     * @param t
-     * @return
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public Tuple2D<List<Array>, List<Array>> createTuple(
             Tuple2D<IFileFragment, IFileFragment> t);
 
     /**
+     * <p>getRecurrence.</p>
      *
-     * @return
+     * @return a {@link maltcms.commands.distances.DtwRecurrence} object.
      */
     public abstract DtwRecurrence getRecurrence();
 
     /**
+     * <p>getPairwiseFeatureSimilarity.</p>
      *
-     * @return
+     * @return a {@link maltcms.commands.distances.PairwiseFeatureSimilarity} object.
      */
     public abstract PairwiseFeatureSimilarity getPairwiseFeatureSimilarity();
 
     /**
+     * <p>setRecurrence.</p>
      *
-     * @param cd
+     * @param cd a {@link maltcms.commands.distances.DtwRecurrence} object.
      */
     public abstract void setRecurrence(DtwRecurrence cd);
 
     /**
+     * <p>setFileFragments.</p>
      *
-     * @param a
-     * @param b
+     * @param a a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param b a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public abstract void setFileFragments(IFileFragment a, IFileFragment b);
 
     /**
+     * <p>setPairwiseFeatureSimilarity.</p>
      *
-     * @param psd
+     * @param psd a {@link maltcms.commands.distances.PairwiseFeatureSimilarity} object.
      */
     public abstract void setPairwiseFeatureSimilarity(PairwiseFeatureSimilarity psd);
 }

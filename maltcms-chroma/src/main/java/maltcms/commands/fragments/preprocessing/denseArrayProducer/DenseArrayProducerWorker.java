@@ -55,8 +55,10 @@ import ucar.ma2.Index;
 import ucar.ma2.MAVector;
 
 /**
+ * <p>DenseArrayProducerWorker class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -81,10 +83,7 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     private URI fileToLoad;
     private URI fileToSave;
 
-    /**
-     *
-     * @return @throws Exception
-     */
+    /** {@inheritDoc} */
     @Override
     public File call() throws Exception {
         EvalTools.notNull(fileToLoad, this);
@@ -113,10 +112,11 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     }
 
     /**
+     * <p>findMinMaxIntensities.</p>
      *
-     * @param output
-     * @param massBins
-     * @return
+     * @param output a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param massBins a int.
+     * @return a {@link java.util.List} object.
      */
     protected List<double[]> findMinMaxIntensities(IFileFragment output, int massBins) {
         List<double[]> minMaxList = new ArrayList<>(massBins);
@@ -137,10 +137,18 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     }
 
     /**
-     * @param minMass
-     * @param maxMass
-     * @param f
-     * @param bins
+     * <p>maskMasses.</p>
+     *
+     * @param minMass a double.
+     * @param maxMass a double.
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param bins a int.
+     * @param massBinResolution a double.
+     * @param maskedMasses a {@link java.util.List} object.
+     * @param invertMaskedMasses a boolean.
+     * @param binnedIntensityVariable a {@link java.lang.String} object.
+     * @param binnedScanIndexVariable a {@link java.lang.String} object.
+     * @param totalIntensityVariable a {@link java.lang.String} object.
      */
     protected void maskMasses(final IFileFragment f, final double minMass, final double maxMass, final double massBinResolution,
             final int bins, final List<Double> maskedMasses, final boolean invertMaskedMasses, final String binnedIntensityVariable, final String binnedScanIndexVariable, final String totalIntensityVariable) {
@@ -206,7 +214,14 @@ public class DenseArrayProducerWorker implements Callable<File>, Serializable {
     }
 
     /**
-     * @param f
+     * <p>normalizeScans.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param normalizeScans a boolean.
+     * @param normalizeEicsToMeanVariance a boolean.
+     * @param binnedIntensityVariable a {@link java.lang.String} object.
+     * @param binnedScanIndexVariable a {@link java.lang.String} object.
+     * @param minMaxIntensities a {@link java.util.List} object.
      */
     protected void normalizeScans(final IFileFragment f, final boolean normalizeScans, boolean normalizeEicsToMeanVariance, String binnedIntensityVariable, String binnedScanIndexVariable, List<double[]> minMaxIntensities) {
         final IVariableFragment ivf = f.getChild(binnedIntensityVariable);

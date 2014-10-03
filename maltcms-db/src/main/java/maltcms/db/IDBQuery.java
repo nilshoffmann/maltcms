@@ -35,10 +35,28 @@ import maltcms.datastructures.ms.IMetabolite;
 /*
  * @author Nils Hoffmann
  */
+/**
+ * <p>IDBQuery interface.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public interface IDBQuery<T extends Predicate<G>, G> {
 
+    /**
+     * <p>setDB.</p>
+     *
+     * @param dbLocation a {@link java.lang.String} object.
+     */
     public abstract void setDB(String dbLocation);
 
+    /**
+     * <p>getBestHits.</p>
+     *
+     * @param k a int.
+     * @param ssp a T object.
+     * @return a {@link java.util.Collection} object.
+     */
     public abstract Collection<Tuple2D<Double, IMetabolite>> getBestHits(int k,
             T ssp);
 }

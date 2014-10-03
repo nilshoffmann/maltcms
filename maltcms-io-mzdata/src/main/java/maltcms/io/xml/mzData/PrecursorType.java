@@ -59,7 +59,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "precursorType", propOrder = {"ionSelection", "activation"})
@@ -77,8 +78,7 @@ public class PrecursorType implements Serializable {
     /**
      * Gets the value of the activation property.
      *
-     * @return possible object is {@link ParamType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public ParamType getActivation() {
         return this.activation;
@@ -87,8 +87,7 @@ public class PrecursorType implements Serializable {
     /**
      * Gets the value of the ionSelection property.
      *
-     * @return possible object is {@link ParamType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public ParamType getIonSelection() {
         return this.ionSelection;
@@ -97,6 +96,7 @@ public class PrecursorType implements Serializable {
     /**
      * Gets the value of the msLevel property.
      *
+     * @return a int.
      */
     public int getMsLevel() {
         return this.msLevel;
@@ -105,6 +105,7 @@ public class PrecursorType implements Serializable {
     /**
      * Gets the value of the spectrumRef property.
      *
+     * @return a int.
      */
     public int getSpectrumRef() {
         return this.spectrumRef;
@@ -113,8 +114,7 @@ public class PrecursorType implements Serializable {
     /**
      * Sets the value of the activation property.
      *
-     * @param value allowed object is {@link ParamType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public void setActivation(final ParamType value) {
         this.activation = value;
@@ -123,8 +123,7 @@ public class PrecursorType implements Serializable {
     /**
      * Sets the value of the ionSelection property.
      *
-     * @param value allowed object is {@link ParamType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public void setIonSelection(final ParamType value) {
         this.ionSelection = value;
@@ -133,6 +132,7 @@ public class PrecursorType implements Serializable {
     /**
      * Sets the value of the msLevel property.
      *
+     * @param value a int.
      */
     public void setMsLevel(final int value) {
         this.msLevel = value;
@@ -141,6 +141,7 @@ public class PrecursorType implements Serializable {
     /**
      * Sets the value of the spectrumRef property.
      *
+     * @param value a int.
      */
     public void setSpectrumRef(final int value) {
         this.spectrumRef = value;

@@ -47,9 +47,10 @@ import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>ObiWarplmataExporter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @RequiresVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index",
@@ -75,6 +76,7 @@ public class ObiWarplmataExporter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final CSVWriter csvw = new CSVWriter();

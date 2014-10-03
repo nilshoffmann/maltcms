@@ -43,6 +43,7 @@ import ucar.ma2.ArrayDouble;
  * CachedList backed implementation.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class FastBinnedMSFeatureVector implements IFeatureVector {
 
@@ -56,6 +57,12 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
     private final ArrayDouble.D0 tic;
     private UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>Constructor for FastBinnedMSFeatureVector.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param i a int.
+     */
     public FastBinnedMSFeatureVector(IFileFragment iff, int i) {// ArrayDouble.D0
         // tic,
         // ArrayDouble.D0
@@ -76,6 +83,7 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
         this.binnedIntens = t.getSecond();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String string) {
         switch (string) {
@@ -92,12 +100,14 @@ public class FastBinnedMSFeatureVector implements IFeatureVector {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList("binned_mass_values", "binned_intensity_values",
                 "total_intensity", "scan_acquisition_time");
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

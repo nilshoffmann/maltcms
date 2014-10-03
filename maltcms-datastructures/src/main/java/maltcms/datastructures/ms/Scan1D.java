@@ -43,7 +43,7 @@ import ucar.ma2.IndexIterator;
  * Implementation of a 1-dimensional scan.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class Scan1D implements IScan1D {
 
@@ -69,10 +69,23 @@ public class Scan1D implements IScan1D {
 //    private ArrayDouble.D0 precursorMz = null;
 //    private ArrayDouble.D0 precursorIntensity = null;
 
+    /**
+     * <p>Constructor for Scan1D.</p>
+     *
+     * @since 1.3.2
+     */
     public Scan1D() {
         
     }
     
+    /**
+     * <p>Constructor for Scan1D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     */
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1) {
         //enforce equal lengths for masses and intensities
@@ -89,6 +102,15 @@ public class Scan1D implements IScan1D {
 //        this.total_intensity.set(integrate(this.intensities));
     }
 
+    /**
+     * <p>Constructor for Scan1D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     * @param msLevel a short.
+     */
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1, final short msLevel) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
@@ -96,6 +118,19 @@ public class Scan1D implements IScan1D {
         this.msLevel = msLevel;
     }
 
+    /**
+     * <p>Constructor for Scan1D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     * @param msLevel a short.
+     * @param precursorCharge a int.
+     * @param precursorMz a double.
+     * @param precursorIntensity a double.
+     * @since 1.3.2
+     */
     public Scan1D(final Array masses1, final Array intensities1,
             final int scanNumber1, final double scanAcquisitionTime1, final short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
         this(masses1, intensities1, scanNumber1, scanAcquisitionTime1, msLevel);
@@ -106,6 +141,7 @@ public class Scan1D implements IScan1D {
         this.precursorIntensity = precursorIntensity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(final String name) {
         switch (name) {
@@ -140,32 +176,38 @@ public class Scan1D implements IScan1D {
         throw new IllegalArgumentException("Feature name " + name + " unknown!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList(new String[]{"mass_values", "intensity_values",
             "scan_index", "scan_acquisition_time", "total_intensity", "ms_level", "precursor_charge", "precursor_mz", "precursor_intensity"});
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getIntensities() {
         return this.intensities;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getMasses() {
         return this.masses;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getScanAcquisitionTime() {
         return this.scanAcquisitionTime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getScanIndex() {
         return this.scanNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getTotalIntensity() {
         return this.total_intensity;
@@ -180,6 +222,7 @@ public class Scan1D implements IScan1D {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;
@@ -217,21 +260,25 @@ public class Scan1D implements IScan1D {
         precursorIntensity = in.readDouble();
     }
 
+    /** {@inheritDoc} */
     @Override
     public short getMsLevel() {
         return msLevel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getPrecursorCharge() {
         return precursorCharge;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getPrecursorMz() {
         return precursorMz;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getPrecursorIntensity() {
         return precursorIntensity;

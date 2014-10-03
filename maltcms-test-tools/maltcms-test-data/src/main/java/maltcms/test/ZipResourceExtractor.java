@@ -43,8 +43,21 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import lombok.Cleanup;
 
+/**
+ * <p>ZipResourceExtractor class.</p>
+ *
+ * @author hoffmann
+ * @version $Id: $Id
+ */
 public class ZipResourceExtractor {
 
+    /**
+     * <p>extract.</p>
+     *
+     * @param resourcePath a {@link java.lang.String} object.
+     * @param destDir a {@link java.io.File} object.
+     * @return a {@link java.io.File} object.
+     */
     public static File extract(String resourcePath, File destDir) {
         System.out.println("Extracting " + resourcePath + " to directory: " + destDir);
         if (!destDir.exists()) {
@@ -105,6 +118,13 @@ public class ZipResourceExtractor {
         return outputFile;
     }
 
+    /**
+     * <p>extractZipArchive.</p>
+     *
+     * @param istream a {@link java.io.InputStream} object.
+     * @param outputDir a {@link java.io.File} object.
+     * @return a {@link java.io.File} object.
+     */
     public static File extractZipArchive(InputStream istream, File outputDir) {
         try {
             File outDir;

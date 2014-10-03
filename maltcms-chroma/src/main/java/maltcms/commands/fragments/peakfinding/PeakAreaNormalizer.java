@@ -48,10 +48,11 @@ import ucar.nc2.Dimension;
 
 /**
  * Separate class for peak normalization of already annotated peaks. The
- * {@link  TICPeakFinder} class performs the same normalization if configured
+ * {@link maltcms.commands.fragments.peakfinding.TICPeakFinder} class performs the same normalization if configured
  * with the same <code>peakNormalizers</code>.
  *
  * @author Nils Hoffmann
+ * 
  */
 @RequiresVariables(names = {"var.peak_area"})
 @ProvidesVariables(names = {"var.peak_area_normalized"})
@@ -63,11 +64,13 @@ public class PeakAreaNormalizer extends AFragmentCommand {
     @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Normalizes peak areas using user-defineable normalization methods.";
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
         TupleND<IFileFragment> results = new TupleND<>();
@@ -115,6 +118,7 @@ public class PeakAreaNormalizer extends AFragmentCommand {
         return results;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;

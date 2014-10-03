@@ -35,8 +35,10 @@ import org.junit.rules.ExternalResource;
 import org.junit.rules.TemporaryFolder;
 
 /**
+ * <p>ExtractClassPathFiles class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public class ExtractClassPathFiles extends ExternalResource {
 
@@ -45,11 +47,18 @@ public class ExtractClassPathFiles extends ExternalResource {
     private final List<File> files = new LinkedList<>();
     private File baseFolder;
 
+    /**
+     * <p>Constructor for ExtractClassPathFiles.</p>
+     *
+     * @param tf a {@link org.junit.rules.TemporaryFolder} object.
+     * @param resourcePaths a {@link java.lang.String} object.
+     */
     public ExtractClassPathFiles(TemporaryFolder tf, String... resourcePaths) {
         this.tf = tf;
         this.resourcePaths = resourcePaths;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void before() throws Throwable {
         try {
@@ -66,6 +75,7 @@ public class ExtractClassPathFiles extends ExternalResource {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void after() {
         for (File f : files) {
@@ -73,10 +83,20 @@ public class ExtractClassPathFiles extends ExternalResource {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>files</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<File> getFiles() {
         return this.files;
     }
 
+    /**
+     * <p>getBaseDir.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getBaseDir() {
         return baseFolder;
     }

@@ -45,8 +45,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>CwtEicPeakFinder class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -63,6 +65,7 @@ public class CwtEicPeakFinder extends AFragmentCommand {
     @Configurable(name = "var.binned_scan_index")
     private String binnedScanIndex = "binned_scan_index";
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         log.info("Warning: this class is still experimental and not meant for productive use!");

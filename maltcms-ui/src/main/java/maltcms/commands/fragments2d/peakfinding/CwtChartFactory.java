@@ -54,15 +54,18 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>CwtChartFactory class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * @version $Id: $Id
  */
 public class CwtChartFactory {
 
     /**
-     * @param array
-     * @return
+     * <p>createColorHeatmap.</p>
+     *
+     * @param array a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     public static BufferedImage createColorHeatmap(ArrayDouble.D2 array) {
         // BufferedImage bi = new
@@ -89,8 +92,10 @@ public class CwtChartFactory {
     }
 
     /**
-     * @param array
-     * @return
+     * <p>createAdaptiveColorHeatmap.</p>
+     *
+     * @param array a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     public static BufferedImage createAdaptiveColorHeatmap(ArrayDouble.D2 array) {
         // BufferedImage bi = new
@@ -118,6 +123,13 @@ public class CwtChartFactory {
         // return bi;
     }
 
+    /**
+     * <p>createCostHistogramDS.</p>
+     *
+     * @param nbins a int.
+     * @param r a {@link maltcms.datastructures.ridge.Ridge} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<JFreeChart> createCostHistogramDS(int nbins, Ridge... r) {
         List<IRidgeCost> l = Ridge.getAvailableRidgeCostClasses();
         List<JFreeChart> dsl = new ArrayList<>(l.size());
@@ -144,6 +156,16 @@ public class CwtChartFactory {
         return dsl;
     }
 
+    /**
+     * <p>createNeighborhoodHistogramDS.</p>
+     *
+     * @param spm a int.
+     * @param nbins a int.
+     * @param qt a {@link maltcms.datastructures.quadTree.QuadTree} object.
+     * @param radius a int.
+     * @param r a {@link maltcms.datastructures.ridge.Ridge} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<JFreeChart> createNeighborhoodHistogramDS(int spm, int nbins,
             QuadTree<Ridge> qt, int radius, Ridge... r) {
         List<IRidgeCost> l = Ridge.getAvailableRidgeCostClasses();
@@ -182,6 +204,13 @@ public class CwtChartFactory {
         return dsl;
     }
 
+    /**
+     * <p>create2DRidgeCostDS.</p>
+     *
+     * @param spm a int.
+     * @param r a {@link maltcms.datastructures.ridge.Ridge} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<JFreeChart> create2DRidgeCostDS(int spm, Ridge... r) {
         List<IRidgeCost> l = Ridge.getAvailableRidgeCostClasses();
         List<JFreeChart> dsl = new ArrayList<>(l.size());
@@ -221,6 +250,15 @@ public class CwtChartFactory {
         return dsl;
     }
 
+    /**
+     * <p>create2DRidgeNeighborhoodDS.</p>
+     *
+     * @param spm a int.
+     * @param qt a {@link maltcms.datastructures.quadTree.QuadTree} object.
+     * @param radius a int.
+     * @param r a {@link maltcms.datastructures.ridge.Ridge} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<JFreeChart> create2DRidgeNeighborhoodDS(int spm,
             QuadTree<Ridge> qt, int radius, Ridge... r) {
         List<JFreeChart> l = new ArrayList<>();
@@ -336,6 +374,13 @@ public class CwtChartFactory {
         return l;
     }
 
+    /**
+     * <p>saveImages.</p>
+     *
+     * @param outputDirectory a {@link java.io.File} object.
+     * @param prefix a {@link java.lang.String} object.
+     * @param l a {@link java.util.List} object.
+     */
     public static void saveImages(File outputDirectory, String prefix,
             List<JFreeChart> l) {
         int i = 0;
@@ -352,6 +397,13 @@ public class CwtChartFactory {
         }
     }
 
+    /**
+     * <p>saveImages.</p>
+     *
+     * @param outputDirectory a {@link java.lang.String} object.
+     * @param prefix a {@link java.lang.String} object.
+     * @param l a {@link java.util.List} object.
+     */
     public static void saveImages(String outputDirectory, String prefix,
             List<JFreeChart> l) {
         saveImages(new File(outputDirectory), prefix, l);

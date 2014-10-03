@@ -35,10 +35,11 @@ import cross.commands.ICommand;
  * Transformation base class to perform operations on Double values.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public abstract class AElementFilter implements ICommand<Double, Double> {
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
     }

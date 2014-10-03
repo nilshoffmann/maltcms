@@ -28,10 +28,18 @@
 package net.sf.maltcms.db.search.api;
 
 /**
+ * <p>IMatchPredicate interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IMatchPredicate<T> {
 
+    /**
+     * <p>match.</p>
+     *
+     * @param t a T object.
+     * @return a boolean.
+     */
     public boolean match(T t);
 }

@@ -43,12 +43,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * <p>JoinScans class.</p>
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class JoinScans {
 
+    /**
+     * <p>createConcatenatedFile.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @param filenames an array of {@link java.lang.String} objects.
+     * @param headers an array of {@link java.lang.String} objects.
+     * @param keys a {@link java.util.HashSet} object.
+     * @param hm a {@link java.util.HashMap} object.
+     */
     public static void createConcatenatedFile(final String filename,
             final String[] filenames, final String[] headers,
             final HashSet<Integer> keys,
@@ -101,6 +111,14 @@ public class JoinScans {
         }
     }
 
+    /**
+     * <p>createReducedFile.</p>
+     *
+     * @param originalFilename a {@link java.lang.String} object.
+     * @param header a {@link java.lang.String} object.
+     * @param keys a {@link java.util.Set} object.
+     * @param map a {@link java.util.HashMap} object.
+     */
     public static void createReducedFile(final String originalFilename,
             final String header, final Set<Integer> keys,
             final HashMap<Integer, Integer> map) {
@@ -134,7 +152,9 @@ public class JoinScans {
     }
 
     /**
-     * @param args
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(final String[] args) {
         // arguments are files to join
@@ -201,6 +221,12 @@ public class JoinScans {
 
     }
 
+    /**
+     * <p>printMap.</p>
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @param map a {@link java.util.HashMap} object.
+     */
     public static void printMap(final String filename,
             final HashMap<Integer, Integer> map) {
         System.out.println("Map for " + filename);
@@ -212,6 +238,11 @@ public class JoinScans {
         }
     }
 
+    /**
+     * <p>printSet.</p>
+     *
+     * @param set a {@link java.util.Set} object.
+     */
     public static void printSet(final Set<Integer> set) {
         final ArrayList<Integer> al = new ArrayList<>(set);
         Collections.sort(al);

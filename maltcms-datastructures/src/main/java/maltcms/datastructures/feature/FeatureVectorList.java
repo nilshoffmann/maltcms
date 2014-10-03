@@ -36,9 +36,10 @@ import maltcms.datastructures.array.IFeatureVector;
 import org.apache.commons.configuration.Configuration;
 
 /**
+ * <p>FeatureVectorList class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class FeatureVectorList<T extends IFeatureVector> implements
         IFileFragmentModifier {
@@ -46,6 +47,12 @@ public class FeatureVectorList<T extends IFeatureVector> implements
     private final List<T> l;
     private final List<String> featureNames;
 
+    /**
+     * <p>Constructor for FeatureVectorList.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @param featureNames a {@link java.util.List} object.
+     */
     public FeatureVectorList(List<T> l, List<String> featureNames) {
         this.l = l;
         this.featureNames = featureNames;
@@ -58,6 +65,7 @@ public class FeatureVectorList<T extends IFeatureVector> implements
      * maltcms.experimental.datastructures.IFileFragmentModifier#modify(cross
      * .datastructures.fragments.IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public void modify(IFileFragment iff) {
         HashSet<String> features = new HashSet<>();
@@ -75,6 +83,7 @@ public class FeatureVectorList<T extends IFeatureVector> implements
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         // TODO Auto-generated method stub

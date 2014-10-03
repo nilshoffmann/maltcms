@@ -45,7 +45,7 @@ import ucar.ma2.IndexIterator;
  * (TIC).
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = PairwiseFeatureSequenceSimilarity.class)
@@ -61,21 +61,14 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
      * maltcms.commands.distances.dtw.ADynamicTimeWarp#configure(org.apache.
      * commons.configuration.Configuration)
      */
-    /**
-     *
-     * @param cfg
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.arrayVariable = cfg.getString("var.total_intensity", "total_intensity");
     }
 
-    /**
-     *
-     * @param t
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {

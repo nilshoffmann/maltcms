@@ -55,7 +55,7 @@ import ucar.ma2.MAMath.MinMax;
  * Plot the distribution of values looking at mz bin values.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -69,6 +69,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
     private String y_var = "intensity_values";
     private final boolean one_for_each = true;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment f : t) {
@@ -128,6 +129,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
         return t;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -142,6 +144,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

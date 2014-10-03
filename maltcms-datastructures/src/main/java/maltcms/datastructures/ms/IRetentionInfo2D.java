@@ -31,19 +31,49 @@ package maltcms.datastructures.ms;
  * Interface adding retention index 2d and time 2d info.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IRetentionInfo2D {
 
+    /**
+     * <p>getRetentionIndex2D.</p>
+     *
+     * @return a double.
+     */
     public abstract double getRetentionIndex2D();
 
+    /**
+     * <p>getRetentionTime2D.</p>
+     *
+     * @return a double.
+     */
     public abstract double getRetentionTime2D();
 
+    /**
+     * <p>getRetentionTimeUnit2D.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public abstract String getRetentionTimeUnit2D();
 
+    /**
+     * <p>setRetentionIndex2D.</p>
+     *
+     * @param d a double.
+     */
     public abstract void setRetentionIndex2D(double d);
 
+    /**
+     * <p>setRetentionTime2D.</p>
+     *
+     * @param d a double.
+     */
     public abstract void setRetentionTime2D(double d);
 
+    /**
+     * <p>setRetentionTimeUnit2D.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public abstract void setRetentionTimeUnit2D(String s);
 }

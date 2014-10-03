@@ -37,25 +37,72 @@ import ucar.ma2.Array;
  * Interface representing a Chromatogram.
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IChromatogram extends IConfigurable {
 
+    /**
+     * <p>getParent.</p>
+     *
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public IFileFragment getParent();
 
+    /**
+     * <p>getNumberOfScans.</p>
+     *
+     * @return a int.
+     */
     public int getNumberOfScans();
 
+    /**
+     * <p>getIntensities.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Array> getIntensities();
 
+    /**
+     * <p>getMasses.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Array> getMasses();
 
+    /**
+     * <p>getScanAcquisitionTimeUnit.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getScanAcquisitionTimeUnit();
 
+    /**
+     * <p>getScanAcquisitionTime.</p>
+     *
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public Array getScanAcquisitionTime();
 
+    /**
+     * <p>getTimeRange.</p>
+     *
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<Double, Double> getTimeRange();
 
+    /**
+     * <p>getMassRange.</p>
+     *
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<Double, Double> getMassRange();
 
+    /**
+     * <p>getIndexFor.</p>
+     *
+     * @param scan_acquisition_time a double.
+     * @return a int.
+     */
     public int getIndexFor(double scan_acquisition_time);
 
 }

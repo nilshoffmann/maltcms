@@ -49,11 +49,16 @@ import ucar.ma2.Range;
  * output file in a different directory.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class FileCopy {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(final String[] args) {
         final Maltcms m = Maltcms.getInstance();
         log.info("Starting Maltcms");

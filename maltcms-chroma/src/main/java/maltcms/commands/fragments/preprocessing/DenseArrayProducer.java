@@ -51,7 +51,7 @@ import org.openide.util.lookup.ServiceProvider;
  * removed from the chromatogram.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @ProvidesVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index"})
@@ -97,6 +97,7 @@ public class DenseArrayProducer extends AFragmentCommand {
     @Configurable
     private double massBinResolution = 1.0d;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         log.debug("Creating dense arrays!");
@@ -159,6 +160,7 @@ public class DenseArrayProducer extends AFragmentCommand {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.massValues = cfg.getString("var.mass_values", "mass_values");

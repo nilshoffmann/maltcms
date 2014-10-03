@@ -34,16 +34,20 @@ import ucar.ma2.Array;
 
 // Plot erzeugen
 /**
+ * <p>GenerateTicChart class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class GenerateTicChart {
 
     /**
+     * <p>generatePlot.</p>
      *
-     * @param name
-     * @param besch
-     * @param a
-     * @return
+     * @param name a {@link java.lang.String} object.
+     * @param besch a {@link java.lang.String} object.
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a {@link maltcms.ui.charts.AChart} object.
      */
     public static AChart<XYPlot> generatePlot(final String name,
             final String besch, final Array a) {

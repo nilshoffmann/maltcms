@@ -36,9 +36,10 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>MovingMedianFilter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -47,15 +48,25 @@ public class MovingMedianFilter extends AArrayFilter {
     @Configurable
     private int window = 10;
 
+    /**
+     * <p>Constructor for MovingMedianFilter.</p>
+     */
     public MovingMedianFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for MovingMedianFilter.</p>
+     *
+     * @param window a int.
+     * @since 1.3.2
+     */
     public MovingMedianFilter(int window) {
         this();
         this.window = window;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         Array arr = super.apply(a);
@@ -74,12 +85,14 @@ public class MovingMedianFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
     }
 
+    /** {@inheritDoc} */
     @Override
     public MovingMedianFilter copy() {
         return new MovingMedianFilter();

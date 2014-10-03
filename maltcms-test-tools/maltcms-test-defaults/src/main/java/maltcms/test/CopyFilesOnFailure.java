@@ -35,12 +35,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * <p>CopyFilesOnFailure class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Slf4j
 public class CopyFilesOnFailure {
 
+    /**
+     * <p>copyToInspectionDir.</p>
+     *
+     * @param outputDir a {@link java.io.File} object.
+     * @param t a {@link java.lang.Throwable} object.
+     */
     public static void copyToInspectionDir(File outputDir, Throwable t) {
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
         File outDir = new File(tmpDir, "maltcms-test-failures");

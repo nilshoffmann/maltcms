@@ -53,6 +53,7 @@ import ucar.ma2.IndexIterator;
  * Default visualization pipeline command.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -72,9 +73,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
     @Configurable(value = "false")
     private boolean fillPeakArea = false;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -86,9 +85,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
 //                + ".fillPeakArea", false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     protected List<Array> getScanlineFor(final IFileFragment ff, final int spm) {
         final List<Array> scanlines = super.getScanlineFor(ff, spm);
@@ -124,9 +121,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
         return scanlines;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     protected void saveChart(final JFreeChart chart, final IFileFragment ref,
             final IFileFragment query) {

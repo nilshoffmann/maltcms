@@ -40,40 +40,45 @@ import ucar.ma2.ArrayDouble;
  * used as a cost/score measure.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface PairwiseFeatureSequenceSimilarity extends
         ICommand<Tuple2D<Array[], Array[]>, Array[]>, IWorkflowElement {
 
     /**
+     * <p>apply.</p>
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param b a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public abstract IFileFragment apply(IFileFragment a, IFileFragment b);
 
     /**
+     * <p>getResult.</p>
      *
-     * @return
+     * @return a {@link ucar.ma2.ArrayDouble.D0} object.
      */
     public abstract ArrayDouble.D0 getResult();
 
     /**
+     * <p>getResultFileFragment.</p>
      *
-     * @return
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public abstract IFileFragment getResultFileFragment();
 
     /**
+     * <p>getResultVector.</p>
      *
-     * @return
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     public abstract ArrayDouble.D1 getResultVector();
 
     /**
+     * <p>getStatsMap.</p>
      *
-     * @return
+     * @return a {@link cross.datastructures.StatsMap} object.
      */
     public abstract StatsMap getStatsMap();
 
@@ -81,13 +86,14 @@ public interface PairwiseFeatureSequenceSimilarity extends
      * Returns true, if this LDF is a distance between Arrays, false if LDF is a
      * similarity.
      *
-     * @return
+     * @return a boolean.
      */
     public abstract boolean minimize();
 
     /**
+     * <p>setStatsMap.</p>
      *
-     * @param sm
+     * @param sm a {@link cross.datastructures.StatsMap} object.
      */
     public abstract void setStatsMap(StatsMap sm);
 }

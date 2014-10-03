@@ -42,8 +42,8 @@ import maltcms.datastructures.ms.IAnchor;
  * {@code maltcms.datastructures.alignment.DefaultPairSet}.
  *
  * @author Nils Hoffmann
- *
  * @param <T>
+ * 
  */
 @Slf4j
 public class DefaultPairSet<T extends IAnchor> implements
@@ -53,14 +53,30 @@ public class DefaultPairSet<T extends IAnchor> implements
     @Configurable
     private int minScansBetweenAnchors = 1;
 
+    /**
+     * <p>Getter for the field <code>minScansBetweenAnchors</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMinScansBetweenAnchors() {
         return minScansBetweenAnchors;
     }
 
+    /**
+     * <p>Setter for the field <code>minScansBetweenAnchors</code>.</p>
+     *
+     * @param minScansBetweenAnchors a int.
+     */
     public void setMinScansBetweenAnchors(int minScansBetweenAnchors) {
         this.minScansBetweenAnchors = minScansBetweenAnchors;
     }
 
+    /**
+     * <p>Constructor for DefaultPairSet.</p>
+     *
+     * @param a1 a {@link java.util.List} object.
+     * @param a2 a {@link java.util.List} object.
+     */
     public DefaultPairSet(final List<T> a1, final List<T> a2) {
         this.minScansBetweenAnchors = Factory.getInstance().getConfiguration()
                 .getInt(this.getClass().getName() + ".minScansBetweenAnchors",
@@ -69,6 +85,11 @@ public class DefaultPairSet<T extends IAnchor> implements
         this.al = prepareWithSet(a1, a2);
     }
 
+    /**
+     * <p>getCorrespondingScans.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Integer, Integer>> getCorrespondingScans() {
         final ArrayList<Tuple2D<Integer, Integer>> al1 = new ArrayList<>(
                 getSize());
@@ -79,15 +100,28 @@ public class DefaultPairSet<T extends IAnchor> implements
         return al1;
     }
 
+    /**
+     * <p>getSize.</p>
+     *
+     * @return a int.
+     */
     public int getSize() {
         return this.al.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<Tuple2D<T, T>> iterator() {
         return this.al.iterator();
     }
 
+    /**
+     * <p>prepareWithSet.</p>
+     *
+     * @param a1 a {@link java.util.List} object.
+     * @param a2 a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     protected List<Tuple2D<T, T>> prepareWithSet(final List<T> a1,
             final List<T> a2) {
         final List<Tuple2D<T, T>> pairedAnchors = new ArrayList<>();
@@ -122,6 +156,12 @@ public class DefaultPairSet<T extends IAnchor> implements
         return validAnchors;
     }
 
+    /**
+     * <p>checkConsistency.</p>
+     *
+     * @param pairedAnchors a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<T, T>> checkConsistency(
             List<Tuple2D<T, T>> pairedAnchors) {
         int prevx = -1;

@@ -35,9 +35,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>TopHatFilter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -46,15 +47,25 @@ public class TopHatFilter extends AArrayFilter {
     @Configurable
     private int window = 10;
 
+    /**
+     * <p>Constructor for TopHatFilter.</p>
+     */
     public TopHatFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for TopHatFilter.</p>
+     *
+     * @param window a int.
+     * @since 1.3.2
+     */
     public TopHatFilter(int window) {
         this();
         this.window = window;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         Array arr = super.apply(a);
@@ -69,12 +80,14 @@ public class TopHatFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TopHatFilter copy() {
         return new TopHatFilter(window);

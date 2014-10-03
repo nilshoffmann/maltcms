@@ -34,19 +34,23 @@ import lombok.Data;
 import maltcms.io.xlsx.bridge.ICell;
 
 /**
+ * <p>JXLCell class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Data
 public class JXLCell implements ICell {
 
     private final Cell cell;
 
+    /** {@inheritDoc} */
     @Override
     public String stringValue() {
         return cell.getContents();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double doubleValue() {
         if (cell.getType() == CellType.NUMBER) {

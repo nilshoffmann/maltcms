@@ -30,7 +30,10 @@ package maltcms.db.predicates.metabolite;
 import com.db4o.query.Predicate;
 
 /**
+ * <p>IAggregatePredicateFactory interface.</p>
+ *
  * @author Nils Hoffmann
+ * 
  */
 public interface IAggregatePredicateFactory<T> {
 
@@ -40,7 +43,8 @@ public interface IAggregatePredicateFactory<T> {
      * Name=BLABLA< => StringContainsPredicate on method getName, BLABLA should
      * be a substring
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.db4o.query.Predicate} object.
      */
     public abstract Predicate<T> digestCommandLine(String[] args);
 }

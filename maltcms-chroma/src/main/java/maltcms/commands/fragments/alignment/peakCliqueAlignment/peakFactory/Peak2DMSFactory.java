@@ -45,8 +45,10 @@ import ucar.ma2.Array;
 import ucar.ma2.Sparse;
 
 /**
+ * <p>Peak2DMSFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IPeakFactory.class)
@@ -62,6 +64,7 @@ public class Peak2DMSFactory implements IPeakFactory {
     private String secondColumnElutionTimeVar = "second_column_elution_time";
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
+    /** {@inheritDoc} */
     @Override
     public IPeakFactoryImpl createInstance(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
         return new Peak2DMSFactoryImpl(sourceFile, minMaxMassRange, size, massBinResolution, useSparseArrays, associationId);

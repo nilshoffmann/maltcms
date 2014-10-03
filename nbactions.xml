@@ -58,4 +58,14 @@
                 <goal>compile</goal>
             </goals>
         </action>
+    <action>
+            <actionName>CUSTOM-Fix Javadoc</actionName>
+            <displayName>Fix Javadoc</displayName>
+            <goals>
+                <goal>javadoc:fix</goal>
+            </goals>
+            <properties>
+                <comparisonVersion>1.3.0</comparisonVersion>
+            </properties>
+        </action>
 </actions>

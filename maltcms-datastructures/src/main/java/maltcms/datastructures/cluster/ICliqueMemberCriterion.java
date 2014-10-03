@@ -30,11 +30,19 @@ package maltcms.datastructures.cluster;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>ICliqueMemberCriterion interface.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public interface ICliqueMemberCriterion<T extends IFeatureVector> {
 
+    /**
+     * <p>shouldBeMemberOf.</p>
+     *
+     * @param c a {@link maltcms.datastructures.cluster.IClique} object.
+     * @param t a T object.
+     * @return a boolean.
+     */
     public abstract boolean shouldBeMemberOf(IClique<T> c, T t);
 }

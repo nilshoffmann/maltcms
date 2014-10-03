@@ -31,29 +31,54 @@ package org.systemsbiology.jrap.staxnxt;
  * a mzXML file.
  *
  * @author Mathijs Vogelzang
+ * 
+ * @since 1.3.2
  */
 public class SoftwareInfo {
 
     public String type, name, version;
 
+    /**
+     * <p>Constructor for SoftwareInfo.</p>
+     *
+     * @param type a {@link java.lang.String} object.
+     * @param name a {@link java.lang.String} object.
+     * @param version a {@link java.lang.String} object.
+     */
     public SoftwareInfo(String type, String name, String version) {
         this.type = type;
         this.name = name;
         this.version = version;
     }
 
+    /**
+     * <p>Setter for the field <code>type</code>.</p>
+     *
+     * @param type a {@link java.lang.String} object.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Setter for the field <code>version</code>.</p>
+     *
+     * @param version a {@link java.lang.String} object.
+     */
     public void setVersion(String version) {
         this.version = version;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return ("type " + type + " name " + name + " version " + version);

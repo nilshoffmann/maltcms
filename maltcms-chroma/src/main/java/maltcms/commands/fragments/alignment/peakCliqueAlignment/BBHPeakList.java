@@ -31,15 +31,26 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
+ * <p>BBHPeakList class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public class BBHPeakList extends ArrayList<UUID> {
 
+    /**
+     * <p>Constructor for BBHPeakList.</p>
+     *
+     * @param initialCapacity a int.
+     */
     public BBHPeakList(int initialCapacity) {
         super(initialCapacity);
     }
 
+    /**
+     * <p>Constructor for BBHPeakList.</p>
+     */
     public BBHPeakList() {
     }
 

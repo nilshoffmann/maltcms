@@ -35,9 +35,10 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>PeakRTFeatureVector class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PeakRTFeatureVector implements IFeatureVector {
 
@@ -48,6 +49,11 @@ public class PeakRTFeatureVector implements IFeatureVector {
     private final ArrayDouble.D0 rt;
     private final UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>Constructor for PeakRTFeatureVector.</p>
+     *
+     * @param rt a double.
+     */
     public PeakRTFeatureVector(double rt) {
         this.rt = new ArrayDouble.D0();
         this.rt.set(rt);
@@ -56,6 +62,7 @@ public class PeakRTFeatureVector implements IFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         if (name.equals("RT")) {
@@ -67,15 +74,22 @@ public class PeakRTFeatureVector implements IFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList("RT");
     }
 
+    /**
+     * <p>getRT.</p>
+     *
+     * @return a double.
+     */
     public double getRT() {
         return this.rt.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -83,6 +97,7 @@ public class PeakRTFeatureVector implements IFeatureVector {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

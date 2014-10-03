@@ -76,8 +76,10 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.slf4j.Logger;
 
 /**
- * @author Nils Hoffmann
+ * <p>LocalHostLauncher class.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Deprecated
@@ -147,6 +149,13 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
     private boolean exitOnException = false;
     private boolean navigateToResults = true;
 
+    /**
+     * <p>Constructor for LocalHostLauncher.</p>
+     *
+     * @param userConfig a {@link org.apache.commons.configuration.PropertiesConfiguration} object.
+     * @param jf a {@link java.awt.Container} object.
+     * @param exitOnException a boolean.
+     */
     public LocalHostLauncher(final PropertiesConfiguration userConfig,
             final Container jf, final boolean exitOnException) {
         this.cfg = userConfig;
@@ -156,14 +165,29 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         this.exitOnException = exitOnException;
     }
 
+    /**
+     * <p>Setter for the field <code>navigateToResults</code>.</p>
+     *
+     * @param b a boolean.
+     */
     public void setNavigateToResults(boolean b) {
         this.navigateToResults = b;
     }
 
+    /**
+     * <p>isNavigateToResults.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNavigateToResults() {
         return this.navigateToResults;
     }
 
+    /**
+     * <p>isExitOnException.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isExitOnException() {
         return this.exitOnException;
     }
@@ -172,7 +196,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
      * Builds a composite configuration, adding default configuration and then
      * the system configuration.
      *
-     * @return
+     * @return a {@link org.apache.commons.configuration.Configuration} object.
      */
     public Configuration getDefaultConfig() {
         URL defaultConfigLocation = null;
@@ -207,6 +231,11 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         return ccfg;
     }
 
+    /**
+     * <p>getProcess.</p>
+     *
+     * @return a {@link maltcms.runtime.LocalHostMaltcmsProcess} object.
+     */
     public LocalHostMaltcmsProcess getProcess() {
         return this.lhmp;
     }
@@ -218,6 +247,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
      * javax.swing.event.HyperlinkListener#hyperlinkUpdate(javax.swing.event
      * .HyperlinkEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void hyperlinkUpdate(final HyperlinkEvent e) {
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -240,6 +270,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
      *
      * @see cross.event.IListener#listen(cross.event.IEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void listen(final IEvent<IWorkflowResult> v) {
         if (v.get() instanceof DefaultWorkflowResult) {
@@ -282,6 +313,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
      * @seejava.beans.PropertyChangeListener#propertyChange(java.beans.
      * PropertyChangeEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void propertyChange(final PropertyChangeEvent evt) {
         this.log.debug("Received PropertyChangeEvent {}", evt);
@@ -300,6 +332,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void run() {
         if (this.progressBar == null) {
@@ -368,6 +401,7 @@ public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
      * java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang
      * .Thread, java.lang.Throwable)
      */
+    /** {@inheritDoc} */
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
         LocalHostLauncher.handleRuntimeException(this.log, e, this,

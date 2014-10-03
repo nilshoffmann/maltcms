@@ -52,8 +52,11 @@ import lombok.experimental.Value;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>CliqueFinder class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 @Value
@@ -66,12 +69,16 @@ public class CliqueFinder {
     private final boolean postProcessPeaks;
 
     /**
-     * @param al
-     * @param nameToFragment
-     * @param fragmentToPeaks
-     * @param minCliqueSize
-     * @param npeaks
+     * <p>combineBiDiBestHits.</p>
+     *
+     * @param al a {@link cross.datastructures.tuple.TupleND} object.
+     * @param nameToFragment a {@link java.util.Map} object.
+     * @param fragmentToPeaks a {@link java.util.Map} object.
+     * @param minCliqueSize a int.
+     * @param npeaks a int.
      * @return a PairwiseSimilarityResult
+     * @param nameToIndex a {@link java.util.Map} object.
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
      */
     public BBHResult combineBiDiBestHits(final TupleND<IFileFragment> al, final Map<String, IFileFragment> nameToFragment, final Map<String, Integer> nameToIndex,
             final Map<String, List<IBipacePeak>> fragmentToPeaks, final int minCliqueSize, int npeaks, final LongObjectMap<PeakEdge> edgeMap) {

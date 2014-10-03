@@ -32,17 +32,36 @@ import maltcms.datastructures.IFileFragmentModifier;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
- * @author Nils Hoffmann
+ * <p>IPairwiseFeatureVectorSequenceOperation interface.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 public interface IPairwiseFeatureVectorSequenceOperation<RESULT> extends
         IFileFragmentModifier {
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param l1 a {@link java.util.List} object.
+     * @param l2 a {@link java.util.List} object.
+     * @return a RESULT object.
+     */
     public abstract RESULT apply(List<IFeatureVector> l1,
             List<IFeatureVector> l2);
 
+    /**
+     * <p>setPairwiseFeatureVectorOperation.</p>
+     *
+     * @param pao a {@link maltcms.commands.distances.dtwng.TwoFeatureVectorOperation} object.
+     */
     public abstract void setPairwiseFeatureVectorOperation(
             TwoFeatureVectorOperation pao);
 
+    /**
+     * <p>getPairwiseFeatureVectorOperation.</p>
+     *
+     * @return a {@link maltcms.commands.distances.dtwng.TwoFeatureVectorOperation} object.
+     */
     public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation();
 }

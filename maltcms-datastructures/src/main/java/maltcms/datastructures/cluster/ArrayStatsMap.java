@@ -34,9 +34,10 @@ import maltcms.datastructures.feature.DefaultFeatureVector;
 import ucar.ma2.Array;
 
 /**
+ * <p>ArrayStatsMap class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class ArrayStatsMap implements IMutableFeatureVector {
 
@@ -46,26 +47,31 @@ public class ArrayStatsMap implements IMutableFeatureVector {
     private static final long serialVersionUID = -8374451195942782968L;
     private DefaultFeatureVector featureVector = new DefaultFeatureVector();
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return featureVector.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return featureVector.getFeatureNames();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         return featureVector.getFeature(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addFeature(String name, Array a) {
         featureVector.addFeature(name, a);
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return featureVector.getUniqueId();

@@ -31,12 +31,15 @@ import java.util.Comparator;
 import maltcms.datastructures.peak.IPeak;
 
 /**
+ * <p>PeakComparator class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PeakComparator
         implements Comparator<IPeak> {
 
+    /** {@inheritDoc} */
     @Override
     public int compare(final IPeak o1, final IPeak o2) {
         if (o1.getScanIndex() == o2.getScanIndex()) {

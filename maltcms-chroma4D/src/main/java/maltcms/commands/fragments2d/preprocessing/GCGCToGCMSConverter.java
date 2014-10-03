@@ -58,6 +58,7 @@ import ucar.ma2.ArrayInt;
  * summing over modulations.
  *
  * @author Nils Hoffmann
+ * 
  */
 /*
  * TODO declare provided and required variables
@@ -70,15 +71,13 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
     @Configurable(value = "5")
     private double snrthreshold = 5;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "GCxGC-MS data to GC-MS data by simple scan-wise summation.";
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> ret = new TupleND<>();
@@ -190,15 +189,13 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
      * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
      * .configuration.Configuration)
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.snrthreshold = cfg.getDouble(getClass().getName() + ".snrthreshold", 5);
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

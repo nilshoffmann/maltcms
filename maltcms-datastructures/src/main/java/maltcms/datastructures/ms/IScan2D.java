@@ -28,8 +28,10 @@
 package maltcms.datastructures.ms;
 
 /**
+ * <p>IScan2D interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IScan2D extends IScan1D {
 
@@ -67,11 +69,31 @@ public interface IScan2D extends IScan1D {
      */
     int getSecondColumnScanIndex();
 
+    /**
+     * <p>setFirstColumnScanAcquisitionTime.</p>
+     *
+     * @param sat a double.
+     */
     void setFirstColumnScanAcquisitionTime(final double sat);
 
+    /**
+     * <p>setFirstColumnScanIndex.</p>
+     *
+     * @param a a int.
+     */
     void setFirstColumnScanIndex(final int a);
 
+    /**
+     * <p>setSecondColumnScanAcquisitionTime.</p>
+     *
+     * @param sat a double.
+     */
     void setSecondColumnScanAcquisitionTime(final double sat);
 
+    /**
+     * <p>setSecondColumnScanIndex.</p>
+     *
+     * @param a a int.
+     */
     void setSecondColumnScanIndex(final int a);
 }

@@ -58,6 +58,7 @@ import ucar.nc2.Dimension;
  * Exports chromatogram data to ANDI-MS netCDF format.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -66,6 +67,7 @@ public class ANDIMSExporter extends AFragmentCommand {
 
     private boolean skipAggregatedVariables = true;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -76,6 +78,7 @@ public class ANDIMSExporter extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Creates ANDIMS compliant output.";
@@ -86,6 +89,7 @@ public class ANDIMSExporter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         for (IFileFragment f : t) {
@@ -295,10 +299,7 @@ public class ANDIMSExporter extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILECONVERSION;

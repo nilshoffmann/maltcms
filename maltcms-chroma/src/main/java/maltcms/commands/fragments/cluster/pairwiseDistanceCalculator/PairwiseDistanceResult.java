@@ -34,8 +34,10 @@ import java.net.URI;
 import lombok.Data;
 
 /**
+ * <p>PairwiseDistanceResult class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class PairwiseDistanceResult implements Serializable {

@@ -37,6 +37,12 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
+/**
+ * <p>SteinAndScott class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class SteinAndScott extends AMetabolitePredicate {
 
@@ -59,25 +65,49 @@ public class SteinAndScott extends AMetabolitePredicate {
         }
     });
 
+    /**
+     * <p>isNormalize.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNormalize() {
         return normalize;
     }
 
+    /**
+     * <p>Setter for the field <code>normalize</code>.</p>
+     *
+     * @param normalize a boolean.
+     */
     public void setNormalize(boolean normalize) {
         this.normalize = normalize;
     }
 
+    /**
+     * <p>Getter for the field <code>resolution</code>.</p>
+     *
+     * @return a double.
+     */
     public double getResolution() {
         return resolution;
     }
 
+    /**
+     * <p>Setter for the field <code>resolution</code>.</p>
+     *
+     * @param resolution a double.
+     */
     public void setResolution(double resolution) {
         this.resolution = resolution;
     }
 
+    /**
+     * <p>Constructor for SteinAndScott.</p>
+     */
     public SteinAndScott() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public AMetabolitePredicate copy() {
         SteinAndScott ms = new SteinAndScott();
@@ -91,11 +121,22 @@ public class SteinAndScott extends AMetabolitePredicate {
         return ms;
     }
 
+    /**
+     * <p>similarity.</p>
+     *
+     * @param massesRef a {@link ucar.ma2.Array} object.
+     * @param intensitiesRef a {@link ucar.ma2.Array} object.
+     * @param massesQuery a {@link ucar.ma2.Array} object.
+     * @param intensitiesQuery a {@link ucar.ma2.Array} object.
+     * @param mw a double.
+     * @return a double.
+     */
     protected double similarity(Array massesRef, Array intensitiesRef,
             Array massesQuery, Array intensitiesQuery, double mw) {
         return iadc.apply(new Tuple2D<>(massesRef, intensitiesRef), new Tuple2D<>(massesQuery, intensitiesQuery));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite et) {
         Tuple2D<ArrayDouble.D1, ArrayInt.D1> etMs = et.getMassSpectrum();
@@ -118,6 +159,7 @@ public class SteinAndScott extends AMetabolitePredicate {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Comparator<Tuple2D<Double, IMetabolite>> getComparator() {
         return this.comparator;

@@ -44,6 +44,8 @@ import java.io.Serializable;
  * unknown dependencies on this separation.
  *
  * @author M. Vogelzang
+ * 
+ * @since 1.3.2
  */
 public class ScanHeader implements Serializable {
 //    class Members and Defaults
@@ -202,6 +204,8 @@ public class ScanHeader implements Serializable {
     protected long scanOffset = -1;
 
     /**
+     * <p>Getter for the field <code>basePeakIntensity</code>.</p>
+     *
      * @return Returns the basePeakIntensity.
      */
     public float getBasePeakIntensity() {
@@ -209,6 +213,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>basePeakIntensity</code>.</p>
+     *
      * @param basePeakIntensity The basePeakIntensity to set.
      */
     public void setBasePeakIntensity(float basePeakIntensity) {
@@ -216,6 +222,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>basePeakMz</code>.</p>
+     *
      * @return Returns the basePeakMz.
      */
     public float getBasePeakMz() {
@@ -223,6 +231,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>basePeakMz</code>.</p>
+     *
      * @param basePeakMz The basePeakMz to set.
      */
     public void setBasePeakMz(float basePeakMz) {
@@ -230,6 +240,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>byteOrder</code>.</p>
+     *
      * @return returns the byteOrder
      */
     public String getByteOrder() {
@@ -237,6 +249,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>byteOrder</code>.</p>
+     *
      * @param byteOrder set the byteOrder
      */
     public void setByteOrder(String byteOrder) {
@@ -244,6 +258,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>centroided</code>.</p>
+     *
      * @return Returns the centroided.
      */
     public int getCentroided() {
@@ -251,6 +267,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>centroided</code>.</p>
+     *
      * @param centroided The centroided to set.
      */
     public void setCentroided(int centroided) {
@@ -258,6 +276,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>chargeDeconvoluted</code>.</p>
+     *
      * @return Returns the chargeDeconvoluted.
      */
     public int getChargeDeconvoluted() {
@@ -265,6 +285,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>chargeDeconvoluted</code>.</p>
+     *
      * @param chargeDeconvoluted The chargeDeconvoluted to set.
      */
     public void setChargeDeconvoluted(int chargeDeconvoluted) {
@@ -272,6 +294,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>collisionEnergy</code>.</p>
+     *
      * @return Returns the collisionEnergy.
      */
     public float getCollisionEnergy() {
@@ -279,6 +303,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>collisionEnergy</code>.</p>
+     *
      * @param collisionEnergy The collisionEnergy to set.
      */
     public void setCollisionEnergy(float collisionEnergy) {
@@ -286,6 +312,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>compressionType</code>.</p>
+     *
      * @return returns compressionType
      */
     public String getCompressionType() {
@@ -293,6 +321,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>compressionType</code>.</p>
+     *
      * @param compressionType set compressionType
      */
     public void setCompressionType(String compressionType) {
@@ -300,6 +330,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>compressedLen</code>.</p>
+     *
      * @return returns compressedLen
      */
     public int getCompressedLen() {
@@ -307,6 +339,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>compressedLen</code>.</p>
+     *
      * @param compressedLen set compressedLen
      */
     public void setCompressedLen(int compressedLen) {
@@ -314,6 +348,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>contentType</code>.</p>
+     *
      * @return returns the contentType
      */
     public String getContentType() {
@@ -321,6 +357,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>contentType</code>.</p>
+     *
      * @param contentType set the contentType
      */
     public void setContentType(String contentType) {
@@ -328,6 +366,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>deisotoped</code>.</p>
+     *
      * @return Returns the deisotoped.
      */
     public int getDeisotoped() {
@@ -335,6 +375,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>deisotoped</code>.</p>
+     *
      * @param deisotoped The deisotoped to set.
      */
     public void setDeisotoped(int deisotoped) {
@@ -342,6 +384,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>endMz</code>.</p>
+     *
      * @return Returns the endMz.
      */
     public float getEndMz() {
@@ -349,6 +393,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>endMz</code>.</p>
+     *
      * @param endMz The endMz to set.
      */
     public void setEndMz(float endMz) {
@@ -356,6 +402,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>filterLine</code>.</p>
+     *
      * @return Returns the filterLine.
      */
     public String getFilterLine() {
@@ -363,13 +411,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param filterLine
+     * <p>Setter for the field <code>filterLine</code>.</p>
+     *
+     * @param filterLine a {@link java.lang.String} object.
      */
     public void setFilterLine(String filterLine) {
         this.filterLine = filterLine;
     }
 
     /**
+     * <p>Getter for the field <code>highMz</code>.</p>
+     *
      * @return Returns the highMz.
      */
     public float getHighMz() {
@@ -377,6 +429,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>highMz</code>.</p>
+     *
      * @param highMz The highMz to set.
      */
     public void setHighMz(float highMz) {
@@ -384,6 +438,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>ionisationEnergy</code>.</p>
+     *
      * @return Returns the ionisationEnergy.
      */
     public float getIonisationEnergy() {
@@ -391,6 +447,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>ionisationEnergy</code>.</p>
+     *
      * @param ionisationEnergy The ionisationEnergy to set.
      */
     public void setIonisationEnergy(float ionisationEnergy) {
@@ -398,6 +456,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>lowMz</code>.</p>
+     *
      * @return Returns the lowMz.
      */
     public float getLowMz() {
@@ -405,6 +465,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>lowMz</code>.</p>
+     *
      * @param lowMz The lowMz to set.
      */
     public void setLowMz(float lowMz) {
@@ -412,6 +474,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>msLevel</code>.</p>
+     *
      * @return Returns the msLevel.
      */
     public int getMsLevel() {
@@ -419,6 +483,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>msLevel</code>.</p>
+     *
      * @param msLevel The msLevel to set.
      */
     public void setMsLevel(int msLevel) {
@@ -426,6 +492,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>num</code>.</p>
+     *
      * @return Returns the num.
      */
     public int getNum() {
@@ -433,6 +501,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>num</code>.</p>
+     *
      * @param num The num to set.
      */
     public void setNum(int num) {
@@ -440,6 +510,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>peaksCount</code>.</p>
+     *
      * @return Returns the peaksCount.
      */
     public int getPeaksCount() {
@@ -447,6 +519,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>peaksCount</code>.</p>
+     *
      * @param peaksCount The peaksCount to set.
      */
     public void setPeaksCount(int peaksCount) {
@@ -454,6 +528,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>polarity</code>.</p>
+     *
      * @return Returns the polarity.
      */
     public String getPolarity() {
@@ -461,6 +537,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>polarity</code>.</p>
+     *
      * @param polarity The polarity to set.
      */
     public void setPolarity(String polarity) {
@@ -468,6 +546,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>precision</code>.</p>
+     *
      * @return Returns the precision.
      */
     public int getPrecision() {
@@ -475,6 +555,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>precision</code>.</p>
+     *
      * @param precision The precision to set.
      */
     public void setPrecision(int precision) {
@@ -482,6 +564,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>precursorCharge</code>.</p>
+     *
      * @return Returns the precursorCharge.
      */
     public int getPrecursorCharge() {
@@ -489,6 +573,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>precursorCharge</code>.</p>
+     *
      * @param precursorCharge The precursorCharge to set.
      */
     public void setPrecursorCharge(int precursorCharge) {
@@ -496,6 +582,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>precursorMz</code>.</p>
+     *
      * @return Returns the precursorMz.
      */
     public float getPrecursorMz() {
@@ -503,6 +591,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>precursorMz</code>.</p>
+     *
      * @param precursorMz The precursorMz to set.
      */
     public void setPrecursorMz(float precursorMz) {
@@ -510,6 +600,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>precursorScanNum</code>.</p>
+     *
      * @return Returns the precursorScanNum.
      */
     public int getPrecursorScanNum() {
@@ -517,6 +609,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>precursorScanNum</code>.</p>
+     *
      * @param precursorScanNum The precursorScanNum to set.
      */
     public void setPrecursorScanNum(int precursorScanNum) {
@@ -524,14 +618,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @return Returns the precursorIntensity
+     * <p>Getter for the field <code>precursorIntensity</code>.</p>
      *
+     * @return Returns the precursorIntensity
      */
     public float getPrecursorIntensity() {
         return precursorIntensity;
     }
 
     /**
+     * <p>Setter for the field <code>precursorIntensity</code>.</p>
+     *
      * @param precursorIntensity The precursorIntensity to set
      */
     public void setPrecursorIntensity(float precursorIntensity) {
@@ -539,6 +636,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>retentionTime</code>.</p>
+     *
      * @return Returns the retentionTime.
      */
     public String getRetentionTime() {
@@ -546,6 +645,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>retentionTime</code>.</p>
+     *
      * @param retentionTime The retentionTime to set.
      */
     public void setRetentionTime(String retentionTime) {
@@ -555,16 +656,25 @@ public class ScanHeader implements Serializable {
     /**
      *
      * The retentionTime for mzML.
+     *
+     * @return a double.
      */
     public double getRT() {
         return rt;
     }
 
+    /**
+     * <p>setRT.</p>
+     *
+     * @param rt a double.
+     */
     public void setRT(double rt) {
         this.rt = rt;
     }
 
     /**
+     * <p>Getter for the field <code>scanType</code>.</p>
+     *
      * @return Returns the scanType.
      */
     public String getScanType() {
@@ -572,6 +682,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>scanType</code>.</p>
+     *
      * @param scanType The scanType to set.
      */
     public void setScanType(String scanType) {
@@ -579,6 +691,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>startMz</code>.</p>
+     *
      * @return Returns the startMz.
      */
     public float getStartMz() {
@@ -586,6 +700,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>startMz</code>.</p>
+     *
      * @param startMz The startMz to set.
      */
     public void setStartMz(float startMz) {
@@ -593,6 +709,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>totIonCurrent</code>.</p>
+     *
      * @return Returns the totIonCurrent.
      */
     public float getTotIonCurrent() {
@@ -600,12 +718,19 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>totIonCurrent</code>.</p>
+     *
      * @param totIonCurrent The totIonCurrent to set.
      */
     public void setTotIonCurrent(float totIonCurrent) {
         this.totIonCurrent = totIonCurrent;
     }
 
+    /**
+     * <p>getDoubleRetentionTime.</p>
+     *
+     * @return a double.
+     */
     public double getDoubleRetentionTime() {
         // TODO: more robust ISO time conversion?
         if (retentionTime.charAt(0) != 'P'
@@ -621,6 +746,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>massPrecision</code>.</p>
+     *
      * @return massPrecision
      */
     public int getMassPrecision() {
@@ -628,6 +755,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Setter for the field <code>massPrecision</code>.</p>
+     *
      * @param massPrecision to set
      */
     public void setMassPrecision(int massPrecision) {
@@ -635,6 +764,8 @@ public class ScanHeader implements Serializable {
     }
 
     /**
+     * <p>Getter for the field <code>massCompressionType</code>.</p>
+     *
      * @return massCompressionType
      */
     public String getMassCompressionType() {
@@ -642,13 +773,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param massCompressionType
+     * <p>Setter for the field <code>massCompressionType</code>.</p>
+     *
+     * @param massCompressionType a {@link java.lang.String} object.
      */
     public void setMassCompressionType(String massCompressionType) {
         this.massCompressionType = massCompressionType;
     }
 
     /**
+     * <p>Getter for the field <code>massCompressedLen</code>.</p>
+     *
      * @return massCompressionLen
      */
     public int getMassCompressedLen() {
@@ -656,13 +791,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param massCompressedLen
+     * <p>Setter for the field <code>massCompressedLen</code>.</p>
+     *
+     * @param massCompressedLen a int.
      */
     public void setMassCompressedLen(int massCompressedLen) {
         this.massCompressedLen = massCompressedLen;
     }
 
     /**
+     * <p>Getter for the field <code>intenPrecision</code>.</p>
+     *
      * @return intenPrecision
      */
     public int getIntenPrecision() {
@@ -670,13 +809,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param intenPrecision
+     * <p>Setter for the field <code>intenPrecision</code>.</p>
+     *
+     * @param intenPrecision a int.
      */
     public void setIntenPrecision(int intenPrecision) {
         this.intenPrecision = intenPrecision;
     }
 
     /**
+     * <p>Getter for the field <code>intenCompressionType</code>.</p>
+     *
      * @return intenCompressionType
      */
     public String getIntenCompressionType() {
@@ -684,13 +827,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param intenCompressionType
+     * <p>Setter for the field <code>intenCompressionType</code>.</p>
+     *
+     * @param intenCompressionType a {@link java.lang.String} object.
      */
     public void setIntenCompressionType(String intenCompressionType) {
         this.intenCompressionType = intenCompressionType;
     }
 
     /**
+     * <p>Getter for the field <code>intenCompressedLen</code>.</p>
+     *
      * @return intenCompressedLen
      */
     public int getIntenCompressedLen() {
@@ -698,13 +845,17 @@ public class ScanHeader implements Serializable {
     }
 
     /**
-     * @param intenCompressedLen
+     * <p>Setter for the field <code>intenCompressedLen</code>.</p>
+     *
+     * @param intenCompressedLen a int.
      */
     public void setIntenCompressedLen(int intenCompressedLen) {
         this.intenCompressedLen = intenCompressedLen;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * String respresentation of a ScanHeader object.
      *
      * Note: This is most likely not an optimal way to build the string.
@@ -760,10 +911,20 @@ public class ScanHeader implements Serializable {
         return (tmpStrBuffer.toString());
     }
 
+    /**
+     * <p>Getter for the field <code>scanOffset</code>.</p>
+     *
+     * @return a long.
+     */
     public long getScanOffset() {
         return scanOffset;
     }
 
+    /**
+     * <p>Setter for the field <code>scanOffset</code>.</p>
+     *
+     * @param scanOffset a long.
+     */
     public void setScanOffset(long scanOffset) {
         this.scanOffset = scanOffset;
     }

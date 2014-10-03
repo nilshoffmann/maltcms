@@ -39,9 +39,10 @@ import java.util.List;
 import maltcms.datastructures.quadTree.distances.PerpendicularDistance;
 
 /**
+ * <p>QuadTreeNode class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class QuadTreeNode<T> {
 
@@ -52,6 +53,17 @@ public class QuadTreeNode<T> {
     private final int capacity;
     private final int level;
 
+    /**
+     * <p>Constructor for QuadTreeNode.</p>
+     *
+     * @param originX a double.
+     * @param originY a double.
+     * @param width a double.
+     * @param height a double.
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param capacity a int.
+     * @param level a int.
+     */
     public QuadTreeNode(double originX, double originY, double width, double height, Tuple2D<Point2D, T> t, int capacity, int level) {
         this.capacity = capacity;
         this.t = new ArrayList<>(this.capacity);
@@ -64,6 +76,14 @@ public class QuadTreeNode<T> {
         this.s = "Node[" + level + "] x:" + this.r.x + ", y:" + this.r.y + ", width:" + this.r.width + ", height:" + this.r.height;
     }
 
+    /**
+     * <p>getClosestChildrenPerpendicularToLine.</p>
+     *
+     * @param children a {@link java.util.List} object.
+     * @param l a {@link java.awt.geom.Line2D} object.
+     * @param distance a double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getClosestChildrenPerpendicularToLine(List<Tuple2D<Point2D, T>> children, Line2D l, double distance) {
         PerpendicularDistance pd = new PerpendicularDistance();
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
@@ -93,6 +113,14 @@ public class QuadTreeNode<T> {
         return children;
     }
 
+    /**
+     * <p>getChildrenInRadius.</p>
+     *
+     * @param children a {@link java.util.List} object.
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param radius a double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getChildrenInRadius(List<Tuple2D<Point2D, T>> children, Point2D p, double radius) {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
@@ -137,6 +165,13 @@ public class QuadTreeNode<T> {
         return dist;
     }
 
+    /**
+     * <p>getChildrenInRange.</p>
+     *
+     * @param r a {@link java.awt.geom.Rectangle2D} object.
+     * @return a {@link java.util.List} object.
+     * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
+     */
     public List<Tuple2D<Point2D, T>> getChildrenInRange(Rectangle2D r) throws ElementNotFoundException {
         if (!r.intersects(getArea())) {
             return Collections.emptyList();
@@ -162,6 +197,14 @@ public class QuadTreeNode<T> {
         return l;
     }
 
+    /**
+     * <p>getClosestChild.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param radius a double.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
+     */
     public Tuple2D<Point2D, T> getClosestChild(Point2D p, double radius) throws ElementNotFoundException {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
@@ -218,6 +261,13 @@ public class QuadTreeNode<T> {
         throw new ElementNotFoundException();
     }
 
+    /**
+     * <p>getChild.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @return a T object.
+     * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
+     */
     public T getChild(Point2D p) throws ElementNotFoundException {
         //System.out.println("Querying node "+toString()+ " for point: "+p.toString());
         if (this.t != null) {//this node has no children yet
@@ -245,11 +295,18 @@ public class QuadTreeNode<T> {
         throw new ElementNotFoundException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.s;
     }
 
+    /**
+     * <p>contains.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @return a boolean.
+     */
     public boolean contains(Point2D p) {
         if (this.r.contains(p)) {
             return true;
@@ -257,6 +314,12 @@ public class QuadTreeNode<T> {
         return false;
     }
 
+    /**
+     * <p>remove.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @return a T object.
+     */
     public T remove(Point2D p) {
         if (!contains(p)) {
             return null;
@@ -285,6 +348,12 @@ public class QuadTreeNode<T> {
         return node.remove(p);
     }
 
+    /**
+     * <p>addChild.</p>
+     *
+     * @param tpl a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @return a {@link maltcms.datastructures.quadTree.QuadTreeNode} object.
+     */
     public QuadTreeNode<T> addChild(Tuple2D<Point2D, T> tpl) {
         if (!contains(tpl.getFirst())) {
             //System.out.println("Node does not contain element, not adding!");
@@ -348,6 +417,11 @@ public class QuadTreeNode<T> {
         }
     }
 
+    /**
+     * <p>getArea.</p>
+     *
+     * @return a {@link java.awt.geom.Rectangle2D} object.
+     */
     public Rectangle2D getArea() {
         return this.r;
     }
@@ -371,10 +445,20 @@ public class QuadTreeNode<T> {
         return q;
     }
 
+    /**
+     * <p>getImmediateChildren.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getImmediateChildren() {
         return this.t;
     }
 
+    /**
+     * <p>Getter for the field <code>children</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<QuadTreeNode<T>> getChildren() {
         return this.children;
     }

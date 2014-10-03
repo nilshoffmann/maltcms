@@ -42,15 +42,21 @@ import java.util.ServiceLoader;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>Ridge class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 public class Ridge implements Comparable<Ridge> {
 
     private List<Tuple2D<Point2D, Double>> ridgePoints;
 
+    /**
+     * <p>Getter for the field <code>ridgePoints</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, Double>> getRidgePoints() {
         return ridgePoints;
     }
@@ -60,14 +66,30 @@ public class Ridge implements Comparable<Ridge> {
     private int maximumIndex = 0;
     private String classLabel = "NN";
 
+    /**
+     * <p>Getter for the field <code>classLabel</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getClassLabel() {
         return classLabel;
     }
 
+    /**
+     * <p>Setter for the field <code>classLabel</code>.</p>
+     *
+     * @param classLabel a {@link java.lang.String} object.
+     */
     public void setClassLabel(String classLabel) {
         this.classLabel = classLabel;
     }
 
+    /**
+     * <p>Constructor for Ridge.</p>
+     *
+     * @param seed a {@link java.awt.geom.Point2D} object.
+     * @param seedVal a double.
+     */
     public Ridge(Point2D seed, double seedVal) {
         this.globalScanIndex = (int) seed.getX();
         this.ridgePoints = new LinkedList<>();
@@ -75,18 +97,34 @@ public class Ridge implements Comparable<Ridge> {
         gp.moveTo(seed.getX(), seed.getY());
     }
 
+    /**
+     * <p>Getter for the field <code>globalScanIndex</code>.</p>
+     *
+     * @return a int.
+     */
     public int getGlobalScanIndex() {
         return this.globalScanIndex;
     }
 
+    /**
+     * <p>getIndexOfMaximum.</p>
+     *
+     * @return a int.
+     */
     public int getIndexOfMaximum() {
         return this.maximumIndex;
     }
 
+    /**
+     * <p>getSize.</p>
+     *
+     * @return a int.
+     */
     public int getSize() {
         return this.ridgePoints.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "first: " + ridgePoints.get(0) + " last: "
@@ -96,6 +134,11 @@ public class Ridge implements Comparable<Ridge> {
                 + ridgePoints.get(getIndexOfMaximum()).getSecond();
     }
 
+    /**
+     * <p>draw.</p>
+     *
+     * @param g a {@link java.awt.Graphics2D} object.
+     */
     public void draw(Graphics2D g) {
         Color c = g.getColor();
         g.setColor(Color.RED);
@@ -104,6 +147,11 @@ public class Ridge implements Comparable<Ridge> {
     }
     private static List<IRidgeCost> ridgeCosts = null;
 
+    /**
+     * <p>getAvailableRidgeCostClasses.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public static List<IRidgeCost> getAvailableRidgeCostClasses() {
         if (ridgeCosts == null) {
             ServiceLoader<IRidgeCost> sl = ServiceLoader.load(IRidgeCost.class);
@@ -126,10 +174,20 @@ public class Ridge implements Comparable<Ridge> {
         return ridgeCosts;
     }
 
+    /**
+     * <p>getRidgeCost.</p>
+     *
+     * @return a double.
+     */
     public double getRidgeCost() {
         return getRidgeCosts().get(0).getSecond();
     }
 
+    /**
+     * <p>Getter for the field <code>ridgeCosts</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<String, Double>> getRidgeCosts() {
         List<IRidgeCost> l = getAvailableRidgeCostClasses();
         List<Tuple2D<String, Double>> d = new ArrayList<>(l.size());
@@ -139,6 +197,14 @@ public class Ridge implements Comparable<Ridge> {
         return d;
     }
 
+    /**
+     * <p>addPoint.</p>
+     *
+     * @param scaleDiff a int.
+     * @param scaleIdx a int.
+     * @param nextScale an array of double.
+     * @return a boolean.
+     */
     public boolean addPoint(int scaleDiff, int scaleIdx, double[] nextScale) {
         if (scaleIdx > this.ridgePoints.size()) {
             return false;
@@ -241,6 +307,7 @@ public class Ridge implements Comparable<Ridge> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(Ridge o) {
         double response = getRidgePoints().get(0).getSecond();

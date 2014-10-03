@@ -40,7 +40,7 @@ import ucar.ma2.Array;
  * Specialization for TICs.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class TICWarpInput implements IWarpInput {
 
@@ -50,6 +50,12 @@ public class TICWarpInput implements IWarpInput {
     private IFileFragment queryFile = null;
     private Tuple2D<List<Array>, List<Array>> tuple = null;
 
+    /**
+     * <p>Constructor for TICWarpInput.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     */
     public TICWarpInput(final IFileFragment ff, final IWorkflow iw) {
         this.path = MaltcmsTools.getWarpPath(ff);
         this.refFile = FragmentTools.getLHSFile(ff);
@@ -61,31 +67,37 @@ public class TICWarpInput implements IWarpInput {
                                 this.refFile, this.queryFile));
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getAlgorithm() {
         return "TIC";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> getArrays() {
         return this.tuple;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getFileFragment() {
         return this.targetFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Tuple2DI> getPath() {
         return this.path;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getQueryFileFragment() {
         return this.queryFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getReferenceFileFragment() {
         return this.refFile;

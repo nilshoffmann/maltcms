@@ -98,7 +98,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "spectrumSettingsType", propOrder = {"acqSpecification",
@@ -384,8 +385,7 @@ public class SpectrumSettingsType implements Serializable {
     /**
      * Gets the value of the acqSpecification property.
      *
-     * @return possible object is {@link SpectrumSettingsType.AcqSpecification }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.SpectrumSettingsType.AcqSpecification}
      */
     public SpectrumSettingsType.AcqSpecification getAcqSpecification() {
         return this.acqSpecification;
@@ -395,8 +395,7 @@ public class SpectrumSettingsType implements Serializable {
      * Gets the value of the spectrumInstrument property.
      *
      * @return possible object is
-     *         {@link SpectrumSettingsType.SpectrumInstrument }
-     *
+     *         {@link maltcms.io.xml.mzData.SpectrumSettingsType.SpectrumInstrument}
      */
     public SpectrumSettingsType.SpectrumInstrument getSpectrumInstrument() {
         return this.spectrumInstrument;
@@ -406,8 +405,7 @@ public class SpectrumSettingsType implements Serializable {
      * Sets the value of the acqSpecification property.
      *
      * @param value allowed object is
-     *              {@link SpectrumSettingsType.AcqSpecification }
-     *
+     *              {@link maltcms.io.xml.mzData.SpectrumSettingsType.AcqSpecification}
      */
     public void setAcqSpecification(
             final SpectrumSettingsType.AcqSpecification value) {
@@ -418,8 +416,7 @@ public class SpectrumSettingsType implements Serializable {
      * Sets the value of the spectrumInstrument property.
      *
      * @param value allowed object is
-     *              {@link SpectrumSettingsType.SpectrumInstrument }
-     *
+     *              {@link maltcms.io.xml.mzData.SpectrumSettingsType.SpectrumInstrument}
      */
     public void setSpectrumInstrument(
             final SpectrumSettingsType.SpectrumInstrument value) {

@@ -51,8 +51,10 @@ import ucar.ma2.MAMath;
 import ucar.ma2.Range;
 
 /**
+ * <p>ModulationTimeEstimatorTask class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -63,19 +65,17 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
     private int numberOfScans = 5000;
     private int offset = 0;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public Double call() {
         return estimateModulationTime(new FileFragment(input));
     }
 
     /**
+     * <p>estimateModulationTime.</p>
      *
-     * @param source
-     * @return
+     * @param source a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a double.
      */
     protected double estimateModulationTime(final IFileFragment source) {
         IVariableFragment totalIntensity = source.getChild("total_intensity",
@@ -118,9 +118,9 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
      * the same shape as a, and an array maximaDiff, which contains all
      * differences between maxima, of size (#of maxima - 1).
      *
-     * @param a
-     * @param maximaIndices
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param maximaIndices a {@link java.util.ArrayList} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public Tuple2D<ArrayDouble.D1, ArrayInt.D1> findMaxima(
             final Array a, final ArrayList<Integer> maximaIndices) {
@@ -181,11 +181,12 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
     }
 
     /**
+     * <p>isCandidate.</p>
      *
-     * @param prev
-     * @param current
-     * @param next
-     * @return
+     * @param prev a double.
+     * @param current a double.
+     * @param next a double.
+     * @return a boolean.
      */
     public boolean isCandidate(final double prev, final double current,
             final double next) {
@@ -195,12 +196,13 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
     }
 
     /**
+     * <p>calcEstimatedAutoCorrelation.</p>
      *
-     * @param a
-     * @param mean
-     * @param variance
-     * @param lag
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param mean a double.
+     * @param variance a double.
+     * @param lag a int.
+     * @return a double.
      */
     public double calcEstimatedAutoCorrelation(final Array a,
             final double mean, final double variance, final int lag) {

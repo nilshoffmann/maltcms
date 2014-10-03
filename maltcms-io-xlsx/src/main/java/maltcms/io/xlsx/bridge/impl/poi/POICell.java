@@ -32,19 +32,23 @@ import maltcms.io.xlsx.bridge.ICell;
 import org.apache.poi.ss.usermodel.Cell;
 
 /**
+ * <p>POICell class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Data
 public class POICell implements ICell {
 
     private final Cell cell;
 
+    /** {@inheritDoc} */
     @Override
     public String stringValue() {
         return cell.getStringCellValue();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double doubleValue() {
         return cell.getNumericCellValue();

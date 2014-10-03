@@ -33,25 +33,75 @@ import java.awt.Point;
  * Interface representing a 2-dimensional chromatogram.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
 
+    /**
+     * <p>getScan2D.</p>
+     *
+     * @param globalScan a int.
+     * @param localScan a int.
+     * @return a {@link maltcms.datastructures.ms.IScan2D} object.
+     */
     public IScan2D getScan2D(int globalScan, int localScan);
 
+    /**
+     * <p>getNumberOfModulations.</p>
+     *
+     * @return a int.
+     */
     public int getNumberOfModulations();
 
+    /**
+     * <p>getNumberOfScansPerModulation.</p>
+     *
+     * @return a int.
+     */
     public int getNumberOfScansPerModulation();
 
+    /**
+     * <p>getNumberOf2DScans.</p>
+     *
+     * @return a int.
+     */
     public int getNumberOf2DScans();
 
+    /**
+     * <p>getModulationDuration.</p>
+     *
+     * @return a double.
+     */
     public double getModulationDuration();
 
+    /**
+     * <p>getSecondColumnScanAcquisitionTimeUnit.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getSecondColumnScanAcquisitionTimeUnit();
 
+    /**
+     * <p>getPointFor.</p>
+     *
+     * @param scan a int.
+     * @return a {@link java.awt.Point} object.
+     */
     public Point getPointFor(int scan);
 
+    /**
+     * <p>getPointFor.</p>
+     *
+     * @param scan_acquisition_time a double.
+     * @return a {@link java.awt.Point} object.
+     */
     public Point getPointFor(double scan_acquisition_time);
 
+    /**
+     * <p>subsetByMsLevel.</p>
+     *
+     * @param msLevel a short.
+     * @return a {@link java.lang.Iterable} object.
+     */
     public Iterable<IScan2D> subsetByMsLevel(short msLevel);
 }

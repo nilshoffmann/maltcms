@@ -31,6 +31,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>MNumRangePredicate class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MNumRangePredicate extends MetabolitePredicate {
 
     /**
@@ -39,12 +45,20 @@ public class MNumRangePredicate extends MetabolitePredicate {
     private static final long serialVersionUID = 4384503672151011994L;
     private Number lB, uB;
 
+    /**
+     * <p>Constructor for MNumRangePredicate.</p>
+     *
+     * @param lowerBound a {@link java.lang.Number} object.
+     * @param upperBound a {@link java.lang.Number} object.
+     * @param value a {@link java.lang.reflect.Method} object.
+     */
     public MNumRangePredicate(Number lowerBound, Number upperBound, Method value) {
         this.lB = lowerBound;
         this.uB = upperBound;
         setMethodOnTargetType(value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite met) {
         try {

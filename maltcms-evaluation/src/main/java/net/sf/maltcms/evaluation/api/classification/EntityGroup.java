@@ -40,15 +40,18 @@ import maltcms.datastructures.array.IFeatureVector;
  * A group of Entity objects which all share the same class label, meaning they
  * are grouped by some algorithm as related entities.
  *
- *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityGroup>, Serializable {
 
     private final HashMap<Category, Entity<T>> categoryToEntityMap;
 
+    /**
+     * <p>Constructor for EntityGroup.</p>
+     *
+     * @param e a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     */
     public EntityGroup(Entity<T>... e) {
         categoryToEntityMap = new HashMap<>();
         for (Entity<T> ent : e) {
@@ -56,6 +59,12 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         }
     }
 
+    /**
+     * <p>subGroup.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
+     */
     public EntityGroup<T> subGroup(Category... c) {
         List<Entity<T>> entities = new ArrayList<>(c.length);
         for (Category cat : c) {
@@ -65,6 +74,12 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         return eg;
     }
 
+    /**
+     * <p>addEntity.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @param e a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     */
     public void addEntity(Category c, Entity<T> e) {
         if (this.categoryToEntityMap.containsKey(c)) {
             System.err.println("Element with key " + c + " already contained in EntityGroup!");
@@ -72,18 +87,35 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         this.categoryToEntityMap.put(c, e);
     }
 
+    /**
+     * <p>getEntities.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity<T>> getEntities() {
         return new ArrayList<>(categoryToEntityMap.values());
     }
 
+    /**
+     * <p>getEntityForCategory.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     */
     public Entity<T> getEntityForCategory(Category c) {
         return categoryToEntityMap.get(c);
     }
 
+    /**
+     * <p>getCategories.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Category> getCategories() {
         return categoryToEntityMap.keySet();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -99,6 +131,7 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         return header.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -106,6 +139,7 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -121,6 +155,7 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(EntityGroup o) {
         if (equals(o)) {

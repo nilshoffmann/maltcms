@@ -30,8 +30,10 @@ package net.sf.maltcms.evaluation.api;
 import java.io.Serializable;
 
 /**
+ * <p>IPostProcessor interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPostProcessor extends Serializable {
 }

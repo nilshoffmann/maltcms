@@ -65,6 +65,7 @@ import ucar.ma2.MAMath.MinMax;
  * Calculates pairwise scores or costs between time series of different lengths.
  *
  * @author Nils Hoffmann
+ * 
  */
 @ProvidesVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
@@ -88,6 +89,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
      *
      * @see maltcms.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         return pairwiseDistances(t, this);
@@ -113,6 +115,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
      * @seemaltcms.IConfigurable#configure(org.apache.commons.configuration.
      * Configuration)
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.minArrayComp = cfg.getString("var.minimizing_array_comp",
@@ -123,10 +126,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
                 + ".pwdExtension", "");
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Calculates pairwise distances/similarities between time series.";
@@ -137,10 +137,7 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.STATISTICS;
@@ -196,10 +193,11 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     }
 
     /**
+     * <p>pairwiseDistances.</p>
      *
-     * @param t
-     * @param pdc
-     * @return
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     * @param pdc a {@link maltcms.commands.fragments.cluster.PairwiseDistanceCalculator} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
      */
     protected TupleND<IFileFragment> pairwiseDistances(
             final TupleND<IFileFragment> t, final PairwiseDistanceCalculator pdc) {
@@ -317,10 +315,11 @@ public class PairwiseDistanceCalculator extends AFragmentCommand {
     }
 
     /**
+     * <p>saveToCSV.</p>
      *
-     * @param pwdist
-     * @param distances
-     * @param names
+     * @param pwdist a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param distances a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @param names a {@link ucar.ma2.ArrayChar.D2} object.
      */
     public void saveToCSV(final IFileFragment pwdist,
             final ArrayDouble.D2 distances, final ArrayChar.D2 names) {

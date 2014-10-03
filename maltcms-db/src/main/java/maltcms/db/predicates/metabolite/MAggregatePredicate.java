@@ -40,7 +40,7 @@ import maltcms.datastructures.ms.IMetabolite;
  * Metabolite (return true for evalOn).
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class MAggregatePredicate extends MetabolitePredicate {
 
@@ -51,12 +51,17 @@ public class MAggregatePredicate extends MetabolitePredicate {
     private Collection<MetabolitePredicate> mpl;
 
     /**
-     * @param mpl
+     * <p>Constructor for MAggregatePredicate.</p>
+     *
+     * @param mpl a {@link java.util.Collection} object.
      */
     public MAggregatePredicate(Collection<MetabolitePredicate> mpl) {
         this.mpl = mpl;
     }
 
+    /**
+     * <p>Constructor for MAggregatePredicate.</p>
+     */
     public MAggregatePredicate() {
         this.mpl = new ArrayList<>();
         this.mpl.add(new MetabolitePredicate() {
@@ -75,6 +80,7 @@ public class MAggregatePredicate extends MetabolitePredicate {
     /* (non-Javadoc)
      * @see com.db4o.query.Predicate#match(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite arg0) {
         //System.out.println("Match called!");

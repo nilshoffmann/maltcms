@@ -36,8 +36,10 @@ import maltcms.tools.ImageTools;
 import ucar.ma2.ArrayDouble;
 
 /**
- * @author Nils Hoffmann
+ * <p>ImagePanel class.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 public class ImagePanel extends JPanel {
 
@@ -47,6 +49,13 @@ public class ImagePanel extends JPanel {
     private static final long serialVersionUID = 4300139196647706338L;
     private BufferedImage bi = null;
 
+    /**
+     * <p>setData.</p>
+     *
+     * @param mat an array of double.
+     * @param masses1 an array of double.
+     * @param masses2 an array of double.
+     */
     public void setData(final double[][] mat, final double[] masses1,
             final double[] masses2) {
         BufferedImage bi = new BufferedImage(mat[0].length, mat.length,
@@ -92,6 +101,7 @@ public class ImagePanel extends JPanel {
         this.bi = bi;
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

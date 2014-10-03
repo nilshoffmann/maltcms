@@ -31,7 +31,10 @@ import cross.datastructures.fragments.IFileFragment;
 import smueller.SymbolicRepresentationAlignment;
 
 /**
+ * <p>OneAffineAlignment class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class OneAffineAlignment extends Alignment {
 
@@ -41,9 +44,10 @@ public class OneAffineAlignment extends Alignment {
     private double[][] hor;
 
     /**
+     * <p>Constructor for OneAffineAlignment.</p>
      *
-     * @param ref1
-     * @param query1
+     * @param ref1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query1 a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public OneAffineAlignment(final IFileFragment ref1,
             final IFileFragment query1) {
@@ -52,11 +56,7 @@ public class OneAffineAlignment extends Alignment {
 
     // �berschriebene Methode zur Matrixberechnung, um affine Gapkosten nach
     // Gotoh zu ber�cksichtigen
-    /**
-     *
-     * @param u
-     * @param v
-     */
+    /** {@inheritDoc} */
     @Override
     public void computeMatrix(final String u, final String v) {
         this.seq1 = u;

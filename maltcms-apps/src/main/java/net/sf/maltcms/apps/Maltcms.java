@@ -78,9 +78,8 @@ import org.slf4j.Logger;
  * is read. Finally, the command-line arguments are evaluated, possibly
  * overriding default options.
  *
- *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class Maltcms implements Thread.UncaughtExceptionHandler {
@@ -89,16 +88,18 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     private boolean runGui = false;
 
     /**
+     * <p>isRunGui.</p>
      *
-     * @return
+     * @return a boolean.
      */
     public boolean isRunGui() {
         return this.runGui;
     }
 
     /**
+     * <p>Setter for the field <code>runGui</code>.</p>
      *
-     * @param runGui
+     * @param runGui a boolean.
      */
     public void setRunGui(boolean runGui) {
         this.runGui = runGui;
@@ -131,19 +132,20 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         int ecode;
         Maltcms.shutdown(1, log);
         log.error("Caught Throwable, returning to console!", npe);
-//        npe.printStackTrace(System.err);
         Maltcms.printBugTrackMessage(log, ics);
         ecode = 1;
         // Save configuration
-        Factory.dumpConfig("runtime.properties", ics.getWorkflow().
+        ics.getWorkflow().getFactory().
+                dumpConfig("runtime.properties",
+                        ics.getWorkflow().
                 getStartupDate());
         System.exit(ecode);
     }
 
     /**
-     * Application's main procedure.
+     * Maltcms' main procedure.
      *
-     * @param args what is passed in from the command-line, usually
+     * @param args what is passed in from the command-line
      */
     public static void main(final String[] args) {
         ThreadTimer tt = new ThreadTimer(5000);
@@ -281,9 +283,10 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * <p>printBugTrackMessage.</p>
      *
-     * @param log
-     * @param cs
+     * @param log a {@link org.slf4j.Logger} object.
+     * @param cs a {@link cross.datastructures.pipeline.ICommandSequence} object.
      */
     public static void printBugTrackMessage(final Logger log, final ICommandSequence cs) {
         StringBuilder sb = new StringBuilder();
@@ -327,7 +330,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     /**
      * Protected Ctor, override this class, to set your own command line
      * options.
-     *
      */
     protected Maltcms() {
         this.o = new Options();
@@ -394,12 +396,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * <p>addBooleanOption.</p>
      *
-     * @param s
-     * @param l
-     * @param descr
-     * @param required
-     * @return
+     * @param s a {@link java.lang.String} object.
+     * @param l a {@link java.lang.String} object.
+     * @param descr a {@link java.lang.String} object.
+     * @param required a boolean.
+     * @return a {@link org.apache.commons.cli.Option} object.
      */
     protected Option addBooleanOption(final String s, final String l,
             final String descr, final boolean required) {
@@ -460,8 +463,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
+     * <p>initClassLoader.</p>
      *
-     * @param urls
+     * @param urls an array of {@link java.lang.String} objects.
      */
     public void initClassLoader(String[] urls) {
         URL maltcmsLocation = getClass().getProtectionDomain().getCodeSource().
@@ -523,19 +527,24 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * org.apache.commons.cli.
      *
      * @param s
-     * @param l
-     * @param descr
      * @param sep
      * @param ssep
+     * @param l a {@link java.lang.String} object.
+     * @param descr a {@link java.lang.String} object.
+     * @param sep a boolean.
+     * @param ssep a char.
      * @param arg
      * @param args
-     * @param numArgs
+     * @param argname
+     * @param args a boolean.
+     * @param numArgs a int.
      * @param optional_arg
      * @param optional_args
-     * @param num_optional_args
-     * @param argname
-     * @param required
-     * @return
+     * @param optional_args a boolean.
+     * @param num_optional_args a int.
+     * @param argname a {@link java.lang.String} object.
+     * @param required a boolean.
+     * @return a {@link org.apache.commons.cli.Option} object.
      */
     protected Option addOption(final String s, final String l,
             final String descr, final boolean sep, final char ssep,
@@ -825,7 +834,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     /**
      * Simply print out all config options currently known
      *
-     * @param cfg
+     * @param cfg a {@link org.apache.commons.configuration.Configuration} object.
      */
     protected void printOptions(final Configuration cfg) {
         EvalTools.notNull(cfg, this);
@@ -838,8 +847,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * Prepares the String[] for input to <i>processVariableFragments</i>.
      * Evaluates the appropriate option.
      *
-     * @param s
-     * @param cfg
+     * @param s an array of {@link java.lang.String} objects.
+     * @param cfg a {@link org.apache.commons.configuration.Configuration} object.
      */
     public void processVariables(final String[] s, final Configuration cfg) {
         EvalTools.notNull(s, this);
@@ -866,11 +875,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang
      * .Thread, java.lang.Throwable)
      */
-    /**
-     *
-     * @param t
-     * @param e
-     */
+    /** {@inheritDoc} */
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
         Maltcms.handleRuntimeException(log, e, null);

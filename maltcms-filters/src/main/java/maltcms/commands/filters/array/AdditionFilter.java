@@ -39,7 +39,7 @@ import ucar.ma2.IndexIterator;
  * Add a given double to elements of an array.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -49,10 +49,18 @@ public class AdditionFilter extends AArrayFilter {
     @Configurable
     private double add = 0.0d;
 
+    /**
+     * <p>Constructor for AdditionFilter.</p>
+     */
     public AdditionFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for AdditionFilter.</p>
+     *
+     * @param add a double.
+     */
     public AdditionFilter(final double add) {
         this();
         this.aef = new AElementFilter() {
@@ -68,6 +76,7 @@ public class AdditionFilter extends AArrayFilter {
      *
      * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
      */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array b = super.apply(a);
@@ -80,6 +89,7 @@ public class AdditionFilter extends AArrayFilter {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.add = cfg.getDouble(this.getClass().getName() + ".add");
@@ -91,6 +101,7 @@ public class AdditionFilter extends AArrayFilter {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public AdditionFilter copy() {
         return new AdditionFilter(add);

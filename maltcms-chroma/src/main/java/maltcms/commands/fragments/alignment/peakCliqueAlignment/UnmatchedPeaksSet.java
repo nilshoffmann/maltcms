@@ -31,18 +31,33 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 /**
+ * <p>UnmatchedPeaksSet class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class UnmatchedPeaksSet extends LinkedHashSet<IBipacePeak> {
 
+    /**
+     * <p>Constructor for UnmatchedPeaksSet.</p>
+     *
+     * @param initialCapacity a int.
+     */
     public UnmatchedPeaksSet(int initialCapacity) {
         super(initialCapacity);
     }
 
+    /**
+     * <p>Constructor for UnmatchedPeaksSet.</p>
+     */
     public UnmatchedPeaksSet() {
     }
 
+    /**
+     * <p>Constructor for UnmatchedPeaksSet.</p>
+     *
+     * @param c a {@link java.util.Collection} object.
+     */
     public UnmatchedPeaksSet(Collection<? extends IBipacePeak> c) {
         super(c);
     }

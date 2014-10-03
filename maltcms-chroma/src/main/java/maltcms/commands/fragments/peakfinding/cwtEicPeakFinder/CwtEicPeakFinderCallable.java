@@ -59,9 +59,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
+ * <p>CwtEicPeakFinderCallable class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 @Slf4j
@@ -82,6 +83,7 @@ public class CwtEicPeakFinderCallable implements Callable<URI>, Serializable {
     @Configurable
     private double minPercentile = 5.0d;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -117,6 +119,7 @@ public class CwtEicPeakFinderCallable implements Callable<URI>, Serializable {
     private void setStartAndStopTimes(Peak1D peak, Ridge r) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public URI call() {
         Array values = Array.factory(eic);

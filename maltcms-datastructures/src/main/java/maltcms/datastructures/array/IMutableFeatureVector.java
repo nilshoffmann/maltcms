@@ -30,15 +30,18 @@ package maltcms.datastructures.array;
 import ucar.ma2.Array;
 
 /**
+ * <p>IMutableFeatureVector interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IMutableFeatureVector extends IFeatureVector {
 
     /**
+     * <p>addFeature.</p>
      *
-     * @param name
-     * @param a
+     * @param name a {@link java.lang.String} object.
+     * @param a a {@link ucar.ma2.Array} object.
      */
     public void addFeature(String name, Array a);
 }

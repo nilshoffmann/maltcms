@@ -57,8 +57,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 
 /**
+ * <p>PairwiseClassificationPerformanceTest class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVector> {
 
@@ -67,6 +69,13 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
     private final IFeatureVectorComparator ifvc;
     private final ChromaTOFPeakListEntityTable<T> peakTable;
 
+    /**
+     * <p>Constructor for PairwiseClassificationPerformanceTest.</p>
+     *
+     * @param peakTable a {@link net.sf.maltcms.evaluation.spi.classification.ChromaTOFPeakListEntityTable} object.
+     * @param groundTruth a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
+     * @param ifvc a {@link net.sf.maltcms.evaluation.api.classification.IFeatureVectorComparator} object.
+     */
     public PairwiseClassificationPerformanceTest(ChromaTOFPeakListEntityTable<T> peakTable, EntityGroupList<T> groundTruth, IFeatureVectorComparator ifvc) {
         this.peakTable = peakTable;
         this.groundTruth = groundTruth;
@@ -78,6 +87,13 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         this.ifvc = ifvc;
     }
 
+    /**
+     * <p>createMspaPairMap.</p>
+     *
+     * @param entities a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.Map} object.
+     */
     public static <T extends IFeatureVector> Map<String, EntityGroupList<T>> createMspaPairMap(EntityGroupList<T> entities) {
         Map<String, EntityGroupList<T>> m = new LinkedHashMap<>();
         int cnt = 0;
@@ -91,6 +107,13 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return m;
     }
 
+    /**
+     * <p>createPairMap.</p>
+     *
+     * @param entities a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.Map} object.
+     */
     public static <T extends IFeatureVector> Map<String, EntityGroupList<T>> createPairMap(EntityGroupList<T> entities) {
         Map<String, EntityGroupList<T>> m = new LinkedHashMap<>();
         int cnt = 0;
@@ -106,6 +129,11 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return m;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         EntityGroupBuilder egb = new EntityGroupBuilder();
         File[] files = FileUtils.listFiles(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/data/mSPA_Dataset_I/"), new String[]{"csv"}, false).toArray(new File[0]);
@@ -230,6 +258,12 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
 //		System.out.println(cpt.performTest("test", datal));
     }
 
+    /**
+     * <p>toArray.</p>
+     *
+     * @param c a {@link java.util.Collection} object.
+     * @return an array of double.
+     */
     public static double[] toArray(Collection<Number> c) {
         double[] values = new double[c.size()];
         Number[] numbers = c.toArray(new Number[c.size()]);
@@ -239,11 +273,22 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return values;
     }
 
+    /**
+     * <p>getPairwisePerformanceMetrics.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getPairwisePerformanceMetrics() {
         return null;
 
     }
 
+    /**
+     * <p>getNumberOfNonNulls.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @return a int.
+     */
     public int getNumberOfNonNulls(List<Entity<T>> l) {
         int n = 0;
         for (Entity<T> e : l) {
@@ -255,6 +300,15 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return n;
     }
 
+    /**
+     * <p>performPairTest.</p>
+     *
+     * @param toolName a {@link java.lang.String} object.
+     * @param instanceName a {@link java.lang.String} object.
+     * @param tool a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
+     * @param comparisonFeatureName a {@link java.lang.String} object.
+     * @return a {@link net.sf.maltcms.evaluation.spi.classification.PairwisePerformanceMetrics} object.
+     */
     public PairwisePerformanceMetrics performPairTest(String toolName, String instanceName, EntityGroupList<T> tool, String comparisonFeatureName) {
 
 //		d1.name = as.character(d1$name)
@@ -368,6 +422,14 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return ppm;
     }
 
+    /**
+     * <p>performTest.</p>
+     *
+     * @param toolName a {@link java.lang.String} object.
+     * @param toolGroups a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     public List<PairwisePerformanceMetrics> performTest(String toolName, EntityGroupList<T> toolGroups) throws IllegalArgumentException {
         //log.debug("Performing classification performance test for " + toolname);
         if (!checkCategories(this.groundTruth, toolGroups)) {
@@ -393,6 +455,13 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return pml;
     }
 
+    /**
+     * <p>checkCategories.</p>
+     *
+     * @param gt a {@link java.util.List} object.
+     * @param testGroup a {@link java.util.List} object.
+     * @return a boolean.
+     */
     public boolean checkCategories(List<EntityGroup<T>> gt, List<EntityGroup<T>> testGroup) {
         boolean check = false;
         int ncat = -1;
@@ -415,6 +484,13 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         return check;
     }
 
+    /**
+     * <p>checkCategories.</p>
+     *
+     * @param gt a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
+     * @param testGroup a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
+     * @return a boolean.
+     */
     public boolean checkCategories(EntityGroup<T> gt, EntityGroup<T> testGroup) {
         //categories need to be the same
         Set<Category> gtCats = gt.getCategories();

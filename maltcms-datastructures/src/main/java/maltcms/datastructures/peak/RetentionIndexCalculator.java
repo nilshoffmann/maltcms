@@ -32,10 +32,12 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.tools.ArrayTools;
 
 /**
- * @author Nils Hoffmann
+ * <p>RetentionIndexCalculator class.</p>
  *
+ * @author Nils Hoffmann
  * @deprecated since 1.3.1, please use
  * {@link net.sf.maltcms.db.search.api.ri.RetentionIndexCalculator}
+ * 
  */
 @Slf4j
 @Deprecated
@@ -44,6 +46,12 @@ public class RetentionIndexCalculator {
     private final double[] riRTs;
     private final int[] nCarbAtoms;
 
+    /**
+     * <p>Constructor for RetentionIndexCalculator.</p>
+     *
+     * @param numberOfCarbonAtoms an array of int.
+     * @param riPeaks a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public RetentionIndexCalculator(int[] numberOfCarbonAtoms,
             Peak1D... riPeaks) {
         riRTs = new double[riPeaks.length];
@@ -53,11 +61,23 @@ public class RetentionIndexCalculator {
         this.nCarbAtoms = numberOfCarbonAtoms;
     }
 
+    /**
+     * <p>Constructor for RetentionIndexCalculator.</p>
+     *
+     * @param numberOfCarbonAtoms an array of int.
+     * @param riRTs a double.
+     */
     public RetentionIndexCalculator(int[] numberOfCarbonAtoms, double... riRTs) {
         this.nCarbAtoms = numberOfCarbonAtoms;
         this.riRTs = riRTs;
     }
 
+    /**
+     * <p>getIsothermalKovatsIndex.</p>
+     *
+     * @param rt a double.
+     * @return a double.
+     */
     public double getIsothermalKovatsIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
@@ -126,6 +146,12 @@ public class RetentionIndexCalculator {
         }
     }
 
+    /**
+     * <p>getTemperatureProgrammedKovatsIndex.</p>
+     *
+     * @param rt a double.
+     * @return a double.
+     */
     public double getTemperatureProgrammedKovatsIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
@@ -169,6 +195,11 @@ public class RetentionIndexCalculator {
         return 100.0d * (n + ((N - n) * ratio(tr, trn, trN)));
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
                 int.class);

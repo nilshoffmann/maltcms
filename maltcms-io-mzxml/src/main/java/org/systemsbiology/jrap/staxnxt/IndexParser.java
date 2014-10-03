@@ -32,6 +32,9 @@ import javax.xml.stream.XMLStreamReader;
  * my changes for mzML 1.1 support -adding a debug flag for messages that
  * probably don't need to be displayed every time
  *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 public class IndexParser {
 
@@ -51,6 +54,11 @@ public class IndexParser {
     //a flag for verbose logging
     protected boolean debug = false;
 
+    /**
+     * <p>Constructor for IndexParser.</p>
+     *
+     * @param inputMZXMLfilename a {@link java.lang.String} object.
+     */
     public IndexParser(String inputMZXMLfilename) {
         this.inputMZXMLfilename = inputMZXMLfilename;
 
@@ -62,6 +70,11 @@ public class IndexParser {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>offsetMap</code>.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     public Map<Integer, Long> getOffsetMap() {
         if (debug) {
             System.out.println("offset size " + offsetMap.size());
@@ -70,6 +83,11 @@ public class IndexParser {
 
     }
 
+    /**
+     * <p>Getter for the field <code>chrogramIndex</code>.</p>
+     *
+     * @return a long.
+     */
     public long getChrogramIndex() {
         if (debug) {
             System.out.println("chrogramIndex " + chrogramIndex);
@@ -78,6 +96,11 @@ public class IndexParser {
 
     }
 
+    /**
+     * <p>Getter for the field <code>maxScan</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMaxScan() {
         if (debug) {
             System.out.println("maxScan " + maxScan);
@@ -139,6 +162,9 @@ public class IndexParser {
         return indexPosition;
     }
 
+    /**
+     * <p>parseIndexes.</p>
+     */
     public void parseIndexes() {
         FileInputStream fileIN = null;
         XMLStreamReader xmlSR = null;
@@ -255,8 +281,8 @@ public class IndexParser {
      * pair containing the scan number is "scan", so I'm knocking off everything
      * but that pair.
      *
-     * @param idString
-     * @return
+     * @param idString a {@link java.lang.String} object.
+     * @return a int.
      */
     protected int parseScanNumberFromOffsetIdrefField(String idString) {
         if (idString.contains("scan=")) {
@@ -268,10 +294,20 @@ public class IndexParser {
         return Integer.parseInt(idString);
     }
 
+    /**
+     * <p>isDebug.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isDebug() {
         return debug;
     }
 
+    /**
+     * <p>Setter for the field <code>debug</code>.</p>
+     *
+     * @param debug a boolean.
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }

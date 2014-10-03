@@ -62,7 +62,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "softwareType", propOrder = {"name", "version", "comments"})
@@ -81,8 +82,7 @@ public class SoftwareType implements Serializable {
     /**
      * Gets the value of the comments property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getComments() {
         return this.comments;
@@ -91,8 +91,7 @@ public class SoftwareType implements Serializable {
     /**
      * Gets the value of the completionTime property.
      *
-     * @return possible object is {@link XMLGregorianCalendar }
-     *
+     * @return possible object is {@link javax.xml.datatype.XMLGregorianCalendar}
      */
     public XMLGregorianCalendar getCompletionTime() {
         return this.completionTime;
@@ -101,8 +100,7 @@ public class SoftwareType implements Serializable {
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getName() {
         return this.name;
@@ -111,8 +109,7 @@ public class SoftwareType implements Serializable {
     /**
      * Gets the value of the version property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getVersion() {
         return this.version;
@@ -121,8 +118,7 @@ public class SoftwareType implements Serializable {
     /**
      * Sets the value of the comments property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setComments(final String value) {
         this.comments = value;
@@ -131,8 +127,7 @@ public class SoftwareType implements Serializable {
     /**
      * Sets the value of the completionTime property.
      *
-     * @param value allowed object is {@link XMLGregorianCalendar }
-     *
+     * @param value allowed object is {@link javax.xml.datatype.XMLGregorianCalendar}
      */
     public void setCompletionTime(final XMLGregorianCalendar value) {
         this.completionTime = value;
@@ -141,8 +136,7 @@ public class SoftwareType implements Serializable {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setName(final String value) {
         this.name = value;
@@ -151,8 +145,7 @@ public class SoftwareType implements Serializable {
     /**
      * Sets the value of the version property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setVersion(final String value) {
         this.version = value;

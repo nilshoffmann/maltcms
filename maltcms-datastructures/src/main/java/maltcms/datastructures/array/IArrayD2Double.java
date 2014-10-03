@@ -37,11 +37,12 @@ import ucar.ma2.ArrayInt;
  * Interface abstraction of 2-dimensional arrays storing double values.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IArrayD2Double extends Serializable {
 
     /**
+     * <p>columns.</p>
      *
      * @return the number of columns
      */
@@ -55,9 +56,10 @@ public interface IArrayD2Double extends Serializable {
     public abstract Tuple2D<ArrayInt.D1, ArrayDouble.D1> flatten();
 
     /**
+     * <p>get.</p>
      *
-     * @param row
-     * @param col
+     * @param row a int.
+     * @param col a int.
      * @return element if row and col are in valid range, otherwise returns
      * default value
      */
@@ -72,52 +74,62 @@ public interface IArrayD2Double extends Serializable {
     public abstract ArrayDouble.D2 getArray();
 
     /**
+     * <p>getColumnBounds.</p>
      *
-     * @param row
+     * @param row a int.
      * @return [lowest column in range, length of column]
      */
     public abstract int[] getColumnBounds(int row);
 
     /**
+     * <p>getDefaultValue.</p>
      *
      * @return the default value, e.g. 0, used for initialization
      */
     public abstract double getDefaultValue();
 
     /**
+     * <p>getNumberOfStoredElements.</p>
      *
      * @return the number of elements stored in this array
      */
     public abstract int getNumberOfStoredElements();
 
     /**
+     * <p>getShape.</p>
      *
      * @return the Area enclosed by this Array
      */
     public abstract Area getShape();
 
+    /**
+     * <p>inRange.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @return a boolean.
+     */
     public abstract boolean inRange(int i, int j);
 
     /**
+     * <p>rows.</p>
      *
      * @return the number of rows
      */
     public abstract int rows();
 
     /**
+     * <p>set.</p>
      *
-     * @param row
-     * @param col
+     * @param row a int.
+     * @param col a int.
      * @param d the value to be set at row,col
-     * @throws ArrayIndexOutOfBoundsException
+     * @throws java.lang.ArrayIndexOutOfBoundsException if any.
      */
     public abstract void set(int row, int col, double d)
             throws ArrayIndexOutOfBoundsException;
 
-    /**
-     *
-     * @return a string representation of this array
-     */
+    /** {@inheritDoc} */
     @Override
     public abstract String toString();
 }

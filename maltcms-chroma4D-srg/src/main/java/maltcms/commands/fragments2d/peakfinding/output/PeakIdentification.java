@@ -54,6 +54,7 @@ import ucar.ma2.IndexIterator;
  * Will do the identification.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -77,14 +78,13 @@ public class PeakIdentification implements IPeakIdentification {
 //    private ObjectSet<IMetabolite> dbMetabolites = null;
     private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<>();
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         // this.doDBSearch = cfg.getBoolean(this.getClass().getName()
@@ -109,9 +109,7 @@ public class PeakIdentification implements IPeakIdentification {
 //        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setName(final Peak2D peak) {
         if (this.dbFiles.isEmpty()) {

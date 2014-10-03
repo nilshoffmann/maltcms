@@ -55,7 +55,8 @@ import javax.xml.bind.annotation.XmlValue;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "peakListBinaryType", propOrder = {"data"})
@@ -190,8 +191,7 @@ public class PeakListBinaryType implements Serializable {
     /**
      * Gets the value of the data property.
      *
-     * @return possible object is {@link PeakListBinaryType.Data }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.PeakListBinaryType.Data}
      */
     public PeakListBinaryType.Data getData() {
         return this.data;
@@ -200,8 +200,7 @@ public class PeakListBinaryType implements Serializable {
     /**
      * Sets the value of the data property.
      *
-     * @param value allowed object is {@link PeakListBinaryType.Data }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.PeakListBinaryType.Data}
      */
     public void setData(final PeakListBinaryType.Data value) {
         this.data = value;

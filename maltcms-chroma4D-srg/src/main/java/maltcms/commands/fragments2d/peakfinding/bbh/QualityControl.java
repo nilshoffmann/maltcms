@@ -41,9 +41,24 @@ import org.apache.commons.math.distribution.NormalDistribution;
 import org.apache.commons.math.distribution.NormalDistributionImpl;
 
 @Slf4j
+/**
+ * <p>QualityControl class.</p>
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
+ */
 @Data
 public class QualityControl {
 
+    /**
+     * <p>calc.</p>
+     *
+     * @param pl1 a {@link java.util.List} object.
+     * @param pl2 a {@link java.util.List} object.
+     * @param bidibesthits a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Reliability> calc(List<Peak2D> pl1, List<Peak2D> pl2,
             List<List<Point>> bidibesthits) {
         Map<Integer, Integer> m = new HashMap<>();

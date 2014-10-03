@@ -40,12 +40,17 @@ import org.openide.util.lookup.ServiceProvider;
  * Implements UPGMA Algorithm by ? (cite ...) FIXME add citation
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @ServiceProvider(service = AFragmentCommand.class)
 public class UPGMAAlgorithm extends ClusteringAlgorithm {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(final String[] args) {
         // Examples from
         // http://evolution.genetics.washington.edu/phylip/doc/neighbor.html
@@ -201,14 +206,30 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
         // nja.iterator();
     }
 
+    /**
+     * <p>Constructor for UPGMAAlgorithm.</p>
+     */
     public UPGMAAlgorithm() {
         super();
     }
 
+    /**
+     * <p>Constructor for UPGMAAlgorithm.</p>
+     *
+     * @param distances an array of double.
+     * @param names an array of {@link java.lang.String} objects.
+     */
     public UPGMAAlgorithm(final double[][] distances, final String[] names) {
         init(distances, names, null);
     }
 
+    /**
+     * <p>Constructor for UPGMAAlgorithm.</p>
+     *
+     * @param distances an array of double.
+     * @param fragments a {@link cross.datastructures.tuple.TupleND} object.
+     * @param ld a {@link maltcms.commands.distances.PairwiseFeatureSequenceSimilarity} object.
+     */
     public UPGMAAlgorithm(final double[][] distances,
             final TupleND<IFileFragment> fragments,
             final PairwiseFeatureSequenceSimilarity ld) {
@@ -223,6 +244,7 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
         setLDF(ld);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double[] dmat(final int i, final int j, final int k) {
         final double[] dmat = new double[getNames().length];
@@ -250,6 +272,7 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void findBestD(final int numclust) {
         int i = -1;
@@ -292,6 +315,7 @@ public class UPGMAAlgorithm extends ClusteringAlgorithm {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void joinIJtoK(final int i, final int j, final int k,
             final double[] dist) {

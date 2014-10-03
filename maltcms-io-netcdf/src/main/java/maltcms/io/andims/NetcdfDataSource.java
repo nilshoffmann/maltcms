@@ -67,7 +67,7 @@ import ucar.nc2.dataset.NetcdfDataset;
  * the ANDI-MS/AIA standard.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -145,6 +145,7 @@ public class NetcdfDataSource implements IDataSource {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int canRead(final IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
@@ -162,6 +163,7 @@ public class NetcdfDataSource implements IDataSource {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
         // System.out.println("Configuration changed for property");
@@ -187,6 +189,7 @@ public class NetcdfDataSource implements IDataSource {
         // System.out.println(typeS);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration configuration) {
         NetcdfDataSource.minCachedFiles = configuration.getInt(
@@ -228,6 +231,14 @@ public class NetcdfDataSource implements IDataSource {
 
     }
 
+    /**
+     * <p>convert.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param v a {@link ucar.nc2.Variable} object.
+     * @param ivf a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @return a {@link cross.datastructures.fragments.IVariableFragment} object.
+     */
     public IVariableFragment convert(final IFileFragment ff, final Variable v,
             final IVariableFragment ivf) {
         final DataType dt = v.getDataType();
@@ -256,6 +267,13 @@ public class NetcdfDataSource implements IDataSource {
         return vf;
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param vf a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @return a {@link ucar.nc2.NetcdfFile} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     protected NetcdfFile get(final IVariableFragment vf)
             throws ResourceNotAvailableException {
 
@@ -276,8 +294,8 @@ public class NetcdfDataSource implements IDataSource {
     /**
      * Attributes are small metadata.
      *
-     * @param ff
-     * @param nf
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param nf a {@link ucar.nc2.NetcdfFile} object.
      */
     protected void loadAttributes(final IFileFragment ff, final NetcdfFile nf) {
         final List<?> attrs = nf.getGlobalAttributes();
@@ -304,6 +322,13 @@ public class NetcdfDataSource implements IDataSource {
         }
     }
 
+    /**
+     * <p>locateFile.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link ucar.nc2.NetcdfFile} object.
+     * @throws java.io.IOException if any.
+     */
     protected synchronized NetcdfFile locateFile(final IFileFragment ff) throws IOException {
         URI u = ff.getUri();
         String filepath = u.toString();
@@ -312,6 +337,14 @@ public class NetcdfDataSource implements IDataSource {
 //		return NetcdfFile.open(filepath);
     }
 
+    /**
+     * <p>locateFile.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @return a {@link ucar.nc2.NetcdfFile} object.
+     * @throws java.io.IOException if any.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     protected NetcdfFile locateFile(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
         NetcdfFile nf = null;
@@ -366,6 +399,7 @@ public class NetcdfDataSource implements IDataSource {
                 + f.getName() + " in any associated file!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             FileNotFoundException, ResourceNotAvailableException {
@@ -378,6 +412,7 @@ public class NetcdfDataSource implements IDataSource {
         return ral;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, FileNotFoundException,
@@ -407,6 +442,12 @@ public class NetcdfDataSource implements IDataSource {
      * scan i, we use Require: NEW_INDEX with length j FOR a=0;a<j;a++ IF a+1 >=
      * k SCAN[a] = DATA[INDEX[a],|DATA|-1] ELSE SCAN[a] =
      * DATA[INDEX[a],INDEX[a+1]-1] ENDIF NEW_INDEX[a] = DATA[INDEX[a]]; ENDFOR
+     *
+     * @param f a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @return a {@link java.util.ArrayList} object.
+     * @throws java.io.IOException if any.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     * @throws java.io.FileNotFoundException if any.
      */
     public ArrayList<Array> readIndexed2(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException,
@@ -547,6 +588,7 @@ public class NetcdfDataSource implements IDataSource {
         return al;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException, FileNotFoundException {
@@ -626,13 +668,7 @@ public class NetcdfDataSource implements IDataSource {
         }
     }
 
-    /**
-     *
-     * @param f
-     * @return
-     * @throws IOException
-     * @throws FileNotFoundException
-     */
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException, FileNotFoundException {
@@ -662,14 +698,7 @@ public class NetcdfDataSource implements IDataSource {
         }
     }
 
-    /**
-     *
-     * @param f
-     * @return
-     * @throws IOException
-     * @throws FileNotFoundException
-     * @throws ResourceNotAvailableException
-     */
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, FileNotFoundException,
@@ -701,9 +730,10 @@ public class NetcdfDataSource implements IDataSource {
     }
 
     /**
+     * <p>structureWrite.</p>
      *
-     * @param parent
-     * @return
+     * @param parent a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link ucar.nc2.NetcdfFileWriteable} object.
      */
     protected NetcdfFileWriteable structureWrite(final IFileFragment parent) {
         NetcdfFileWriteable nfw = null;
@@ -894,19 +924,17 @@ public class NetcdfDataSource implements IDataSource {
         return null;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
 
     /**
+     * <p>toDimensionArray.</p>
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.ArrayList} object.
+     * @return an array of {@link ucar.nc2.Dimension} objects.
      */
     protected Dimension[] toDimensionArray(final ArrayList<Dimension> al) {
         Dimension[] dim = new Dimension[al.size()];
@@ -929,11 +957,7 @@ public class NetcdfDataSource implements IDataSource {
         vf.setAttributes(attributes);
     }
 
-    /**
-     *
-     * @param f
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean write(final IFileFragment f) {
         log.debug("{}", f.toString());

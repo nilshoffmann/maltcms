@@ -32,11 +32,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
+ * <p>FilePipeline class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class FilePipeline extends APipeline<File> {
 
+    /** {@inheritDoc} */
     @Override
     public List<File> call() throws Exception {
         for (Callable<File> pipe : getPipelines()) {

@@ -83,7 +83,7 @@ import ucar.ma2.InvalidRangeException;
  * Work in progress. EIC peak finder, EIC are individual ion channels.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -107,14 +107,15 @@ public class EICPeakFinder extends AFragmentCommand {
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     /**
+     * <p>calcEstimatedCrossCorrelation.</p>
      *
-     * @param a
-     * @param b
-     * @param meana
-     * @param meanb
-     * @param variancea
-     * @param varianceb
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @param meana a double.
+     * @param meanb a double.
+     * @param variancea a double.
+     * @param varianceb a double.
+     * @return a double.
      */
     protected static double calcEstimatedCrossCorrelation(final Array a,
             final Array b, final double meana, final double meanb,
@@ -144,6 +145,7 @@ public class EICPeakFinder extends AFragmentCommand {
     @Configurable
     private double massResolution = 1.0d;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         EvalTools.notNull(t, this);
@@ -281,9 +283,12 @@ public class EICPeakFinder extends AFragmentCommand {
     }
 
     /**
+     * <p>savePeakAnnotations.</p>
      *
-     * @param l
-     * @param iff
+     * @param l a {@link java.util.List} object.
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult} object.
+     * @since 1.3.2
      */
     public WorkflowResult savePeakAnnotations(final List<Peak1D> l,
             final IFileFragment iff) {
@@ -403,6 +408,16 @@ public class EICPeakFinder extends AFragmentCommand {
         return s;
     }
 
+    /**
+     * <p>findPeakAreas.</p>
+     *
+     * @param chromatogram a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param ts a {@link java.util.List} object.
+     * @param rawTIC a {@link ucar.ma2.Array} object.
+     * @param baselineCorrectedTIC a {@link ucar.ma2.Array} object.
+     * @param snr an array of double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
             final List<Integer> ts, final Array rawTIC,
             final Array baselineCorrectedTIC, final double[] snr) {
@@ -467,10 +482,12 @@ public class EICPeakFinder extends AFragmentCommand {
     }
 
     /**
+     * <p>findPeakPositions.</p>
      *
-     * @param tic
-     * @param sat
-     * @return
+     * @param tic a {@link ucar.ma2.Array} object.
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet} object.
+     * @since 1.3.2
      */
     public PeakPositionsResultSet findPeakPositions(Array tic, Array sat) {
         EvalTools.notNull(tic, this);
@@ -549,13 +566,15 @@ public class EICPeakFinder extends AFragmentCommand {
 //
 //	}
     /**
+     * <p>calcEstimatedAutoCorrelation.</p>
      *
      * @param a
-     * @param b
-     * @param mean
-     * @param variance
-     * @param lag
      * @param acr
+     * @param b a {@link ucar.ma2.Array} object.
+     * @param mean a double.
+     * @param variance a double.
+     * @param lag a int.
+     * @param acr a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     protected void calcEstimatedAutoCorrelation(final Array a, final Array b,
             final double mean, final double variance, final int lag,
@@ -598,10 +617,11 @@ public class EICPeakFinder extends AFragmentCommand {
 //		return c;
 //	}
     /**
+     * <p>getMaxAutocorrelation.</p>
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     protected Tuple2D<Integer, Double> getMaxAutocorrelation(final Array a,
             final Array b) {

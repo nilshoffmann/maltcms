@@ -40,6 +40,7 @@ import maltcms.datastructures.peak.Peak2D;
  * Provides some methods to export relevant peak information.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public interface IPeakExporter extends IConfigurable, IWorkflowElement {
 
@@ -49,7 +50,8 @@ public interface IPeakExporter extends IConfigurable, IWorkflowElement {
      * @param bidiBestHitList bidirational best hits table
      * @param bbh bidirection best hits intance
      * @param names names of the chromtatograms
-     * @param reliabilites reliability of peak groups
+     * @param peaklist a {@link java.util.List} object.
+     * @param reliabilities a {@link java.util.List} object.
      */
     void exportBBHInformation(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
             final IBidirectionalBestHit bbh, final List<String> names,
@@ -62,7 +64,8 @@ public interface IPeakExporter extends IConfigurable, IWorkflowElement {
      * @param bidiBestHitList bidirational best hits table
      * @param bbh bidirection best hits intance
      * @param names names of the chromtatograms
-     * @param reliabilites reliability of peak groups
+     * @param peaklist a {@link java.util.List} object.
+     * @param reliabilities a {@link java.util.List} object.
      */
     void exportBBHMultipleAlignmentRT(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
             final IBidirectionalBestHit bbh, final List<String> names,

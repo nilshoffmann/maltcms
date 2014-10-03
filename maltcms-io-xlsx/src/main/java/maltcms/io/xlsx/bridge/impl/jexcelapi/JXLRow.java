@@ -34,19 +34,23 @@ import maltcms.io.xlsx.bridge.ICell;
 import maltcms.io.xlsx.bridge.IRow;
 
 /**
+ * <p>JXLRow class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Data
 public class JXLRow implements IRow {
 
     private final Cell[] row;
 
+    /** {@inheritDoc} */
     @Override
     public ICell getCell(int i) {
         return new JXLCell(row[i]);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<ICell> iterator() {
         return new Iterator<ICell>() {

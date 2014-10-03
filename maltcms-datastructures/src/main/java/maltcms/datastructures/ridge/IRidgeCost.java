@@ -28,11 +28,18 @@
 package maltcms.datastructures.ridge;
 
 /**
+ * <p>IRidgeCost interface.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public interface IRidgeCost {
 
+    /**
+     * <p>getCost.</p>
+     *
+     * @param r a {@link maltcms.datastructures.ridge.Ridge} object.
+     * @return a double.
+     */
     public double getCost(Ridge r);
 }

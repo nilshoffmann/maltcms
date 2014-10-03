@@ -35,9 +35,14 @@ import java.util.ArrayList;
  * used to process the data contained in an mzXML file.
  *
  * @author M. Vogelzang
+ * 
+ * @since 1.3.2
  */
 public class DataProcessingInfo {
 
+    /** Constant <code>UNKNOWN=-1</code> */
+    /** Constant <code>YES=1</code> */
+    /** Constant <code>NO=0</code> */
     public static final int UNKNOWN = -1, YES = 1, NO = 0;
 
     protected double intensityCutoff;
@@ -46,6 +51,9 @@ public class DataProcessingInfo {
 
     ArrayList<SoftwareInfo> softwareUsed = null;
 
+    /**
+     * <p>Constructor for DataProcessingInfo.</p>
+     */
     public DataProcessingInfo() {
         centroided = UNKNOWN;
         deisotoped = UNKNOWN;
@@ -64,7 +72,7 @@ public class DataProcessingInfo {
     /**
      * Was the data centroided?
      *
-     * @return UNKNOWN, YES or NO.
+     * @return a int.
      */
     public int getCentroided() {
         return centroided;
@@ -82,7 +90,7 @@ public class DataProcessingInfo {
     /**
      * Was the data charge deconvoluted?
      *
-     * @return UNKNOWN, YES or NO.
+     * @return a int.
      */
     public int getChargeDeconvoluted() {
         return chargeDeconvoluted;
@@ -100,7 +108,7 @@ public class DataProcessingInfo {
     /**
      * Was the data charge deisotoped?
      *
-     * @return UNKNOWN, YES or NO.
+     * @return a int.
      */
     public int getDeisotoped() {
         return deisotoped;
@@ -160,7 +168,7 @@ public class DataProcessingInfo {
     /**
      * Were spots integrated?
      *
-     * @return UNKNOWN, YES or NO.
+     * @return a int.
      */
     public int getSpotIntegration() {
         return spotIntegration;
@@ -178,7 +186,7 @@ public class DataProcessingInfo {
     /**
      * Were peaks extracted?
      *
-     * @return UNKNOWN, YES or NO
+     * @return a int.
      */
     public int getPeakPicked() {
         return peakPicked;
@@ -187,7 +195,7 @@ public class DataProcessingInfo {
     /**
      * set value of peakPicked to one of UNKNOWN, YES or NO
      *
-     * @param peakPicked
+     * @param peakPicked a int.
      */
     public void setPeakPicked(int peakPicked) {
         this.peakPicked = peakPicked;
@@ -196,12 +204,17 @@ public class DataProcessingInfo {
     /**
      * Were Chromatogram smoothed?
      *
-     * @return UNKNOWN, YES, NO
+     * @return a int.
      */
     public int getSmoothed() {
         return smoothed;
     }
 
+    /**
+     * <p>Setter for the field <code>smoothed</code>.</p>
+     *
+     * @param smoothed a int.
+     */
     public void setSmoothed(int smoothed) {
         this.smoothed = smoothed;
     }
@@ -215,6 +228,11 @@ public class DataProcessingInfo {
         return baseLineReduced;
     }
 
+    /**
+     * <p>Setter for the field <code>baseLineReduced</code>.</p>
+     *
+     * @param baseLineReduced a int.
+     */
     public void setBaseLineReduced(int baseLineReduced) {
         this.baseLineReduced = baseLineReduced;
     }
@@ -222,16 +240,22 @@ public class DataProcessingInfo {
     /**
      * Were chromatogram remove low intensity data
      *
-     * @return UNKNOWN, YES or NO
+     * @return a int.
      */
     public int getLowIntensityDataRemoved() {
         return lowIntensityDataRemoved;
     }
 
+    /**
+     * <p>Setter for the field <code>lowIntensityDataRemoved</code>.</p>
+     *
+     * @param lowIntensityDataRemoved a int.
+     */
     public void setLowIntensityDataRemoved(int lowIntensityDataRemoved) {
         this.lowIntensityDataRemoved = lowIntensityDataRemoved;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         String outputLine = "";

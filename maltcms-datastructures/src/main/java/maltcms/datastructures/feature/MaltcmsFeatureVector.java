@@ -41,6 +41,7 @@ import ucar.ma2.InvalidRangeException;
  * required at construction time.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class MaltcmsFeatureVector implements IFeatureVector {
 
@@ -52,11 +53,18 @@ public class MaltcmsFeatureVector implements IFeatureVector {
     private int index = -1;
     private UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>addFeatures.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param i a int.
+     */
     public void addFeatures(IFileFragment iff, int i) {
         this.iff = iff;
         this.index = i;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         if (this.iff.getChild(name).getIndex() == null) {
@@ -71,6 +79,7 @@ public class MaltcmsFeatureVector implements IFeatureVector {
         return this.iff.getChild(name).getIndexedArray().get(this.index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         ArrayList<String> names = new ArrayList<>();
@@ -80,6 +89,7 @@ public class MaltcmsFeatureVector implements IFeatureVector {
         return names;
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

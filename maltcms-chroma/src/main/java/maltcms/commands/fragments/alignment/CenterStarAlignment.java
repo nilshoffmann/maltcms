@@ -74,7 +74,7 @@ import ucar.ma2.Index;
  * Implementation of the center star approximation for multiple alignment.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @RequiresVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
@@ -109,10 +109,7 @@ public class CenterStarAlignment extends AFragmentCommand {
     @Configurable
     private String centerSequence = "";
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -123,6 +120,7 @@ public class CenterStarAlignment extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final IFileFragment pwd = MaltcmsTools.getPairwiseDistanceFragment(t);
@@ -168,6 +166,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         return new TupleND<>(warpedFiles);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.pairwiseDistanceMatrixVariableName = cfg.getString(
@@ -317,10 +316,7 @@ public class CenterStarAlignment extends AFragmentCommand {
         return centerSeq;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Creates a multiple alignment by selecting a reference chromatogram based on highest overall similarity or lowest overall distance of reference to other chromatograms.";
@@ -335,10 +331,7 @@ public class CenterStarAlignment extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;

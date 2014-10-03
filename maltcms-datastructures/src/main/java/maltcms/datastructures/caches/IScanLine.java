@@ -37,6 +37,7 @@ import ucar.ma2.Array;
  * Interface for all scan line data holder.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public interface IScanLine extends IConfigurable {
 
@@ -68,9 +69,18 @@ public interface IScanLine extends IConfigurable {
      * @param x scanline number
      * @param y offset inside this scanline
      * @return array representing one mass spectrum
+     * @since 1.3.2
      */
     Array getMassSpectrum(final int x, final int y);
 
+    /**
+     * <p>getSparseMassSpectrum.</p>
+     *
+     * @param x a int.
+     * @param y a int.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @since 1.3.2
+     */
     Tuple2D<Array, Array> getSparseMassSpectrum(final int x, final int y);
 
     /**
@@ -78,9 +88,17 @@ public interface IScanLine extends IConfigurable {
      *
      * @param p point of requested mass spectra
      * @return mass spectrum
+     * @since 1.3.2
      */
     Array getMassSpectrum(final Point p);
 
+    /**
+     * <p>getSparseMassSpectrum.</p>
+     *
+     * @param p a {@link java.awt.Point} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @since 1.3.2
+     */
     Tuple2D<Array, Array> getSparseMassSpectrum(final Point p);
 
     /**
@@ -91,7 +109,7 @@ public interface IScanLine extends IConfigurable {
     int getScanLineCount();
 
     /**
-     * This method will create a {@link List} of {@link Array} containing the
+     * This method will create a {@link java.util.List} of {@link ucar.ma2.Array} containing the
      * mass spectra of scanline x. All this mass spectra are normalized to one
      * size.
      *
@@ -100,6 +118,12 @@ public interface IScanLine extends IConfigurable {
      */
     List<Array> getScanlineMS(final int x);
 
+    /**
+     * <p>getScanlineSparseMS.</p>
+     *
+     * @param x a int.
+     * @return a {@link java.util.List} object.
+     */
     List<Tuple2D<Array, Array>> getScanlineSparseMS(final int x);
 
     /**
@@ -152,27 +176,30 @@ public interface IScanLine extends IConfigurable {
     /**
      * Map a global scan index to a Point of x,y coordinates.
      *
-     * @param scanIndex
-     * @return
+     * @param scanIndex a int.
+     * @return a {@link java.awt.Point} object.
      */
     Point mapIndex(int scanIndex);
 
     /**
      * Map a Point to a global scan index.
      *
-     * @param p
-     * @return
+     * @param p a {@link java.awt.Point} object.
+     * @return a int.
      */
     int mapPoint(Point p);
 
     /**
      * Map two coordinates x,y to a global scan index.
      *
-     * @param x
-     * @param y
-     * @return
+     * @param x a int.
+     * @param y a int.
+     * @return a int.
      */
     int mapPoint(int x, int y);
 
+    /**
+     * <p>clear.</p>
+     */
     public void clear();
 }

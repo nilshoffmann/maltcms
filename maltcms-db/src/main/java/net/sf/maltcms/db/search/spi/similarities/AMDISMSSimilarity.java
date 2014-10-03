@@ -37,8 +37,10 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
 /**
+ * <p>AMDISMSSimilarity class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class AMDISMSSimilarity {
 
@@ -111,6 +113,13 @@ public class AMDISMSSimilarity {
 //                2 * intensityExponent)));
 //        return mixedValue / refValue * queryValue;
 //    }
+    /**
+     * <p>apply.</p>
+     *
+     * @param referenceMassSpectrum a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param queryMassSpectrum a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @return a double.
+     */
     public double apply(Tuple2D<Array, Array> referenceMassSpectrum,
             Tuple2D<Array, Array> queryMassSpectrum) {
 //        double massExponent = 1.0;

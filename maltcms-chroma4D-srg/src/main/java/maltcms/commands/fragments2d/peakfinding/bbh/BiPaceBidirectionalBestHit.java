@@ -37,8 +37,10 @@ import maltcms.math.functions.IScalarArraySimilarity;
 import org.apache.commons.configuration.Configuration;
 
 /**
+ * <p>BiPaceBidirectionalBestHit class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
@@ -46,6 +48,7 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
     private IScalarArraySimilarity similarity;
     private boolean useMeanMS = false;
 
+    /** {@inheritDoc} */
     @Override
     public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
         List<List<Point>> bbhs = new ArrayList<>();
@@ -54,20 +57,16 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
     }
 
     /**
+     * <p>findBBHs.</p>
      *
-     * @param peaklists
-     * @param bbhs
+     * @param peaklists a {@link java.util.List} object.
+     * @param bbhs a {@link java.util.List} object.
      */
     protected void findBBHs(List<List<Peak2D>> peaklists, List<List<Point>> bbhs) {
         throw new NotImplementedException();
     }
 
-    /**
-     *
-     * @param p1
-     * @param p2
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public double sim(Peak2D p1, Peak2D p2) {
         double sim = Double.NEGATIVE_INFINITY;
@@ -83,17 +82,12 @@ public class BiPaceBidirectionalBestHit implements IBidirectionalBestHit {
         return sim;
     }
 
-    /**
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void clear() {
     }
 
-    /**
-     *
-     * @param c
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration c) {
     }

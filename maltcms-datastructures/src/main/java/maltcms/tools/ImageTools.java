@@ -90,7 +90,7 @@ import ucar.ma2.Sparse;
  * Utility class concerned with creation and saving of images.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class ImageTools {
@@ -200,7 +200,7 @@ public class ImageTools {
     /**
      * Creates an image of an 2D chromatogramm.
      *
-     * @param <T> should extend {@link AFragmentCommand}
+     * @param <T> should extend {@link cross.commands.fragments.AFragmentCommand}
      * @param ffName file fragment name
      * @param intensity intensity array
      * @param scansPerModulation scans per modulation
@@ -240,6 +240,12 @@ public class ImageTools {
         return bi;
     }
 
+    /**
+     * <p>createSampleTable.</p>
+     *
+     * @param nsamples a int.
+     * @return an array of double.
+     */
     public static double[] createSampleTable(final int nsamples) {
         final double[] samples = new double[nsamples];
         ImageTools.log.debug("Creating sample table with size {}", nsamples);
@@ -249,11 +255,26 @@ public class ImageTools {
         return samples;
     }
 
+    /**
+     * <p>applyLut.</p>
+     *
+     * @param im a {@link java.awt.image.BufferedImage} object.
+     * @param lt a {@link java.awt.image.LookupTable} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage applyLut(BufferedImage im, LookupTable lt) {
         LookupOp lo = new LookupOp(lt, null);
         return lo.filter(im, null);
     }
 
+    /**
+     * <p>createCompatibleImage.</p>
+     *
+     * @param width a int.
+     * @param height a int.
+     * @param transparencyMode a int.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage createCompatibleImage(int width, int height,
             int transparencyMode) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -266,12 +287,13 @@ public class ImageTools {
     }
 
     /**
-     * Creates a color ramp image with width=the number of elements in the 
+     * Creates a color ramp image with width=the number of elements in the
      * sample table.
-     * @param sampleTable
-     * @param transparencyMode
-     * @param colors
-     * @return 
+     *
+     * @param sampleTable an array of double.
+     * @param transparencyMode a int.
+     * @param colors a {@link java.awt.Color} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     public static BufferedImage createColorRampImage(double[] sampleTable,
             int transparencyMode, Color... colors) {
@@ -294,6 +316,18 @@ public class ImageTools {
 
     }
 
+    /**
+     * <p>modifyImageLookupTable.</p>
+     *
+     * @param bi a {@link java.awt.image.BufferedImage} object.
+     * @param activeColorRamp an array of int.
+     * @param sampleTable an array of double.
+     * @param alpha a double.
+     * @param beta a double.
+     * @param transparencyMode a int.
+     * @param transparency a float.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage modifyImageLookupTable(BufferedImage bi,
             int[][] activeColorRamp, double[] sampleTable, double alpha,
             double beta, int transparencyMode, float transparency) {
@@ -304,6 +338,17 @@ public class ImageTools {
                 sampleTable.length));
     }
 
+    /**
+     * <p>createModifiedLookupImage.</p>
+     *
+     * @param colors an array of {@link java.awt.Color} objects.
+     * @param sampleTable an array of double.
+     * @param alpha a double.
+     * @param beta a double.
+     * @param transparencyMode a int.
+     * @param transparency a float.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage createModifiedLookupImage(Color[] colors,
             double[] sampleTable, double alpha, double beta,
             int transparencyMode, float transparency) {
@@ -327,6 +372,12 @@ public class ImageTools {
         // sampleTable.length));
     }
 
+    /**
+     * <p>rampToColorArray.</p>
+     *
+     * @param colorRamp an array of int.
+     * @return an array of {@link java.awt.Color} objects.
+     */
     public static Color[] rampToColorArray(int[][] colorRamp) {
         Color[] c = new Color[colorRamp.length];
         for (int i = 0; i < colorRamp.length; i++) {
@@ -335,6 +386,14 @@ public class ImageTools {
         return c;
     }
 
+    /**
+     * <p>createLookupTable.</p>
+     *
+     * @param im a {@link java.awt.image.BufferedImage} object.
+     * @param transparency a float.
+     * @param tableSize a int.
+     * @return a {@link java.awt.image.LookupTable} object.
+     */
     public static LookupTable createLookupTable(BufferedImage im,
             float transparency, int tableSize) {
         Raster imageRaster = im.getData();
@@ -355,6 +414,11 @@ public class ImageTools {
         return lookupTable;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         final ColorRampReader crr = new ColorRampReader();
         final int[][] colorRamp = crr.getDefaultRamp();
@@ -405,6 +469,15 @@ public class ImageTools {
 
     }
 
+    /**
+     * <p>drawSquareMatrixWithLabels.</p>
+     *
+     * @param heightPerRow a {@link java.util.List} object.
+     * @param labels a {@link java.util.List} object.
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param skipvalue a double.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage drawSquareMatrixWithLabels(
             final List<Integer> heightPerRow, final List<String> labels,
             final Array a, final double skipvalue) {
@@ -443,6 +516,13 @@ public class ImageTools {
         return fullImage;
     }
 
+    /**
+     * <p>filter.</p>
+     *
+     * @param arrays a {@link java.util.ArrayList} object.
+     * @param channels a int.
+     * @return a {@link java.util.ArrayList} object.
+     */
     public static ArrayList<Array> filter(final ArrayList<Array> arrays,
             final int channels) {
         final ArrayList<Array> ret = new ArrayList<>(arrays.size());
@@ -475,6 +555,18 @@ public class ImageTools {
         return ret;
     }
 
+    /**
+     * <p>fullSpectrum.</p>
+     *
+     * @param chromatogramName a {@link java.lang.String} object.
+     * @param arrays a {@link java.util.List} object.
+     * @param height a int.
+     * @param colorRamp an array of int.
+     * @param sampleSize a int.
+     * @param flip a boolean.
+     * @param threshold a double.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage fullSpectrum(final String chromatogramName,
             final List<Array> arrays, final int height,
             final int[][] colorRamp, final int sampleSize, final boolean flip,
@@ -504,6 +596,12 @@ public class ImageTools {
         return bim;
     }
 
+    /**
+     * <p>flipVertical.</p>
+     *
+     * @param bi a {@link java.awt.image.RenderedImage} object.
+     * @return a {@link java.awt.image.RenderedImage} object.
+     */
     public static RenderedImage flipVertical(final RenderedImage bi) {
         // Create a transposed image, flipped about the vertical axis
         final RenderedOp ro = TransposeDescriptor.create(bi,
@@ -511,6 +609,12 @@ public class ImageTools {
         return ro.getAsBufferedImage();
     }
 
+    /**
+     * <p>flipHorizontal.</p>
+     *
+     * @param bi a {@link java.awt.image.RenderedImage} object.
+     * @return a {@link java.awt.image.RenderedImage} object.
+     */
     public static RenderedImage flipHorizontal(final RenderedImage bi) {
         // Create a transposed image, flipped about the horizontal axis
         final RenderedOp ro = TransposeDescriptor.create(bi,
@@ -518,6 +622,14 @@ public class ImageTools {
         return ro.getAsBufferedImage();
     }
 
+    /**
+     * <p>getBreakpoints.</p>
+     *
+     * @param values1 a {@link ucar.ma2.Array} object.
+     * @param samples a int.
+     * @param skipvalue a double.
+     * @return an array of double.
+     */
     public static double[] getBreakpoints(final Array values1,
             final int samples, final double skipvalue) {
         final Array values = values1.copy();
@@ -586,6 +698,13 @@ public class ImageTools {
         return breakpoints;
     }
 
+    /**
+     * <p>getMaxStringLengthForTuple.</p>
+     *
+     * @param c a {@link java.util.Collection} object.
+     * @param f a {@link java.awt.Font} object.
+     * @return a int.
+     */
     public static int getMaxStringLengthForTuple(
             final Collection<Tuple2D<String, Array>> c, final Font f) {
         // determine maximum allowed string length
@@ -601,6 +720,14 @@ public class ImageTools {
         return maxStringLength;
     }
 
+    /**
+     * <p>getSample.</p>
+     *
+     * @param samples an array of double.
+     * @param breakpoints an array of double.
+     * @param value a double.
+     * @return a double.
+     */
     public static double getSample(final double[] samples,
             final double[] breakpoints, final double value) {
         final int i = Arrays.binarySearch(breakpoints, value);
@@ -628,6 +755,15 @@ public class ImageTools {
         }
     }
 
+    /**
+     * <p>makeImage.</p>
+     *
+     * @param w a {@link java.awt.image.WritableRaster} object.
+     * @param arrays a {@link java.util.List} object.
+     * @param nsamples a int.
+     * @param colorRamp an array of int.
+     * @param threshold a double.
+     */
     public static void makeImage(final WritableRaster w,
             final List<Array> arrays, final int nsamples,
             final int[][] colorRamp, final double threshold) {
@@ -638,6 +774,14 @@ public class ImageTools {
                 breakpoints);
     }
 
+    /**
+     * <p>mapTanH.</p>
+     *
+     * @param alpha a double.
+     * @param beta a double.
+     * @param x a double.
+     * @return a double.
+     */
     public static double mapTanH(final double alpha, final double beta,
             final double x) {
         final double a = Math.max(-1, Math.min(1, alpha));
@@ -646,6 +790,14 @@ public class ImageTools {
         return v;
     }
 
+    /**
+     * <p>mapSampleTable.</p>
+     *
+     * @param s an array of double.
+     * @param alpha a double.
+     * @param beta a double.
+     * @return an array of double.
+     */
     public static double[] mapSampleTable(final double[] s, final double alpha,
             final double beta) {
         final double[] ret = new double[s.length];
@@ -658,6 +810,12 @@ public class ImageTools {
         return ret;
     }
 
+    /**
+     * <p>toFloatArray.</p>
+     *
+     * @param s an array of double.
+     * @return an array of float.
+     */
     public static float[] toFloatArray(final double[] s) {
         final float[] a = new float[s.length];
         for (int i = 0; i < a.length; i++) {
@@ -666,6 +824,12 @@ public class ImageTools {
         return a;
     }
 
+    /**
+     * <p>toDoubleArray.</p>
+     *
+     * @param s an array of float.
+     * @return an array of double.
+     */
     public static double[] toDoubleArray(final float[] s) {
         final double[] a = new double[s.length];
         for (int i = 0; i < a.length; i++) {
@@ -674,10 +838,26 @@ public class ImageTools {
         return a;
     }
 
+    /**
+     * <p>mapSampleTable.</p>
+     *
+     * @param s an array of double.
+     * @return an array of double.
+     */
     public static double[] mapSampleTable(final double[] s) {
         return mapSampleTable(s, 0, 1);
     }
 
+    /**
+     * <p>makeImage.</p>
+     *
+     * @param w a {@link java.awt.image.WritableRaster} object.
+     * @param arrays a {@link java.util.List} object.
+     * @param nsamples a int.
+     * @param colorRamp an array of int.
+     * @param threshold a double.
+     * @param breakpoints an array of double.
+     */
     public static void makeImage(final WritableRaster w,
             final List<Array> arrays, final int nsamples,
             final int[][] colorRamp, final double threshold,
@@ -794,6 +974,14 @@ public class ImageTools {
         // log.info("{} ceil=floor, {} interpolations",fleqceil,interp);
     }
 
+    /**
+     * <p>makeImage2D.</p>
+     *
+     * @param values a {@link ucar.ma2.Array} object.
+     * @param nsamples a int.
+     * @param skipvalue a double.
+     * @return a {@link java.awt.image.RenderedImage} object.
+     */
     public static RenderedImage makeImage2D(final Array values,
             final int nsamples, final double skipvalue) {
         final BufferedImage ba = new BufferedImage(values.getShape()[0], values.
@@ -806,6 +994,16 @@ public class ImageTools {
         return ba;
     }
 
+    /**
+     * <p>makeImage2D.</p>
+     *
+     * @param w a {@link java.awt.image.WritableRaster} object.
+     * @param values a {@link ucar.ma2.Array} object.
+     * @param nsamples a int.
+     * @param colorRamp an array of int.
+     * @param threshold a double.
+     * @param breakpoints an array of double.
+     */
     public static void makeImage2D(final WritableRaster w, final Array values,
             final int nsamples, final int[][] colorRamp,
             final double threshold, final double[] breakpoints) {
@@ -898,6 +1096,13 @@ public class ImageTools {
         ImageTools.log.debug("Maxval: {}  minval: {}", maxval, minval);
     }
 
+    /**
+     * <p>makeImage2D.</p>
+     *
+     * @param matrix a {@link ucar.ma2.Array} object.
+     * @param nsamples a int.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage makeImage2D(final Array matrix,
             final int nsamples) {
         if (matrix.getRank() != 2) {
@@ -936,13 +1141,15 @@ public class ImageTools {
     }
 
     /**
+     * <p>saveImage.</p>
      *
      * @param bim the image to save
      * @param imgname the filename
      * @param format the format, e.g. "png", "jpeg"
-     * @param outputDir
+     * @param outputDir a {@link java.io.File} object.
      * @param iw may be null
      * @param resources resources, which were used to create the image
+     * @return a {@link java.io.File} object.
      */
     public static File saveImage(final RenderedImage bim, final String imgname,
             final String format, final File outputDir,
@@ -970,6 +1177,14 @@ public class ImageTools {
         return out;
     }
 
+    /**
+     * <p>writeImage.</p>
+     *
+     * @param chart a {@link org.jfree.chart.JFreeChart} object.
+     * @param file a {@link java.io.File} object.
+     * @param imgwidth a int.
+     * @param imgheight a int.
+     */
     public static void writeImage(final JFreeChart chart, final File file,
             final int imgwidth, final int imgheight) {
         try {
@@ -1011,6 +1226,14 @@ public class ImageTools {
         }
     }
 
+    /**
+     * <p>writePNG.</p>
+     *
+     * @param chart a {@link org.jfree.chart.JFreeChart} object.
+     * @param fos a {@link java.io.FileOutputStream} object.
+     * @param imgwidth a int.
+     * @param imgheight a int.
+     */
     public static void writePNG(final JFreeChart chart,
             final FileOutputStream fos, final int imgwidth, final int imgheight) {
         try {

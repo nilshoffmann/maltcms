@@ -72,7 +72,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "supDataType", propOrder = {"arrayName", "_float", "_double",
@@ -107,8 +108,7 @@ public class SupDataType implements Serializable {
     /**
      * Gets the value of the arrayName property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getArrayName() {
         return this.arrayName;
@@ -133,9 +133,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Boolean
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Boolean> getBoolean() {
         if (this._boolean == null) {
@@ -163,9 +163,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Double
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Double> getDouble() {
         if (this._double == null) {
@@ -193,9 +193,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Float
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Float> getFloat() {
         if (this._float == null) {
@@ -207,6 +207,7 @@ public class SupDataType implements Serializable {
     /**
      * Gets the value of the id property.
      *
+     * @return a int.
      */
     public int getId() {
         return this.id;
@@ -231,9 +232,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Integer
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Integer> getInt() {
         if (this._int == null) {
@@ -245,6 +246,7 @@ public class SupDataType implements Serializable {
     /**
      * Gets the value of the length property.
      *
+     * @return a int.
      */
     public int getLength() {
         return this.length;
@@ -253,8 +255,7 @@ public class SupDataType implements Serializable {
     /**
      * Gets the value of the offset property.
      *
-     * @return possible object is {@link Integer }
-     *
+     * @return possible object is {@link java.lang.Integer}
      */
     public int getOffset() {
         if (this.offset == null) {
@@ -283,9 +284,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link String
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<String> getString() {
         if (this.string == null) {
@@ -313,9 +314,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link Float
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Float> getTime() {
         if (this.time == null) {
@@ -343,9 +344,9 @@ public class SupDataType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link String
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<String> getURI() {
         if (this.uri == null) {
@@ -357,6 +358,7 @@ public class SupDataType implements Serializable {
     /**
      * Gets the value of the indexed property.
      *
+     * @return a boolean.
      */
     public boolean isIndexed() {
         return this.indexed;
@@ -365,8 +367,7 @@ public class SupDataType implements Serializable {
     /**
      * Sets the value of the arrayName property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setArrayName(final String value) {
         this.arrayName = value;
@@ -375,6 +376,7 @@ public class SupDataType implements Serializable {
     /**
      * Sets the value of the id property.
      *
+     * @param value a int.
      */
     public void setId(final int value) {
         this.id = value;
@@ -383,6 +385,7 @@ public class SupDataType implements Serializable {
     /**
      * Sets the value of the indexed property.
      *
+     * @param value a boolean.
      */
     public void setIndexed(final boolean value) {
         this.indexed = value;
@@ -391,6 +394,7 @@ public class SupDataType implements Serializable {
     /**
      * Sets the value of the length property.
      *
+     * @param value a int.
      */
     public void setLength(final int value) {
         this.length = value;
@@ -399,8 +403,7 @@ public class SupDataType implements Serializable {
     /**
      * Sets the value of the offset property.
      *
-     * @param value allowed object is {@link Integer }
-     *
+     * @param value allowed object is {@link java.lang.Integer}
      */
     public void setOffset(final Integer value) {
         this.offset = value;

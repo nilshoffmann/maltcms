@@ -34,6 +34,12 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>QueryResultListCellRenderer class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class QueryResultListCellRenderer extends JLabel implements ListCellRenderer {
 
     /**
@@ -41,12 +47,16 @@ public class QueryResultListCellRenderer extends JLabel implements ListCellRende
      */
     private static final long serialVersionUID = 5980514459833450228L;
 
+    /**
+     * <p>Constructor for QueryResultListCellRenderer.</p>
+     */
     public QueryResultListCellRenderer() {
         setOpaque(true);
         setHorizontalAlignment(LEFT);
         setVerticalAlignment(CENTER);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {

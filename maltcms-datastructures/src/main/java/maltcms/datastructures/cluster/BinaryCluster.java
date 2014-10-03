@@ -34,12 +34,22 @@ import java.util.Locale;
  * Concrete implementation of a binary cluster.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class BinaryCluster extends ACluster {
 
     private BinaryCluster lchild, rchild;
 
+    /**
+     * <p>Constructor for BinaryCluster.</p>
+     *
+     * @param lchild1 a {@link maltcms.datastructures.cluster.BinaryCluster} object.
+     * @param rchild1 a {@link maltcms.datastructures.cluster.BinaryCluster} object.
+     * @param distl a double.
+     * @param distr a double.
+     * @param dist an array of double.
+     * @param id a int.
+     */
     public BinaryCluster(final BinaryCluster lchild1,
             final BinaryCluster rchild1, final double distl,
             final double distr, final double[] dist, final int id) {
@@ -62,16 +72,33 @@ public class BinaryCluster extends ACluster {
         // System.out.println("Created new ICluster "+this.name);
     }
 
+    /**
+     * <p>Constructor for BinaryCluster.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param id a int.
+     * @param dist an array of double.
+     */
     public BinaryCluster(final String name, final int id, final double[] dist) {
         setName(name);
         setID(id);
         setDistances(dist);
     }
 
+    /**
+     * <p>getLChild.</p>
+     *
+     * @return a {@link maltcms.datastructures.cluster.ICluster} object.
+     */
     public ICluster getLChild() {
         return this.lchild;
     }
 
+    /**
+     * <p>getLChildID.</p>
+     *
+     * @return a int.
+     */
     public int getLChildID() {
         if (this.lchild == null) {
             return -1;
@@ -79,10 +106,20 @@ public class BinaryCluster extends ACluster {
         return this.lchild.getID();
     }
 
+    /**
+     * <p>getRChild.</p>
+     *
+     * @return a {@link maltcms.datastructures.cluster.ICluster} object.
+     */
     public ICluster getRChild() {
         return this.rchild;
     }
 
+    /**
+     * <p>getRChildID.</p>
+     *
+     * @return a int.
+     */
     public int getRChildID() {
         if (this.rchild == null) {
             return -1;
@@ -90,10 +127,20 @@ public class BinaryCluster extends ACluster {
         return this.rchild.getID();
     }
 
+    /**
+     * <p>setLChild.</p>
+     *
+     * @param bc a {@link maltcms.datastructures.cluster.BinaryCluster} object.
+     */
     public void setLChild(final BinaryCluster bc) {
         this.lchild = bc;
     }
 
+    /**
+     * <p>setRChild.</p>
+     *
+     * @param bc a {@link maltcms.datastructures.cluster.BinaryCluster} object.
+     */
     public void setRChild(final BinaryCluster bc) {
         this.rchild = bc;
     }
@@ -101,6 +148,7 @@ public class BinaryCluster extends ACluster {
     // public int getLevel(){
     // return this.level;
     // }
+    /** {@inheritDoc} */
     @Override
     public String toNewick() {
         // (NODE) each Node is encapsulated in parentheses
@@ -114,6 +162,7 @@ public class BinaryCluster extends ACluster {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         String name = "";

@@ -36,39 +36,68 @@ import java.util.List;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 
 //@ServiceProvider(service = AMetabolitePredicate.class)
+/**
+ * <p>RetentionIndexMatcher class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class RetentionIndexMatcher extends AMetabolitePredicate {
 
     private AMetabolitePredicate delegate = new Cosine();
     private double retentionIndex = Double.NaN;
     private List<Tuple2D<Double, IMetabolite>> metabolites = new LinkedList<>();
 
+    /**
+     * <p>Getter for the field <code>delegate</code>.</p>
+     *
+     * @return a {@link net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate} object.
+     */
     public AMetabolitePredicate getDelegate() {
         return delegate;
     }
 
+    /**
+     * <p>Setter for the field <code>delegate</code>.</p>
+     *
+     * @param delegate a {@link net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate} object.
+     */
     public void setDelegate(AMetabolitePredicate delegate) {
         this.delegate = delegate;
         this.delegate.setScoreThreshold(0.0);
     }
 
+    /**
+     * <p>Getter for the field <code>retentionIndex</code>.</p>
+     *
+     * @return a double.
+     */
     public double getRetentionIndex() {
         return retentionIndex;
     }
 
+    /**
+     * <p>Setter for the field <code>retentionIndex</code>.</p>
+     *
+     * @param retentionIndex a double.
+     */
     public void setRetentionIndex(double retentionIndex) {
         this.retentionIndex = retentionIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getScoreThreshold() {
         return delegate.getScoreThreshold();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setScoreThreshold(double scoreThreshold) {
         delegate.setScoreThreshold(scoreThreshold);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TreeSet<Tuple2D<Double, IMetabolite>> getScoreMap() {
         return delegate.getScoreMap();
@@ -90,17 +119,31 @@ public class RetentionIndexMatcher extends AMetabolitePredicate {
 //    });
     private double window = 10.0;
 
+    /**
+     * <p>Getter for the field <code>window</code>.</p>
+     *
+     * @return a double.
+     */
     public double getWindow() {
         return window;
     }
 
+    /**
+     * <p>Setter for the field <code>window</code>.</p>
+     *
+     * @param threshold a double.
+     */
     public void setWindow(double threshold) {
         this.window = threshold;
     }
 
+    /**
+     * <p>Constructor for RetentionIndexMatcher.</p>
+     */
     public RetentionIndexMatcher() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public AMetabolitePredicate copy() {
         RetentionIndexMatcher ms = new RetentionIndexMatcher();
@@ -114,6 +157,7 @@ public class RetentionIndexMatcher extends AMetabolitePredicate {
         return ms;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite et) {
 
@@ -141,6 +185,7 @@ public class RetentionIndexMatcher extends AMetabolitePredicate {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Comparator<Tuple2D<Double, IMetabolite>> getComparator() {
         return delegate.getComparator();

@@ -36,6 +36,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
  * estimation of signal baselines.
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IBaselineEstimator extends Serializable, ICopyable<IBaselineEstimator> {
 
@@ -46,7 +47,7 @@ public interface IBaselineEstimator extends Serializable, ICopyable<IBaselineEst
      * @param xValues the domain values of the signal
      * @param yValues the function values of the signal
      * @return a polynomial spline function that interpolates the given signal
-     * @throws RuntimeException if a
+     * @throws java.lang.RuntimeException if a
      * {@link org.apache.commons.math.MathException} is encountered
      */
     PolynomialSplineFunction findBaseline(double[] xValues, double[] yValues) throws RuntimeException;

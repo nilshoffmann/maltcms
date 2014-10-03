@@ -35,12 +35,22 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>BBHFinder class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 public class BBHFinder {
 
+    /**
+     * <p>findBiDiBestHits.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param a a {@link java.util.List} object.
+     * @param b a {@link java.util.List} object.
+     * @return a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHPeakList} object.
+     */
     public BBHPeakList findBiDiBestHits(LongObjectMap<PeakEdge> edgeMap, List<? extends IBipacePeak> a, List<? extends IBipacePeak> b) {
         final BBHPeakList matchedPeaks = new BBHPeakList();
         int laassociation = a.get(0).getAssociationId();

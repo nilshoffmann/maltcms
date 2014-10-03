@@ -35,17 +35,30 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * <p>MultiMap class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class MultiMap<K, V> {
 
     private Map<K, Collection<V>> map = new LinkedHashMap<>();
 
+    /**
+     * <p>keySet.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<K> keySet() {
         return map.keySet();
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param k a K object.
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<V> get(K k) {
         Collection<V> c = map.get(k);
         if (c == null) {
@@ -54,6 +67,12 @@ public class MultiMap<K, V> {
         return c;
     }
 
+    /**
+     * <p>put.</p>
+     *
+     * @param k a K object.
+     * @param v a V object.
+     */
     public void put(K k, V v) {
         if (map.containsKey(k)) {
             Collection<V> c = map.get(k);
@@ -65,6 +84,11 @@ public class MultiMap<K, V> {
         }
     }
 
+    /**
+     * <p>remove.</p>
+     *
+     * @param k a K object.
+     */
     public void remove(K k) {
         map.remove(k);
     }

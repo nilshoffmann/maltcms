@@ -71,13 +71,14 @@ import ucar.ma2.ArrayInt;
  * matrices.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
 public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         IClusteringAlgorithm {
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -87,6 +88,12 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * (non-Javadoc)
      *
      * @see maltcms.commands.fragments.cluster.IClusteringAlgorithm#toGraphML()
+     */
+    /**
+     * <p>toGraphML.</p>
+     *
+     * @param ica a {@link maltcms.commands.fragments.cluster.IClusteringAlgorithm} object.
+     * @return a {@link java.lang.String} object.
      */
     public static String toGraphML(final IClusteringAlgorithm ica) {
         final StringBuilder sb = new StringBuilder();
@@ -167,9 +174,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     private ArrayDouble.D2 pwds = null;
     private String minArrayComp;
 
+    /**
+     * <p>Constructor for ClusteringAlgorithm.</p>
+     */
     public ClusteringAlgorithm() {
     }
 
+    /**
+     * <p>addNodeK.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @param k a int.
+     */
     public void addNodeK(final int i, final int j, final int k) {
 
         this.names[k] = "((" + this.names[i] + ")" + this.names[j] + ")";
@@ -189,6 +206,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * @seemaltcms.commands.fragments.cluster.IClusteringAlgorithm#apply(cross.
      * datastructures.tuple.TupleND)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         setInputFiles(t);
@@ -289,6 +307,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         return maxlength;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.pairwiseDistanceMatrixVariableName = cfg.getString(
@@ -310,6 +329,13 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         return dap.apply(new TupleND<>(iff)).get(0);
     }
 
+    /**
+     * <p>d.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @return a double.
+     */
     public double d(final int i, final int j) {
         if (this.cluster.containsKey(i) && this.cluster.containsKey(j)) {
             return this.cluster.get(Math.max(i, j)).getDistanceTo(
@@ -320,11 +346,26 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         }
     }
 
+    /**
+     * <p>dmat.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @param k a int.
+     * @return an array of double.
+     */
     public abstract double[] dmat(int i, int j, int k);
 
+    /**
+     * <p>findBestD.</p>
+     *
+     * @param l a int.
+     */
     public abstract void findBestD(int l);
 
     /**
+     * <p>getChromatogramDistanceFunction.</p>
+     *
      * @return the chromatogramDistanceFunctionClass
      */
     public PairwiseFeatureSequenceSimilarity getChromatogramDistanceFunction() {
@@ -332,6 +373,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>getChromatogramWarpCommand.</p>
+     *
      * @return the chromatogramWarpCommandClass
      */
     public AFragmentCommand getChromatogramWarpCommand() {
@@ -339,6 +382,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Getter for the field <code>cluster</code>.</p>
+     *
      * @return the cluster
      */
     public HashMap<Integer, BinaryCluster> getCluster() {
@@ -351,34 +396,42 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getCluster(int)
      */
+    /** {@inheritDoc} */
     @Override
     public BinaryCluster getCluster(final int i) {
         return this.cluster.get(i);
     }
 
     /**
+     * <p>Getter for the field <code>clusterNames</code>.</p>
+     *
      * @return the clusterNames
      */
     public String[] getClusterNames() {
         return this.clusterNames;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<Entry<Integer, BinaryCluster>> getClusters() {
         return Collections.unmodifiableSet(this.cluster.entrySet());
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getConsensus() {
         return this.consensus;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Calculates clustering based on pairwise similarities/distances.";
     }
 
     /**
+     * <p>Getter for the field <code>dist</code>.</p>
+     *
      * @return the dist
      */
     public double[][] getDist() {
@@ -391,21 +444,30 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#getFragments()
      */
+    /** {@inheritDoc} */
     @Override
     public HashMap<Integer, IFileFragment> getFragments() {
         return this.fragments;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> getInputFiles() {
         return this.inputFiles;
     }
 
+    /**
+     * <p>getL.</p>
+     *
+     * @return a int.
+     */
     public int getL() {
         return this.L;
     }
 
     /**
+     * <p>Getter for the field <code>minimizingArrayCompVariableName</code>.</p>
+     *
      * @return the minimizingArrayCompVariableName
      */
     public String getMinimizingArrayCompVariableName() {
@@ -417,12 +479,15 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      *
      * @see maltcms.commands.fragments.cluster.IClusteringAlgorithm#getNames()
      */
+    /** {@inheritDoc} */
     @Override
     public String[] getNames() {
         return this.names;
     }
 
     /**
+     * <p>Getter for the field <code>pairwiseDistanceMatrixVariableName</code>.</p>
+     *
      * @return the pairwiseDistanceMatrixVariableName
      */
     public String getPairwiseDistanceMatrixVariableName() {
@@ -430,12 +495,19 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Getter for the field <code>pairwiseDistanceNamesVariableName</code>.</p>
+     *
      * @return the pairwiseDistanceNamesVariableName
      */
     public String getPairwiseDistanceNamesVariableName() {
         return this.pairwiseDistanceNamesVariableName;
     }
 
+    /**
+     * <p>Getter for the field <code>usedIndices</code>.</p>
+     *
+     * @return a {@link java.util.HashSet} object.
+     */
     public HashSet<Integer> getUsedIndices() {
         return this.usedIndices;
     }
@@ -445,6 +517,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.CLUSTERING;
@@ -456,6 +529,13 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * @see
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#handleFileFragments
      * (int, int, int)
+     */
+    /**
+     * <p>handleFileFragments.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @param k a int.
      */
     public void handleFileFragments(final int i, final int j, final int k) {
         final IFileFragment ff1 = this.fragments.get(i);
@@ -498,6 +578,13 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
 
     }
 
+    /**
+     * <p>init.</p>
+     *
+     * @param distances an array of double.
+     * @param names1 an array of {@link java.lang.String} objects.
+     * @param fragments1 a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public void init(final double[][] distances, final String[] names1,
             final TupleND<IFileFragment> fragments1) {
         this.usedIndices = new HashSet<>();
@@ -547,6 +634,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * datastructures.fragments.FileFragment,
      * cross.datastructures.tuple.TupleND)
      */
+    /** {@inheritDoc} */
     @Override
     public void init(final IFileFragment pwd, final TupleND<IFileFragment> t) {
         // check for existing children
@@ -585,16 +673,24 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>isMinimizeDist.</p>
+     *
      * @return the minimizeDist
      */
     public boolean isMinimizeDist() {
         return this.minimizeDist;
     }
 
+    /**
+     * <p>isMinimizing.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isMinimizing() {
         return this.minimizeDist;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<IFileFragment> iterator() {
         return null;
@@ -607,6 +703,14 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * maltcms.commands.fragments.cluster.IClusteringAlgorithm#joinIJtoK(int,
      * int, int, double[])
      */
+    /**
+     * <p>joinIJtoK.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @param k a int.
+     * @param dist1 an array of double.
+     */
     public abstract void joinIJtoK(int i, int j, int k, double[] dist1);
 
     /*
@@ -614,6 +718,7 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      *
      * @see maltcms.commands.fragments.cluster.IClusteringAlgorithm#merge()
      */
+    /** {@inheritDoc} */
     @Override
     public void merge() {
         log.info("#############################################################################");
@@ -646,6 +751,9 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * maltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#printCluster
      * ()
      */
+    /**
+     * <p>printCluster.</p>
+     */
     public void printCluster() {
         log.info("Printing cluster:");
         final Set<Integer> s = this.cluster.keySet();
@@ -654,6 +762,13 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         }
     }
 
+    /**
+     * <p>printDistanceToNewCluster.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @param nci a int.
+     */
     public void printDistanceToNewCluster(final int i, final int j,
             final int nci) {
         log.debug("Distance of " + this.names[i] + " to new cluster "
@@ -667,6 +782,9 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      *
      * @seemaltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#
      * printDistMatrix()
+     */
+    /**
+     * <p>printDistMatrix.</p>
      */
     public void printDistMatrix() {
         // System.out.println("Printing corrected Distance Matrix:");
@@ -692,17 +810,28 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
      * @seemaltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#
      * printNamesMatrix()
      */
+    /**
+     * <p>printNamesMatrix.</p>
+     */
     public void printNamesMatrix() {
         log.info("Printing names:");
         log.info(java.util.Arrays.toString(this.names));
     }
 
+    /**
+     * <p>putCluster.</p>
+     *
+     * @param i a int.
+     * @param bc a {@link maltcms.datastructures.cluster.BinaryCluster} object.
+     */
     public void putCluster(final int i, final BinaryCluster bc) {
         this.cluster.put(i, bc);
     }
 
     /**
-     * @param chromatogramDistanceFunction
+     * <p>setChromatogramDistanceFunction.</p>
+     *
+     * @param chromatogramDistanceFunction a {@link maltcms.commands.distances.PairwiseFeatureSequenceSimilarity} object.
      */
     public void setChromatogramDistanceFunction(
             final PairwiseFeatureSequenceSimilarity chromatogramDistanceFunction) {
@@ -710,7 +839,9 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
-     * @param chromatogramWarpCommand
+     * <p>setChromatogramWarpCommand.</p>
+     *
+     * @param chromatogramWarpCommand a {@link cross.commands.fragments.AFragmentCommand} object.
      */
     public void setChromatogramWarpCommand(
             final AFragmentCommand chromatogramWarpCommand) {
@@ -718,6 +849,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>cluster</code>.</p>
+     *
      * @param cluster the cluster to set
      */
     public void setCluster(final HashMap<Integer, BinaryCluster> cluster) {
@@ -725,23 +858,35 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>clusterNames</code>.</p>
+     *
      * @param clusterNames the clusterNames to set
      */
     public void setClusterNames(final String[] clusterNames) {
         this.clusterNames = clusterNames;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setConsensus(final IFileFragment f) {
         this.consensus = f;
     }
 
+    /**
+     * <p>setd.</p>
+     *
+     * @param i a int.
+     * @param j a int.
+     * @param v a double.
+     */
     public void setd(final int i, final int j, final double v) {
         this.dist[i][j] = v;
         this.dist[j][i] = v;
     }
 
     /**
+     * <p>Setter for the field <code>dist</code>.</p>
+     *
      * @param dist the dist to set
      */
     public void setDist(final double[][] dist) {
@@ -749,26 +894,41 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>fragments</code>.</p>
+     *
      * @param fragments the fragments to set
      */
     public void setFragments(final HashMap<Integer, IFileFragment> fragments) {
         this.fragments = fragments;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setInputFiles(final TupleND<IFileFragment> t) {
         this.inputFiles = t;
     }
 
+    /**
+     * <p>setL.</p>
+     *
+     * @param l a int.
+     */
     public void setL(final int l) {
         this.L = l;
     }
 
+    /**
+     * <p>setLDF.</p>
+     *
+     * @param ldf1 a {@link maltcms.commands.distances.PairwiseFeatureSequenceSimilarity} object.
+     */
     public void setLDF(final PairwiseFeatureSequenceSimilarity ldf1) {
         this.chromatogramDistanceFunctionClass = ldf1;
     }
 
     /**
+     * <p>Setter for the field <code>minimizeDist</code>.</p>
+     *
      * @param minimizeDist the minimizeDist to set
      */
     public void setMinimizeDist(final boolean minimizeDist) {
@@ -776,6 +936,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>minimizingArrayCompVariableName</code>.</p>
+     *
      * @param minimizingArrayCompVariableName the
      * minimizingArrayCompVariableName to set
      */
@@ -785,6 +947,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>names</code>.</p>
+     *
      * @param names the names to set
      */
     public void setNames(final String[] names) {
@@ -792,6 +956,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>pairwiseDistanceMatrixVariableName</code>.</p>
+     *
      * @param pairwiseDistanceMatrixVariableName the
      * pairwiseDistanceMatrixVariableName to set
      */
@@ -801,6 +967,8 @@ public abstract class ClusteringAlgorithm extends AFragmentCommand implements
     }
 
     /**
+     * <p>Setter for the field <code>pairwiseDistanceNamesVariableName</code>.</p>
+     *
      * @param pairwiseDistanceNamesVariableName the
      * pairwiseDistanceNamesVariableName to set
      */

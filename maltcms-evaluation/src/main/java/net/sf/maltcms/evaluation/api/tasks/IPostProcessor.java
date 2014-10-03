@@ -30,10 +30,17 @@ package net.sf.maltcms.evaluation.api.tasks;
 import java.io.Serializable;
 
 /**
+ * <p>IPostProcessor interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPostProcessor extends Serializable {
 
+    /**
+     * <p>process.</p>
+     *
+     * @param task a {@link net.sf.maltcms.evaluation.api.tasks.ITask} object.
+     */
     public void process(ITask task);
 }

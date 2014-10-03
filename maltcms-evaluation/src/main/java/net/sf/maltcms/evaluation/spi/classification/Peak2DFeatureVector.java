@@ -38,9 +38,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
+ * <p>Peak2DFeatureVector class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
 
@@ -58,6 +59,15 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
         RT1, RT2, NAME, ROWINDEX, AREA
     };
 
+    /**
+     * <p>Constructor for Peak2DFeatureVector.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param rowIndex a int.
+     * @param rt1 a double.
+     * @param rt2 a double.
+     * @param area a double.
+     */
     public Peak2DFeatureVector(String name, int rowIndex, double rt1, double rt2, double area) {
         this.name = name;
         this.rt1 = rt1;
@@ -70,6 +80,7 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         FEATURE f = FEATURE.valueOf(name);
@@ -106,6 +117,7 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         List<String> l = new LinkedList<>();
@@ -115,29 +127,43 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
         return l;
     }
 
+    /**
+     * <p>getRT1.</p>
+     *
+     * @return a double.
+     */
     public double getRT1() {
         return rt1;
     }
 
+    /**
+     * <p>getRT2.</p>
+     *
+     * @return a double.
+     */
     public double getRT2() {
         return rt2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getRowIndex() {
         return rowIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getArea() {
         return area;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -150,6 +176,7 @@ public class Peak2DFeatureVector implements IRowIndexNamedPeakFeatureVector {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

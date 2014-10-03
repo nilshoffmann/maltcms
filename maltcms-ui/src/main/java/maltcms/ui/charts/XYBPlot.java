@@ -44,11 +44,12 @@ import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
 
 /**
- * This class extends the {@link XYPlot} to a Plot with a zoomable background
+ * This class extends the {@link org.jfree.chart.plot.XYPlot} to a Plot with a zoomable background
  * image. This class supports only axis with the same lower and upper bounds
  * like the image.
  *
  * @author Mathias Wilhelm
+ * @version $Id: $Id
  */
 public class XYBPlot extends XYPlot implements Serializable {
 
@@ -68,7 +69,7 @@ public class XYBPlot extends XYPlot implements Serializable {
      * image
      * @param xAxis x axis of the plot
      * @param yAxis y axis of the plot
-     * @throws IOException Includes any I/O exceptions that may occur
+     * @throws java.io.IOException Includes any I/O exceptions that may occur
      */
     public XYBPlot(final String backgroundFilename, final NumberAxis xAxis,
             final NumberAxis yAxis) throws IOException {
@@ -94,7 +95,7 @@ public class XYBPlot extends XYPlot implements Serializable {
      * image
      * @param xAxisLabel label of the x axis
      * @param yAxisLabel label of the y axis
-     * @throws IOException Includes any I/O exceptions that may occur
+     * @throws java.io.IOException Includes any I/O exceptions that may occur
      */
     public XYBPlot(final String backgroundFilename, final String xAxisLabel,
             final String yAxisLabel) throws IOException {
@@ -164,9 +165,7 @@ public class XYBPlot extends XYPlot implements Serializable {
                 .getX() - p1.getX()), (int) (p2.getY() - p1.getY())));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void zoomDomainAxes(final double factor,
             final PlotRenderingInfo info, final Point2D source) {
@@ -179,9 +178,7 @@ public class XYBPlot extends XYPlot implements Serializable {
         updateBackground();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void zoomRangeAxes(final double factor,
             final PlotRenderingInfo info, final Point2D source) {
@@ -217,9 +214,7 @@ public class XYBPlot extends XYPlot implements Serializable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void zoomDomainAxes(final double factor,
             final PlotRenderingInfo info, final Point2D source,
@@ -228,9 +223,7 @@ public class XYBPlot extends XYPlot implements Serializable {
         updateBackground();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void zoomRangeAxes(final double factor,
             final PlotRenderingInfo info, final Point2D source,
@@ -239,9 +232,7 @@ public class XYBPlot extends XYPlot implements Serializable {
         updateBackground();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void zoomDomainAxes(final double lowerPercent,
             final double upperPercent, final PlotRenderingInfo info,
@@ -250,9 +241,7 @@ public class XYBPlot extends XYPlot implements Serializable {
         updateBackground();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void zoomRangeAxes(final double lowerPercent,
             final double upperPercent, final PlotRenderingInfo info,

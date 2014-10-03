@@ -35,21 +35,31 @@ import java.io.Serializable;
  * a feature, such as a peak).
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Category implements Comparable<Category>, Serializable {
 
     private final String name;
 
+    /**
+     * <p>Constructor for Category.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public Category(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getName();
@@ -58,11 +68,13 @@ public class Category implements Comparable<Category>, Serializable {
     /* (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(Category o) {
         return toString().compareTo(o.toString());
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Category)) {
@@ -72,6 +84,7 @@ public class Category implements Comparable<Category>, Serializable {
         return getName().equals(other.getName());
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return getName().hashCode();

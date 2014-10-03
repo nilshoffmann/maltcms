@@ -66,7 +66,7 @@ import ucar.ma2.MAMath;
  * Provides various methods to write arrays and other data to csv files.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -89,11 +89,18 @@ public class CSVWriter implements IWorkflowElement {
      *
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
      */
+    /** {@inheritDoc} */
     @Override
     public void appendXML(final Element e) {
         throw new NotImplementedException();
     }
 
+    /**
+     * <p>checkEqualLength.</p>
+     *
+     * @param a a {@link java.util.List} object.
+     * @return a boolean.
+     */
     public boolean checkEqualLength(final List<ArrayDouble.D1>... a) {
         List<ArrayDouble.D1> previous = null;
         for (final List<ArrayDouble.D1> arr : a) {
@@ -110,6 +117,12 @@ public class CSVWriter implements IWorkflowElement {
         return true;
     }
 
+    /**
+     * <p>checkEqualLength.</p>
+     *
+     * @param a a {@link java.util.List} object.
+     * @return a boolean.
+     */
     public boolean checkEqualLength(final List<ArrayDouble.D1> a) {
         Array previous = null;
         for (final Array arr : a) {
@@ -142,11 +155,27 @@ public class CSVWriter implements IWorkflowElement {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;
     }
 
+    /**
+     * <p>writeAlignmentPath.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param map a {@link java.util.List} object.
+     * @param distValues an array of double.
+     * @param rows a int.
+     * @param cols a int.
+     * @param refname a {@link java.lang.String} object.
+     * @param queryname a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
+     * @param symbolicPath a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeAlignmentPath(final String path, final String filename,
             final List<Tuple2DI> map, final double[] distValues, final int rows, final int cols,
             final String refname, final String queryname, final String value,
@@ -195,6 +224,14 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeArray.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param vals a {@link ucar.ma2.Array} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeArray(final String path, final String filename,
             final Array vals) {
         final File f = createFile(path, filename, WorkflowSlot.FILEIO);
@@ -228,6 +265,15 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeArray2DWithHeader.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param arr a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @param columnLabels an array of {@link java.lang.String} objects.
+     * @return a {@link java.io.File} object.
+     */
     public File writeArray2DWithHeader(final String path, final String filename,
             final ArrayDouble.D2 arr, final String[] columnLabels) {
 
@@ -269,6 +315,14 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeArray2D.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param arr a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeArray2D(final String path, final String filename,
             final ArrayDouble.D2 arr) {
 
@@ -307,6 +361,19 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeArray2DwithLabels.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param arr a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @param labels a {@link ucar.ma2.ArrayChar.D2} object.
+     * @param creator a {@link java.lang.Class} object.
+     * @param slot a {@link cross.datastructures.workflow.WorkflowSlot} object.
+     * @param date a {@link java.util.Date} object.
+     * @param resources a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeArray2DwithLabels(final String path,
             final String filename, final ArrayDouble.D2 arr,
             final ArrayChar.D2 labels, final Class<?> creator,
@@ -370,6 +437,14 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeArrayListOfArrays.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param values a {@link java.util.List} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeArrayListOfArrays(final String path,
             final String filename, final List<Array> values) {
         final boolean writeBlockNewline = Factory.getInstance().getConfiguration().
@@ -414,6 +489,15 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeArrayListsOfArrays.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param indices a {@link java.util.List} object.
+     * @param values a {@link java.util.List} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeArrayListsOfArrays(final String path,
             final String filename, final List<Array> indices,
             final List<Array> values) {
@@ -469,6 +553,14 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeOneFilePerArray.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param values a {@link java.util.List} object.
+     * @return an array of {@link java.io.File} objects.
+     */
     public File[] writeOneFilePerArray(final String path,
             final String filename, final List<Array> values) {
         int i = 0;
@@ -487,11 +579,26 @@ public class CSVWriter implements IWorkflowElement {
         return files;
     }
 
+    /**
+     * <p>writeStatsMap.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param sm a {@link cross.datastructures.StatsMap} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeStatsMap(final IFileFragment f, final StatsMap sm) {
         final File file = new File(f.getUri());
         return writeStatsMap(file.getParent(), file.getName(), sm);
     }
 
+    /**
+     * <p>writeStatsMap.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param sm a {@link cross.datastructures.StatsMap} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeStatsMap(final String path, final String filename,
             final StatsMap sm) {
         final File f = createFile(path, filename, WorkflowSlot.STATISTICS);
@@ -533,6 +640,14 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeStatsMaps.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param sms a {@link cross.datastructures.StatsMap} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeStatsMaps(final String path, final String filename,
             final StatsMap... sms) {
         final File f = createFile(path, filename, WorkflowSlot.STATISTICS);
@@ -575,6 +690,15 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeTableByCols.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param table a {@link java.util.List} object.
+     * @param ws a {@link cross.datastructures.workflow.WorkflowSlot} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeTableByCols(final String path, final String filename,
             final List<List<String>> table, final WorkflowSlot ws) {
         final File f = createFile(path, filename, ws);
@@ -602,6 +726,15 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeTableByRows.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param table a {@link java.util.List} object.
+     * @param ws a {@link cross.datastructures.workflow.WorkflowSlot} object.
+     * @return a {@link java.io.File} object.
+     */
     public File writeTableByRows(final String path, final String filename,
             final List<List<String>> table, final WorkflowSlot ws) {
         final File f = createFile(path, filename, ws);
@@ -626,6 +759,15 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>createPrintWriter.</p>
+     *
+     * @param path a {@link java.lang.String} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param header a {@link java.util.List} object.
+     * @param ws a {@link cross.datastructures.workflow.WorkflowSlot} object.
+     * @return a {@link java.io.PrintWriter} object.
+     */
     public PrintWriter createPrintWriter(final String path,
             final String filename, final List<String> header,
             final WorkflowSlot ws) {
@@ -651,6 +793,12 @@ public class CSVWriter implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>writeLine.</p>
+     *
+     * @param pw a {@link java.io.PrintWriter} object.
+     * @param line a {@link java.util.List} object.
+     */
     public void writeLine(final PrintWriter pw, final List<String> line) {
         final StringBuffer row = new StringBuffer();
         for (int j = 0; j < line.size(); j++) {

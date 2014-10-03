@@ -34,6 +34,12 @@ import java.util.List;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.Array;
 
+/**
+ * <p>ProfileChromatogram1D class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @RequiresVariables(names = {"var.binned_mass_values", "var.binned_intensity_values", "var.binned_scan_index"})
 public class ProfileChromatogram1D extends Chromatogram1D {
 
@@ -42,7 +48,7 @@ public class ProfileChromatogram1D extends Chromatogram1D {
      * var.binned_scan_index, var.binned_intensity_values, and
      * var.binned_mass_values to be available.
      *
-     * @param f
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public ProfileChromatogram1D(IFileFragment f) {
         this(f, false);
@@ -53,9 +59,11 @@ public class ProfileChromatogram1D extends Chromatogram1D {
      * var.binned_scan_index, var.binned_intensity_values, and
      * var.binned_mass_values to be available.
      *
-     * @param f
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
      * @throws ResourceNotAvailableException if any of the required variables is
      * not available
+     * @param checkVariableAvailability a boolean.
+     * @since 1.3.2
      */
     public ProfileChromatogram1D(IFileFragment f, boolean checkVariableAvailability) {
         super(f);
@@ -68,6 +76,7 @@ public class ProfileChromatogram1D extends Chromatogram1D {
     }
 
     /**
+     * <p>getBinnedIntensities.</p>
      *
      * @return @throws ResourceNotAvailableException if any of the required
      * variables is not available
@@ -77,6 +86,7 @@ public class ProfileChromatogram1D extends Chromatogram1D {
     }
 
     /**
+     * <p>getBinnedMasses.</p>
      *
      * @return @throws ResourceNotAvailableException if any of the required
      * variables is not available

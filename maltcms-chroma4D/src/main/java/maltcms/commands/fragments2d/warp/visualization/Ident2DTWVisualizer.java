@@ -37,10 +37,11 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
- * Basically the same as {@link Default2DTWVisualizer} but dont uses the warp
+ * Basically the same as {@link maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer} but dont uses the warp
  * path.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -48,9 +49,7 @@ public class Ident2DTWVisualizer extends Default2DTWVisualizer {
 
     private int currentrasterline = -1;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public BufferedImage createImage(final List<Array> scanlinesi,
             final List<Array> scanlinesj, final Array warpPathi,

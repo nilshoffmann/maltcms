@@ -31,8 +31,10 @@ import cross.ICopyable;
 import java.io.Serializable;
 
 /**
+ * <p>IPeakIntegrator interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPeakIntegrator extends Serializable, ICopyable<IPeakIntegrator> {
 

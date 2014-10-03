@@ -49,6 +49,7 @@ import org.apache.commons.configuration.Configuration;
  * fixiert werden
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -65,6 +66,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
     private int counter = 0;
     private int fcounter = 0;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -89,9 +91,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
         this.doneList.add(new HashMap<Integer, Boolean>());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        this.threshold = cfg.getDouble(
@@ -107,9 +107,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
 //                + ".maxRetDiff", 500.0d);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public double sim(Peak2D p, Peak2D np) {
         double sim = Double.NEGATIVE_INFINITY;
@@ -173,10 +171,9 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return a list of all bidirectional best hits. List contains the indices
-     * of peak in the peaklist.
+     * Getter.
      */
     @Override
     public List<List<Point>> getBidiBestHitList(
@@ -293,6 +290,7 @@ public class FastBidirectionalBestHit implements IBidirectionalBestHit {
         return indexList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
 //        this.dist = Factory.getInstance().getObjectFactory().instantiate(

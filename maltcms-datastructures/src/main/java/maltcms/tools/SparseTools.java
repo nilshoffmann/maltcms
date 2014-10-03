@@ -46,11 +46,14 @@ import ucar.ma2.Sparse;
  *
  * @author Nils Hoffmann
  * @deprecated You can use the usual array operations on Sparse array instances.
+ * 
  */
 @Slf4j
 public class SparseTools {
 
+    /** Constant <code>es</code> */
     protected static final ExecutorService es = Executors.newFixedThreadPool(4);
+    /** Constant <code>normalized</code> */
     public static final Map<Sparse, Double> normalized = Collections
             .synchronizedMap(new HashMap<Sparse, Double>());
 
@@ -90,6 +93,17 @@ public class SparseTools {
 //		// System.out.println("acos="+acos);
 //		return cos;
 //	}
+    /**
+     * <p>create.</p>
+     *
+     * @param indices a {@link java.util.List} object.
+     * @param values a {@link java.util.List} object.
+     * @param minindex a int.
+     * @param maxindex a int.
+     * @param nbins a int.
+     * @param massPrecision a double.
+     * @return an array of {@link ucar.ma2.Array} objects.
+     */
     public static Array[] create(final List<Array> indices,
             final List<Array> values, final int minindex, final int maxindex,
             final int nbins, final double massPrecision) {
@@ -121,6 +135,17 @@ public class SparseTools {
                 "Number of elements in argument lists differ!");
     }
 
+    /**
+     * <p>createAsList.</p>
+     *
+     * @param indices a {@link java.util.List} object.
+     * @param values a {@link java.util.List} object.
+     * @param minindex a int.
+     * @param maxindex a int.
+     * @param nbins a int.
+     * @param massPrecision a double.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Array> createAsList(final List<Array> indices,
             final List<Array> values, final int minindex, final int maxindex,
             final int nbins, final double massPrecision) {
@@ -143,6 +168,13 @@ public class SparseTools {
 //		final ArrayDot ad = new ArrayDot();
 //		return ad.apply(0, 0, -1, -1, s, t);
 //	}
+    /**
+     * <p>mult.</p>
+     *
+     * @param s a {@link ucar.ma2.Sparse} object.
+     * @param d a double.
+     * @return a {@link ucar.ma2.Sparse} object.
+     */
     public static Sparse mult(final Sparse s, final double d) {
         final IndexIterator sk = s.getIndexIterator();
         while (sk.hasNext()) {
@@ -156,6 +188,15 @@ public class SparseTools {
 //		// System.out.println(norm);
 //		return norm;
 //	}
+    /**
+     * <p>randomGaussian.</p>
+     *
+     * @param minindex a int.
+     * @param size a int.
+     * @param mean a double.
+     * @param stddev a double.
+     * @return a {@link ucar.ma2.Sparse} object.
+     */
     public static Sparse randomGaussian(final int minindex, final int size,
             final double mean, final double stddev) {
         final Sparse s = new Sparse(size, minindex, minindex + size - 1);
@@ -165,6 +206,15 @@ public class SparseTools {
         return s;
     }
 
+    /**
+     * <p>randomUniform.</p>
+     *
+     * @param minindex a int.
+     * @param size a int.
+     * @param mean a double.
+     * @param scale a double.
+     * @return a {@link ucar.ma2.Sparse} object.
+     */
     public static Sparse randomUniform(final int minindex, final int size,
             final double mean, final double scale) {
         final Sparse s = new Sparse(size, minindex, minindex + size - 1);

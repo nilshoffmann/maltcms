@@ -51,9 +51,10 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
 /**
+ * <p>Peak1DGroup class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 public class Peak1DGroup implements Iterable<Peak1D> {
@@ -77,6 +78,13 @@ public class Peak1DGroup implements Iterable<Peak1D> {
     private double apexIntensity = Double.NaN;
     private double area = Double.NaN;
 
+    /**
+     * <p>Constructor for Peak1DGroup.</p>
+     *
+     * @param fragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param scanIndex a int.
+     * @param raw a boolean.
+     */
     public Peak1DGroup(IFileFragment fragment, int scanIndex, boolean raw) {
         Tuple2D<Array, Array> ms = null;
         if (raw) {
@@ -91,6 +99,11 @@ public class Peak1DGroup implements Iterable<Peak1D> {
         this.peakSet.add(peak);
     }
 
+    /**
+     * <p>Constructor for Peak1DGroup.</p>
+     *
+     * @param p a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public Peak1DGroup(Peak1D... p) {
         this.peakSet = new TreeSet<>(new Peak1DComparator());
         this.peakSet.addAll(Arrays.asList(p));
@@ -136,6 +149,12 @@ public class Peak1DGroup implements Iterable<Peak1D> {
         setArea(area);
     }
 
+    /**
+     * <p>getMassSpectrum.</p>
+     *
+     * @param index a int.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<Array, Array> getMassSpectrum(int index) {
         int i = 0;
         int globalStartIdx = getStartIndex();
@@ -164,10 +183,20 @@ public class Peak1DGroup implements Iterable<Peak1D> {
         }
     }
 
+    /**
+     * <p>getMassSpectrum.</p>
+     *
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<Array, Array> getMassSpectrum() {
         return getMassSpectrum(getApexIndex());
     }
 
+    /**
+     * <p>getMassSpectra.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Array, Array>> getMassSpectra() {
         List<Tuple2D<Array, Array>> massSpectra = new ArrayList<>();
         if (apexMassSpectrum != null) {
@@ -243,6 +272,7 @@ public class Peak1DGroup implements Iterable<Peak1D> {
 //        }
 //        return sb.toString();
 //    }
+    /** {@inheritDoc} */
     @Override
     public Iterator<Peak1D> iterator() {
         return Collections.unmodifiableSet(this.peakSet).iterator();

@@ -33,15 +33,35 @@ import java.io.Serializable;
  * Interface for alignment anchors.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IAnchor extends Comparable<IAnchor>, Serializable {
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public abstract String getName();
 
+    /**
+     * <p>getScanIndex.</p>
+     *
+     * @return a int.
+     */
     public abstract int getScanIndex();
 
+    /**
+     * <p>setName.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public abstract void setName(String s);
 
+    /**
+     * <p>setScanIndex.</p>
+     *
+     * @param scan a int.
+     */
     public abstract void setScanIndex(int scan);
 }

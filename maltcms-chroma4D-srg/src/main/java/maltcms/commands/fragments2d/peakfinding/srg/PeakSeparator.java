@@ -42,8 +42,11 @@ import maltcms.tools.ArrayTools;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>PeakSeparator class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 @Data
@@ -56,10 +59,11 @@ public class PeakSeparator {
     private ArrayDouble.D1 rt1, rt2;
 
     /**
+     * <p>startSeparationFor.</p>
      *
-     * @param peakAreaList
-     * @param slc
-     * @param rts
+     * @param peakAreaList a {@link java.util.List} object.
+     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param rts a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
             IScanLine slc,
@@ -213,12 +217,13 @@ public class PeakSeparator {
     }
 
     /**
+     * <p>shouldBeSeparated.</p>
      *
-     * @param list
-     * @param similarity
-     * @param slc
-     * @param useMeanMs
-     * @return
+     * @param list a {@link java.util.List} object.
+     * @param similarity a {@link maltcms.math.functions.IScalarArraySimilarity} object.
+     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param useMeanMs a boolean.
+     * @return a boolean.
      */
     public boolean shouldBeSeparated(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, IScanLine slc, boolean useMeanMs) {
@@ -261,10 +266,11 @@ public class PeakSeparator {
     }
 
     /**
+     * <p>separatePeaks.</p>
      *
-     * @param list
-     * @param similarity
-     * @param slc
+     * @param list a {@link java.util.List} object.
+     * @param similarity a {@link maltcms.math.functions.IScalarArraySimilarity} object.
+     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
      */
     public void separatePeaks(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, IScanLine slc) {
@@ -317,9 +323,10 @@ public class PeakSeparator {
     }
 
     /**
+     * <p>mergePeaks.</p>
      *
-     * @param list
-     * @param slc
+     * @param list a {@link java.util.List} object.
+     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
      */
     public void mergePeaks(List<PeakArea2D> list,
             IScanLine slc) {
@@ -350,8 +357,9 @@ public class PeakSeparator {
     }
 
     /**
+     * <p>Setter for the field <code>minDist</code>.</p>
      *
-     * @param minDist
+     * @param minDist a double.
      */
     public void setMinDist(double minDist) {
         this.minDist = minDist;

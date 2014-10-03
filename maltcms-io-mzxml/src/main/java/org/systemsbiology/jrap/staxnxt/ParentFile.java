@@ -33,12 +33,21 @@ package org.systemsbiology.jrap.staxnxt;
  * file.
  *
  * @author Mathijs
+ * 
+ * @since 1.3.2
  */
 public class ParentFile {
     //public final static int TYPE_RAW = 1, TYPE_PROCESSED = 2;
 
     protected String URI, sha1, type;
 
+    /**
+     * <p>Constructor for ParentFile.</p>
+     *
+     * @param URI a {@link java.lang.String} object.
+     * @param type a {@link java.lang.String} object.
+     * @param sha1 a {@link java.lang.String} object.
+     */
     public ParentFile(String URI, String type, String sha1) {
         this.URI = URI;
         this.sha1 = sha1;
@@ -47,6 +56,8 @@ public class ParentFile {
 
     /**
      * Get the URI of this file.
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getURI() {
         return URI;
@@ -54,6 +65,8 @@ public class ParentFile {
 
     /**
      * Get the sha1-sum of this file.
+     *
+     * @return a {@link java.lang.String} object.
      */
     public String getSha1() {
         return sha1;
@@ -70,6 +83,7 @@ public class ParentFile {
         return type;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return ("URI " + URI + " sha1 " + sha1 + " type " + type);

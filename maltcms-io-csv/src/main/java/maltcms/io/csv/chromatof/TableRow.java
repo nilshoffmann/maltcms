@@ -30,8 +30,10 @@ package maltcms.io.csv.chromatof;
 import java.util.LinkedHashMap;
 
 /**
+ * <p>TableRow class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class TableRow extends LinkedHashMap<String, String> {
 

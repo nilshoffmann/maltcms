@@ -58,7 +58,7 @@ import ucar.ma2.MAMath;
  * values.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 @Slf4j
 public class XYChart extends AChart<XYPlot> {
@@ -75,6 +75,19 @@ public class XYChart extends AChart<XYPlot> {
     private boolean diffRender = false;
     private boolean logScale = false;
 
+    /**
+     * <p>Constructor for XYChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param labels1 an array of {@link java.lang.String} objects.
+     * @param arrays1 an array of {@link ucar.ma2.Array} objects.
+     * @param domains1 an array of {@link ucar.ma2.Array} objects.
+     * @param annotation_positions_x1 a {@link ucar.ma2.Array} object.
+     * @param annotation_positions_y1 a {@link ucar.ma2.Array} object.
+     * @param annotations1 an array of {@link java.lang.String} objects.
+     * @param x_axis a {@link java.lang.String} object.
+     * @param y_axis a {@link java.lang.String} object.
+     */
     public XYChart(final String title1, final String[] labels1,
             final Array[] arrays1, final Array[] domains1,
             final Array annotation_positions_x1,
@@ -86,6 +99,17 @@ public class XYChart extends AChart<XYPlot> {
         this.annotations = Arrays.asList(annotations1);
     }
 
+    /**
+     * <p>Constructor for XYChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param labels1 an array of {@link java.lang.String} objects.
+     * @param arrays1 an array of {@link ucar.ma2.Array} objects.
+     * @param domains1 an array of {@link ucar.ma2.Array} objects.
+     * @param x_axis a {@link java.lang.String} object.
+     * @param y_axis a {@link java.lang.String} object.
+     * @param useLogScale a boolean.
+     */
     public XYChart(final String title1, final String[] labels1,
             final Array[] arrays1, final Array[] domains1, final String x_axis,
             final String y_axis, final boolean useLogScale) {
@@ -98,17 +122,37 @@ public class XYChart extends AChart<XYPlot> {
         this.logScale = useLogScale;
     }
 
+    /**
+     * <p>Constructor for XYChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param labels1 an array of {@link java.lang.String} objects.
+     * @param arrays1 an array of {@link ucar.ma2.Array} objects.
+     * @param domains1 an array of {@link ucar.ma2.Array} objects.
+     * @param x_axis a {@link java.lang.String} object.
+     * @param y_axis a {@link java.lang.String} object.
+     */
     public XYChart(final String title1, final String[] labels1,
             final Array[] arrays1, final Array[] domains1, final String x_axis,
             final String y_axis) {
         this(title1, labels1, arrays1, domains1, x_axis, y_axis, false);
     }
 
+    /**
+     * <p>Constructor for XYChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param labels1 an array of {@link java.lang.String} objects.
+     * @param arrays1 an array of {@link ucar.ma2.Array} objects.
+     * @param x_axis a {@link java.lang.String} object.
+     * @param y_axis a {@link java.lang.String} object.
+     */
     public XYChart(final String title1, final String[] labels1,
             final Array[] arrays1, final String x_axis, final String y_axis) {
         this(title1, labels1, arrays1, null, x_axis, y_axis);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -120,6 +164,7 @@ public class XYChart extends AChart<XYPlot> {
                 + ".differenceRenderer", false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public XYPlot create() {
         configure(Factory.getInstance().getConfiguration());
@@ -216,11 +261,13 @@ public class XYChart extends AChart<XYPlot> {
         return p;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

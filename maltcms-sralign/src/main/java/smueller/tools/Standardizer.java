@@ -34,7 +34,10 @@ import ucar.ma2.IndexIterator;
 
 // Statische Methode, die zur Standardisiereung be�tigt werden
 /**
+ * <p>Standardizer class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class Standardizer {
 
@@ -46,11 +49,12 @@ public class Standardizer {
     // Arraywerte,
     // addiert minimum um im pos. wertebereich zu bleiben
     /**
+     * <p>cleanbase.</p>
      *
-     * @param a1
-     * @param median1
-     * @param deviation
-     * @return
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @param median1 a double.
+     * @param deviation a double.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public Array cleanbase(final Array a1, final double median1,
             final double deviation) {
@@ -74,9 +78,10 @@ public class Standardizer {
     }
 
     /**
+     * <p>cleanbaseline.</p>
      *
-     * @param a1
-     * @return
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public Array cleanbaseline(final Array a1) {
         final Array a = a1.copy();
@@ -95,24 +100,27 @@ public class Standardizer {
     }
 
     /**
+     * <p>Getter for the field <code>max</code>.</p>
      *
-     * @return
+     * @return a double.
      */
     public double getMax() {
         return this.max;
     }
 
     /**
+     * <p>Getter for the field <code>median</code>.</p>
      *
-     * @return
+     * @return a double.
      */
     public double getMedian() {
         return this.median;
     }
 
     /**
+     * <p>Getter for the field <code>min</code>.</p>
      *
-     * @return
+     * @return a double.
      */
     public double getMin() {
         return this.min;
@@ -120,9 +128,10 @@ public class Standardizer {
 
     // zieht logarithmus
     /**
+     * <p>logData.</p>
      *
-     * @param a1
-     * @return
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public Array logData(final Array a1) {
         final Array a = a1.copy();
@@ -137,9 +146,10 @@ public class Standardizer {
 
     // Berechnung des globalen Mittelwertes
     /**
+     * <p>mean.</p>
      *
-     * @param a
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public double mean(final Array a) {
         final IndexIterator ii1 = a.getIndexIterator();
@@ -153,9 +163,10 @@ public class Standardizer {
 
     // setzt alle negativen Arraywerte auf 0
     /**
+     * <p>nullData.</p>
      *
-     * @param a1
-     * @return
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public Array nullData(final Array a1) {
         final Array a = a1.copy();
@@ -174,9 +185,10 @@ public class Standardizer {
 
     // Standardisierung, skalieren auf Wertebereich 0-1
     /**
+     * <p>scale.</p>
      *
-     * @param a1
-     * @return
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public Array scale(final Array a1) {
         final Array a = a1.copy();
@@ -200,10 +212,11 @@ public class Standardizer {
 
     // Berechnung der Standardabweichung
     /**
+     * <p>standardDeviation.</p>
      *
-     * @param a
-     * @param meanvalue
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param meanvalue a double.
+     * @return a double.
      */
     public double standardDeviation(final Array a, final double meanvalue) {
         final IndexIterator ii2 = a.getIndexIterator();

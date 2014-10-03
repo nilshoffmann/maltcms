@@ -56,12 +56,24 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYBarDataset;
 
 @Slf4j
+/**
+ * <p>LogDeltaEvaluation class.</p>
+ *
+ * @author hoffmann
+ * @version $Id: $Id
+ */
 public class LogDeltaEvaluation implements IWorkflowElement {
 
     private IWorkflow workflow;
     private boolean logNaturalis = true;
     private List<Peak2DClique> peakCliques;
 
+    /**
+     * <p>calcRatios.</p>
+     *
+     * @param peaks a {@link java.util.List} object.
+     * @param f a {@link java.util.Collection} object.
+     */
     public void calcRatios(List<Peak2DClique> peaks, Collection<IFileFragment> f) {
         this.peakCliques = peaks;
         final String groupFileLocation = Factory.getInstance().getConfiguration().
@@ -229,22 +241,26 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         xybr.setBarPainter(new StandardXYBarPainter());
     }
 
+    /** {@inheritDoc} */
     @Override
     public IWorkflow getWorkflow() {
         return this.workflow;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.STATISTICS;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setWorkflow(IWorkflow iw) {
         this.workflow = iw;
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void appendXML(Element e) {
     }

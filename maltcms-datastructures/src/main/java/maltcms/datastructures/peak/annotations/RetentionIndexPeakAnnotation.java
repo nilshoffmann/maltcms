@@ -30,8 +30,10 @@ package maltcms.datastructures.peak.annotations;
 import lombok.Data;
 
 /**
+ * <p>RetentionIndexPeakAnnotation class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class RetentionIndexPeakAnnotation extends PeakAnnotation {

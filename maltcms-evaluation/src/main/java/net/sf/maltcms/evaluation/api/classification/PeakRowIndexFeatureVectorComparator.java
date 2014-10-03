@@ -28,15 +28,17 @@
 package net.sf.maltcms.evaluation.api.classification;
 
 /**
+ * <p>PeakRowIndexFeatureVectorComparator class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorComparator<IRowIndexNamedPeakFeatureVector> {
 
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isFN(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
@@ -52,6 +54,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isFP(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
@@ -71,6 +74,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isTN(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
@@ -87,6 +91,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isTP(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
@@ -105,12 +110,10 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
     }
 
     /**
+     * {@inheritDoc}
+     *
      * NaN's are treated as 0, giving a large distance for x!=y and 0 for x=y,
      * with either x=NaN and y!=NaN, x!=NaN and y==NaN, or x=NaN=y
-     *
-     * @param gt
-     * @param test
-     * @return
      */
     @Override
     public double getSquaredDiff(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {

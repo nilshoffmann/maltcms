@@ -46,8 +46,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>LocalHostMaltcmsProcess class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Deprecated
 public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowResult> implements
@@ -57,6 +59,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
     private final EventSource<IWorkflowResult> es = new EventSource<>();
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    /** {@inheritDoc} */
     @Override
     public void addListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.es.addListener(l);
@@ -67,6 +70,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
      *
      * @see java.util.concurrent.Callable#call()
      */
+    /** {@inheritDoc} */
     @Override
     public IWorkflow doInBackground() throws Exception {
         log.info("Starting up Maltcms!");
@@ -126,6 +130,7 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         return iw;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void fireEvent(final IEvent<IWorkflowResult> e) {
         this.es.fireEvent(e);
@@ -137,6 +142,8 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
      * @see cross.event.IListener#listen(cross.event.IEvent)
      */
     /**
+     * {@inheritDoc}
+     *
      * Relay method, calling all registered Listeners, if an event is received
      * from a Workflow.
      */
@@ -146,11 +153,17 @@ public class LocalHostMaltcmsProcess extends SwingWorker<IWorkflow, IWorkflowRes
         this.es.fireEvent(v);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeListener(final IListener<IEvent<IWorkflowResult>> l) {
         this.es.removeListener(l);
     }
 
+    /**
+     * <p>setConfiguration.</p>
+     *
+     * @param cfg a {@link org.apache.commons.configuration.Configuration} object.
+     */
     public void setConfiguration(final Configuration cfg) {
         this.cfg = cfg;
         log.debug("Using configuration");

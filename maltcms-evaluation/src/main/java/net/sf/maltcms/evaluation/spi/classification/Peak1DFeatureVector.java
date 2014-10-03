@@ -38,9 +38,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
+ * <p>Peak1DFeatureVector class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
 
@@ -59,6 +60,14 @@ public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
         RT, NAME, ROWINDEX, AREA
     };
 
+    /**
+     * <p>Constructor for Peak1DFeatureVector.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param rowIndex a int.
+     * @param rt a double.
+     * @param area a double.
+     */
     public Peak1DFeatureVector(String name, int rowIndex, double rt, double area) {
         this.name = name;
         this.rt = rt;
@@ -70,6 +79,7 @@ public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         FEATURE f = FEATURE.valueOf(name);
@@ -101,6 +111,7 @@ public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         List<String> l = new LinkedList<>();
@@ -110,25 +121,34 @@ public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
         return l;
     }
 
+    /**
+     * <p>getRT.</p>
+     *
+     * @return a double.
+     */
     public double getRT() {
         return rt;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getRowIndex() {
         return rowIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getArea() {
         return area;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -140,6 +160,7 @@ public class Peak1DFeatureVector implements IRowIndexNamedPeakFeatureVector {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

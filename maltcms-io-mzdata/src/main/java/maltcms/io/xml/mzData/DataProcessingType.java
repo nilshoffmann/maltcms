@@ -64,7 +64,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dataProcessingType", propOrder = {"software",
@@ -101,8 +102,7 @@ public class DataProcessingType implements Serializable {
     /**
      * Gets the value of the processingMethod property.
      *
-     * @return possible object is {@link ParamType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public ParamType getProcessingMethod() {
         return this.processingMethod;
@@ -111,8 +111,7 @@ public class DataProcessingType implements Serializable {
     /**
      * Gets the value of the software property.
      *
-     * @return possible object is {@link DataProcessingType.Software }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.DataProcessingType.Software}
      */
     public DataProcessingType.Software getSoftware() {
         return this.software;
@@ -121,8 +120,7 @@ public class DataProcessingType implements Serializable {
     /**
      * Sets the value of the processingMethod property.
      *
-     * @param value allowed object is {@link ParamType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.ParamType}
      */
     public void setProcessingMethod(final ParamType value) {
         this.processingMethod = value;
@@ -131,8 +129,7 @@ public class DataProcessingType implements Serializable {
     /**
      * Sets the value of the software property.
      *
-     * @param value allowed object is {@link DataProcessingType.Software }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.DataProcessingType.Software}
      */
     public void setSoftware(final DataProcessingType.Software value) {
         this.software = value;

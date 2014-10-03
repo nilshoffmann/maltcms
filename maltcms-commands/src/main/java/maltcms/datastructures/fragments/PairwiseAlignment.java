@@ -74,7 +74,7 @@ import ucar.nc2.Dimension;
  * Implementation of IFileFragmentProvider for PairwiseAlignment.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @ProvidesVariables(names = {"var.minimizing_array_comp"})
@@ -114,10 +114,20 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     private boolean normalizeAlignmentValueByMapWeights;
     private List<Tuple2DI> interppath;
 
+    /**
+     * <p>Getter for the field <code>interppath</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2DI> getInterppath() {
         return interppath;
     }
 
+    /**
+     * <p>Setter for the field <code>interppath</code>.</p>
+     *
+     * @param interppath a {@link java.util.List} object.
+     */
     public void setInterppath(List<Tuple2DI> interppath) {
         this.interppath = interppath;
     }
@@ -127,11 +137,13 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
      *
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
      */
+    /** {@inheritDoc} */
     @Override
     public void appendXML(final Element e) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.saveCDM = cfg.getBoolean(
@@ -153,6 +165,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>alignment</code>.</p>
+     *
      * @return the alignment
      */
     public IArrayD2Double getAlignment() {
@@ -160,6 +174,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>arrayDistanceClassName</code>.</p>
+     *
      * @return the arrayDistanceClassName
      */
     public String getArrayDistanceClassName() {
@@ -167,6 +183,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>cd</code>.</p>
+     *
      * @return the cumulativeDistanceClass
      */
     public IRecurrence getCd() {
@@ -174,6 +192,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>creator</code>.</p>
+     *
      * @return the creator
      */
     public Class<?> getCreator() {
@@ -181,6 +201,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>distance</code>.</p>
+     *
      * @return the distance
      */
     public IArrayD2Double getDistance() {
@@ -188,6 +210,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>ff</code>.</p>
+     *
      * @return the ff
      */
     public IFileFragment getFf() {
@@ -197,7 +221,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     /**
      * Retrieve paired anchors
      *
-     * @return
+     * @return a {@link maltcms.datastructures.alignment.DefaultPairSet} object.
      */
     public DefaultPairSet<IAnchor> getAnchors() {
         return anchors;
@@ -206,7 +230,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     /**
      * Set paired anchors
      *
-     * @param anchors
+     * @param anchors a {@link maltcms.datastructures.alignment.DefaultPairSet} object.
      */
     public void setAnchors(DefaultPairSet<IAnchor> anchors) {
         this.anchors = anchors;
@@ -217,12 +241,15 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
      */
+    /** {@inheritDoc} */
     @Override
     public IWorkflow getWorkflow() {
         return this.iw;
     }
 
     /**
+     * <p>Getter for the field <code>path</code>.</p>
+     *
      * @return the path
      */
     public List<Tuple2DI> getPath() {
@@ -230,6 +257,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>predecessors</code>.</p>
+     *
      * @return the predecessors
      */
     public ArrayByte.D2 getPredecessors() {
@@ -237,6 +266,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>pwd</code>.</p>
+     *
      * @return the pwd
      */
     public PairwiseFeatureSimilarity getPwd() {
@@ -244,6 +275,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>querysize</code>.</p>
+     *
      * @return the querysize
      */
     public int getQuerysize() {
@@ -251,6 +284,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>ref</code>.</p>
+     *
      * @return the ref
      */
     public IFileFragment getRef() {
@@ -258,6 +293,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>refsize</code>.</p>
+     *
      * @return the refsize
      */
     public int getRefsize() {
@@ -265,6 +302,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>result</code>.</p>
+     *
      * @return the result
      */
     public D0 getResult() {
@@ -272,6 +311,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>resultVector</code>.</p>
+     *
      * @return the resultVector
      */
     public D1 getResultVector() {
@@ -279,6 +320,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>target</code>.</p>
+     *
      * @return the target
      */
     public IFileFragment getTarget() {
@@ -290,12 +333,15 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;
     }
 
     /**
+     * <p>isMinimize.</p>
+     *
      * @return the isMinimize
      */
     public boolean isMinimize() {
@@ -303,6 +349,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>isNormalizeByMapWeights.</p>
+     *
      * @return the normalizeAlignmentValueByMapWeights
      */
     public boolean isNormalizeByMapWeights() {
@@ -310,6 +358,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>isSaveCDM.</p>
+     *
      * @return the saveCDM
      */
     public boolean isSaveCDM() {
@@ -317,12 +367,15 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>isSavePWDM.</p>
+     *
      * @return the savePWDM
      */
     public boolean isSavePWDM() {
         return this.savePWDM;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment provideFileFragment() {
         if (this.ff == null) {
@@ -535,6 +588,11 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
         return interp;
     }
 
+    /**
+     * <p>Setter for the field <code>alignment</code>.</p>
+     *
+     * @param al a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     */
     public void setAlignment(final IArrayD2Double al) {
         // ArrayDouble.D2 d2 = new ArrayDouble.D2(al.columns(),al.rows());
         // for(int i=0;i<al.rows();i++) {
@@ -546,6 +604,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>arrayDistanceClassName</code>.</p>
+     *
      * @param arrayDistanceClassName the arrayDistanceClassName to set
      */
     public void setArrayDistanceClassName(final String arrayDistanceClassName) {
@@ -553,24 +613,35 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
-     * @param cumulativeDistanceClass the cumulativeDistanceClass to set
+     * <p>Setter for the field <code>cd</code>.</p>
+     *
+     * @param cd a {@link maltcms.commands.distances.IRecurrence} object.
      */
     public void setCd(final IRecurrence cd) {
         this.cd = cd;
     }
 
     /**
+     * <p>Setter for the field <code>creator</code>.</p>
+     *
      * @param creator the creator to set
      */
     public void setCreator(final Class<?> creator) {
         this.creator = creator;
     }
 
+    /**
+     * <p>setCumulativeDistance.</p>
+     *
+     * @param cd1 a {@link maltcms.commands.distances.DtwRecurrence} object.
+     */
     public void setCumulativeDistance(final DtwRecurrence cd1) {
         this.cd = cd1;
     }
 
     /**
+     * <p>Setter for the field <code>distance</code>.</p>
+     *
      * @param distance the distance to set
      */
     public void setDistance(final IArrayD2Double distance) {
@@ -578,12 +649,21 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>ff</code>.</p>
+     *
      * @param ff the ff to set
      */
     public void setFf(final IFileFragment ff) {
         this.ff = ff;
     }
 
+    /**
+     * <p>setFileFragments.</p>
+     *
+     * @param ref1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param target1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param creator1 a {@link java.lang.Class} object.
+     */
     public void setFileFragments(final IFileFragment ref1,
             final IFileFragment target1, final Class<?> creator1) {
         this.ref = ref1;
@@ -591,6 +671,11 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
         this.creator = creator1;
     }
 
+    /**
+     * <p>setIsMinimizing.</p>
+     *
+     * @param b a boolean.
+     */
     public void setIsMinimizing(final boolean b) {
         this.isMinimize = b;
     }
@@ -601,6 +686,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
      * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
      * datastructures.workflow.IWorkflow)
      */
+    /** {@inheritDoc} */
     @Override
     public void setWorkflow(final IWorkflow iw1) {
         this.iw = iw1;
@@ -608,6 +694,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>setMinimize.</p>
+     *
      * @param isMinimize the isMinimize to set
      */
     public void setMinimize(final boolean isMinimize) {
@@ -615,25 +703,46 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
-     * @param normalizeAlignmentValueByMapWeights the
-     * normalizeAlignmentValueByMapWeights to set
+     * <p>setNormalizeByMapLength.</p>
+     *
+     * @param normalizeByMapWeights a boolean.
      */
     public void setNormalizeByMapLength(final boolean normalizeByMapWeights) {
         this.normalizeAlignmentValueByMapWeights = normalizeByMapWeights;
     }
 
+    /**
+     * <p>setNumberOfScansQuery.</p>
+     *
+     * @param n a int.
+     */
     public void setNumberOfScansQuery(final int n) {
         this.querysize = n;
     }
 
+    /**
+     * <p>setNumberOfScansReference.</p>
+     *
+     * @param n a int.
+     */
     public void setNumberOfScansReference(final int n) {
         this.refsize = n;
     }
 
+    /**
+     * <p>setPairwiseDistance.</p>
+     *
+     * @param pwd1 a {@link maltcms.commands.distances.PairwiseFeatureSimilarity} object.
+     */
     public void setPairwiseDistance(final PairwiseFeatureSimilarity pwd1) {
         this.pwd = pwd1;
     }
 
+    /**
+     * <p>setPairwiseDistances.</p>
+     *
+     * @param pwd1 a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     */
     public void setPairwiseDistances(final IArrayD2Double pwd1) {
         // ArrayDouble.D2 d2 = new ArrayDouble.D2(pwd1.columns(),pwd1.rows());
         // for(int i=0;i<pwd1.rows();i++) {
@@ -644,11 +753,18 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
         this.distance = pwd1;
     }
 
+    /**
+     * <p>Setter for the field <code>path</code>.</p>
+     *
+     * @param path1 a {@link java.util.List} object.
+     */
     public void setPath(final List<Tuple2DI> path1) {
         this.path = path1;
     }
 
     /**
+     * <p>Setter for the field <code>predecessors</code>.</p>
+     *
      * @param predecessors the predecessors to set
      */
     public void setPredecessors(final ArrayByte.D2 predecessors) {
@@ -656,6 +772,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>pwd</code>.</p>
+     *
      * @param pwd the pwd to set
      */
     public void setPwd(final PairwiseFeatureSimilarity pwd) {
@@ -663,6 +781,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>querysize</code>.</p>
+     *
      * @param querysize the querysize to set
      */
     public void setQuerysize(final int querysize) {
@@ -670,6 +790,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>ref</code>.</p>
+     *
      * @param ref the ref to set
      */
     public void setRef(final IFileFragment ref) {
@@ -677,18 +799,27 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>refsize</code>.</p>
+     *
      * @param refsize the refsize to set
      */
     public void setRefsize(final int refsize) {
         this.refsize = refsize;
     }
 
+    /**
+     * <p>Setter for the field <code>result</code>.</p>
+     *
+     * @param d a double.
+     */
     public void setResult(final double d) {
         this.result = new ArrayDouble.D0();
         this.result.set(d);
     }
 
     /**
+     * <p>Setter for the field <code>saveCDM</code>.</p>
+     *
      * @param saveCDM the saveCDM to set
      */
     public void setSaveCDM(final boolean saveCDM) {
@@ -696,6 +827,8 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>savePWDM</code>.</p>
+     *
      * @param savePWDM the savePWDM to set
      */
     public void setSavePWDM(final boolean savePWDM) {
@@ -703,12 +836,19 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>target</code>.</p>
+     *
      * @param target the target to set
      */
     public void setTarget(final IFileFragment target) {
         this.target = target;
     }
 
+    /**
+     * <p>setTraceMatrix.</p>
+     *
+     * @param predecessors1 a {@link ucar.ma2.ArrayByte.D2} object.
+     */
     public void setTraceMatrix(final ArrayByte.D2 predecessors1) {
         this.predecessors = predecessors1;
     }

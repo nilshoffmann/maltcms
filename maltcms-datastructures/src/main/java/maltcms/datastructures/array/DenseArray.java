@@ -44,10 +44,18 @@ import ucar.ma2.ArrayInt.D1;
  * A simple dense array encapsulation class.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class DenseArray implements IArrayD2Double {
 
+    /**
+     * <p>createLayoutImage.</p>
+     *
+     * @param pa a {@link maltcms.datastructures.array.DenseArray} object.
+     * @param bg a {@link java.awt.Color} object.
+     * @param fg a {@link java.awt.Color} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public static BufferedImage createLayoutImage(final DenseArray pa,
             final Color bg, final Color fg) {
         final BufferedImage bi = new BufferedImage(pa.rows(), pa.columns(),
@@ -67,7 +75,7 @@ public class DenseArray implements IArrayD2Double {
     /**
      * Copy a and save it in internal array
      *
-     * @param a
+     * @param a a {@link ucar.ma2.Array} object.
      */
     public DenseArray(final Array a) {
         if (a instanceof ArrayDouble.D2) {
@@ -81,9 +89,9 @@ public class DenseArray implements IArrayD2Double {
      * Create new Array with specified number of rows and columns. Initialize
      * with defaultValue1.
      *
-     * @param rows
-     * @param columns
-     * @param defaultValue1
+     * @param rows a int.
+     * @param columns a int.
+     * @param defaultValue1 a double.
      */
     public DenseArray(final int rows, final int columns,
             final double defaultValue1) {
@@ -97,6 +105,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.alignment.IArrayD2Double#columns()
      */
+    /** {@inheritDoc} */
     @Override
     public int columns() {
         return this.data.getShape()[1];
@@ -107,6 +116,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#flatten()
      */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         final ArrayDouble.D1 arr = new ArrayDouble.D1(
@@ -128,6 +138,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.alignment.IArrayD2Double#get(int, int)
      */
+    /** {@inheritDoc} */
     @Override
     public double get(final int row, final int col) {
         return this.data.get(row, col);
@@ -138,6 +149,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getArray()
      */
+    /** {@inheritDoc} */
     @Override
     public D2 getArray() {
         return (ArrayDouble.D2) this.data.copy();
@@ -148,6 +160,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
      */
+    /** {@inheritDoc} */
     @Override
     public int[] getColumnBounds(final int row) {
         return new int[]{0, columns()};
@@ -158,6 +171,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
      */
+    /** {@inheritDoc} */
     @Override
     public double getDefaultValue() {
         return this.defaultValue;
@@ -170,6 +184,7 @@ public class DenseArray implements IArrayD2Double {
      * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
      * ()
      */
+    /** {@inheritDoc} */
     @Override
     public int getNumberOfStoredElements() {
         return (columns() * rows());
@@ -180,11 +195,13 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getShape()
      */
+    /** {@inheritDoc} */
     @Override
     public Area getShape() {
         return new Area(new Rectangle(0, 0, columns(), rows()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean inRange(final int i, final int j) {
         if ((i > 0) && (j > 0) && (i < rows()) && (j < columns())) {
@@ -198,6 +215,7 @@ public class DenseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.alignment.IArrayD2Double#rows()
      */
+    /** {@inheritDoc} */
     @Override
     public int rows() {
         return this.data.getShape()[0];
@@ -209,6 +227,7 @@ public class DenseArray implements IArrayD2Double {
      * @see maltcms.datastructures.alignment.IArrayD2Double#set(int, int,
      * double)
      */
+    /** {@inheritDoc} */
     @Override
     public void set(final int row, final int col, final double d)
             throws ArrayIndexOutOfBoundsException {

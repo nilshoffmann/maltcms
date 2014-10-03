@@ -33,12 +33,19 @@ import maltcms.datastructures.array.IFeatureVector;
 import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 
 @Data
+/**
+ * <p>FeatureVectorDtwSimilarity class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class FeatureVectorDtwSimilarity extends TwoFeatureVectorOperation {
 
     private IDtwSimilarityFunction scoreFunction = new DtwTimePenalizedPairwiseSimilarity();
     private String arrayFeatureName = "intensity_values";
     private String timeFeatureName = "scan_acquisition_time";
 
+    /** {@inheritDoc} */
     @Override
     public double apply(IFeatureVector f1, IFeatureVector f2) {
         return scoreFunction.apply(0, 0, f1.getFeature(timeFeatureName).
@@ -46,6 +53,7 @@ public class FeatureVectorDtwSimilarity extends TwoFeatureVectorOperation {
                 getFeature(arrayFeatureName), f2.getFeature(arrayFeatureName));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isMinimize() {
         return scoreFunction.minimize();

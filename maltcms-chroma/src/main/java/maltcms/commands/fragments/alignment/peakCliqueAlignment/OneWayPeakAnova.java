@@ -62,9 +62,11 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYBarDataset;
 
 /**
+ * <p>OneWayPeakAnova class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 public class OneWayPeakAnova implements IWorkflowElement {
@@ -112,6 +114,13 @@ public class OneWayPeakAnova implements IWorkflowElement {
         return MathTools.average(values, 0, values.length - 1);
     }
 
+    /**
+     * <p>calcFisherRatios.</p>
+     *
+     * @param c a {@link java.util.Collection} object.
+     * @param f a {@link java.util.Collection} object.
+     * @param groupFileLocation a {@link java.lang.String} object.
+     */
     public void calcFisherRatios(Collection<Clique<IBipacePeak>> c,
             Collection<IFileFragment> f, String groupFileLocation) {
         if (groupFileLocation.isEmpty()) {
@@ -330,6 +339,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
      */
+    /** {@inheritDoc} */
     @Override
     public IWorkflow getWorkflow() {
         return this.workflow;
@@ -340,6 +350,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.STATISTICS;
@@ -351,6 +362,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
      * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
      * datastructures.workflow.IWorkflow)
      */
+    /** {@inheritDoc} */
     @Override
     public void setWorkflow(IWorkflow iw) {
         this.workflow = iw;
@@ -362,6 +374,7 @@ public class OneWayPeakAnova implements IWorkflowElement {
      *
      * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
      */
+    /** {@inheritDoc} */
     @Override
     public void appendXML(Element e) {
         // TODO Auto-generated method stub

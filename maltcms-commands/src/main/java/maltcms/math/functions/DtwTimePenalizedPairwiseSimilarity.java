@@ -36,8 +36,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>DtwTimePenalizedPairwiseSimilarity class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IDtwSimilarityFunction.class)
@@ -49,6 +51,7 @@ public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunctio
     private IScalarSimilarity retentionTimeSimilarity = new GaussianDifferenceSimilarity();
     private IArraySimilarity denseMassSpectraSimilarity = new ArrayCos();
 
+    /** {@inheritDoc} */
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,
             Array t2) {
@@ -60,11 +63,13 @@ public class DtwTimePenalizedPairwiseSimilarity implements IDtwSimilarityFunctio
         return rtScore * score;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean minimize() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
     }

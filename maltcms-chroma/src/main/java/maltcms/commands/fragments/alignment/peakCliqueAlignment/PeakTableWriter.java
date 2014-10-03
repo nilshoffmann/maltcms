@@ -28,8 +28,11 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 /**
+ * <p>PeakTableWriter class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public class PeakTableWriter {
 

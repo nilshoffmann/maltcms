@@ -43,8 +43,10 @@ import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
 import ucar.ma2.Array;
 
 /**
+ * <p>QuantileSnrPeakFinder class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -70,12 +72,19 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
     @Configurable
     private int meanEstimationWindow = 100;
 
+    /**
+     * <p>applyFilters.</p>
+     *
+     * @param correctedtic a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     protected Array applyFilters(final Array correctedtic) {
         final Array filteredtic = BatchFilter.applyFilters(correctedtic,
                 this.filter);
         return filteredtic;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PeakPositionsResultSet findPeakPositions(Array tic) {
         EvalTools.notNull(tic, this);
@@ -114,6 +123,7 @@ public class QuantileSnrPeakFinder implements IPeakFinder {
         return pprs;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IPeakFinder copy() {
         QuantileSnrPeakFinder qspf = new QuantileSnrPeakFinder();

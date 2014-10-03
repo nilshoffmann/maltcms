@@ -52,8 +52,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
+ * <p>Data2DNormalizer class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -85,15 +87,13 @@ public class Data2DNormalizer extends AFragmentCommand {
     @Configurable
     private int topHatFilterWindow = 5;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Normalizes 2D / GCxGC-MS data";
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> ret = new TupleND<>();
@@ -221,6 +221,7 @@ public class Data2DNormalizer extends AFragmentCommand {
      * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
      * .configuration.Configuration)
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -233,10 +234,7 @@ public class Data2DNormalizer extends AFragmentCommand {
                 "second_column_scan_index");
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

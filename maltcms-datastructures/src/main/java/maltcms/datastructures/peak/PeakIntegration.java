@@ -28,8 +28,10 @@
 package maltcms.datastructures.peak;
 
 /**
+ * <p>PeakIntegration class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public enum PeakIntegration {
 

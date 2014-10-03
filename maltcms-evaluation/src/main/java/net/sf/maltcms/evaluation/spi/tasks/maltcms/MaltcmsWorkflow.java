@@ -28,8 +28,10 @@
 package net.sf.maltcms.evaluation.spi.tasks.maltcms;
 
 /**
+ * <p>MaltcmsWorkflow class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class MaltcmsWorkflow {
 }

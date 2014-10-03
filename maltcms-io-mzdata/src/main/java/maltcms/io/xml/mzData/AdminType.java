@@ -60,7 +60,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "adminType", propOrder = {"sampleName", "sampleDescription",
@@ -93,9 +94,9 @@ public class AdminType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link PersonType }
+     * {@link maltcms.io.xml.mzData.PersonType}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<PersonType> getContact() {
         if (this.contact == null) {
@@ -107,8 +108,7 @@ public class AdminType implements Serializable {
     /**
      * Gets the value of the sampleDescription property.
      *
-     * @return possible object is {@link DescriptionType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.DescriptionType}
      */
     public DescriptionType getSampleDescription() {
         return this.sampleDescription;
@@ -117,8 +117,7 @@ public class AdminType implements Serializable {
     /**
      * Gets the value of the sampleName property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getSampleName() {
         return this.sampleName;
@@ -127,8 +126,7 @@ public class AdminType implements Serializable {
     /**
      * Gets the value of the sourceFile property.
      *
-     * @return possible object is {@link SourceFileType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.SourceFileType}
      */
     public SourceFileType getSourceFile() {
         return this.sourceFile;
@@ -137,8 +135,7 @@ public class AdminType implements Serializable {
     /**
      * Sets the value of the sampleDescription property.
      *
-     * @param value allowed object is {@link DescriptionType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.DescriptionType}
      */
     public void setSampleDescription(final DescriptionType value) {
         this.sampleDescription = value;
@@ -147,8 +144,7 @@ public class AdminType implements Serializable {
     /**
      * Sets the value of the sampleName property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setSampleName(final String value) {
         this.sampleName = value;
@@ -157,8 +153,7 @@ public class AdminType implements Serializable {
     /**
      * Sets the value of the sourceFile property.
      *
-     * @param value allowed object is {@link SourceFileType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.SourceFileType}
      */
     public void setSourceFile(final SourceFileType value) {
         this.sourceFile = value;

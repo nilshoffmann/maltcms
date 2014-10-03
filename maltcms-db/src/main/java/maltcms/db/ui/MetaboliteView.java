@@ -50,6 +50,12 @@ import maltcms.datastructures.ms.Metabolite;
 
 import com.db4o.ObjectContainer;
 
+/**
+ * <p>MetaboliteView class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteView implements TableModelListener, ComponentListener {
 
     /**
@@ -67,6 +73,11 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
     protected double threshold = 0.99d;
     protected JScrollPane jsp = null, jsp2 = null;
 
+    /**
+     * <p>Constructor for MetaboliteView.</p>
+     *
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     */
     public MetaboliteView(MetaboliteViewModel mvm) {
         this.mvm = mvm;
         //jpb = new JProgressBar();
@@ -88,6 +99,11 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         this.jp = new JPanel();
     }
 
+    /**
+     * <p>setEnabled.</p>
+     *
+     * @param b a boolean.
+     */
     public void setEnabled(final boolean b) {
         Runnable r = new Runnable() {
             @Override
@@ -99,6 +115,11 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         SwingUtilities.invokeLater(r);
     }
 
+    /**
+     * <p>addComponents.</p>
+     *
+     * @param jf a {@link javax.swing.JFrame} object.
+     */
     public void addComponents(JFrame jf) {
         jf.setLayout(new BorderLayout());
         //jf.add(jp,BorderLayout.CENTER);
@@ -118,6 +139,11 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         //metaboliteView.setFillsViewportHeight(true);
     }
 
+    /**
+     * <p>getMetaboliteMembers.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<String> getMetaboliteMembers() {
         Method[] m = Metabolite.class.getMethods();
         Vector<String> al = new Vector<>();
@@ -131,6 +157,11 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         return al;
     }
 
+    /**
+     * <p>newRowsAdded.</p>
+     *
+     * @param arg0 a {@link javax.swing.event.TableModelEvent} object.
+     */
     public void newRowsAdded(TableModelEvent arg0) {
         this.metaboliteView.revalidate();
         //this.jsp2.revalidate();
@@ -138,6 +169,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         //this.jp.revalidate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void tableChanged(TableModelEvent arg0) {
         this.metaboliteView.revalidate();
@@ -146,14 +178,17 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
         //this.jp.revalidate();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void componentHidden(ComponentEvent e) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void componentMoved(ComponentEvent e) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void componentResized(ComponentEvent e) {
         //System.out.println("Component resized: "+e.toString());
@@ -165,6 +200,7 @@ public class MetaboliteView implements TableModelListener, ComponentListener {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void componentShown(ComponentEvent e) {
     }

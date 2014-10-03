@@ -41,8 +41,7 @@ import ucar.ma2.ArrayInt;
  * the modulation periods scans belong to.
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Scan2D extends Scan1D implements IScan2D {
 
@@ -53,15 +52,40 @@ public class Scan2D extends Scan1D implements IScan2D {
     private double fctime = -1, sctime = -1;
     private int fcind = -1, scind = -1;
 
+    /**
+     * <p>Constructor for Scan2D.</p>
+     *
+     * @since 1.3.2
+     */
     public Scan2D() {
         
     }
     
+    /**
+     * <p>Constructor for Scan2D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     */
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
             double scanAcquisitionTime1) {
         super(masses1, intensities1, scanNumber1, scanAcquisitionTime1);
     }
 
+    /**
+     * <p>Constructor for Scan2D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     * @param idx1 a int.
+     * @param idx2 a int.
+     * @param rt1 a double.
+     * @param rt2 a double.
+     */
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
             double scanAcquisitionTime1, int idx1, int idx2, double rt1,
             double rt2) {
@@ -72,6 +96,19 @@ public class Scan2D extends Scan1D implements IScan2D {
         this.sctime = rt2;
     }
 
+    /**
+     * <p>Constructor for Scan2D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     * @param idx1 a int.
+     * @param idx2 a int.
+     * @param rt1 a double.
+     * @param rt2 a double.
+     * @param msLevel a short.
+     */
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
             double scanAcquisitionTime1, int idx1, int idx2, double rt1,
             double rt2, short msLevel) {
@@ -82,6 +119,23 @@ public class Scan2D extends Scan1D implements IScan2D {
         this.sctime = rt2;
     }
 
+    /**
+     * <p>Constructor for Scan2D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     * @param idx1 a int.
+     * @param idx2 a int.
+     * @param rt1 a double.
+     * @param rt2 a double.
+     * @param msLevel a short.
+     * @param precursorCharge a int.
+     * @param precursorMz a double.
+     * @param precursorIntensity a double.
+     * @since 1.3.2
+     */
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
             double scanAcquisitionTime1, int idx1, int idx2, double rt1,
             double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
@@ -92,6 +146,21 @@ public class Scan2D extends Scan1D implements IScan2D {
         this.sctime = rt2;
     }
 
+    /**
+     * <p>Constructor for Scan2D.</p>
+     *
+     * @param masses1 a {@link ucar.ma2.Array} object.
+     * @param intensities1 a {@link ucar.ma2.Array} object.
+     * @param scanNumber1 a int.
+     * @param scanAcquisitionTime1 a double.
+     * @param rt1 a double.
+     * @param rt2 a double.
+     * @param msLevel a short.
+     * @param precursorCharge a int.
+     * @param precursorMz a double.
+     * @param precursorIntensity a double.
+     * @since 1.3.2
+     */
     public Scan2D(Array masses1, Array intensities1, int scanNumber1,
             double scanAcquisitionTime1, double rt1,
             double rt2, short msLevel, final int precursorCharge, final double precursorMz, final double precursorIntensity) {
@@ -100,46 +169,55 @@ public class Scan2D extends Scan1D implements IScan2D {
         this.sctime = rt2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getSecondColumnScanIndex() {
         return this.scind;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSecondColumnScanAcquisitionTime() {
         return this.sctime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSecondColumnScanIndex(final int a) {
         this.scind = a;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSecondColumnScanAcquisitionTime(final double sat) {
         this.sctime = sat;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getFirstColumnScanIndex() {
         return this.fcind;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFirstColumnScanAcquisitionTime() {
         return this.fctime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFirstColumnScanIndex(final int a) {
         this.fcind = a;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFirstColumnScanAcquisitionTime(final double sat) {
         this.fctime = sat;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(final String name) {
         switch (name) {
@@ -170,6 +248,7 @@ public class Scan2D extends Scan1D implements IScan2D {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList(new String[]{"mass_values", "intensity_values",

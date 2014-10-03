@@ -86,7 +86,7 @@ import ucar.ma2.MAMath.MinMax;
  * TODO implement visualization of anchors.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -128,21 +128,26 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     private int fontsize = 30;
 
     /**
+     * <p>addSpectra.</p>
      *
+     * @param queryName a {@link java.lang.String} object.
+     * @param refName a {@link java.lang.String} object.
      * @param queryName
-     * @param refName
      * @param query
-     * @param ref
-     * @param bi
-     * @param specwidth1
-     * @param colorlegendwidth
-     * @param colorlegendheight
-     * @param margin
-     * @param colorTable
-     * @param minimize
-     * @param refAnchors
      * @param queryAnchors
-     * @return
+     * @param refName
+     * @param ref
+     * @param refAnchors
+     * @param bi a {@link java.awt.image.BufferedImage} object.
+     * @param specwidth1 a int.
+     * @param colorlegendwidth a int.
+     * @param colorlegendheight a int.
+     * @param margin a int.
+     * @param colorTable an array of int.
+     * @param minimize a boolean.
+     * @param refAnchors a {@link java.util.List} object.
+     * @param queryAnchors a {@link java.util.List} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     protected BufferedImage addSpectra(final String queryName,
             final String refName, final Array query, final Array ref,
@@ -309,14 +314,16 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>addSpectrumImage.</p>
      *
-     * @param name
+     * @param name a {@link java.lang.String} object.
      * @param a
-     * @param height
-     * @param fg
-     * @param bg
      * @param anchorPositions
-     * @return
+     * @param height a int.
+     * @param fg a {@link java.awt.Color} object.
+     * @param bg a {@link java.awt.Color} object.
+     * @param anchorPositions a {@link java.util.List} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     protected BufferedImage addSpectrumImage(final String name, final Array a,
             final int height, final Color fg, final Color bg,
@@ -372,6 +379,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         return bim;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t1) {
         final IFileFragment iff = MaltcmsTools.getPairwiseDistanceFragment(t1);
@@ -382,6 +390,7 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
         return t1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.path_i = cfg.getString("var.warp_path_i", "warp_path_i");
@@ -390,16 +399,17 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>createAlignmentMatrixImage.</p>
      *
-     * @param a
-     * @param di
-     * @param rF
-     * @param qF
-     * @param reference
-     * @param query
-     * @param path
-     * @param output
-     * @param minimize
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param di a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @param rF a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param qF a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param reference a {@link ucar.ma2.Array} object.
+     * @param query a {@link ucar.ma2.Array} object.
+     * @param path a {@link java.util.List} object.
+     * @param output a {@link java.io.File} object.
+     * @param minimize a boolean.
      */
     protected void createAlignmentMatrixImage(final Array a,
             final IVariableFragment di, final IFileFragment rF,
@@ -595,12 +605,13 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>mapToBin.</p>
      *
-     * @param value
-     * @param maxval
-     * @param minval
-     * @param numbins
-     * @return
+     * @param value a double.
+     * @param maxval a double.
+     * @param minval a double.
+     * @param numbins a int.
+     * @return a int.
      */
     protected int mapToBin(final double value, final double maxval,
             final double minval, final int numbins) {

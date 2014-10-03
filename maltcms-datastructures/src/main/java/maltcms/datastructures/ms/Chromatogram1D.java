@@ -54,7 +54,7 @@ import ucar.ma2.MAMath;
  * Implementation of a one-dimensional chromatogram.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class Chromatogram1D implements IChromatogram1D {
@@ -72,10 +72,21 @@ public class Chromatogram1D implements IChromatogram1D {
     private Array msLevel;
     private Map<Short, List<Integer>> msScanMap;
 
+    /**
+     * <p>Constructor for Chromatogram1D.</p>
+     *
+     * @param e a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public Chromatogram1D(final IFileFragment e) {
         this(e, true);
     }
 
+    /**
+     * <p>Constructor for Chromatogram1D.</p>
+     *
+     * @param e a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param useCache a boolean.
+     */
     public Chromatogram1D(final IFileFragment e, final boolean useCache) {
         this.parent = e;
         final String mz = Factory.getInstance().getConfiguration().getString(
@@ -125,6 +136,12 @@ public class Chromatogram1D implements IChromatogram1D {
         }
     }
 
+    /**
+     * <p>setPrefetchSize.</p>
+     *
+     * @param scans a int.
+     * @param list a {@link java.util.List} object.
+     */
     protected void setPrefetchSize(int scans, List<Array> list) {
         if (list instanceof CachedList) {
             ((CachedList) list).setCacheSize(scans / 10);
@@ -132,6 +149,11 @@ public class Chromatogram1D implements IChromatogram1D {
         }
     }
 
+    /**
+     * <p>activateCache.</p>
+     *
+     * @param ivf a {@link cross.datastructures.fragments.IVariableFragment} object.
+     */
     protected void activateCache(IVariableFragment ivf) {
         if (ivf instanceof ImmutableVariableFragment2) {
             ((ImmutableVariableFragment2) ivf).setUseCachedList(true);
@@ -141,6 +163,12 @@ public class Chromatogram1D implements IChromatogram1D {
         }
     }
 
+    /**
+     * <p>buildScan.</p>
+     *
+     * @param i a int.
+     * @return a {@link maltcms.datastructures.ms.Scan1D} object.
+     */
     protected Scan1D buildScan(int i) {
         log.info("Building scan {}", i);
         final Array masses = massValues.get(i);
@@ -153,6 +181,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<Double, Double> getTimeRange() {
         if (timeRange == null) {
@@ -162,6 +191,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return timeRange;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<Double, Double> getMassRange() {
         if (massRange == null) {
@@ -170,35 +200,42 @@ public class Chromatogram1D implements IChromatogram1D {
         return massRange;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.scan_acquisition_time_var = cfg.getString(
                 "var.scan_acquisition_time", "scan_acquisition_time");
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Array> getIntensities() {
         return intensityValues;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Array> getMasses() {
         return massValues;
     }
 
-    /**
-     * @param scan scan index to load
-     */
+    /** {@inheritDoc} */
     @Override
     public Scan1D getScan(final int scan) {
         return buildScan(scan);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getScanAcquisitionTimeUnit() {
         return this.scanAcquisitionTimeUnit;
     }
 
+    /**
+     * <p>getScans.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Scan1D> getScans() {
         ArrayList<Scan1D> al = new ArrayList<>();
         for (int i = 0; i < getNumberOfScans(); i++) {
@@ -207,6 +244,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return al;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<IScan1D> subsetByScanAcquisitionTime(double startSat, double stopSat) {
         final int startIndex = getIndexFor(startSat);
@@ -247,6 +285,7 @@ public class Chromatogram1D implements IChromatogram1D {
         };
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<IScan1D> subsetByScanIndex(final int startIndex, final int stopIndex) {
         if (startIndex < 0) {
@@ -286,6 +325,8 @@ public class Chromatogram1D implements IChromatogram1D {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * This iterator acts on the underlying collection of scans in
      * Chromatogram1D, so be careful with concurrent access / modification!
      */
@@ -317,6 +358,11 @@ public class Chromatogram1D implements IChromatogram1D {
         return iter;
     }
 
+    /**
+     * <p>setExperiment.</p>
+     *
+     * @param e a {@link maltcms.datastructures.ms.IExperiment1D} object.
+     */
     public void setExperiment(final IExperiment1D e) {
         this.parent = e;
     }
@@ -326,6 +372,7 @@ public class Chromatogram1D implements IChromatogram1D {
      *
      * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
      */
+    /** {@inheritDoc} */
     @Override
     public Array getScanAcquisitionTime() {
         return this.scanAcquisitionTimeVar.getArray();
@@ -336,6 +383,7 @@ public class Chromatogram1D implements IChromatogram1D {
      *
      * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
      */
+    /** {@inheritDoc} */
     @Override
     public int getNumberOfScans() {
         if (numberOfScans == -1) {
@@ -344,6 +392,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return numberOfScans;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getIndexFor(double scan_acquisition_time) throws ArrayIndexOutOfBoundsException {
         double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
@@ -383,11 +432,13 @@ public class Chromatogram1D implements IChromatogram1D {
      *
      * @see maltcms.datastructures.ms.IChromatogram#getParent()
      */
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getParent() {
         return this.parent;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getNumberOfScansForMsLevel(short msLevelValue) {
         if (msLevelValue == (short) 1 && msScanMap == null) {
@@ -396,6 +447,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return msScanMap.get(msLevelValue).size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterable<IScan1D> subsetByMsLevel(final short msLevel) {
         Iterable<IScan1D> iterable = new Iterable<IScan1D>() {
@@ -407,6 +459,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return iterable;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Collection<Short> getMsLevels() {
         if (msScanMap == null) {
@@ -417,6 +470,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IScan1D getScanForMsLevel(int i, short level) {
         if (level == (short) 1 && msScanMap == null) {
@@ -428,6 +482,7 @@ public class Chromatogram1D implements IChromatogram1D {
         return getScan(msScanMap.get(level).get(i));
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Integer> getIndicesOfScansForMsLevel(short level) {
         if (level == (short) 1 && msScanMap == null) {

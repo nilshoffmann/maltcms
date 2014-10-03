@@ -76,7 +76,7 @@ import ucar.nc2.NetcdfFileWriteable;
  * scan_index scan_acquisition_time total_intensity mass_values intensity_values
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
@@ -125,6 +125,7 @@ public class FsaTxtDataSource implements IDataSource {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int canRead(final IFileFragment ff) {
         final int dotindex = ff.getName().indexOf(".");
@@ -143,10 +144,12 @@ public class FsaTxtDataSource implements IDataSource {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration configuration) {
         this.scanDimensionVars = StringTools.toStringList(configuration.getList(this.
@@ -164,6 +167,7 @@ public class FsaTxtDataSource implements IDataSource {
                 this.getClass().getName() + ".dataFieldToRead", 3);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             FileNotFoundException, ResourceNotAvailableException {
@@ -176,6 +180,7 @@ public class FsaTxtDataSource implements IDataSource {
         return ral;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, FileNotFoundException,
@@ -183,6 +188,7 @@ public class FsaTxtDataSource implements IDataSource {
         throw new NotImplementedException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException, FileNotFoundException {
@@ -213,6 +219,14 @@ public class FsaTxtDataSource implements IDataSource {
                 getName());
     }
 
+    /**
+     * <p>read.</p>
+     *
+     * @param csvr a {@link maltcms.io.csv.CSVReader} object.
+     * @param inputFileName a {@link java.lang.String} object.
+     * @return a {@link maltcms.io.csv.CSVReader} object.
+     * @throws java.io.IOException if any.
+     */
     protected CSVReader read(CSVReader csvr, String inputFileName) throws IOException {
         String fileExtension = StringTools.getFileExtension(inputFileName).
                 toLowerCase();
@@ -230,6 +244,7 @@ public class FsaTxtDataSource implements IDataSource {
         return csvr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException, FileNotFoundException {
@@ -245,6 +260,7 @@ public class FsaTxtDataSource implements IDataSource {
         return al;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, FileNotFoundException,
@@ -255,11 +271,19 @@ public class FsaTxtDataSource implements IDataSource {
         return f;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
 
+    /**
+     * <p>getDataEntry.</p>
+     *
+     * @param f a {@link java.net.URI} object.
+     * @param id a int.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     protected Array getDataEntry(URI f, int id) {
         try {
             CSVReader csvr = read(new CSVReader(), FileTools.getFilename(f));
@@ -286,6 +310,7 @@ public class FsaTxtDataSource implements IDataSource {
                 toString());
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);

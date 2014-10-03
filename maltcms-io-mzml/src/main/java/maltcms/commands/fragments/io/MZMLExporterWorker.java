@@ -99,6 +99,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
  * Worker implementation for writing of mzML files.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -131,6 +132,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     private String secondColumnElutionTimeVariable = "second_column_elution_time";
     private String msLevelVariable = "ms_level";
 
+    /** {@inheritDoc} */
     @Override
     public URI call() throws Exception {
         log.info("Creating mzML file for {}", inputFile);
@@ -228,6 +230,12 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return f.toURI();
     }
 
+    /**
+     * <p>createDataProcessingList.</p>
+     *
+     * @return a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessingList} object.
+     * @since 1.3.2
+     */
     protected DataProcessingList createDataProcessingList() {
         DataProcessingList list = new DataProcessingList();
         List<DataProcessing> dpList = list.getDataProcessing();
@@ -256,6 +264,13 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return list;
     }
 
+    /**
+     * <p>sha1Hash.</p>
+     *
+     * @param file a {@link java.net.URI} object.
+     * @return a {@link java.lang.String} object.
+     * @since 1.3.2
+     */
     protected String sha1Hash(URI file) {
         File f = new File(file);
         if (f.isFile() && f.exists()) {
@@ -301,6 +316,12 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return "";
     }
 
+    /**
+     * <p>createSoftwareList.</p>
+     *
+     * @return a {@link uk.ac.ebi.jmzml.model.mzml.SoftwareList} object.
+     * @since 1.3.2
+     */
     protected SoftwareList createSoftwareList() {
         SoftwareList list = new SoftwareList();
         List<Software> softwareList = list.getSoftware();
@@ -318,6 +339,18 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return list;
     }
 
+    /**
+     * <p>createBinaryDataArray.</p>
+     *
+     * @param massIntensityMode a boolean.
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param dataType a {@link ucar.ma2.DataType} object.
+     * @param compress a boolean.
+     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing} object.
+     * @param cv a {@link uk.ac.ebi.jmzml.model.mzml.CV} object.
+     * @return a {@link uk.ac.ebi.jmzml.model.mzml.BinaryDataArray} object.
+     * @since 1.3.2
+     */
     protected BinaryDataArray createBinaryDataArray(boolean massIntensityMode, Array a, DataType dataType, boolean compress, DataProcessing dataProcessing, CV cv) {
         BinaryDataArray bda = new BinaryDataArray();
         int dataArrayLength = a.getShape()[0];
@@ -371,6 +404,16 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return bda;
     }
 
+    /**
+     * <p>createChromatogramList.</p>
+     *
+     * @param inputFileFragment a {@link cross.datastructures.fragments.FileFragment} object.
+     * @param psiMs a {@link uk.ac.ebi.jmzml.model.mzml.CV} object.
+     * @param compress a boolean.
+     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing} object.
+     * @return a {@link uk.ac.ebi.jmzml.model.mzml.ChromatogramList} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     protected ChromatogramList createChromatogramList(FileFragment inputFileFragment, CV psiMs, boolean compress, DataProcessing dataProcessing) throws ResourceNotAvailableException {
         ChromatogramList cl = new ChromatogramList();
         cl.setDefaultDataProcessing(dataProcessing);
@@ -421,11 +464,27 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         return cl;
     }
 
+    /**
+     * <p>getEncodedLength.</p>
+     *
+     * @param binaryData an array of byte.
+     * @return a int.
+     */
     protected int getEncodedLength(byte[] binaryData) {
         byte[] encoded = Base64.encodeBase64(binaryData);
         return encoded.length;
     }
 
+    /**
+     * <p>createSpectraList.</p>
+     *
+     * @param inputFileName a {@link java.lang.String} object.
+     * @param inputFileFragment a {@link cross.datastructures.fragments.FileFragment} object.
+     * @param psiMs a {@link uk.ac.ebi.jmzml.model.mzml.CV} object.
+     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing} object.
+     * @return a {@link uk.ac.ebi.jmzml.model.mzml.SpectrumList} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     protected SpectrumList createSpectraList(String inputFileName, FileFragment inputFileFragment, CV psiMs, DataProcessing dataProcessing) throws ResourceNotAvailableException {
         //prepare spectra
         SpectrumList sl = new CachedSpectrumList(inputFileName, 2000);

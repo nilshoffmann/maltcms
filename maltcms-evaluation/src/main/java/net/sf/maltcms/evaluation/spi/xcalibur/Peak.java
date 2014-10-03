@@ -36,9 +36,10 @@ import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>Peak class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Peak implements IFeatureVector {
 
@@ -51,13 +52,32 @@ public class Peak implements IFeatureVector {
     private double[] mw = new double[]{};
     private double area = 0;
     private double height = 0;
+    /** Constant <code>AREA_DEFAULT=0</code> */
     public static final double AREA_DEFAULT = 0;
+    /** Constant <code>HEIGHT_DEFAULT=0</code> */
     public static final double HEIGHT_DEFAULT = 0;
+    /** Constant <code>RT_DEFAULT=Double.NaN</code> */
     public static final double RT_DEFAULT = Double.NaN;
+    /** Constant <code>RT_START_DEFAULT=Double.NaN</code> */
     public static final double RT_START_DEFAULT = Double.NaN;
+    /** Constant <code>RT_STOP_DEFAULT=Double.NaN</code> */
     public static final double RT_STOP_DEFAULT = Double.NaN;
     private final UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>Constructor for Peak.</p>
+     *
+     * @param creator a {@link net.sf.maltcms.evaluation.spi.xcalibur.Creator} object.
+     * @param parent a {@link net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram} object.
+     * @param name a {@link java.lang.String} object.
+     * @param rt a double.
+     * @param rtstart a double.
+     * @param rtstop a double.
+     * @param mw an array of double.
+     * @param area a double.
+     * @param height a double.
+     * @param unit a {@link net.sf.maltcms.evaluation.spi.xcalibur.RTUnit} object.
+     */
     public Peak(Creator creator, Chromatogram parent, String name, double rt, double rtstart, double rtstop, double[] mw, double area, double height, RTUnit unit) {
         this.parent = parent;
         this.name = name;
@@ -92,6 +112,7 @@ public class Peak implements IFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         switch (name) {
@@ -150,12 +171,14 @@ public class Peak implements IFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         final String[] names = new String[]{"RT", "RTSTART", "RTSTOP", "AREA", "HEIGHT", "MW", "FILE", "NAME", "CREATORNAME"};
         return Arrays.asList(names);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -165,42 +188,88 @@ public class Peak implements IFeatureVector {
         return sb.toString();
     }
 
+    /**
+     * <p>Getter for the field <code>parent</code>.</p>
+     *
+     * @return a {@link net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram} object.
+     */
     public Chromatogram getParent() {
         return parent;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Getter for the field <code>creatorname</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCreatorname() {
         return creatorname;
     }
 
+    /**
+     * <p>Getter for the field <code>rt</code>.</p>
+     *
+     * @return a double.
+     */
     public double getRt() {
         return rt;
     }
 
+    /**
+     * <p>Getter for the field <code>rtstart</code>.</p>
+     *
+     * @return a double.
+     */
     public double getRtstart() {
         return rtstart;
     }
 
+    /**
+     * <p>Getter for the field <code>rtstop</code>.</p>
+     *
+     * @return a double.
+     */
     public double getRtstop() {
         return rtstop;
     }
 
+    /**
+     * <p>Getter for the field <code>mw</code>.</p>
+     *
+     * @return an array of double.
+     */
     public double[] getMw() {
         return mw;
     }
 
+    /**
+     * <p>Getter for the field <code>area</code>.</p>
+     *
+     * @return a double.
+     */
     public double getArea() {
         return area;
     }
 
+    /**
+     * <p>Getter for the field <code>height</code>.</p>
+     *
+     * @return a double.
+     */
     public double getHeight() {
         return height;
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

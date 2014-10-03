@@ -42,8 +42,10 @@ import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
 /**
+ * <p>MinMaxMassFinderWorker class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -55,10 +57,7 @@ public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable 
     private String maxMassVariableName = "mass_range_max";
     private String fallbackVariableName = "mass_values";
 
-    /**
-     *
-     * @return @throws Exception
-     */
+    /** {@inheritDoc} */
     @Override
     public double[] call() throws Exception {
         Double min = Double.MAX_VALUE;

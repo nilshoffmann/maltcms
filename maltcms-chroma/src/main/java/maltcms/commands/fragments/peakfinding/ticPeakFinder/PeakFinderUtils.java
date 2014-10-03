@@ -42,16 +42,33 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 
 /**
+ * <p>PeakFinderUtils class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 public class PeakFinderUtils {
 
+    /**
+     * <p>isAboveThreshold.</p>
+     *
+     * @param snrdb a double.
+     * @param threshold a double.
+     * @return a boolean.
+     */
     public static boolean isAboveThreshold(final double snrdb, final double threshold) {
         return (snrdb >= threshold);
     }
 
+    /**
+     * <p>isCandidate.</p>
+     *
+     * @param index a int.
+     * @param values an array of double.
+     * @param window a int.
+     * @return a boolean.
+     */
     public static boolean isCandidate(final int index, final double[] values,
             final int window) {
         final double max = MathTools.max(values, index - window, index + window);
@@ -62,6 +79,14 @@ public class PeakFinderUtils {
         return false;
     }
 
+    /**
+     * <p>isMinCandidate.</p>
+     *
+     * @param index a int.
+     * @param values an array of double.
+     * @param window a int.
+     * @return a boolean.
+     */
     public static boolean isMinCandidate(final int index, final double[] values,
             final int window) {
         final double min = MathTools.min(values, index - window, index + window);
@@ -72,6 +97,16 @@ public class PeakFinderUtils {
         return false;
     }
 
+    /**
+     * <p>checkExtremum.</p>
+     *
+     * @param values an array of double.
+     * @param snr an array of double.
+     * @param ts a {@link java.util.ArrayList} object.
+     * @param threshold a double.
+     * @param i a int.
+     * @param window a int.
+     */
     public static void checkExtremum(final double[] values, final double[] snr,
             final ArrayList<Integer> ts, final double threshold, final int i,
             final int window) {
@@ -85,6 +120,14 @@ public class PeakFinderUtils {
         }
     }
 
+    /**
+     * <p>checkMinimum.</p>
+     *
+     * @param values an array of double.
+     * @param ts a {@link java.util.Collection} object.
+     * @param i a int.
+     * @param window a int.
+     */
     public static void checkMinimum(final double[] values,
             final Collection<Integer> ts, final int i,
             final int window) {
@@ -97,6 +140,14 @@ public class PeakFinderUtils {
         }
     }
 
+    /**
+     * <p>isMinimum.</p>
+     *
+     * @param prev a double.
+     * @param current a double.
+     * @param next a double.
+     * @return a boolean.
+     */
     public static boolean isMinimum(final double prev, final double current,
             final double next) {
         if ((current < prev) && (current < next)) {
@@ -108,6 +159,13 @@ public class PeakFinderUtils {
         return false;
     }
 
+    /**
+     * <p>createPeakCandidatesArray.</p>
+     *
+     * @param tic a {@link ucar.ma2.Array} object.
+     * @param ts a {@link java.util.ArrayList} object.
+     * @return a {@link ucar.ma2.ArrayInt.D1} object.
+     */
     public static ArrayInt.D1 createPeakCandidatesArray(final Array tic,
             final ArrayList<Integer> ts) {
         EvalTools.notNull(ts, PeakFinderUtils.class);
@@ -119,6 +177,16 @@ public class PeakFinderUtils {
         return extr;
     }
 
+    /**
+     * <p>findBaseline.</p>
+     *
+     * @param ticValues an array of double.
+     * @param baselineEstimationMinimaWindow a int.
+     * @param accuracy a double.
+     * @param bandwidth a double.
+     * @param robustnessIterations a int.
+     * @return a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     */
     public static PolynomialSplineFunction findBaseline(double[] ticValues, int baselineEstimationMinimaWindow, double accuracy, double bandwidth, int robustnessIterations) {
         final LinkedHashSet<Integer> ts = new LinkedHashSet<>();
         for (int i = 0; i < ticValues.length; i++) {
@@ -155,6 +223,13 @@ public class PeakFinderUtils {
         return null;
     }
 
+    /**
+     * <p>findBaseline.</p>
+     *
+     * @param ticValues an array of double.
+     * @param baselineEstimationMinimaWindow a int.
+     * @return a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     */
     public static PolynomialSplineFunction findBaseline(double[] ticValues, int baselineEstimationMinimaWindow) {
         return findBaseline(ticValues, baselineEstimationMinimaWindow, LoessInterpolator.DEFAULT_ACCURACY, LoessInterpolator.DEFAULT_BANDWIDTH, LoessInterpolator.DEFAULT_ROBUSTNESS_ITERS);
     }

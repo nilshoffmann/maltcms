@@ -28,9 +28,10 @@
 package maltcms.datastructures.ms;
 
 /**
+ * <p>IScan2DProvider interface.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public interface IScan2DProvider extends IScanProvider<IScan2D> {
 }

@@ -37,14 +37,13 @@ import ucar.ma2.MAVector;
  * Implementation of Tanimoto score.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayTanimoto implements IArraySimilarity {
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         double score = Double.MIN_VALUE;
@@ -58,6 +57,7 @@ public class ArrayTanimoto implements IArraySimilarity {
         return score;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayTanimoto alp = new ArrayTanimoto();

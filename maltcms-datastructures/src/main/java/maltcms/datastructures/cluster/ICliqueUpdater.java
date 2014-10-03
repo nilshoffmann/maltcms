@@ -30,13 +30,25 @@ package maltcms.datastructures.cluster;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>ICliqueUpdater interface.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public interface ICliqueUpdater<T extends IFeatureVector> {
 
+    /**
+     * <p>update.</p>
+     *
+     * @param c a {@link maltcms.datastructures.cluster.IClique} object.
+     * @param t a T object.
+     */
     public abstract void update(IClique<T> c, T t);
 
+    /**
+     * <p>setCentroid.</p>
+     *
+     * @param c a {@link maltcms.datastructures.cluster.IClique} object.
+     */
     public abstract void setCentroid(IClique<T> c);
 }

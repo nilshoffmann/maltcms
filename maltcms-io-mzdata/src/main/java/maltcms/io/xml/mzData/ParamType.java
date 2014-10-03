@@ -60,7 +60,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "paramType", propOrder = {"cvParamOrUserParam"})
@@ -94,9 +95,9 @@ public class ParamType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link CvParamType } {@link UserParamType }
+     * {@link maltcms.io.xml.mzData.CvParamType} {@link maltcms.io.xml.mzData.UserParamType}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Object> getCvParamOrUserParam() {
         if (this.cvParamOrUserParam == null) {

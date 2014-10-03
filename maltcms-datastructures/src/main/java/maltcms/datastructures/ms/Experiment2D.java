@@ -34,30 +34,34 @@ import cross.datastructures.fragments.IFileFragment;
  * GCxGC-MS.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class Experiment2D extends Experiment1D implements IExperiment2D {
 
     /**
-     *
+     * <p>Constructor for Experiment2D.</p>
      */
     public Experiment2D() {
         super();
     }
 
     /**
-     * @param ff1
+     * <p>Constructor for Experiment2D.</p>
+     *
+     * @param ff1 a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public Experiment2D(IFileFragment ff1) {
         super(ff1);
     }
     private IChromatogram2D ic2d = null;
 
+    /** {@inheritDoc} */
     @Override
     public IChromatogram2D getChromatogram2D() {
         return this.ic2d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatogram2D(final IChromatogram2D ic) {
         this.ic2d = ic;

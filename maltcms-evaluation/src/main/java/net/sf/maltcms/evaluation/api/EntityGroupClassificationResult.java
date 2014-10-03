@@ -28,8 +28,10 @@
 package net.sf.maltcms.evaluation.api;
 
 /**
+ * <p>EntityGroupClassificationResult class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class EntityGroupClassificationResult implements Comparable<EntityGroupClassificationResult> {
 
@@ -38,6 +40,17 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
     private final int tp, tn, fp, fn;
     private final double dist;
 
+    /**
+     * <p>Constructor for EntityGroupClassificationResult.</p>
+     *
+     * @param toolEntityGroup a {@link net.sf.maltcms.evaluation.api.EntityGroup} object.
+     * @param groundTruthEntityGroup a {@link net.sf.maltcms.evaluation.api.EntityGroup} object.
+     * @param tp a int.
+     * @param tn a int.
+     * @param fp a int.
+     * @param fn a int.
+     * @param dist a double.
+     */
     public EntityGroupClassificationResult(EntityGroup toolEntityGroup, EntityGroup groundTruthEntityGroup, int tp, int tn, int fp, int fn, double dist) {
         this.toolEntityGroup = toolEntityGroup;
         this.groundTruthEntityGroup = groundTruthEntityGroup;
@@ -48,45 +61,76 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
         this.dist = dist;
     }
 
+    /**
+     * <p>Getter for the field <code>dist</code>.</p>
+     *
+     * @return a double.
+     */
     public double getDist() {
         return dist;
     }
 
+    /**
+     * <p>Getter for the field <code>fn</code>.</p>
+     *
+     * @return a int.
+     */
     public int getFn() {
         return fn;
     }
 
+    /**
+     * <p>Getter for the field <code>groundTruthEntityGroup</code>.</p>
+     *
+     * @return a {@link net.sf.maltcms.evaluation.api.EntityGroup} object.
+     */
     public EntityGroup getGroundTruthEntityGroup() {
         return groundTruthEntityGroup;
     }
 
+    /**
+     * <p>Getter for the field <code>toolEntityGroup</code>.</p>
+     *
+     * @return a {@link net.sf.maltcms.evaluation.api.EntityGroup} object.
+     */
     public EntityGroup getToolEntityGroup() {
         return toolEntityGroup;
     }
 
+    /**
+     * <p>Getter for the field <code>fp</code>.</p>
+     *
+     * @return a int.
+     */
     public int getFp() {
         return fp;
     }
 
+    /**
+     * <p>Getter for the field <code>tn</code>.</p>
+     *
+     * @return a int.
+     */
     public int getTn() {
         return tn;
     }
 
+    /**
+     * <p>Getter for the field <code>tp</code>.</p>
+     *
+     * @return a int.
+     */
     public int getTp() {
         return tp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "EntityGroupClassificationResult{\n" + "toolEntityGroup=\n" + toolEntityGroup + ",\n groundTruthEntityGroup=\n" + groundTruthEntityGroup + ",\n tp=" + tp + ", tn=" + tn + ", fp=" + fp + ", fn=" + fn + ", dist=" + dist + '}';
     }
 
-    /**
-     *
-     * @param o
-     * @throws IllegalArgumentException
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(EntityGroupClassificationResult o) throws IllegalArgumentException {
         final int WORSE = -1;
@@ -124,6 +168,7 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -157,6 +202,7 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 3;

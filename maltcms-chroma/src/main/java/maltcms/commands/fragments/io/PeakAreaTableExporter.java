@@ -40,18 +40,19 @@ import org.openide.util.lookup.ServiceProvider;
  * Exports aligned peak area table.
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @RequiresVariables(names = {"var.tic_peaks"})
 //@ServiceProvider(service=AFragmentCommand.class)
 public class PeakAreaTableExporter extends AFragmentCommand {
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Creates a csv file from a multiple alignment and peak data.";
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
         throw new NotImplementedException();
@@ -61,6 +62,7 @@ public class PeakAreaTableExporter extends AFragmentCommand {
 //        return in;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILEIO;

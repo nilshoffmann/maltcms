@@ -37,7 +37,7 @@ import ucar.ma2.IndexIterator;
  * Applies log10 or ln to all elements of an array.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -46,6 +46,9 @@ public class LogFilter extends AArrayFilter {
     private AElementFilter aef = null;
     private final boolean naturalLog;
 
+    /**
+     * <p>Constructor for LogFilter.</p>
+     */
     public LogFilter() {
         super();
         naturalLog = false;
@@ -57,6 +60,11 @@ public class LogFilter extends AArrayFilter {
         };
     }
 
+    /**
+     * <p>Constructor for LogFilter.</p>
+     *
+     * @param natural a boolean.
+     */
     public LogFilter(final boolean natural) {
         this.naturalLog = natural;
         if (natural) {
@@ -81,6 +89,7 @@ public class LogFilter extends AArrayFilter {
      *
      * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
      */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
@@ -93,6 +102,7 @@ public class LogFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public LogFilter copy() {
         return new LogFilter(naturalLog);

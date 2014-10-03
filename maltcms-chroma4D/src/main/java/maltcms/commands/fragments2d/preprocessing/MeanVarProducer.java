@@ -62,6 +62,7 @@ import ucar.ma2.IndexIterator;
  * Will iterate over all mass spectra and calculates mean and variance.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -109,9 +110,7 @@ public class MeanVarProducer extends AFragmentCommand {
     @Configurable(value = "-1.0d")
     private double minStandardDeviation = -1.0d;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<>();
@@ -372,9 +371,7 @@ public class MeanVarProducer extends AFragmentCommand {
                 intensities1D);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.minStandardDeviation = cfg.getDouble(this.getClass().getName()
@@ -471,17 +468,13 @@ public class MeanVarProducer extends AFragmentCommand {
         return new Tuple2D<>(mean, var);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Produces mean and variance of a chromatogram";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

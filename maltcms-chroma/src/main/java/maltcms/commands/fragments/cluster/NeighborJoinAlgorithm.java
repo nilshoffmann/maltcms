@@ -41,12 +41,17 @@ import org.openide.util.lookup.ServiceProvider;
  * citation
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @ServiceProvider(service = AFragmentCommand.class)
 public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(final String[] args) {
         // Examples from
         // http://evolution.genetics.washington.edu/phylip/doc/neighbor.html
@@ -200,15 +205,31 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
     }
     private double[] R = null;
 
+    /**
+     * <p>Constructor for NeighborJoinAlgorithm.</p>
+     */
     public NeighborJoinAlgorithm() {
         super();
     }
 
+    /**
+     * <p>Constructor for NeighborJoinAlgorithm.</p>
+     *
+     * @param distances an array of double.
+     * @param names an array of {@link java.lang.String} objects.
+     */
     public NeighborJoinAlgorithm(final double[][] distances,
             final String[] names) {
         init(distances, names, null);
     }
 
+    /**
+     * <p>Constructor for NeighborJoinAlgorithm.</p>
+     *
+     * @param distances an array of double.
+     * @param fragments a {@link cross.datastructures.tuple.TupleND} object.
+     * @param ld a {@link maltcms.commands.distances.PairwiseFeatureSequenceSimilarity} object.
+     */
     public NeighborJoinAlgorithm(final double[][] distances,
             final TupleND<IFileFragment> fragments,
             final PairwiseFeatureSequenceSimilarity ld) {
@@ -222,6 +243,11 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         setLDF(ld);
     }
 
+    /**
+     * <p>calcR.</p>
+     *
+     * @param numclust a int.
+     */
     public void calcR(final int numclust) {
         for (int i = 0; i < numclust; i++) {
             double sum = 0.0d;
@@ -238,6 +264,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public double[] dmat(final int i, final int j, final int k) {
         final double[] dmat = new double[getNames().length];
@@ -258,6 +285,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         return dmat;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void findBestD(final int numclust) {
         calcR(numclust);
@@ -293,6 +321,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void init(final double[][] distances, final String[] names,
             final TupleND<IFileFragment> fragments) {
@@ -304,6 +333,7 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void joinIJtoK(final int i, final int j, final int k,
             final double[] dist) {
@@ -321,6 +351,9 @@ public class NeighborJoinAlgorithm extends ClusteringAlgorithm {
         }
     }
 
+    /**
+     * <p>printRMatrix.</p>
+     */
     public void printRMatrix() {
         log.info("Printing relative Distance Vector:");
         log.info(java.util.Arrays.toString(this.R));

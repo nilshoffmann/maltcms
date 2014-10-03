@@ -37,7 +37,7 @@ import ucar.ma2.IndexIterator;
  * Applies exp(x) to all elements of an array.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -45,6 +45,9 @@ public class ExpFilter extends AArrayFilter {
 
     private AElementFilter aef = null;
 
+    /**
+     * <p>Constructor for ExpFilter.</p>
+     */
     public ExpFilter() {
         super();
         this.aef = new AElementFilter() {
@@ -60,6 +63,7 @@ public class ExpFilter extends AArrayFilter {
      *
      * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
      */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
@@ -72,6 +76,7 @@ public class ExpFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ExpFilter copy() {
         return new ExpFilter();

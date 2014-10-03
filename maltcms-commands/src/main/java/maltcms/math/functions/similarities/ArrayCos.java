@@ -41,7 +41,7 @@ import ucar.ma2.MAVector;
  * Cosine similarity between arrays.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @EqualsAndHashCode
@@ -52,6 +52,9 @@ public class ArrayCos implements IArraySimilarity {
     private transient final ICacheDelegate<Array, Double> cache;
     private double minimumSimilarity = 0.0d;
 
+    /**
+     * <p>Constructor for ArrayCos.</p>
+     */
     public ArrayCos() {
         cache = SimilarityTools.newValueCache("ArrayCosCache");
     }
@@ -67,6 +70,7 @@ public class ArrayCos implements IArraySimilarity {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         final double l1 = getLength(t1);
@@ -83,6 +87,7 @@ public class ArrayCos implements IArraySimilarity {
         return val > minimumSimilarity ? val : Double.NEGATIVE_INFINITY;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayCos ac = new ArrayCos();
@@ -90,6 +95,7 @@ public class ArrayCos implements IArraySimilarity {
         return ac;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

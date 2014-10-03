@@ -40,8 +40,10 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 
 /**
+ * <p>MSPeaklistAlignment class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
@@ -54,6 +56,14 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
     @Configurable
     private double epsilon = 0.0001;
 
+    /**
+     * <p>matchMass.</p>
+     *
+     * @param m1 a double.
+     * @param m2 a double.
+     * @param epsilon a double.
+     * @return a double.
+     */
     public double matchMass(double m1, double m2, double epsilon) {
         if (Math.abs(m1 - m2) <= epsilon) {
             return 0.0d;
@@ -61,6 +71,19 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         return 1.0d;
     }
 
+    /**
+     * <p>recurse.</p>
+     *
+     * @param amat an array of double.
+     * @param i a int.
+     * @param j a int.
+     * @param m1 a double.
+     * @param m2 a double.
+     * @param i1 a double.
+     * @param i2 a double.
+     * @param p an array of {@link java.awt.Point} objects.
+     * @return a double.
+     */
     public double recurse(double[][] amat, int i, int j, double m1, double m2,
             double i1, double i2, Point[][] p) {
         // fill gaps
@@ -91,6 +114,12 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         return amat[i][j];
     }
 
+    /**
+     * <p>traceback.</p>
+     *
+     * @param trace an array of {@link java.awt.Point} objects.
+     * @return a {@link java.util.ArrayList} object.
+     */
     public ArrayList<Point> traceback(Point[][] trace) {
         for (Point[] trace1 : trace) {
             StringBuilder sb = new StringBuilder();
@@ -116,6 +145,15 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         return al;
     }
 
+    /**
+     * <p>peakCntAlignment.</p>
+     *
+     * @param masses1 an array of double.
+     * @param intens1 an array of double.
+     * @param masses2 an array of double.
+     * @param intens2 an array of double.
+     * @return a double.
+     */
     public double peakCntAlignment(double[] masses1, double[] intens1,
             double[] masses2, double[] intens2) {
         System.out.println("Length 1: " + masses1.length + " length 2: "
@@ -134,6 +172,13 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         return amat[masses1.length][masses2.length];
     }
 
+    /**
+     * <p>printMatrix.</p>
+     *
+     * @param mat an array of double.
+     * @param masses1 an array of double.
+     * @param masses2 an array of double.
+     */
     public void printMatrix(final double[][] mat, final double[] masses1,
             final double[] masses2) {
         ImagePanel jp = new ImagePanel();
@@ -144,6 +189,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
         jf.pack();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(IFeatureVector f1, IFeatureVector f2) {
         Array m1 = f1.getFeature(this.mass_values);
@@ -156,6 +202,15 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
                 .get1DJavaArray(double.class));
     }
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param m1 a {@link ucar.ma2.Array} object.
+     * @param m2 a {@link ucar.ma2.Array} object.
+     * @param i1 a {@link ucar.ma2.Array} object.
+     * @param i2 a {@link ucar.ma2.Array} object.
+     * @return a double.
+     */
     public double apply(Array m1, Array m2, Array i1, Array i2) {
         return peakCntAlignment((double[]) m1.get1DJavaArray(double.class),
                 (double[]) i1.get1DJavaArray(double.class), (double[]) m2
@@ -163,11 +218,13 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
                 .get1DJavaArray(double.class));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isMinimize() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);

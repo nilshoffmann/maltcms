@@ -32,9 +32,10 @@ import ucar.ma2.Array;
 
 // Erzeugt sortierte Java Arrays aus ma2 Arrays
 /**
+ * <p>SortedJavArrays class.</p>
  *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class SortedJavArrays {
 
@@ -43,11 +44,9 @@ public class SortedJavArrays {
     private double[] sortedjavarray2;
 
     /**
+     * <p>Getter for the field <code>sortedjavarray1</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of double.
      */
     public double[] getSortedjavarray1() {
 
@@ -56,11 +55,9 @@ public class SortedJavArrays {
     }
 
     /**
+     * <p>Getter for the field <code>sortedjavarray2</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of double.
      */
     public double[] getSortedjavarray2() {
 
@@ -69,11 +66,9 @@ public class SortedJavArrays {
     }
 
     /**
+     * <p>Setter for the field <code>sortedjavarray1</code>.</p>
      *
-     *
-     *
-     * @param sortedjavarray11
-     *
+     * @param sortedjavarray11 an array of double.
      */
     public void setSortedjavarray1(final double[] sortedjavarray11) {
 
@@ -82,11 +77,9 @@ public class SortedJavArrays {
     }
 
     /**
+     * <p>Setter for the field <code>sortedjavarray2</code>.</p>
      *
-     *
-     *
-     * @param sortedjavarray21
-     *
+     * @param sortedjavarray21 an array of double.
      */
     public void setSortedjavarray2(final double[] sortedjavarray21) {
 
@@ -95,13 +88,10 @@ public class SortedJavArrays {
     }
 
     /**
+     * <p>sort.</p>
      *
-     *
-     *
-     * @param a1
-     *
-     * @param b1
-     *
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @param b1 a {@link ucar.ma2.Array} object.
      */
     public void sort(final Array a1, final Array b1) {
 

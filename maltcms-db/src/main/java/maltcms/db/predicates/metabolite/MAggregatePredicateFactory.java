@@ -34,11 +34,22 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>MAggregatePredicateFactory class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MAggregatePredicateFactory implements
         IAggregatePredicateFactory<IMetabolite> {
 
     private Predicate<IMetabolite> defaultPredicate = null;
 
+    /**
+     * <p>Constructor for MAggregatePredicateFactory.</p>
+     *
+     * @param p a {@link com.db4o.query.Predicate} object.
+     */
     public MAggregatePredicateFactory(Predicate<IMetabolite> p) {
         EvalTools.notNull(p, this);
         this.defaultPredicate = p;
@@ -47,6 +58,7 @@ public class MAggregatePredicateFactory implements
     /* (non-Javadoc)
      * @see maltcms.db.predicates.metabolite.IAggregatePredicateFactory#digestCommandLine(java.lang.String[])
      */
+    /** {@inheritDoc} */
     @Override
     public Predicate<IMetabolite> digestCommandLine(String[] args) {
         PublicMemberGetters<IMetabolite> pmg = new PublicMemberGetters<>(

@@ -31,9 +31,10 @@ import cross.datastructures.fragments.IFileFragment;
 import java.util.Vector;
 
 /**
+ * <p>Alignment class.</p>
  *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class Alignment {
 
@@ -127,13 +128,10 @@ public class Alignment {
     OptimalAlignmentVector oav2 = new OptimalAlignmentVector();
 
     /**
+     * <p>Constructor for Alignment.</p>
      *
-     *
-     *
-     * @param ref1
-     *
-     * @param query1
-     *
+     * @param ref1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query1 a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public Alignment(final IFileFragment ref1, final IFileFragment query1) {
 
@@ -145,9 +143,7 @@ public class Alignment {
 
     // Gibt alle optimalen Alignments i.d. Konsole aus
     /**
-     *
-     *
-     *
+     * <p>ausgabe.</p>
      */
     public void ausgabe() {
 
@@ -193,13 +189,10 @@ public class Alignment {
 
     // Buchstaben Zahlen zuordnen, um die Kostenmatrix ansprechen zu k�nnen
     /**
+     * <p>chartoNumber.</p>
      *
-     *
-     *
-     * @param a
-     *
-     * @return
-     *
+     * @param a a char.
+     * @return a int.
      */
     public int chartoNumber(final char a) {
 
@@ -277,9 +270,7 @@ public class Alignment {
 
     // Klont den aktuellen OAV und und f�gt ihm den Vektor hinzu
     /**
-     *
-     *
-     *
+     * <p>cloneAl.</p>
      */
     public void cloneAl() {
 
@@ -294,13 +285,10 @@ public class Alignment {
     }
 
     /**
+     * <p>computeMatrix.</p>
      *
-     *
-     *
-     * @param u
-     *
-     * @param v
-     *
+     * @param u a {@link java.lang.String} object.
+     * @param v a {@link java.lang.String} object.
      */
     public void computeMatrix(final String u, final String v) {
 
@@ -467,13 +455,10 @@ public class Alignment {
 
     // Alle optimalen Alignments erstellen
     /**
+     * <p>createAlignments.</p>
      *
-     *
-     *
-     * @param u
-     *
-     * @param v
-     *
+     * @param u a {@link java.lang.String} object.
+     * @param v a {@link java.lang.String} object.
      */
     public void createAlignments(final String u, final String v) {
 
@@ -645,9 +630,7 @@ public class Alignment {
 
     // Matrix in der Konsole ausgeben
     /**
-     *
-     *
-     *
+     * <p>drawMatrix.</p>
      */
     public void drawMatrix() {
 
@@ -683,9 +666,7 @@ public class Alignment {
 
     // Zeichnet alle 3 Dimensionen der Pfadmatrix
     /**
-     *
-     *
-     *
+     * <p>drawPathway.</p>
      */
     public void drawPathway() {
 
@@ -728,11 +709,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>allalignments</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return a {@link java.util.Vector} object.
      */
     public Vector<OptimalAlignmentVector> getAllalignments() {
 
@@ -741,11 +720,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>matrix</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of double.
      */
     public double[][] getMatrix() {
 
@@ -754,11 +731,9 @@ public class Alignment {
     }
 
     /**
+     * <p>getPairwiseDistance.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of double.
      */
     public double[][] getPairwiseDistance() {
 
@@ -767,11 +742,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>pathway</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of int.
      */
     public int[][][] getPathway() {
 
@@ -780,11 +753,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>query</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment getQuery() {
 
@@ -793,11 +764,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>ref</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment getRef() {
 
@@ -806,11 +775,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>seq1</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return a {@link java.lang.String} object.
      */
     public String getSeq1() {
 
@@ -819,11 +786,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Getter for the field <code>seq2</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return a {@link java.lang.String} object.
      */
     public String getSeq2() {
 
@@ -832,17 +797,12 @@ public class Alignment {
     }
 
     /**
+     * <p>mini.</p>
      *
-     *
-     *
-     * @param a
-     *
-     * @param b
-     *
-     * @param c
-     *
-     * @return
-     *
+     * @param a a double.
+     * @param b a double.
+     * @param c a double.
+     * @return a double.
      */
     public double mini(final double a, final double b, final double c) {
 
@@ -851,11 +811,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Setter for the field <code>kostenfunktion</code>.</p>
      *
-     *
-     *
-     * @param kostenfunktion1
-     *
+     * @param kostenfunktion1 an array of double.
      */
     public void setKostenfunktion(final double[][] kostenfunktion1) {
 
@@ -864,11 +822,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Setter for the field <code>query</code>.</p>
      *
-     *
-     *
-     * @param query1
-     *
+     * @param query1 a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void setQuery(final IFileFragment query1) {
 
@@ -877,11 +833,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Setter for the field <code>ref</code>.</p>
      *
-     *
-     *
-     * @param ref1
-     *
+     * @param ref1 a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void setRef(final IFileFragment ref1) {
 
@@ -890,11 +844,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Setter for the field <code>seq1</code>.</p>
      *
-     *
-     *
-     * @param seq11
-     *
+     * @param seq11 a {@link java.lang.String} object.
      */
     public void setSeq1(final String seq11) {
 
@@ -903,11 +855,9 @@ public class Alignment {
     }
 
     /**
+     * <p>Setter for the field <code>seq2</code>.</p>
      *
-     *
-     *
-     * @param seq21
-     *
+     * @param seq21 a {@link java.lang.String} object.
      */
     public void setSeq2(final String seq21) {
 
@@ -916,15 +866,11 @@ public class Alignment {
     }
 
     /**
+     * <p>vergleiche.</p>
      *
-     *
-     *
-     * @param i
-     *
-     * @param j
-     *
-     * @return
-     *
+     * @param i a int.
+     * @param j a int.
+     * @return a double.
      */
     public double vergleiche(final int i, final int j) {
 

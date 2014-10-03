@@ -56,7 +56,7 @@ import org.jfree.ui.RectangleInsets;
  * running in headless mode.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 @Slf4j
 @Data
@@ -77,6 +77,14 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     private boolean serializeJFreeChart = false;
     private boolean saveGraphics = true;
 
+    /**
+     * <p>Constructor for PlotRunner.</p>
+     *
+     * @param plot1 a {@link org.jfree.chart.plot.Plot} object.
+     * @param title1 a {@link java.lang.String} object.
+     * @param filename1 a {@link java.lang.String} object.
+     * @param outputDir a {@link java.io.File} object.
+     */
     public PlotRunner(final Plot plot1, final String title1,
             final String filename1, final File outputDir) {
         this.plot = plot1;
@@ -88,6 +96,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
         this.file.getParentFile().mkdirs();
     }
 
+    /** {@inheritDoc} */
     @Override
     public JFreeChart call() throws Exception {
         log
@@ -154,6 +163,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
         return jfc;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         if (!this.sizeOverride) {
@@ -190,6 +200,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 //        return this.file;
 //    }
     /**
+     * <p>Getter for the field <code>filename</code>.</p>
+     *
      * @return the filename
      */
     public String getFilename() {
@@ -197,6 +209,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>filetype</code>.</p>
+     *
      * @return the filetype
      */
     public String getFiletype() {
@@ -204,6 +218,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>fontFamily</code>.</p>
+     *
      * @return the fontFamily
      */
     public String getFontFamily() {
@@ -211,6 +227,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>imgheight</code>.</p>
+     *
      * @return the imgheight
      */
     public int getImgheight() {
@@ -218,6 +236,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>imgwidth</code>.</p>
+     *
      * @return the imgwidth
      */
     public int getImgwidth() {
@@ -225,17 +245,26 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>plot</code>.</p>
+     *
      * @return the plot
      */
     public Plot getPlot() {
         return this.plot;
     }
 
+    /**
+     * <p>Getter for the field <code>targetContainer</code>.</p>
+     *
+     * @return a {@link javax.swing.JFrame} object.
+     */
     public JFrame getTargetContainer() {
         return this.targetContainer;
     }
 
     /**
+     * <p>Getter for the field <code>title</code>.</p>
+     *
      * @return the title
      */
     public String getTitle() {
@@ -243,32 +272,53 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>isHeadless.</p>
+     *
      * @return the headless
      */
     public boolean isHeadless() {
         return this.headless;
     }
 
+    /**
+     * <p>isSaveGraphics.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isSaveGraphics() {
         return this.saveGraphics;
     }
 
+    /**
+     * <p>isSerializeJFreeChart.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isSerializeJFreeChart() {
         return this.serializeJFreeChart;
     }
 
     /**
+     * <p>isSizeOverride.</p>
+     *
      * @return the sizeOverride
      */
     public boolean isSizeOverride() {
         return this.sizeOverride;
     }
 
+    /**
+     * <p>isStop.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isStop() {
         return this.stop;
     }
 
     /**
+     * <p>Setter for the field <code>file</code>.</p>
+     *
      * @param file the file to set
      */
     public void setFile(final File file) {
@@ -276,6 +326,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Setter for the field <code>filename</code>.</p>
+     *
      * @param filename the filename to set
      */
     public void setFilename(final String filename) {
@@ -283,6 +335,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Setter for the field <code>filetype</code>.</p>
+     *
      * @param filetype the filetype to set
      */
     public void setFiletype(final String filetype) {
@@ -290,17 +344,26 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Setter for the field <code>fontFamily</code>.</p>
+     *
      * @param fontFamily the fontFamily to set
      */
     public void setFontFamily(final String fontFamily) {
         this.fontFamily = fontFamily;
     }
 
+    /**
+     * <p>Setter for the field <code>headless</code>.</p>
+     *
+     * @param b a boolean.
+     */
     public void setHeadless(final boolean b) {
         this.headless = b;
     }
 
     /**
+     * <p>Setter for the field <code>imgheight</code>.</p>
+     *
      * @param imgheight the imgheight to set
      */
     public void setImgheight(final int imgheight) {
@@ -308,6 +371,8 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Setter for the field <code>imgwidth</code>.</p>
+     *
      * @param imgwidth the imgwidth to set
      */
     public void setImgwidth(final int imgwidth) {
@@ -315,36 +380,62 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
     }
 
     /**
+     * <p>Setter for the field <code>plot</code>.</p>
+     *
      * @param plot the plot to set
      */
     public void setPlot(final Plot plot) {
         this.plot = plot;
     }
 
+    /**
+     * <p>Setter for the field <code>saveGraphics</code>.</p>
+     *
+     * @param saveGraphics1 a boolean.
+     */
     public void setSaveGraphics(final boolean saveGraphics1) {
         this.saveGraphics = saveGraphics1;
     }
 
+    /**
+     * <p>Setter for the field <code>serializeJFreeChart</code>.</p>
+     *
+     * @param serializeJFreeChart1 a boolean.
+     */
     public void setSerializeJFreeChart(final boolean serializeJFreeChart1) {
         this.serializeJFreeChart = serializeJFreeChart1;
     }
 
     /**
+     * <p>Setter for the field <code>sizeOverride</code>.</p>
+     *
      * @param sizeOverride the sizeOverride to set
      */
     public void setSizeOverride(final boolean sizeOverride) {
         this.sizeOverride = sizeOverride;
     }
 
+    /**
+     * <p>Setter for the field <code>stop</code>.</p>
+     *
+     * @param stop1 a boolean.
+     */
     public void setStop(final boolean stop1) {
         this.stop = stop1;
     }
 
+    /**
+     * <p>Setter for the field <code>targetContainer</code>.</p>
+     *
+     * @param jf a {@link javax.swing.JFrame} object.
+     */
     public void setTargetContainer(final JFrame jf) {
         this.targetContainer = jf;
     }
 
     /**
+     * <p>Setter for the field <code>title</code>.</p>
+     *
      * @param title the title to set
      */
     public void setTitle(final String title) {

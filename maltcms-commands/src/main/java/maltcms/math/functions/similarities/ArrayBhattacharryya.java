@@ -36,12 +36,21 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 @Data
+/**
+ * <p>ArrayBhattacharryya class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @ServiceProvider(service = IArraySimilarity.class)
 @NotThreadSafe
 public class ArrayBhattacharryya implements IArraySimilarity {
 
     private transient final ObjectDoubleOpenHashMap<Array> cache;
 
+    /**
+     * <p>Constructor for ArrayBhattacharryya.</p>
+     */
     public ArrayBhattacharryya() {
         cache = new ObjectDoubleOpenHashMap<>();
     }
@@ -57,6 +66,7 @@ public class ArrayBhattacharryya implements IArraySimilarity {
         return cache.get(a);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(Array t1,
             Array t2) {
@@ -76,11 +86,13 @@ public class ArrayBhattacharryya implements IArraySimilarity {
         return Double.NEGATIVE_INFINITY;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         return new ArrayBhattacharryya();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

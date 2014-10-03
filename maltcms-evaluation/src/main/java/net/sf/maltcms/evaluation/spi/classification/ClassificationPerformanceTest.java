@@ -48,8 +48,7 @@ import net.sf.maltcms.evaluation.api.classification.PeakRTFeatureVectorComparato
  * are to be evaluated.
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class ClassificationPerformanceTest<T extends IFeatureVector> {
 
@@ -57,6 +56,12 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
     private final int numberOfGroundTruthEntities;
     private final IFeatureVectorComparator ifvc;
 
+    /**
+     * <p>Constructor for ClassificationPerformanceTest.</p>
+     *
+     * @param groundTruth a {@link java.util.List} object.
+     * @param ifvc a {@link net.sf.maltcms.evaluation.api.classification.IFeatureVectorComparator} object.
+     */
     public ClassificationPerformanceTest(List<EntityGroup<T>> groundTruth, IFeatureVectorComparator ifvc) {
         this.groundTruth = groundTruth;
         int nent = 0;
@@ -67,6 +72,11 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         this.ifvc = ifvc;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         Category c1 = new Category("c1");
         Category c2 = new Category("c2");
@@ -113,6 +123,14 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         System.out.println(cpt.performTest("test", datal));
     }
 
+    /**
+     * <p>performTest.</p>
+     *
+     * @param toolname a {@link java.lang.String} object.
+     * @param testGroup a {@link java.util.List} object.
+     * @return a {@link net.sf.maltcms.evaluation.spi.classification.PerformanceMetrics} object.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     public PerformanceMetrics performTest(String toolname, List<EntityGroup<T>> testGroup) throws IllegalArgumentException {
         //log.debug("Performing classification performance test for " + toolname);
         if (!checkCategories(this.groundTruth, testGroup)) {
@@ -205,9 +223,9 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
      * We expect to find at least one positive assignment in a group. To rank
      * the groups, we focus on TP and TN first.
      *
-     * @param testGroup
-     * @param groundTruth
-     * @return
+     * @param testGroup a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
+     * @param groundTruth a {@link java.util.List} object.
+     * @return a {@link net.sf.maltcms.evaluation.spi.classification.EntityGroupClassificationResult} object.
      */
     public EntityGroupClassificationResult findBest(EntityGroup<T> testGroup, List<EntityGroup<T>> groundTruth) {
         //int tmpCorrect = 1;
@@ -373,6 +391,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         return new int[]{tp1, tn1, fp1, fn1};
     }
 
+    /**
+     * <p>checkCategories.</p>
+     *
+     * @param gt a {@link java.util.List} object.
+     * @param testGroup a {@link java.util.List} object.
+     * @return a boolean.
+     */
     public boolean checkCategories(List<EntityGroup<T>> gt, List<EntityGroup<T>> testGroup) {
         boolean check = false;
         int ncat = -1;
@@ -395,6 +420,13 @@ public class ClassificationPerformanceTest<T extends IFeatureVector> {
         return check;
     }
 
+    /**
+     * <p>checkCategories.</p>
+     *
+     * @param gt a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
+     * @param testGroup a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
+     * @return a boolean.
+     */
     public boolean checkCategories(EntityGroup<T> gt, EntityGroup<T> testGroup) {
         //categories need to be the same
         Set<Category> gtCats = gt.getCategories();

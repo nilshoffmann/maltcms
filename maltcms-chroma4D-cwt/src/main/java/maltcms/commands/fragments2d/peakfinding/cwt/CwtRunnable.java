@@ -112,9 +112,10 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
 /**
+ * <p>CwtRunnable class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @ServiceProvider(service = IPeakPicking.class)
 @Data
@@ -157,6 +158,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
 
     private QuadTree<Ridge> ridgeTree = null;
 
+    /** {@inheritDoc} */
     @Override
     public File call() {
 
@@ -817,11 +819,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return qt;
     }
 
-    /**
-     *
-     * @param ffO
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaks(IFileFragment ffO) {
         this.inputFile = ffO.getUri();
@@ -836,14 +834,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return l;
     }
 
-    /**
-     *
-     * @param ff
-     * @param p
-     * @param dx
-     * @param dy
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         if (this.ridgeTree == null) {
@@ -859,6 +850,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return list;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration pc) {
 

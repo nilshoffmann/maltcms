@@ -64,6 +64,7 @@ import ucar.ma2.IndexIterator;
  * of every chromatogram.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -119,9 +120,7 @@ public class MeanVarVis extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean useLogScale = false;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment ff : t) {
@@ -183,9 +182,7 @@ public class MeanVarVis extends AFragmentCommand {
         return t;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.meanMSIntensityVar = cfg.getString("var.mean_ms_intensity",
@@ -360,17 +357,13 @@ public class MeanVarVis extends AFragmentCommand {
         ImageTools.saveImage(bi2, filename, this.format, getWorkflow().getOutputDirectory(this), elem);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Visualization of mean, variance, standard deviation and more.";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

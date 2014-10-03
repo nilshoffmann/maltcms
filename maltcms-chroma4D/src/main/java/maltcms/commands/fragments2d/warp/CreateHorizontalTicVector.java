@@ -56,6 +56,7 @@ import ucar.ma2.Index;
  * Creates all reference-query horizontal tic scanlines vectors.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -78,17 +79,13 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
             value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Creates the horizontal TIC-vector after warping the first time axis.";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 
@@ -181,9 +178,7 @@ public class CreateHorizontalTicVector extends AFragmentCommand {
         return new TupleND<>(ret);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

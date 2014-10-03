@@ -67,7 +67,7 @@ import org.openide.util.lookup.ServiceProvider;
  * signal-to-noise ratio, decides whether a maximum is a peak candidate or not.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @RequiresVariables(names = {"var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
@@ -114,11 +114,13 @@ public class TICPeakFinder extends AFragmentCommand {
     @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         EvalTools.notNull(t, this);
@@ -176,6 +178,7 @@ public class TICPeakFinder extends AFragmentCommand {
         return new TupleND<>();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         log.debug("Configure called on TICPeakFinder");
@@ -189,10 +192,7 @@ public class TICPeakFinder extends AFragmentCommand {
                 "tic_filtered");
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.";
@@ -203,10 +203,7 @@ public class TICPeakFinder extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;

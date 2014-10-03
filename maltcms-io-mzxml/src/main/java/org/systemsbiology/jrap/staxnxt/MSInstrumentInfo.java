@@ -31,6 +31,8 @@ package org.systemsbiology.jrap.staxnxt;
  * for a certain MzXML file.
  *
  * @author M. Vogelzang
+ * 
+ * @since 1.3.2
  */
 public class MSInstrumentInfo {
 
@@ -39,6 +41,8 @@ public class MSInstrumentInfo {
     protected MSOperator operator;
 
     /**
+     * <p>Getter for the field <code>detector</code>.</p>
+     *
      * @return Returns the detector.
      */
     public String getDetector() {
@@ -46,6 +50,8 @@ public class MSInstrumentInfo {
     }
 
     /**
+     * <p>Getter for the field <code>ionization</code>.</p>
+     *
      * @return Returns the ionization method.
      */
     public String getIonization() {
@@ -53,6 +59,8 @@ public class MSInstrumentInfo {
     }
 
     /**
+     * <p>Getter for the field <code>manufacturer</code>.</p>
+     *
      * @return Returns the manufacturer.
      */
     public String getManufacturer() {
@@ -60,6 +68,8 @@ public class MSInstrumentInfo {
     }
 
     /**
+     * <p>Getter for the field <code>massAnalyzer</code>.</p>
+     *
      * @return Returns the mass analyzer.
      */
     public String getMassAnalyzer() {
@@ -67,6 +77,8 @@ public class MSInstrumentInfo {
     }
 
     /**
+     * <p>Getter for the field <code>model</code>.</p>
+     *
      * @return Returns the model.
      */
     public String getModel() {
@@ -74,6 +86,8 @@ public class MSInstrumentInfo {
     }
 
     /**
+     * <p>Getter for the field <code>operator</code>.</p>
+     *
      * @return Returns the operator.
      */
     public MSOperator getOperator() {
@@ -81,12 +95,15 @@ public class MSInstrumentInfo {
     }
 
     /**
+     * <p>Getter for the field <code>softwareInfo</code>.</p>
+     *
      * @return Returns the software information.
      */
     public SoftwareInfo getSoftwareInfo() {
         return softwareInfo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return ("msManufacturer " + manufacturer + " msModel " + model + " msIonization "

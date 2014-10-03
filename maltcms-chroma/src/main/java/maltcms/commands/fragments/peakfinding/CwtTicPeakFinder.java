@@ -47,8 +47,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>CwtTicPeakFinder class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -70,6 +72,7 @@ public class CwtTicPeakFinder extends AFragmentCommand {
     @Configurable
     private boolean saveGraphics = false;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         ICompletionService<URI> ics = createCompletionService(URI.class);

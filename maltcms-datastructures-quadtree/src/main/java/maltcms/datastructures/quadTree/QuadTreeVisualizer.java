@@ -39,15 +39,34 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
+ * <p>QuadTreeVisualizer class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public class QuadTreeVisualizer {
 
+    /**
+     * <p>createImage.</p>
+     *
+     * @param qt a {@link maltcms.datastructures.quadTree.QuadTree} object.
+     * @param <T> a T object.
+     * @return a {@link java.awt.image.RenderedImage} object.
+     */
     public <T> RenderedImage createImage(QuadTree<T> qt) {
         return createImage(qt, 1.0d, 1.0d);
     }
 
+    /**
+     * <p>createImage.</p>
+     *
+     * @param qt a {@link maltcms.datastructures.quadTree.QuadTree} object.
+     * @param pointSizeX a double.
+     * @param pointSizeY a double.
+     * @param <T> a T object.
+     * @return a {@link java.awt.image.RenderedImage} object.
+     */
     public <T> RenderedImage createImage(QuadTree<T> qt, double pointSizeX, double pointSizeY) {
         BufferedImage bi = new BufferedImage((int) Math.ceil(qt.getDataBounds().getWidth()) + 1, (int) Math.ceil(qt.getDataBounds().getHeight()) + 1, BufferedImage.TYPE_INT_ARGB);
         QuadTreeNode<T> root = qt.getRoot();

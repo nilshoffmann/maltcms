@@ -36,6 +36,12 @@ import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;
 
 @Slf4j
+/**
+ * <p>MissingPeak2D class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @Data
 public class MissingPeak2D {
 
@@ -44,14 +50,26 @@ public class MissingPeak2D {
     List<Integer> missingInChromatogram = new ArrayList<>();
     Array meanMS = null;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
+    /**
+     * <p>Constructor for MissingPeak2D.</p>
+     */
     public MissingPeak2D() {
     }
 
+    /**
+     * <p>Constructor for MissingPeak2D.</p>
+     *
+     * @param meanFirstScanIndex a int.
+     * @param meanSecondScanIndex a int.
+     * @param maxFirstDelta a int.
+     * @param maxSecondDelta a int.
+     */
     public MissingPeak2D(int meanFirstScanIndex, int meanSecondScanIndex,
             int maxFirstDelta, int maxSecondDelta) {
         this.meanFirstScanIndex = meanFirstScanIndex;
@@ -60,58 +78,128 @@ public class MissingPeak2D {
         this.maxSecondDelta = maxSecondDelta;
     }
 
+    /**
+     * <p>Getter for the field <code>meanFirstScanIndex</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMeanFirstScanIndex() {
         return meanFirstScanIndex;
     }
 
+    /**
+     * <p>Getter for the field <code>meanSecondScanIndex</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMeanSecondScanIndex() {
         return meanSecondScanIndex;
     }
 
+    /**
+     * <p>Getter for the field <code>maxFirstDelta</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMaxFirstDelta() {
         return maxFirstDelta;
     }
 
+    /**
+     * <p>Getter for the field <code>maxSecondDelta</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMaxSecondDelta() {
         return maxSecondDelta;
     }
 
+    /**
+     * <p>addMissingChromatogram.</p>
+     *
+     * @param i a {@link java.lang.Integer} object.
+     */
     public void addMissingChromatogram(Integer i) {
         this.missingInChromatogram.add(i);
     }
 
+    /**
+     * <p>getMissingChromatogramList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Integer> getMissingChromatogramList() {
         return this.missingInChromatogram;
     }
 
+    /**
+     * <p>Setter for the field <code>meanFirstScanIndex</code>.</p>
+     *
+     * @param meanFirstScanIndex a int.
+     */
     public void setMeanFirstScanIndex(int meanFirstScanIndex) {
         this.meanFirstScanIndex = meanFirstScanIndex;
     }
 
+    /**
+     * <p>Setter for the field <code>meanSecondScanIndex</code>.</p>
+     *
+     * @param meanSecondScanIndex a int.
+     */
     public void setMeanSecondScanIndex(int meanSecondScanIndex) {
         this.meanSecondScanIndex = meanSecondScanIndex;
     }
 
+    /**
+     * <p>Setter for the field <code>maxFirstDelta</code>.</p>
+     *
+     * @param maxFirstDelta a int.
+     */
     public void setMaxFirstDelta(int maxFirstDelta) {
         this.maxFirstDelta = maxFirstDelta;
     }
 
+    /**
+     * <p>Setter for the field <code>maxSecondDelta</code>.</p>
+     *
+     * @param maxSecondDelta a int.
+     */
     public void setMaxSecondDelta(int maxSecondDelta) {
         this.maxSecondDelta = maxSecondDelta;
     }
 
+    /**
+     * <p>Getter for the field <code>averageCount</code>.</p>
+     *
+     * @return a int.
+     */
     public int getAverageCount() {
         return averageCount;
     }
 
+    /**
+     * <p>Setter for the field <code>averageCount</code>.</p>
+     *
+     * @param averageCount a int.
+     */
     public void setAverageCount(int averageCount) {
         this.averageCount = averageCount;
     }
 
+    /**
+     * <p>getMeanPoint.</p>
+     *
+     * @return a {@link java.awt.Point} object.
+     */
     public Point getMeanPoint() {
         return new Point(this.meanFirstScanIndex, this.meanSecondScanIndex);
     }
 
+    /**
+     * <p>addMS.</p>
+     *
+     * @param ms a {@link ucar.ma2.Array} object.
+     */
     public void addMS(Array ms) {
         if (this.meanMS != null) {
             this.meanMS = ArrayTools.sum(this.meanMS, ms);
@@ -120,6 +208,11 @@ public class MissingPeak2D {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>meanMS</code>.</p>
+     *
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public Array getMeanMS() {
         return ArrayTools.mult(this.meanMS, 1.0d / (double) this.averageCount);
     }

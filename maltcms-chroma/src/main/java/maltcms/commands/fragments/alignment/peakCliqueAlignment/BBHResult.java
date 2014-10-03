@@ -32,8 +32,11 @@ import java.util.List;
 import lombok.Value;
 
 /**
+ * <p>BBHResult class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Value
 public class BBHResult {

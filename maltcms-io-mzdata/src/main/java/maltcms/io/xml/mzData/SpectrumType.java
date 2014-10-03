@@ -69,7 +69,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "spectrumType", propOrder = {"spectrumDesc", "supDesc",
@@ -94,6 +95,7 @@ public class SpectrumType implements Serializable {
     /**
      * Gets the value of the id property.
      *
+     * @return a int.
      */
     public int getId() {
         return this.id;
@@ -102,8 +104,7 @@ public class SpectrumType implements Serializable {
     /**
      * Gets the value of the intenArrayBinary property.
      *
-     * @return possible object is {@link PeakListBinaryType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.PeakListBinaryType}
      */
     public PeakListBinaryType getIntenArrayBinary() {
         return this.intenArrayBinary;
@@ -112,8 +113,7 @@ public class SpectrumType implements Serializable {
     /**
      * Gets the value of the mzArrayBinary property.
      *
-     * @return possible object is {@link PeakListBinaryType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.PeakListBinaryType}
      */
     public PeakListBinaryType getMzArrayBinary() {
         return this.mzArrayBinary;
@@ -122,8 +122,7 @@ public class SpectrumType implements Serializable {
     /**
      * Gets the value of the spectrumDesc property.
      *
-     * @return possible object is {@link SpectrumDescType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.SpectrumDescType}
      */
     public SpectrumDescType getSpectrumDesc() {
         return this.spectrumDesc;
@@ -149,9 +148,9 @@ public class SpectrumType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link SupDataType } {@link SupDataBinaryType }
+     * {@link maltcms.io.xml.mzData.SupDataType} {@link maltcms.io.xml.mzData.SupDataBinaryType}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<Object> getSupDataArrayBinaryOrSupDataArray() {
         if (this.supDataArrayBinaryOrSupDataArray == null) {
@@ -179,9 +178,9 @@ public class SpectrumType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link SupDescType }
+     * {@link maltcms.io.xml.mzData.SupDescType}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<SupDescType> getSupDesc() {
         if (this.supDesc == null) {
@@ -193,6 +192,7 @@ public class SpectrumType implements Serializable {
     /**
      * Sets the value of the id property.
      *
+     * @param value a int.
      */
     public void setId(final int value) {
         this.id = value;
@@ -201,8 +201,7 @@ public class SpectrumType implements Serializable {
     /**
      * Sets the value of the intenArrayBinary property.
      *
-     * @param value allowed object is {@link PeakListBinaryType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.PeakListBinaryType}
      */
     public void setIntenArrayBinary(final PeakListBinaryType value) {
         this.intenArrayBinary = value;
@@ -211,8 +210,7 @@ public class SpectrumType implements Serializable {
     /**
      * Sets the value of the mzArrayBinary property.
      *
-     * @param value allowed object is {@link PeakListBinaryType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.PeakListBinaryType}
      */
     public void setMzArrayBinary(final PeakListBinaryType value) {
         this.mzArrayBinary = value;
@@ -221,8 +219,7 @@ public class SpectrumType implements Serializable {
     /**
      * Sets the value of the spectrumDesc property.
      *
-     * @param value allowed object is {@link SpectrumDescType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.SpectrumDescType}
      */
     public void setSpectrumDesc(final SpectrumDescType value) {
         this.spectrumDesc = value;

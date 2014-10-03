@@ -68,6 +68,7 @@ import ucar.nc2.Dimension;
  * both to their common time, given by the steps of the alignment map.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -98,10 +99,11 @@ public class PathWarp extends AFragmentCommand {
     private int minScansBetweenAnchors = 5;
 
     /**
+     * <p>apply.</p>
      *
-     * @param m
-     * @param tf
-     * @return
+     * @param m a {@link maltcms.datastructures.warp.MZIWarpInput} object.
+     * @param tf a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment apply(final MZIWarpInput m, final IFileFragment tf) {
         processIndexedArrays(m, tf);
@@ -119,6 +121,7 @@ public class PathWarp extends AFragmentCommand {
      *
      * @see maltcms.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final TupleND<IFileFragment> ret = new TupleND<>();
@@ -145,6 +148,7 @@ public class PathWarp extends AFragmentCommand {
      * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
      * .configuration.Configuration)
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -206,9 +210,10 @@ public class PathWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>processArrays.</p>
      *
-     * @param m
-     * @param tf
+     * @param m a {@link maltcms.datastructures.warp.MZIWarpInput} object.
+     * @param tf a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void processArrays(final MZIWarpInput m, final IFileFragment tf) {
         final ArrayList<String> al = FragmentTools.getDefaultVars();
@@ -232,9 +237,10 @@ public class PathWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>processIndexedArrays.</p>
      *
-     * @param m
-     * @param tf
+     * @param m a {@link maltcms.datastructures.warp.MZIWarpInput} object.
+     * @param tf a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void processIndexedArrays(final MZIWarpInput m,
             final IFileFragment tf) {
@@ -319,12 +325,14 @@ public class PathWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>processRIs.</p>
      *
      * @param m
-     * @param tf
-     * @param refScanNo
-     * @param queryScanNo
      * @param minScansBetweenAnchors
+     * @param tf a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param refScanNo a int.
+     * @param queryScanNo a int.
+     * @param minScansBetweenAnchors a int.
      */
     public void processRIs(final MZIWarpInput m, final IFileFragment tf,
             final int refScanNo, final int queryScanNo,

@@ -33,15 +33,18 @@ import maltcms.math.functions.IArraySimilarity;
 import ucar.ma2.Array;
 
 /**
+ * <p>SimilarityTools class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class SimilarityTools {
 
     /**
+     * <p>toSimilarity.</p>
      *
-     * @param distance
-     * @return
+     * @param distance a double.
+     * @return a double.
      */
     public static double toSimilarity(double distance) {
         return -distance;
@@ -51,7 +54,10 @@ public class SimilarityTools {
      * Converts the given similarity s(a,b) to d(a,b):=sqrt(s(a,a)+s(b,b)-
      * 2*s(a,b)).
      *
-     * @return
+     * @param sim a {@link maltcms.math.functions.IArraySimilarity} object.
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public static double toDistance(IArraySimilarity sim, Array a, Array b) {
         double dist = 0.0d;
@@ -61,6 +67,15 @@ public class SimilarityTools {
         return Math.sqrt(dist);
     }
 
+    /**
+     * <p>newValueCache.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param <K> a K object.
+     * @param <V> a V object.
+     * @return a {@link cross.cache.ICacheDelegate} object.
+     * @since 1.3.2
+     */
     public static <K, V> ICacheDelegate<K, V> newValueCache(String name) {
         return CacheFactory.createVolatileCache(name, 30, 60, 100000);
     }

@@ -58,9 +58,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
+ * <p>MassFilter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 @Data
@@ -89,6 +90,7 @@ public class MassFilter extends AFragmentCommand {
     @Configurable
     private boolean invert = false;
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -105,6 +107,7 @@ public class MassFilter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 

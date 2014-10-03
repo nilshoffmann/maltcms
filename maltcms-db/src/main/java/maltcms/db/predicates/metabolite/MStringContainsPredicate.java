@@ -30,6 +30,12 @@ package maltcms.db.predicates.metabolite;
 import java.lang.reflect.InvocationTargetException;
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>MStringContainsPredicate class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MStringContainsPredicate extends MStringMatchPredicate {
 
     /**
@@ -37,10 +43,16 @@ public class MStringContainsPredicate extends MStringMatchPredicate {
      */
     private static final long serialVersionUID = -8108747283945214056L;
 
+    /**
+     * <p>Constructor for MStringContainsPredicate.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public MStringContainsPredicate(String s) {
         super(s);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite q) {
         if (getMethodOnTargetType() != null) {

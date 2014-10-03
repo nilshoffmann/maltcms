@@ -39,15 +39,18 @@ import maltcms.datastructures.array.IFeatureVector;
  * A group of Entity objects which all share the same class label, meaning they
  * are grouped by some algorithm as related entities.
  *
- *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class EntityGroup implements Comparable<EntityGroup> {
 
     private final HashMap<Category, Entity> categoryToEntityMap;
 
+    /**
+     * <p>Constructor for EntityGroup.</p>
+     *
+     * @param e a {@link net.sf.maltcms.evaluation.api.Entity} object.
+     */
     public EntityGroup(Entity... e) {
         categoryToEntityMap = new HashMap<>();
         for (Entity ent : e) {
@@ -55,6 +58,12 @@ public class EntityGroup implements Comparable<EntityGroup> {
         }
     }
 
+    /**
+     * <p>addEntity.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.Category} object.
+     * @param e a {@link net.sf.maltcms.evaluation.api.Entity} object.
+     */
     public void addEntity(Category c, Entity e) {
         if (this.categoryToEntityMap.containsKey(c)) {
             System.err.println("Element with key " + c + " already contained in EntityGroup!");
@@ -62,18 +71,35 @@ public class EntityGroup implements Comparable<EntityGroup> {
         this.categoryToEntityMap.put(c, e);
     }
 
+    /**
+     * <p>getEntities.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity> getEntities() {
         return new ArrayList<>(categoryToEntityMap.values());
     }
 
+    /**
+     * <p>getEntityForCategory.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.Category} object.
+     * @return a {@link net.sf.maltcms.evaluation.api.Entity} object.
+     */
     public Entity getEntityForCategory(Category c) {
         return categoryToEntityMap.get(c);
     }
 
+    /**
+     * <p>getCategories.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Category> getCategories() {
         return categoryToEntityMap.keySet();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -89,6 +115,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
         return header.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -96,6 +123,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -111,6 +139,7 @@ public class EntityGroup implements Comparable<EntityGroup> {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(EntityGroup o) {
         if (equals(o)) {

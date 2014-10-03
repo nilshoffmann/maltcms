@@ -72,9 +72,8 @@ import ucar.ma2.InvalidRangeException;
  * Use {
  *
  * @see Default2DVarLoader} instead with flag estimateModulationTime=true
- *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -90,6 +89,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     private double doubleFillValue;
     private double threshold;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<>();
@@ -122,10 +122,11 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     }
 
     /**
+     * <p>buildSecondRetentionTime.</p>
      *
-     * @param tic
-     * @param maxima
-     * @return
+     * @param tic a {@link ucar.ma2.ArrayInt.D1} object.
+     * @param maxima a {@link java.util.ArrayList} object.
+     * @return a {@link ucar.ma2.ArrayInt.D2} object.
      */
     protected ArrayInt.D2 buildSecondRetentionTime(final ArrayInt.D1 tic,
             final ArrayList<Integer> maxima) {
@@ -196,12 +197,14 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     }
 
     /**
+     * <p>calcEstimatedAutoCorrelation.</p>
      *
      * @param a
-     * @param mean
-     * @param variance
-     * @param lag
      * @param acr
+     * @param mean a double.
+     * @param variance a double.
+     * @param lag a int.
+     * @param acr a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     protected void calcEstimatedAutoCorrelation(final Array a,
             final double mean, final double variance, final int lag,
@@ -225,8 +228,9 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     }
 
     /**
+     * <p>checkDeltas.</p>
      *
-     * @param al
+     * @param al a {@link java.util.ArrayList} object.
      */
     protected void checkDeltas(final ArrayList<Tuple2D<Integer, Double>> al) {
         Tuple2D<Integer, Double> tple = al.remove(0);
@@ -240,6 +244,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.tic_var = cfg.getString("var.total_intensity", "total_intensity");
@@ -256,9 +261,9 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * the same shape as a, and an array maximaDiff, which contains all
      * differences between maxima, of size (#of maxima - 1).
      *
-     * @param a
-     * @param maximaIndices
-     * @return
+     * @param a a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param maximaIndices a {@link java.util.ArrayList} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     protected Tuple2D<ArrayDouble.D1, ArrayInt.D1> findMaxima(
             final ArrayDouble.D1 a, final ArrayList<Integer> maximaIndices) {
@@ -319,9 +324,10 @@ public class ModulationTimeEstimator extends AFragmentCommand {
     }
 
     /**
+     * <p>findSecondRetentionTimes.</p>
      *
-     * @param ff
-     * @param fret
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param fret a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     protected void findSecondRetentionTimes(final IFileFragment ff,
             final IFileFragment fret) {
@@ -480,10 +486,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         // checkDeltas(maxima);
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Reconstructs second retention time of 2DGC-MS chromatograms from given scan rate and second column time.";
@@ -493,13 +496,13 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      * We need: All Tics, scan acquisition times for every scan, all maxima of
      * the tic (modulation peaks of solvent), number of scans in between maxima.
      *
-     * @param fret
+     * @param fret a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param satMean a double.
      * @param satMean
-     * @param tic
-     * @param sat
-     * @param maximaA
-     * @param maximaDiff
-     * @return
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @param maximaA a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param maximaDiff a ucar$ma2$ArrayInt$D1 object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     protected Tuple2D<ArrayDouble.D1, ArrayDouble.D1> getModulationTime(
             final IFileFragment fret, final double satMean, final Array sat,
@@ -563,21 +566,19 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;
     }
 
     /**
+     * <p>isCandidate.</p>
      *
-     * @param prev
-     * @param current
-     * @param next
-     * @return
+     * @param prev a double.
+     * @param current a double.
+     * @param next a double.
+     * @return a boolean.
      */
     protected boolean isCandidate(final double prev, final double current,
             final double next) {

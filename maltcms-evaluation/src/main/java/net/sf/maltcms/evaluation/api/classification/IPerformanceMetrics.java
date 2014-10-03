@@ -28,8 +28,10 @@
 package net.sf.maltcms.evaluation.api.classification;
 
 /**
+ * <p>IPerformanceMetrics interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPerformanceMetrics {
 
@@ -38,30 +40,95 @@ public interface IPerformanceMetrics {
         TP, FP, TN, FN, F1, SENSITIVITY, SPECIFICITY, FPR, FNR, RECALL, ACCURACY, GAIN
     };
 
+    /**
+     * <p>getAccuracy.</p>
+     *
+     * @return a double.
+     */
     double getAccuracy();
 
+    /**
+     * <p>getF1.</p>
+     *
+     * @return a double.
+     */
     double getF1();
 
+    /**
+     * <p>getFNR.</p>
+     *
+     * @return a double.
+     */
     double getFNR();
 
+    /**
+     * <p>getFPR.</p>
+     *
+     * @return a double.
+     */
     double getFPR();
 
+    /**
+     * <p>getFn.</p>
+     *
+     * @return a int.
+     */
     int getFn();
 
+    /**
+     * <p>getFp.</p>
+     *
+     * @return a int.
+     */
     int getFp();
 
+    /**
+     * <p>getGain.</p>
+     *
+     * @return a double.
+     */
     double getGain();
 
+    /**
+     * <p>getPrecision.</p>
+     *
+     * @return a double.
+     */
     double getPrecision();
 
+    /**
+     * <p>getRecall.</p>
+     *
+     * @return a double.
+     */
     double getRecall();
 
+    /**
+     * <p>getSensitivity.</p>
+     *
+     * @return a double.
+     */
     double getSensitivity();
 
+    /**
+     * <p>getSpecificity.</p>
+     *
+     * @return a double.
+     */
     double getSpecificity();
 
+    /**
+     * <p>getTn.</p>
+     *
+     * @return a int.
+     */
     int getTn();
 
+    /**
+     * <p>getTp.</p>
+     *
+     * @return a int.
+     */
     int getTp();
 
 }

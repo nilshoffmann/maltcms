@@ -58,9 +58,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
+ * <p>EICHeatmapCoplot class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
 @Slf4j
@@ -80,6 +81,7 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final File[] files = drawEICs(getWorkflow().getOutputDirectory(this),

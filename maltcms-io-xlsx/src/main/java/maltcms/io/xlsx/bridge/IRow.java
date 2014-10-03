@@ -28,11 +28,19 @@
 package maltcms.io.xlsx.bridge;
 
 /**
+ * <p>IRow interface.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public interface IRow extends Iterable<ICell> {
 
+    /**
+     * <p>getCell.</p>
+     *
+     * @param i a int.
+     * @return a {@link maltcms.io.xlsx.bridge.ICell} object.
+     */
     public ICell getCell(int i);
 
 }

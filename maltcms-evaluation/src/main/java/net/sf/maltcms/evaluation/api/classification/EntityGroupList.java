@@ -41,8 +41,10 @@ import maltcms.datastructures.array.IFeatureVector;
 import net.sf.maltcms.evaluation.spi.classification.Peak2DFeatureVector;
 
 /**
+ * <p>EntityGroupList class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class EntityGroupList<T extends IFeatureVector> implements List<EntityGroup<T>> {
 
@@ -50,6 +52,11 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
 
     private final Set<Category> categories;
 
+    /**
+     * <p>Constructor for EntityGroupList.</p>
+     *
+     * @param categories a {@link java.util.List} object.
+     */
     public EntityGroupList(List<Category> categories) {
         ArrayList<Category> cats = new ArrayList<>(categories);
         Collections.sort(cats, new Comparator<Category>() {
@@ -62,18 +69,40 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         this.categories = new LinkedHashSet<>(cats);
     }
 
+    /**
+     * <p>Constructor for EntityGroupList.</p>
+     *
+     * @param category a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     */
     public EntityGroupList(Category... category) {
         this(Arrays.asList(category));
     }
 
+    /**
+     * <p>getCategoriesSize.</p>
+     *
+     * @return a int.
+     */
     public int getCategoriesSize() {
         return categories.size();
     }
 
+    /**
+     * <p>Getter for the field <code>categories</code>.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<Category> getCategories() {
         return categories;
     }
 
+    /**
+     * <p>findMatching.</p>
+     *
+     * @param template a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     * @param feature a {@link java.lang.String} object.
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     */
     public Entity<T> findMatching(Entity<T> template, String feature) {
         for (Entity<T> e : getEntities(template.getCategory())) {
             if (template.getFeatureVector() instanceof Peak2DFeatureVector && e.getFeatureVector() instanceof Peak2DFeatureVector) {
@@ -91,11 +120,24 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         return null;
     }
 
+    /**
+     * <p>containsEntity.</p>
+     *
+     * @param template a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     * @param feature a {@link java.lang.String} object.
+     * @return a boolean.
+     */
     public boolean containsEntity(Entity<T> template, String feature) {
         Entity<T> result = findMatching(template, feature);
         return result == null ? false : true;
     }
 
+    /**
+     * <p>getEntities.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity<T>> getEntities(Category c) {
         List<Entity<T>> es = new ArrayList<>();
         for (EntityGroup<T> eg : this) {
@@ -104,6 +146,12 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         return es;
     }
 
+    /**
+     * <p>getSubList.</p>
+     *
+     * @param categories a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
+     */
     public EntityGroupList<T> getSubList(Category... categories) {
         EntityGroupList<T> entityGroups = new EntityGroupList<>(categories);
         for (EntityGroup<T> eg : this) {
@@ -112,36 +160,43 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         return entityGroups;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int size() {
         return delegate.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEmpty() {
         return delegate.isEmpty();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean contains(Object o) {
         return delegate.contains(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<EntityGroup<T>> iterator() {
         return delegate.iterator();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object[] toArray() {
         return delegate.toArray();
     }
 
+    /** {@inheritDoc} */
     @Override
     public <T> T[] toArray(T[] a) {
         return delegate.toArray(a);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean add(EntityGroup<T> e) {
         if (categories.containsAll(e.getCategories())) {
@@ -151,16 +206,19 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean remove(Object o) {
         return delegate.remove(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean containsAll(Collection<?> c) {
         return delegate.containsAll(c);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean addAll(Collection<? extends EntityGroup<T>> c) {
         boolean b = false;
@@ -170,41 +228,49 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean addAll(int index, Collection<? extends EntityGroup<T>> c) {
         return delegate.addAll(index, c);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean removeAll(Collection<?> c) {
         return delegate.removeAll(c);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean retainAll(Collection<?> c) {
         return delegate.retainAll(c);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         delegate.clear();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         return delegate.equals(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return delegate.hashCode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public EntityGroup<T> get(int index) {
         return delegate.get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public EntityGroup<T> set(int index, EntityGroup<T> element) {
         if (categories.containsAll(element.getCategories())) {
@@ -214,6 +280,7 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void add(int index, EntityGroup<T> element) {
         if (categories.containsAll(element.getCategories())) {
@@ -223,31 +290,37 @@ public class EntityGroupList<T extends IFeatureVector> implements List<EntityGro
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public EntityGroup<T> remove(int index) {
         return delegate.remove(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int indexOf(Object o) {
         return delegate.indexOf(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int lastIndexOf(Object o) {
         return delegate.lastIndexOf(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ListIterator<EntityGroup<T>> listIterator() {
         return delegate.listIterator();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ListIterator<EntityGroup<T>> listIterator(int index) {
         return delegate.listIterator(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<EntityGroup<T>> subList(int fromIndex, int toIndex) {
         return delegate.subList(fromIndex, toIndex);

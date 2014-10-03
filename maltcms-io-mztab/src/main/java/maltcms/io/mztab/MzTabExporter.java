@@ -26,8 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.mpaxs.api.ICompletionService;
 
 /**
+ * <p>MzTabExporter class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -46,6 +48,7 @@ public class MzTabExporter extends AFragmentCommand {
     private String description = "Exports peak data to mzTab format.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
         try {

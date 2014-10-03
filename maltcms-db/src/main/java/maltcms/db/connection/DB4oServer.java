@@ -31,24 +31,39 @@ import com.db4o.Db4o;
 import com.db4o.ObjectServer;
 
 /**
+ * <p>DB4oServer class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class DB4oServer implements Runnable {
 
     private String address, port;
     private boolean shutdown = false;
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(final String[] args) {
         Thread t = new Thread(new DB4oServer(args[0], args[1]));
         t.start();
     }
 
+    /**
+     * <p>shutdown.</p>
+     */
     public void shutdown() {
         this.shutdown = true;
     }
 
+    /**
+     * <p>Constructor for DB4oServer.</p>
+     *
+     * @param address a {@link java.lang.String} object.
+     * @param port a {@link java.lang.String} object.
+     */
     public DB4oServer(String address, String port) {
         this.address = address;
         this.port = port;
@@ -57,6 +72,7 @@ public class DB4oServer implements Runnable {
     /* (non-Javadoc)
      * @see java.lang.Runnable#run()
      */
+    /** {@inheritDoc} */
     @Override
     public void run() {
         System.out.println("Starting db4o server for " + this.address + " on port " + this.port);

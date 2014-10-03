@@ -48,8 +48,10 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>ArrayTools class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class ArrayTools {
 
@@ -60,6 +62,8 @@ public class ArrayTools {
      * @param sd standard deviation
      * @param quantil array quantils
      * @param visualize visualize sorted array
+     * @param ac a {@link cross.commands.fragments.AFragmentCommand} object.
+     * @return an array of double.
      */
     public static double[] getQuantileValue(final IFileFragment ff,
             final Array sd, final double[] quantil, final boolean visualize,

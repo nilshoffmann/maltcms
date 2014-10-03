@@ -35,22 +35,71 @@ import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 
+/**
+ * <p>IClusteringAlgorithm interface.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public interface IClusteringAlgorithm extends Iterable<IFileFragment> {
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public abstract TupleND<IFileFragment> apply(TupleND<IFileFragment> t);
 
+    /**
+     * <p>getCluster.</p>
+     *
+     * @param i a int.
+     * @return a {@link maltcms.datastructures.cluster.BinaryCluster} object.
+     */
     public abstract BinaryCluster getCluster(int i);
 
+    /**
+     * <p>getClusters.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public abstract Set<Entry<Integer, BinaryCluster>> getClusters();
 
+    /**
+     * <p>getConsensus.</p>
+     *
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public abstract IFileFragment getConsensus();
 
+    /**
+     * <p>getFragments.</p>
+     *
+     * @return a {@link java.util.HashMap} object.
+     */
     public abstract HashMap<Integer, IFileFragment> getFragments();
 
+    /**
+     * <p>getInputFiles.</p>
+     *
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public abstract TupleND<IFileFragment> getInputFiles();
 
+    /**
+     * <p>getNames.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public abstract String[] getNames();
 
+    /**
+     * <p>init.</p>
+     *
+     * @param pwd a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public abstract void init(IFileFragment pwd, TupleND<IFileFragment> t);
 
     /*
@@ -59,9 +108,22 @@ public interface IClusteringAlgorithm extends Iterable<IFileFragment> {
      * @see
      * maltcms.commands.fragments.multiplealignment.ClusteringAlgorithm#merge()
      */
+    /**
+     * <p>merge.</p>
+     */
     public abstract void merge();
 
+    /**
+     * <p>setConsensus.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public abstract void setConsensus(IFileFragment f);
 
+    /**
+     * <p>setInputFiles.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public abstract void setInputFiles(TupleND<IFileFragment> t);
 }

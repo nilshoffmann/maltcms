@@ -37,11 +37,13 @@ import ucar.ma2.IndexIterator;
  * Dot product as similarity measure between arrays.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayDot implements IArraySimilarity {
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         double dot = 0.0d;
@@ -53,6 +55,7 @@ public class ArrayDot implements IArraySimilarity {
         return dot;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         return new ArrayDot();

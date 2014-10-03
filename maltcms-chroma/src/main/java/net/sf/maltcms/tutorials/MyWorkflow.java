@@ -40,8 +40,21 @@ import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 
+/**
+ * <p>MyWorkflow class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MyWorkflow {
 
+    /**
+     * <p>createWorkflow.</p>
+     *
+     * @param commands a {@link java.util.List} object.
+     * @param inputFiles a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.workflow.IWorkflow} object.
+     */
     public static IWorkflow createWorkflow(
             List<IFragmentCommand> commands, List<File> inputFiles) {
         CommandPipeline cp = new CommandPipeline();
@@ -56,8 +69,9 @@ public class MyWorkflow {
     }
 
     /**
+     * <p>main.</p>
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         //Download the test files from

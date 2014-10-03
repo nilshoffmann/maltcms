@@ -37,7 +37,9 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * .
+ *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -81,44 +83,49 @@ public class AlignmentPath2D {
     }
 
     /**
+     * <p>getRHSPointHorizontal.</p>
      *
-     * @param lhsHorizontal
-     * @return
+     * @param lhsHorizontal a {@link java.lang.Integer} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Integer> getRHSPointHorizontal(final Integer lhsHorizontal) {
         return this.LHStoRHShorizontalMap.get(lhsHorizontal);
     }
 
     /**
+     * <p>getLHSPointHorizontal.</p>
      *
-     * @param rhsHorizontal
-     * @return
+     * @param rhsHorizontal a {@link java.lang.Integer} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Integer> getLHSPointHorizontal(final Integer rhsHorizontal) {
         return this.RHStoLHShorizontalMap.get(rhsHorizontal);
     }
 
     /**
+     * <p>getRHSPointVerticals.</p>
      *
-     * @param lhsVertical
-     * @return
+     * @param lhsVertical a {@link java.lang.Integer} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Integer> getRHSPointVerticals(final Integer lhsVertical) {
         return this.LHStoRHSverticalMap.get(lhsVertical);
     }
 
     /**
+     * <p>getLHSPointVertical.</p>
      *
-     * @param rhsVertical
-     * @return
+     * @param rhsVertical a {@link java.lang.Integer} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Integer> getLHSPointVertical(final Integer rhsVertical) {
         return this.RHStoLHSverticalMap.get(rhsVertical);
     }
 
     /**
+     * <p>Getter for the field <code>horizontalList</code>.</p>
      *
-     * @return
+     * @return a {@link java.util.List} object.
      */
     public List<Point> getHorizontalList() {
         return this.horizontalList;

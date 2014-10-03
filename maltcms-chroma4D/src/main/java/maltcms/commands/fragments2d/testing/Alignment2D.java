@@ -58,8 +58,10 @@ import maltcms.tools.ImageTools;
 import ucar.ma2.Array;
 
 /**
+ * <p>Alignment2D class.</p>
  *
  * @author Mathias Wilhelm
+ * 
  */
 @RequiresVariables(names = {"var.maxms_1d_horizontal",
     "var.maxms_1d_horizontal_index", "var.maxms_1d_vertical",
@@ -92,17 +94,14 @@ public class Alignment2D extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean scale = false;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
     /**
-     *
+     * <p>Constructor for Alignment2D.</p>
      */
     public Alignment2D() {
         FeatureVectorDtwSimilarity sim = new FeatureVectorDtwSimilarity();
@@ -113,21 +112,13 @@ public class Alignment2D extends AFragmentCommand {
         dtwSimilarity = sim;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "2D Alignment in spe";
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
 
@@ -252,11 +243,7 @@ public class Alignment2D extends AFragmentCommand {
         return featureList;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;

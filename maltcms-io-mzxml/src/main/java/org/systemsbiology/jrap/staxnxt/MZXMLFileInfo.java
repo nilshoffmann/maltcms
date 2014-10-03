@@ -35,6 +35,8 @@ import java.util.ArrayList;
  * MzXML file that is constant for the entire file.
  *
  * @author M. Vogelzang
+ * 
+ * @since 1.3.2
  */
 public class MZXMLFileInfo {
 
@@ -43,6 +45,9 @@ public class MZXMLFileInfo {
     protected MSInstrumentInfo instrumentInfo;
     protected DataProcessingInfo dataProcessing;
 
+    /**
+     * <p>Constructor for MZXMLFileInfo.</p>
+     */
     public MZXMLFileInfo() {
         //parentFiles = null;
         instrumentInfo = new MSInstrumentInfo();
@@ -77,6 +82,7 @@ public class MZXMLFileInfo {
         return dataProcessing;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         String outputLine = "";

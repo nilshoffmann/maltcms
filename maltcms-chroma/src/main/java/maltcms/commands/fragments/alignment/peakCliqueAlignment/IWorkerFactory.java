@@ -37,23 +37,69 @@ import java.util.concurrent.Callable;
 import maltcms.math.functions.IScalarArraySimilarity;
 
 /**
+ * <p>IWorkerFactory interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IWorkerFactory extends Serializable {
 
+    /**
+     * <p>create.</p>
+     *
+     * @param outputDirectory a {@link java.io.File} object.
+     * @param input a {@link cross.datastructures.tuple.TupleND} object.
+     * @param fragmentToPeaks a {@link java.util.Map} object.
+     * @return a {@link java.util.List} object.
+     */
     List<Callable<PairwiseSimilarityResult>> create(File outputDirectory, TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks);
 
+    /**
+     * <p>setSimilarityFunction.</p>
+     *
+     * @param similarityFunction a {@link maltcms.math.functions.IScalarArraySimilarity} object.
+     * @since 1.3.2
+     */
     void setSimilarityFunction(IScalarArraySimilarity similarityFunction);
 
+    /**
+     * <p>setAssumeSymmetricSimilarity.</p>
+     *
+     * @param assumeSymmetricSimilarity a boolean.
+     * @since 1.3.2
+     */
     void setAssumeSymmetricSimilarity(boolean assumeSymmetricSimilarity);
 
+    /**
+     * <p>setSavePeakSimilarities.</p>
+     *
+     * @param savePeakSimilarities a boolean.
+     * @since 1.3.2
+     */
     void setSavePeakSimilarities(boolean savePeakSimilarities);
 
+    /**
+     * <p>getSimilarityFunction.</p>
+     *
+     * @return a {@link maltcms.math.functions.IScalarArraySimilarity} object.
+     * @since 1.3.2
+     */
     IScalarArraySimilarity getSimilarityFunction();
 
+    /**
+     * <p>isAssumeSymmetricSimilarity.</p>
+     *
+     * @return a boolean.
+     * @since 1.3.2
+     */
     boolean isAssumeSymmetricSimilarity();
 
+    /**
+     * <p>isSavePeakSimilarities.</p>
+     *
+     * @return a boolean.
+     * @since 1.3.2
+     */
     boolean isSavePeakSimilarities();
 
 }

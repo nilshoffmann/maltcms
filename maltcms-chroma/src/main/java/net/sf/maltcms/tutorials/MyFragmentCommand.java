@@ -46,8 +46,10 @@ import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 
 /**
+ * <p>MyFragmentCommand class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @RequiresVariables(names = {"var.total_intensity"})
 @ProvidesVariables(names = {"var.total_intensity"})
@@ -57,11 +59,13 @@ public class MyFragmentCommand extends AFragmentCommand {
     @Configurable(description = "List of filters to be applied to var.total_intensity")
     private List<AArrayFilter> filter = new LinkedList<AArrayFilter>(Arrays.asList(new MultiplicationFilter(1.0d)));
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Applies a list of filters sequentially to var.total_intensity.";
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
         //initialize progress
@@ -92,6 +96,7 @@ public class MyFragmentCommand extends AFragmentCommand {
         return out;
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

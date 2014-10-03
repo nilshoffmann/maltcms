@@ -71,7 +71,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "spectrumDescType", propOrder = {"spectrumSettings",
@@ -180,9 +181,9 @@ public class SpectrumDescType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link String
-     * }
+     *}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<String> getComments() {
         if (this.comments == null) {
@@ -194,8 +195,7 @@ public class SpectrumDescType implements Serializable {
     /**
      * Gets the value of the precursorList property.
      *
-     * @return possible object is {@link SpectrumDescType.PrecursorList }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.SpectrumDescType.PrecursorList}
      */
     public SpectrumDescType.PrecursorList getPrecursorList() {
         return this.precursorList;
@@ -204,8 +204,7 @@ public class SpectrumDescType implements Serializable {
     /**
      * Gets the value of the spectrumSettings property.
      *
-     * @return possible object is {@link SpectrumSettingsType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.SpectrumSettingsType}
      */
     public SpectrumSettingsType getSpectrumSettings() {
         return this.spectrumSettings;
@@ -214,8 +213,7 @@ public class SpectrumDescType implements Serializable {
     /**
      * Sets the value of the precursorList property.
      *
-     * @param value allowed object is {@link SpectrumDescType.PrecursorList }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.SpectrumDescType.PrecursorList}
      */
     public void setPrecursorList(final SpectrumDescType.PrecursorList value) {
         this.precursorList = value;
@@ -224,8 +222,7 @@ public class SpectrumDescType implements Serializable {
     /**
      * Sets the value of the spectrumSettings property.
      *
-     * @param value allowed object is {@link SpectrumSettingsType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.SpectrumSettingsType}
      */
     public void setSpectrumSettings(final SpectrumSettingsType value) {
         this.spectrumSettings = value;

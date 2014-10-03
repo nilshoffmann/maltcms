@@ -32,31 +32,88 @@ import java.awt.geom.Area;
 import java.util.List;
 
 /**
- * @author Nils Hoffmann
+ * <p>IAlignment interface.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 public interface IAlignment extends
         IPairwiseFeatureVectorSequenceOperation<Double> {
 
+    /**
+     * <p>getMap.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Point> getMap();
 
+    /**
+     * <p>getLeftHandSideId.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getLeftHandSideId();
 
+    /**
+     * <p>getRightHandSideId.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getRightHandSideId();
 
+    /**
+     * <p>setRightHandSideId.</p>
+     *
+     * @param rhsid a {@link java.lang.String} object.
+     */
     public void setRightHandSideId(String rhsid);
 
+    /**
+     * <p>setLeftHandSideId.</p>
+     *
+     * @param lhsid a {@link java.lang.String} object.
+     */
     public void setLeftHandSideId(String lhsid);
 
+    /**
+     * <p>setConstraints.</p>
+     *
+     * @param a a {@link java.awt.geom.Area} object.
+     */
     public void setConstraints(Area a);
 
+    /**
+     * <p>getConstraints.</p>
+     *
+     * @return a {@link java.awt.geom.Area} object.
+     */
     public Area getConstraints();
 
+    /**
+     * <p>setDefaultValue.</p>
+     *
+     * @param d a double.
+     */
     public void setDefaultValue(double d);
 
+    /**
+     * <p>getDefaultValue.</p>
+     *
+     * @return a double.
+     */
     public double getDefaultValue();
 
+    /**
+     * <p>setOptimizationFunction.</p>
+     *
+     * @param iof a {@link maltcms.commands.distances.dtwng.IOptimizationFunction} object.
+     */
     public void setOptimizationFunction(IOptimizationFunction iof);
 
+    /**
+     * <p>getOptimizationFunction.</p>
+     *
+     * @return a {@link maltcms.commands.distances.dtwng.IOptimizationFunction} object.
+     */
     public IOptimizationFunction getOptimizationFunction();
 }

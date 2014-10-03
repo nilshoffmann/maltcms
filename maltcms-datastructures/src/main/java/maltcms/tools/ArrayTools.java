@@ -66,19 +66,34 @@ import ucar.ma2.Sparse;
  * Utility class providing methods for Sparse and Dense Arrays.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class ArrayTools {
 
     private static Random random;
 
+    /**
+     * <p>calcPercentDone.</p>
+     *
+     * @param elements a long.
+     * @param elemCnt a long.
+     * @return a double.
+     */
     public static double calcPercentDone(final long elements, final long elemCnt) {
         double percentDone;
         percentDone = (double) elemCnt / (double) elements;
         return percentDone;
     }
 
+    /**
+     * <p>combine.</p>
+     *
+     * @param a1 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param a2 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param asColumns a boolean.
+     * @return a {@link ucar.ma2.ArrayDouble.D2} object.
+     */
     public static ArrayDouble.D2 combine(final ArrayDouble.D1 a1,
             final ArrayDouble.D1 a2, final boolean asColumns) {
         if (a1.getShape().length == a2.getShape().length) {
@@ -111,14 +126,32 @@ public class ArrayTools {
         }
     }
 
+    /**
+     * <p>factory.</p>
+     *
+     * @param d a double.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
+     */
     public static ArrayDouble.D1 factory(double... d) {
         return (ArrayDouble.D1) Array.factory(d);
     }
 
+    /**
+     * <p>factory.</p>
+     *
+     * @param d a int.
+     * @return a {@link ucar.ma2.ArrayInt.D1} object.
+     */
     public static ArrayInt.D1 factory(int... d) {
         return (ArrayInt.D1) Array.factory(d);
     }
 
+    /**
+     * <p>factory.</p>
+     *
+     * @param d a float.
+     * @return a {@link ucar.ma2.ArrayFloat.D1} object.
+     */
     public static ArrayFloat.D1 factory(float... d) {
         return (ArrayFloat.D1) Array.factory(d);
     }
@@ -126,8 +159,9 @@ public class ArrayTools {
     /**
      * This factory is usable for scalar values and primitive array instances.
      *
-     * @param o
-     * @return
+     * @param o a {@link java.lang.Object} object.
+     * @return a {@link ucar.ma2.Array} object.
+     * @throws java.lang.IllegalArgumentException if any.
      */
     public static Array factoryScalar(Object o) throws IllegalArgumentException {
         if (o == null) {
@@ -216,6 +250,14 @@ public class ArrayTools {
                 + o.getClass().getName());
     }
 
+    /**
+     * <p>compress.</p>
+     *
+     * @param sourceA a {@link java.util.List} object.
+     * @param source a int.
+     * @param length a int.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
+     */
     public static ArrayDouble.D1 compress(final List<Array> sourceA,
             final int source, final int length) {
         final ArrayDouble.D1 res = ArrayTools.vector(sourceA.get(source).
@@ -239,6 +281,12 @@ public class ArrayTools {
         return res;
     }
 
+    /**
+     * <p>convertArrays.</p>
+     *
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<ArrayDouble.D1> convertArrays(final List<Array> al) {
         final ArrayList<ArrayDouble.D1> ret = new ArrayList<>(al.
                 size());
@@ -278,6 +326,12 @@ public class ArrayTools {
         return ret;
     }
 
+    /**
+     * <p>convertArraysIntD1.</p>
+     *
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<ArrayInt.D1> convertArraysIntD1(final List<Array> al) {
         final ArrayList<ArrayInt.D1> ret = new ArrayList<>(al.size());
         for (Array a : al) {
@@ -291,6 +345,13 @@ public class ArrayTools {
         return ret;
     }
 
+    /**
+     * <p>convertScan.</p>
+     *
+     * @param masses a {@link ucar.ma2.Array} object.
+     * @param intensities a {@link ucar.ma2.Array} object.
+     * @return a {@link java.util.TreeMap} object.
+     */
     public static TreeMap<Double, Integer> convertScan(final Array masses,
             final Array intensities) {
         // Convert masses and intensities to tree map holding the mass-intensity
@@ -318,8 +379,8 @@ public class ArrayTools {
      * Returns a Tuple2D holding an ArrayInt.D1 as scan indices to the arrays
      * held in the Tuple2D, mass values and intensity values.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Tuple2D<Array, Array>> createCombinedArray(
             final List<Sparse> al) {
@@ -352,14 +413,14 @@ public class ArrayTools {
      * binned representations. Requires minimum and maximum mass values, number
      * of bins, resolution and the fillvalue for empty bins.
      *
-     * @param source_ind
-     * @param source_val
-     * @param tiv
-     * @param min
-     * @param max
-     * @param nbins
-     * @param resolution
-     * @param fillvalue
+     * @param source_ind a {@link ucar.ma2.Array} object.
+     * @param source_val a {@link ucar.ma2.Array} object.
+     * @param tiv a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param min a double.
+     * @param max a double.
+     * @param nbins a int.
+     * @param resolution a double.
+     * @param fillvalue a double.
      */
     public static void createDenseArray(final Array source_ind,
             final Array source_val, final Tuple2D<Array, Array> tiv,
@@ -458,6 +519,17 @@ public class ArrayTools {
         // log.debug(target_val.toString());
     }
 
+    /**
+     * <p>createSparseIndexArray.</p>
+     *
+     * @param index a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param values a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param minindex a int.
+     * @param maxindex a int.
+     * @param nbins a int.
+     * @param massBinResolution a double.
+     * @return a {@link ucar.ma2.Sparse} object.
+     */
     public static Sparse createSparseIndexArray(final ArrayDouble.D1 index,
             final ArrayDouble.D1 values, final int minindex,
             final int maxindex, final int nbins, final double massBinResolution) {
@@ -469,9 +541,9 @@ public class ArrayTools {
     /**
      * Calculates A-B elementwise.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array diff(final Array a, final Array b) {
         if (MAMath.conformable(a, b)) {
@@ -492,9 +564,9 @@ public class ArrayTools {
     /**
      * Calculates A/B elementwise.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array div(final Array a, final Array b) {
         if (MAMath.conformable(a, b)) {
@@ -515,9 +587,9 @@ public class ArrayTools {
     /**
      * Calculates A*B elementwise.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array mult(final Array a, final Array b) {
         if (MAMath.conformable(a, b)) {
@@ -539,8 +611,8 @@ public class ArrayTools {
      * Divides values in array by 60, convenience method for second to minute
      * conversion.
      *
-     * @param a
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array divBy60(final Array a) {
         return ArrayTools.mult(a, 1.0d / 60.0d);
@@ -550,9 +622,9 @@ public class ArrayTools {
      * Expansion, as used in Dynamic Time Warping, defined as copying the
      * expanded element length times.
      *
-     * @param source
-     * @param length
-     * @return
+     * @param source a {@link ucar.ma2.Array} object.
+     * @param length a int.
+     * @return a {@link java.util.List} object.
      */
     public static List<ArrayDouble.D1> expand(final Array source,
             final int length) {
@@ -574,8 +646,8 @@ public class ArrayTools {
     /**
      * Fill array a with double value d.
      *
-     * @param a
-     * @param d
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param d a double.
      */
     public static void fill(final Array a, final double d) {
         final IndexIterator iter = a.getIndexIterator();
@@ -587,8 +659,8 @@ public class ArrayTools {
     /**
      * Fill array a with Double value d.
      *
-     * @param a
-     * @param d
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param d a {@link java.lang.Double} object.
      */
     public static void fillArray(final Array a, final Double d) {
         ArrayTools.fill(a, d);
@@ -597,8 +669,8 @@ public class ArrayTools {
     /**
      * Fill array a with int value i.
      *
-     * @param a
-     * @param i
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param i a int.
      */
     public static void fillArray(final Array a, final int i) {
         final IndexIterator ii = a.getIndexIterator();
@@ -610,8 +682,8 @@ public class ArrayTools {
     /**
      * Fill array a with Integer value i.
      *
-     * @param a
-     * @param i
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param i a {@link java.lang.Integer} object.
      */
     public static void fillArray(final Array a, final Integer i) {
         ArrayTools.fillArray(a, i.intValue());
@@ -621,9 +693,9 @@ public class ArrayTools {
      * Restore List of Array objects from contiguous representation, using an
      * index array containing the offsets for each individual array.
      *
-     * @param indices
-     * @param values
-     * @return
+     * @param indices a {@link ucar.ma2.ArrayInt.D1} object.
+     * @param values a {@link ucar.ma2.Array} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Array> fromCRS(final ArrayInt.D1 indices,
             final Array values) {
@@ -666,14 +738,21 @@ public class ArrayTools {
     /**
      * Return a list, which is more generally typed than the input list.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Array> generalizeList(final List<ArrayDouble.D1> al) {
         final ArrayList<Array> ret = new ArrayList<Array>(al);
         return ret;
     }
 
+    /**
+     * <p>getNewIndexOnLHS.</p>
+     *
+     * @param oldIndex a int.
+     * @param al a {@link java.util.List} object.
+     * @return a int.
+     */
     public static int getNewIndexOnLHS(final int oldIndex,
             final List<Tuple2DI> al) {
         final List<Integer> indices = new ArrayList<>(1);
@@ -692,6 +771,13 @@ public class ArrayTools {
         return newIndex;
     }
 
+    /**
+     * <p>getNewIndexOnRHS.</p>
+     *
+     * @param oldIndex a int.
+     * @param al a {@link java.util.List} object.
+     * @return a int.
+     */
     public static int getNewIndexOnRHS(final int oldIndex,
             final List<Tuple2DI> al) {
 
@@ -714,8 +800,8 @@ public class ArrayTools {
     /**
      * Compute total number of elements for all Sparse arrays in list.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a int.
      */
     public static int getRequiredSize(final List<Sparse> al) {
         int i = 0;
@@ -736,8 +822,8 @@ public class ArrayTools {
      * Returns the number of elements required for a one-dimensional
      * representation of multidimensional array.
      *
-     * @param a
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a int.
      */
     public static int getSizeForFlattenedArray(final Array a) {
         long l = 0;
@@ -756,9 +842,9 @@ public class ArrayTools {
      * Create an index array with given size, whose integer indexing begins at
      * begin_index.
      *
-     * @param size
-     * @param begin_index
-     * @return
+     * @param size a int.
+     * @param begin_index a int.
+     * @return a {@link ucar.ma2.ArrayInt.D1} object.
      */
     public static ArrayInt.D1 indexArray(final int size, final int begin_index) {
         final ArrayInt.D1 arr = new ArrayInt.D1(size);
@@ -768,14 +854,31 @@ public class ArrayTools {
         return arr;
     }
 
+    /**
+     * <p>initRandom.</p>
+     */
     public static void initRandom() {
         ArrayTools.random = new Random();
     }
 
+    /**
+     * <p>initRandom.</p>
+     *
+     * @param seed a long.
+     */
     public static void initRandom(final long seed) {
         ArrayTools.random = new Random(seed);
     }
 
+    /**
+     * <p>insertRandomGauss.</p>
+     *
+     * @param intensity_values a {@link java.util.List} object.
+     * @param at_position a int.
+     * @param number_of_scans a int.
+     * @param dim1 a int.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Array> insertRandomGauss(
             final List<Array> intensity_values, final int at_position,
             final int number_of_scans, final int dim1) {
@@ -789,6 +892,12 @@ public class ArrayTools {
         return intensity_values;
     }
 
+    /**
+     * <p>integrate.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a double.
+     */
     public static double integrate(final Array a) {
         return MAMath.sumDouble(a);
     }
@@ -796,8 +905,8 @@ public class ArrayTools {
     /**
      * Sum over all values of all arrays within a list.
      *
-     * @param valuesvalues
-     * @return
+     * @param values a {@link java.util.List} object.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     public static ArrayDouble.D1 integrate(final List<Array> values) {
         final ArrayDouble.D1 total_intensity = new ArrayDouble.D1(values.size());
@@ -810,11 +919,25 @@ public class ArrayTools {
         return total_intensity;
     }
 
+    /**
+     * <p>matrix.</p>
+     *
+     * @param rows a int.
+     * @param columns a int.
+     * @return a {@link ucar.ma2.ArrayDouble.D2} object.
+     */
     public static ArrayDouble.D2 matrix(final int rows, final int columns) {
         final ArrayDouble.D2 a = new ArrayDouble.D2(rows, columns);
         return a;
     }
 
+    /**
+     * <p>merge.</p>
+     *
+     * @param rhs a {@link java.util.List} object.
+     * @param average a boolean.
+     * @return a {@link java.util.TreeMap} object.
+     */
     public static TreeMap<Double, Integer> merge(
             final List<TreeMap<Double, Integer>> rhs, final boolean average) {
         final HashMap<Double, Integer> bincounter = new HashMap<>();
@@ -855,6 +978,17 @@ public class ArrayTools {
         return lhs;
     }
 
+    /**
+     * <p>merge2.</p>
+     *
+     * @param lhsMasses a {@link java.util.List} object.
+     * @param lhsIntensities a {@link java.util.List} object.
+     * @param rhsMasses a {@link java.util.List} object.
+     * @param rhsIntensities a {@link java.util.List} object.
+     * @param al a {@link java.util.List} object.
+     * @param average a boolean.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<List<Array>, List<Array>> merge2(
             final List<Array> lhsMasses, final List<Array> lhsIntensities,
             final List<Array> rhsMasses, final List<Array> rhsIntensities,
@@ -902,6 +1036,13 @@ public class ArrayTools {
         return new Tuple2D<List<Array>, List<Array>>(wmasses, wintens);
     }
 
+    /**
+     * <p>mult.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param d a double.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array mult(final Array a, final double d) {
         final Array ret = a.copy();
         final IndexIterator iter = ret.getIndexIterator();
@@ -911,6 +1052,11 @@ public class ArrayTools {
         return ret;
     }
 
+    /**
+     * <p>nextGaussian.</p>
+     *
+     * @return a double.
+     */
     public static double nextGaussian() {
         if (ArrayTools.random == null) {
             ArrayTools.initRandom();
@@ -918,6 +1064,11 @@ public class ArrayTools {
         return ArrayTools.random.nextGaussian();
     }
 
+    /**
+     * <p>nextUniform.</p>
+     *
+     * @return a double.
+     */
     public static double nextUniform() {
         if (ArrayTools.random == null) {
             ArrayTools.initRandom();
@@ -925,6 +1076,13 @@ public class ArrayTools {
         return ArrayTools.random.nextDouble();
     }
 
+    /**
+     * <p>pow.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param exp a double.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array pow(final Array a, final double exp) {
         final IndexIterator ii1 = a.getIndexIterator();
         final Array ret = Array.factory(a.getElementType(), a.getShape());
@@ -936,6 +1094,15 @@ public class ArrayTools {
         return ret;
     }
 
+    /**
+     * <p>printPercentDone.</p>
+     *
+     * @param percentDone a double.
+     * @param parts a long.
+     * @param partCnt1 a long.
+     * @param log a {@link org.slf4j.Logger} object.
+     * @return a long.
+     */
     public static long printPercentDone(final double percentDone,
             final long parts, final long partCnt1, final Logger log) {
         long partCnt = partCnt1;
@@ -947,6 +1114,15 @@ public class ArrayTools {
         return partCnt;
     }
 
+    /**
+     * <p>printPercentDone.</p>
+     *
+     * @param percentDone a double.
+     * @param parts a long.
+     * @param partCnt1 a long.
+     * @param os a {@link java.io.OutputStream} object.
+     * @return a long.
+     */
     public static long printPercentDone(final double percentDone,
             final long parts, final long partCnt1, final OutputStream os) {
         long partCnt = partCnt1;
@@ -961,6 +1137,18 @@ public class ArrayTools {
         return partCnt;
     }
 
+    /**
+     * <p>project2.</p>
+     *
+     * @param toLHS a boolean.
+     * @param massesRef a {@link java.util.List} object.
+     * @param intenRef a {@link java.util.List} object.
+     * @param al a {@link java.util.List} object.
+     * @param massesToBeWarped a {@link java.util.List} object.
+     * @param intenToBeWarped a {@link java.util.List} object.
+     * @param average a boolean.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<List<Array>, List<Array>> project2(
             final boolean toLHS, final List<Array> massesRef,
             final List<Array> intenRef, final List<Tuple2DI> al,
@@ -1030,6 +1218,15 @@ public class ArrayTools {
         return new Tuple2D<List<Array>, List<Array>>(wmasses, wintens);
     }
 
+    /**
+     * <p>projectToLHS.</p>
+     *
+     * @param lhs a {@link ucar.ma2.Array} object.
+     * @param al a {@link java.util.List} object.
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param average a boolean.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
             final Array rhs, final boolean average) {
         final Array rhsm = Array.factory(lhs.getElementType(), lhs.getShape());
@@ -1060,6 +1257,15 @@ public class ArrayTools {
         return rhsm;
     }
 
+    /**
+     * <p>projectToRHS.</p>
+     *
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param al a {@link java.util.List} object.
+     * @param lhs a {@link ucar.ma2.Array} object.
+     * @param average a boolean.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
             final Array lhs, final boolean average) {
         final Array lhsm = Array.factory(rhs.getElementType(), rhs.getShape());
@@ -1090,6 +1296,14 @@ public class ArrayTools {
         return lhsm;
     }
 
+    /**
+     * <p>randomGaussian.</p>
+     *
+     * @param size a int.
+     * @param mean a double.
+     * @param stddev a double.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
+     */
     public static ArrayDouble.D1 randomGaussian(final int size,
             final double mean, final double stddev) {
         final ArrayDouble.D1 arr = ArrayTools.vector(size);
@@ -1099,6 +1313,14 @@ public class ArrayTools {
         return arr;
     }
 
+    /**
+     * <p>randomUniform.</p>
+     *
+     * @param size a int.
+     * @param mean a double.
+     * @param scale a double.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
+     */
     public static ArrayDouble.D1 randomUniform(final int size,
             final double mean, final double scale) {
         final ArrayDouble.D1 arr = ArrayTools.vector(size);
@@ -1181,6 +1403,14 @@ public class ArrayTools {
     // return new Tuple2D<Array, Tuple2D<Array, Array>>(indices,
     // new Tuple2D<Array, Array>(mz, intens));
     // }
+    /**
+     * <p>rootMeanSquareError.</p>
+     *
+     * @param map a {@link java.util.List} object.
+     * @param refInt a {@link java.util.List} object.
+     * @param queryInt a {@link java.util.List} object.
+     * @return a double.
+     */
     public static double rootMeanSquareError(final List<Tuple2DI> map,
             final List<Array> refInt, final List<Array> queryInt) {
         // ArrayList<Array> res = new ArrayList<Array>(refInt.size());
@@ -1194,12 +1424,24 @@ public class ArrayTools {
         return Math.sqrt((res / (map.size())));
     }
 
+    /**
+     * <p>scalar.</p>
+     *
+     * @param d a double.
+     * @return a {@link ucar.ma2.ArrayDouble.D0} object.
+     */
     public static ArrayDouble.D0 scalar(final double d) {
         final ArrayDouble.D0 a = new ArrayDouble.D0();
         a.set(d);
         return a;
     }
 
+    /**
+     * <p>sq.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array sq(final Array a) {
         final IndexIterator ii1 = a.getIndexIterator();
         final Array ret = Array.factory(a.getElementType(), a.getShape());
@@ -1216,9 +1458,9 @@ public class ArrayTools {
     /**
      * Calculates A + B elementwise.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array sum(final Array a, final Array b) {
         if (MAMath.conformable(a, b)) {
@@ -1246,8 +1488,8 @@ public class ArrayTools {
      * The list returned is a CachedList implementation. It creates the tilted
      * arrays lazily from the original supplied list.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Array> tilt(final List<Array> al) {
         EvalTools.notNull(al, ArrayTools.class);
@@ -1348,8 +1590,8 @@ public class ArrayTools {
      * Creates a new Array containing all values of elements in al along every
      * dimension.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<ArrayDouble.D1> tiltD1(final List<ArrayDouble.D1> al) {
         EvalTools.notNull(al, ArrayTools.class);
@@ -1372,6 +1614,12 @@ public class ArrayTools {
         return ret;
     }
 
+    /**
+     * <p>toArrays.</p>
+     *
+     * @param s a {@link java.util.TreeMap} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<Array, Array> toArrays(
             final TreeMap<Double, Integer> s) {
         // Convert treemap of scan to mass and intensity array of scan
@@ -1392,6 +1640,12 @@ public class ArrayTools {
         return new Tuple2D<Array, Array>(masses, intens);
     }
 
+    /**
+     * <p>toCRS.</p>
+     *
+     * @param values a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<ArrayDouble.D1, ArrayDouble.D1> toCRS(
             final List<Array> values) {
         final int size = cross.datastructures.tools.ArrayTools.
@@ -1420,11 +1674,25 @@ public class ArrayTools {
         return new Tuple2D<>(indices, target);
     }
 
+    /**
+     * <p>vector.</p>
+     *
+     * @param elems a int.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
+     */
     public static ArrayDouble.D1 vector(final int elems) {
         final ArrayDouble.D1 a = new ArrayDouble.D1(elems);
         return a;
     }
 
+    /**
+     * <p>filterIndices.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param removeIndices a {@link java.util.List} object.
+     * @param defaultValue a double.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array filterIndices(Array a, List<Integer> removeIndices,
             double defaultValue) {
         return filterIndices(a, removeIndices, false, defaultValue);
@@ -1435,9 +1703,11 @@ public class ArrayTools {
      * values at those indices and returns a new array where the respective
      * values have been set to a definable minimum value.
      *
-     * @param a
-     * @param removeIndices
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param removeIndices a {@link java.util.List} object.
+     * @param invert a boolean.
+     * @param defaultValue a double.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array filterIndices(Array a, List<Integer> removeIndices,
             boolean invert, double defaultValue) {

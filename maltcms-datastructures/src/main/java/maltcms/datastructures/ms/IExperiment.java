@@ -38,17 +38,45 @@ import cross.exception.ResourceNotAvailableException;
  * IFileFragment.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IExperiment extends IConfigurable, IFileFragment {
 
+    /**
+     * <p>getFileFragment.</p>
+     *
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public IFileFragment getFileFragment();
 
+    /**
+     * <p>getMetadata.</p>
+     *
+     * @return a {@link java.util.HashMap} object.
+     */
     public HashMap<String, String> getMetadata();
 
+    /**
+     * <p>setFileFragment.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public void setFileFragment(IFileFragment ff);
 
+    /**
+     * <p>setMetadata.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @param value a {@link java.lang.String} object.
+     */
     public void setMetadata(String key, String value);
 
+    /**
+     * <p>getMetadata.</p>
+     *
+     * @param key a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     public String getMetadata(String key) throws ResourceNotAvailableException;
 }

@@ -31,11 +31,14 @@ import java.util.Comparator;
 import maltcms.datastructures.peak.IPeak;
 
 /**
+ * <p>PeakFileFragmentComparator class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PeakFileFragmentComparator implements Comparator<IPeak> {
 
+    /** {@inheritDoc} */
     @Override
     public int compare(final IPeak o1, final IPeak o2) {
         final int i = new PeakComparator().compare(o1, o2);

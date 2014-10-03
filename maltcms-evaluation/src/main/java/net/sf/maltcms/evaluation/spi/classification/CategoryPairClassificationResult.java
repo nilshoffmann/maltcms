@@ -35,6 +35,7 @@ import net.sf.maltcms.evaluation.api.classification.Category;
  * categories.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class CategoryPairClassificationResult implements Comparable<CategoryPairClassificationResult> {
 
@@ -43,6 +44,17 @@ public class CategoryPairClassificationResult implements Comparable<CategoryPair
     private final int tp, tn, fp, fn;
     private final double dist;
 
+    /**
+     * <p>Constructor for CategoryPairClassificationResult.</p>
+     *
+     * @param lhs a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @param rhs a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @param tp a int.
+     * @param tn a int.
+     * @param fp a int.
+     * @param fn a int.
+     * @param dist a double.
+     */
     public CategoryPairClassificationResult(Category lhs, Category rhs, int tp, int tn, int fp, int fn, double dist) {
         this.lhs = lhs;
         this.rhs = rhs;
@@ -53,45 +65,76 @@ public class CategoryPairClassificationResult implements Comparable<CategoryPair
         this.dist = dist;
     }
 
+    /**
+     * <p>Getter for the field <code>dist</code>.</p>
+     *
+     * @return a double.
+     */
     public double getDist() {
         return dist;
     }
 
+    /**
+     * <p>Getter for the field <code>fn</code>.</p>
+     *
+     * @return a int.
+     */
     public int getFn() {
         return fn;
     }
 
+    /**
+     * <p>getRightHandSideCategory.</p>
+     *
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     */
     public Category getRightHandSideCategory() {
         return rhs;
     }
 
+    /**
+     * <p>getLeftHandSideCategory.</p>
+     *
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     */
     public Category getLeftHandSideCategory() {
         return lhs;
     }
 
+    /**
+     * <p>Getter for the field <code>fp</code>.</p>
+     *
+     * @return a int.
+     */
     public int getFp() {
         return fp;
     }
 
+    /**
+     * <p>Getter for the field <code>tn</code>.</p>
+     *
+     * @return a int.
+     */
     public int getTn() {
         return tn;
     }
 
+    /**
+     * <p>Getter for the field <code>tp</code>.</p>
+     *
+     * @return a int.
+     */
     public int getTp() {
         return tp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return "CategoryPairClassificationResult{\n" + "lhs=\n" + lhs + ",\n rhs=\n" + rhs + ",\n tp=" + tp + ", tn=" + tn + ", fp=" + fp + ", fn=" + fn + ", dist=" + dist + '}';
     }
 
-    /**
-     *
-     * @param o
-     * @throws IllegalArgumentException
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(CategoryPairClassificationResult o) throws IllegalArgumentException {
         final int WORSE = -1;
@@ -129,6 +172,7 @@ public class CategoryPairClassificationResult implements Comparable<CategoryPair
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -162,6 +206,7 @@ public class CategoryPairClassificationResult implements Comparable<CategoryPair
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 3;

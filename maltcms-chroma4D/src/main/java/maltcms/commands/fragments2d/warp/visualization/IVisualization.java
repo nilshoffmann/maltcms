@@ -42,24 +42,25 @@ import ucar.ma2.ArrayDouble;
  * path.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public interface IVisualization extends IConfigurable {
 
     /**
-     * Will create a {@link BufferedImage} from the given scanlines and a warp
+     * Will create a {@link java.awt.image.BufferedImage} from the given scanlines and a warp
      * path.
      *
      * @param scanlinesi scanlines from the left chromatogram
      * @param scanlinesj scanlines from the top chromatogram
      * @param warpPathi warp path for the left chromatogram
      * @param warpPathj warp path for the top chromatogram
-     * @return a {@link BufferedImage} which contains both chromatograms
+     * @return a {@link java.awt.image.BufferedImage} which contains both chromatograms
      */
     BufferedImage createImage(List<Array> scanlinesi, List<Array> scanlinesj,
             Array warpPathi, Array warpPathj);
 
     /**
-     * Creates a {@link AChart}.
+     * Creates a {@link maltcms.ui.charts.AChart}.
      *
      * @param filename background image filename
      * @param samplenamei sample name of the first chromatogram
@@ -67,7 +68,7 @@ public interface IVisualization extends IConfigurable {
      * @param rettimei first and second retention time of the first chromatogram
      * @param rettimej first and second retention time of the second
      * chromatogram
-     * @return {@link JFreeChart}
+     * @return {@link org.jfree.chart.JFreeChart}
      */
     JFreeChart createChart(String filename, String samplenamei,
             String samplenamej,

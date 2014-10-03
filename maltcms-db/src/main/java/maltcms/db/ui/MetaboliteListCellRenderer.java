@@ -33,8 +33,17 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>MetaboliteListCellRenderer class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteListCellRenderer extends JLabel implements ListCellRenderer {
 
+    /**
+     * <p>Constructor for MetaboliteListCellRenderer.</p>
+     */
     public MetaboliteListCellRenderer() {
         setOpaque(true);
         setHorizontalAlignment(LEFT);
@@ -45,6 +54,7 @@ public class MetaboliteListCellRenderer extends JLabel implements ListCellRender
      */
     private static final long serialVersionUID = -2284912996792720438L;
 
+    /** {@inheritDoc} */
     @Override
     public Component getListCellRendererComponent(JList list, Object value,
             int index, boolean isSelected, boolean cellHasFocus) {

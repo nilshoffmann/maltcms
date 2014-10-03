@@ -33,8 +33,10 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 
 /**
+ * <p>PeakPositionsResultSet class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PeakPositionsResultSet {
 
@@ -44,6 +46,15 @@ public class PeakPositionsResultSet {
     private final Array correctedTIC;
     private final PolynomialSplineFunction baselineEstimator;
 
+    /**
+     * <p>Constructor for PeakPositionsResultSet.</p>
+     *
+     * @param correctedTIC a {@link ucar.ma2.Array} object.
+     * @param peakPositions a {@link ucar.ma2.ArrayInt.D1} object.
+     * @param snrValues an array of double.
+     * @param ts a {@link java.util.List} object.
+     * @param baselineEstimator a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     */
     public PeakPositionsResultSet(Array correctedTIC,
             ArrayInt.D1 peakPositions, double[] snrValues, List<Integer> ts, PolynomialSplineFunction baselineEstimator) {
         this.snrValues = snrValues;
@@ -53,22 +64,47 @@ public class PeakPositionsResultSet {
         this.baselineEstimator = baselineEstimator;
     }
 
+    /**
+     * <p>Getter for the field <code>peakPositions</code>.</p>
+     *
+     * @return a {@link ucar.ma2.ArrayInt.D1} object.
+     */
     public ArrayInt.D1 getPeakPositions() {
         return peakPositions;
     }
 
+    /**
+     * <p>Getter for the field <code>snrValues</code>.</p>
+     *
+     * @return an array of double.
+     */
     public double[] getSnrValues() {
         return snrValues;
     }
 
+    /**
+     * <p>Getter for the field <code>ts</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Integer> getTs() {
         return ts;
     }
 
+    /**
+     * <p>Getter for the field <code>correctedTIC</code>.</p>
+     *
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public Array getCorrectedTIC() {
         return correctedTIC;
     }
 
+    /**
+     * <p>Getter for the field <code>baselineEstimator</code>.</p>
+     *
+     * @return a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     */
     public PolynomialSplineFunction getBaselineEstimator() {
         return baselineEstimator;
     }

@@ -62,7 +62,7 @@ import ucar.nc2.Dimension;
  * implementations.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -89,6 +89,7 @@ public class ModulationExtractor extends AFragmentCommand {
     @Configurable(value = "-1")
     private int endModulation = -1;
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.totalIntensityVar = cfg.getString("var.total_intensity",
@@ -100,26 +101,28 @@ public class ModulationExtractor extends AFragmentCommand {
     }
 
     /**
+     * <p>get1DArraySubset.</p>
      *
-     * @param a
-     * @param modulationStart
-     * @param modulationEnd
-     * @param scansPerModulation
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param modulationStart a int.
+     * @param modulationEnd a int.
+     * @param scansPerModulation a int.
+     * @return a {@link ucar.ma2.Array} object.
      */
     protected Array get1DArraySubset(Array a, int modulationStart, int modulationEnd, int scansPerModulation) {
         return get1DArraySubset(a, modulationStart, modulationEnd, 0, scansPerModulation - 1, scansPerModulation);
     }
 
     /**
+     * <p>get1DArraySubset.</p>
      *
-     * @param a
-     * @param modulationStart
-     * @param modulationEnd
-     * @param intraModulationStart
-     * @param intraModulationStop
-     * @param scansPerModulation
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param modulationStart a int.
+     * @param modulationEnd a int.
+     * @param intraModulationStart a int.
+     * @param intraModulationStop a int.
+     * @param scansPerModulation a int.
+     * @return a {@link ucar.ma2.Array} object.
      */
     protected Array get1DArraySubset(Array a, int modulationStart, int modulationEnd, int intraModulationStart, int intraModulationStop, int scansPerModulation) {
         int elementsPerModulation = intraModulationStop - intraModulationStart + 1;
@@ -142,10 +145,11 @@ public class ModulationExtractor extends AFragmentCommand {
     }
 
     /**
+     * <p>modulationIndexToScanIndex.</p>
      *
-     * @param ff
-     * @param interModulationIndex
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param interModulationIndex a int.
+     * @return a int.
      */
     protected int modulationIndexToScanIndex(IFileFragment ff, int interModulationIndex) {
         final double srv = ff.getChild(this.scanRateVar).getArray().getDouble(Index.scalarIndexImmutable);
@@ -155,11 +159,12 @@ public class ModulationExtractor extends AFragmentCommand {
     }
 
     /**
+     * <p>intraModulationIndexToScanIndex.</p>
      *
-     * @param ff
-     * @param interModulationIndex
-     * @param intraModulationIndex
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param interModulationIndex a int.
+     * @param intraModulationIndex a int.
+     * @return a int.
      */
     protected int intraModulationIndexToScanIndex(IFileFragment ff, int interModulationIndex, int intraModulationIndex) {
         return modulationIndexToScanIndex(ff, interModulationIndex) + intraModulationIndex;
@@ -169,12 +174,12 @@ public class ModulationExtractor extends AFragmentCommand {
      * int[] contains
      * modulationStart,modulationEnd,intraModulationStart,intraModulationStop
      *
-     * @param ff
-     * @param modulationStart
-     * @param modulationEnd
-     * @param intraModulationStart
-     * @param intraModulationStop
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param modulationStart a int.
+     * @param modulationEnd a int.
+     * @param intraModulationStart a int.
+     * @param intraModulationStop a int.
+     * @return an array of int.
      */
     protected int[] checkRanges(IFileFragment ff, int modulationStart, int modulationEnd, int intraModulationStart, int intraModulationStop) {
         final double srv = ff.getChild(this.scanRateVar).getArray().getDouble(Index.scalarIndexImmutable);
@@ -201,10 +206,7 @@ public class ModulationExtractor extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
@@ -228,6 +230,7 @@ public class ModulationExtractor extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final TupleND<IFileFragment> res = new TupleND<>();
@@ -285,10 +288,7 @@ public class ModulationExtractor extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

@@ -65,7 +65,7 @@ import ucar.nc2.Attribute;
  * ChromatogramWarp2} instead!
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Deprecated
@@ -78,10 +78,7 @@ public class ChromatogramWarp extends AFragmentCommand {
     private String anchorNameVariableName = "retention_names";
     private boolean average = false;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -92,11 +89,13 @@ public class ChromatogramWarp extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         throw new NotImplementedException();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.indexedVars = StringTools.toStringList(cfg.getList(this.getClass()
@@ -117,10 +116,11 @@ public class ChromatogramWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>copyReference.</p>
      *
-     * @param ref
-     * @param iw
-     * @return
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment copyReference(final IFileFragment ref,
             final IWorkflow iw) {
@@ -168,16 +168,15 @@ public class ChromatogramWarp extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Warps Chromatograms to a given reference, according to alignment paths.";
     }
 
     /**
+     * <p>Getter for the field <code>indexedVars</code>.</p>
+     *
      * @return the indexedVars
      */
     public List<String> getIndexedVars() {
@@ -185,6 +184,8 @@ public class ChromatogramWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>indexVar</code>.</p>
+     *
      * @return the indexVar
      */
     public String getIndexVar() {
@@ -192,6 +193,8 @@ public class ChromatogramWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>Getter for the field <code>plainVars</code>.</p>
+     *
      * @return the plainVars
      */
     public List<String> getPlainVars() {
@@ -203,16 +206,15 @@ public class ChromatogramWarp extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.WARPING;
     }
 
     /**
+     * <p>Setter for the field <code>indexedVars</code>.</p>
+     *
      * @param indexedVars the indexedVars to set
      */
     public void setIndexedVars(final List<String> indexedVars) {
@@ -220,6 +222,8 @@ public class ChromatogramWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>indexVar</code>.</p>
+     *
      * @param indexVar the indexVar to set
      */
     public void setIndexVar(final String indexVar) {
@@ -227,6 +231,8 @@ public class ChromatogramWarp extends AFragmentCommand {
     }
 
     /**
+     * <p>Setter for the field <code>plainVars</code>.</p>
+     *
      * @param plainVars the plainVars to set
      */
     public void setPlainVars(final List<String> plainVars) {
@@ -242,12 +248,13 @@ public class ChromatogramWarp extends AFragmentCommand {
      * file, not originalFile, since we want to keep additional information,
      * which we already found out.
      *
-     * @param ref
-     * @param originalFile
-     * @param processedFile
-     * @param path
-     * @param toLHS
-     * @return
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param originalFile a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param processedFile a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param path a {@link java.util.List} object.
+     * @param toLHS a boolean.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment warp(final IFileFragment ref,
             final IFileFragment originalFile,
@@ -359,10 +366,10 @@ public class ChromatogramWarp extends AFragmentCommand {
      * @param ref reference IFileFragment
      * @param toBeWarped the to-be-warped IFileFragment
      * @param path alignment path of alignment between a and b
-     * @param plainVars list of variable names, which should be warped
      * @param toLHS whether warping should be done from right to left (true) or
      * vice versa (false)
      * @return FileFragment containing warped data
+     * @param indexedVars a {@link java.util.List} object.
      */
     public IFileFragment warp2D(final IFileFragment warpedB,
             final IFileFragment ref, final IFileFragment toBeWarped,
@@ -498,10 +505,10 @@ public class ChromatogramWarp extends AFragmentCommand {
      * assumes target scale of warp on left side of path, processedFile should
      * contain the data to the right side of the path.
      *
-     * @param warped
-     * @param processedFile
-     * @param path
-     * @param toLHS
+     * @param warped a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param path a {@link java.util.List} object.
+     * @param toLHS a boolean.
+     * @param toBeWarped a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void warpAnchors(final IFileFragment warped,
             final IFileFragment toBeWarped, final List<Tuple2DI> path,

@@ -87,7 +87,7 @@ import ucar.ma2.MAMath.MinMax;
  * by lines depicting the path obtained from alignment.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 //"var.pairwise_distance_matrix"
 //var.pairwise_distance_alignment_names
@@ -143,6 +143,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     @Setter(AccessLevel.PRIVATE)
     private BufferedImage map;
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final IFileFragment iff = MaltcmsTools.getPairwiseDistanceFragment(t);
@@ -167,6 +168,7 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
         log.info("RMSE of full chromatograms={}", RMSE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.total_intensity = cfg.getString("var.total_intensity",
@@ -176,12 +178,14 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>createMapImage.</p>
      *
      * @param l
-     * @param upper_width
      * @param lower_width
-     * @param height
-     * @return
+     * @param upper_width a int.
+     * @param lower_width a int.
+     * @param height a int.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     public BufferedImage createMapImage(final List<Tuple2DI> l,
             final int upper_width, final int lower_width, final int height) {
@@ -212,12 +216,14 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>createSuperimposedImage.</p>
      *
      * @param l
      * @param lhs
-     * @param rhs
-     * @param height
-     * @return
+     * @param lhs a {@link ucar.ma2.Array} object.
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param height a int.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     public BufferedImage createSuperimposedImage(final List<Tuple2DI> l,
             final Array lhs, final Array rhs, final int height) {
@@ -273,11 +279,12 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>getAnnotations.</p>
      *
-     * @param iff
-     * @param domain
-     * @param yVals
-     * @return
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param domain a {@link ucar.ma2.Array} object.
+     * @param yVals a {@link ucar.ma2.Array} object.
+     * @return a {@link java.util.Collection} object.
      */
     public Collection<XYAnnotation> getAnnotations(final IFileFragment iff,
             final Array domain, final Array yVals) {
@@ -313,17 +320,18 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>makeComparativeTICChart.</p>
      *
-     * @param tc1
-     * @param tc2
-     * @param ref
-     * @param query
-     * @param x_label
-     * @param y_label
-     * @param c1
-     * @param c2
-     * @param minY
-     * @param maxY
+     * @param tc1 a {@link maltcms.ui.charts.AChart} object.
+     * @param tc2 a {@link maltcms.ui.charts.AChart} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param y_label a {@link java.lang.String} object.
+     * @param c1 a {@link java.util.Collection} object.
+     * @param c2 a {@link java.util.Collection} object.
+     * @param minY a double.
+     * @param maxY a double.
      */
     public void makeComparativeTICChart(final AChart<XYPlot> tc1,
             final AChart<XYPlot> tc2, final IFileFragment ref,
@@ -372,17 +380,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>makeDifferentialTICChart.</p>
      *
-     * @param map1
-     * @param ref
-     * @param query
+     * @param map1 a {@link java.util.List} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param lhs
-     * @param rhs
      * @param lhs_domain
-     * @param x_label
-     * @param y_label
-     * @param c1
-     * @param c2
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param lhs_domain a {@link ucar.ma2.Array} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param y_label a {@link java.lang.String} object.
+     * @param c1 a {@link java.util.Collection} object.
+     * @param c2 a {@link java.util.Collection} object.
      */
     public void makeDifferentialTICChart(final List<Tuple2DI> map1,
             final IFileFragment ref, final IFileFragment query,
@@ -435,17 +445,20 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>makeMapChart.</p>
      *
      * @param tc1
-     * @param tc2
-     * @param alignment
      * @param tc1Domain
+     * @param tc2
      * @param tc2Domain
-     * @param x_label
-     * @param filea1
-     * @param fileb1
-     * @param c1
-     * @param c2
+     * @param alignment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param tc1Domain a {@link ucar.ma2.Array} object.
+     * @param tc2Domain a {@link ucar.ma2.Array} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param filea1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param fileb1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param c1 a {@link java.util.Collection} object.
+     * @param c2 a {@link java.util.Collection} object.
      */
     public void makeMapChart(final AChart<XYPlot> tc1,
             final AChart<XYPlot> tc2, final IFileFragment alignment,
@@ -503,17 +516,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>makeRatioTICChart.</p>
      *
-     * @param map1
-     * @param ref
-     * @param query
+     * @param map1 a {@link java.util.List} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param lhs
-     * @param rhs
      * @param lhs_domain
-     * @param x_label
-     * @param y_label
-     * @param c1
-     * @param c2
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param lhs_domain a {@link ucar.ma2.Array} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param y_label a {@link java.lang.String} object.
+     * @param c1 a {@link java.util.Collection} object.
+     * @param c2 a {@link java.util.Collection} object.
      */
     public void makeRatioTICChart(final List<Tuple2DI> map1,
             final IFileFragment ref, final IFileFragment query,
@@ -565,17 +580,19 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>makeSuperimposedChart.</p>
      *
-     * @param map1
-     * @param ref
-     * @param query
+     * @param map1 a {@link java.util.List} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param lhs
-     * @param rhs
      * @param lhs_domain
-     * @param x_label
-     * @param y_label
-     * @param c1
-     * @param c2
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param lhs_domain a {@link ucar.ma2.Array} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param y_label a {@link java.lang.String} object.
+     * @param c1 a {@link java.util.Collection} object.
+     * @param c2 a {@link java.util.Collection} object.
      */
     public void makeSuperimposedChart(final List<Tuple2DI> map1,
             final IFileFragment ref, final IFileFragment query,
@@ -648,10 +665,11 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 //        }
 //    }
     /**
+     * <p>setFragments.</p>
      *
-     * @param filea1
-     * @param fileb1
-     * @param alignment
+     * @param filea1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param fileb1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param alignment a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void setFragments(final IFileFragment filea1,
             final IFileFragment fileb1, final IFileFragment alignment) {
@@ -806,10 +824,11 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
     }
 
     /**
+     * <p>setImages.</p>
      *
-     * @param a1im
-     * @param b1im
-     * @param map1
+     * @param a1im a {@link java.awt.image.BufferedImage} object.
+     * @param b1im a {@link java.awt.image.BufferedImage} object.
+     * @param map1 a {@link java.awt.image.BufferedImage} object.
      */
     public void setImages(final BufferedImage a1im, final BufferedImage b1im,
             final BufferedImage map1) {

@@ -57,7 +57,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "cvLookupType")
@@ -76,8 +77,7 @@ public class CvLookupType implements Serializable {
     /**
      * Gets the value of the address property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getAddress() {
         return this.address;
@@ -86,8 +86,7 @@ public class CvLookupType implements Serializable {
     /**
      * Gets the value of the cvLabel property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getCvLabel() {
         return this.cvLabel;
@@ -96,8 +95,7 @@ public class CvLookupType implements Serializable {
     /**
      * Gets the value of the fullName property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getFullName() {
         return this.fullName;
@@ -106,8 +104,7 @@ public class CvLookupType implements Serializable {
     /**
      * Gets the value of the version property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getVersion() {
         return this.version;
@@ -116,8 +113,7 @@ public class CvLookupType implements Serializable {
     /**
      * Sets the value of the address property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setAddress(final String value) {
         this.address = value;
@@ -126,8 +122,7 @@ public class CvLookupType implements Serializable {
     /**
      * Sets the value of the cvLabel property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setCvLabel(final String value) {
         this.cvLabel = value;
@@ -136,8 +131,7 @@ public class CvLookupType implements Serializable {
     /**
      * Sets the value of the fullName property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setFullName(final String value) {
         this.fullName = value;
@@ -146,8 +140,7 @@ public class CvLookupType implements Serializable {
     /**
      * Sets the value of the version property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setVersion(final String value) {
         this.version = value;

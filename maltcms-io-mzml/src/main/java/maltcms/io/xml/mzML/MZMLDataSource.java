@@ -84,6 +84,12 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 @Slf4j
+/**
+ * <p>MZMLDataSource class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @ServiceProvider(service = IDataSource.class)
 public class MZMLDataSource implements IDataSource {
 
@@ -130,6 +136,7 @@ public class MZMLDataSource implements IDataSource {
         return MZMLDataSource.variableToArrayCache;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int canRead(final IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
@@ -147,10 +154,12 @@ public class MZMLDataSource implements IDataSource {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration configuration) {
         this.mass_values = configuration.getString("var.mass_values",
@@ -421,8 +430,8 @@ public class MZMLDataSource implements IDataSource {
     /**
      * Read min and max_mass_range to determine bin sizes.
      *
-     * @param var
-     * @param um
+     * @param var a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @param um a {@link uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller} object.
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
      * mass_range_max as second array
      */
@@ -513,6 +522,7 @@ public class MZMLDataSource implements IDataSource {
         return a;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -525,6 +535,7 @@ public class MZMLDataSource implements IDataSource {
         return ral;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -938,6 +949,7 @@ public class MZMLDataSource implements IDataSource {
         throw new ResourceNotAvailableException("Unknown variable name to mzML mapping for " + var.getName());
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -960,6 +972,7 @@ public class MZMLDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException {
@@ -990,6 +1003,7 @@ public class MZMLDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IVariableFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -1147,11 +1161,13 @@ public class MZMLDataSource implements IDataSource {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);

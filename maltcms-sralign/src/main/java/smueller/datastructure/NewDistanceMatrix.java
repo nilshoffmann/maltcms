@@ -28,13 +28,17 @@
 package smueller.datastructure;
 
 /**
+ * <p>NewDistanceMatrix class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class NewDistanceMatrix extends DistanceMatrix {
 
     /**
+     * <p>Constructor for NewDistanceMatrix.</p>
      *
-     * @param bp
+     * @param bp an array of double.
      */
     public NewDistanceMatrix(final double[] bp) {
         super(bp);

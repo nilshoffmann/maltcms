@@ -50,11 +50,19 @@ import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
 
 /**
+ * <p>PeakFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PeakFactory {
 
+    /**
+     * <p>getFeatureList.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link maltcms.io.xml.bindings.openms.featurexml.FeatureMap.FeatureList} object.
+     */
     public static FeatureMap.FeatureList getFeatureList(File f) {
         JAXBContext jc;
         try {
@@ -67,6 +75,12 @@ public class PeakFactory {
         }
     }
 
+    /**
+     * <p>getFeatureList.</p>
+     *
+     * @param s a {@link java.io.InputStream} object.
+     * @return a {@link maltcms.io.xml.bindings.openms.featurexml.FeatureMap.FeatureList} object.
+     */
     public static FeatureMap.FeatureList getFeatureList(InputStream s) {
         JAXBContext jc;
         try {
@@ -79,6 +93,12 @@ public class PeakFactory {
         }
     }
 
+    /**
+     * <p>getRt.</p>
+     *
+     * @param ft a {@link maltcms.io.xml.bindings.openms.featurexml.FeatureType} object.
+     * @return a double.
+     */
     public static double getRt(FeatureType ft) {
         List<Position> l = ft.getPosition();
         if (l.get(0).getDim().equals("0")) {
@@ -89,6 +109,12 @@ public class PeakFactory {
         return Double.NaN;
     }
 
+    /**
+     * <p>getMz.</p>
+     *
+     * @param ft a {@link maltcms.io.xml.bindings.openms.featurexml.FeatureType} object.
+     * @return a double.
+     */
     public static double getMz(FeatureType ft) {
         List<Position> l = ft.getPosition();
         if (l.get(0).getDim().equals("1")) {
@@ -99,6 +125,14 @@ public class PeakFactory {
         return Double.NaN;
     }
 
+    /**
+     * <p>joinFeatures.</p>
+     *
+     * @param outputDir a {@link java.io.File} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param fl a {@link maltcms.io.xml.bindings.openms.featurexml.FeatureMap.FeatureList} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public static IFileFragment joinFeatures(File outputDir, String filename, FeatureMap.FeatureList fl) {
         //first dim is rt
         //second dim is mz
@@ -190,6 +224,11 @@ public class PeakFactory {
         return chromMS;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         IFactory fac = Factory.getInstance();
         fac.getConfiguration().setProperty("output.overwrite", true);

@@ -34,9 +34,10 @@ import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>BreakPoints class.</p>
  *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class BreakPoints {
 
@@ -44,13 +45,10 @@ public class BreakPoints {
 
     // Berechne gemeinsame Breakpoints
     /**
+     * <p>Constructor for BreakPoints.</p>
      *
-     *
-     *
-     * @param c
-     *
-     * @param d
-     *
+     * @param c a {@link ucar.ma2.Array} object.
+     * @param d a {@link ucar.ma2.Array} object.
      */
     public BreakPoints(final Array c, final Array d) {
 
@@ -73,17 +71,12 @@ public class BreakPoints {
     }
 
     /**
+     * <p>calcbreakpoints.</p>
      *
-     *
-     *
-     * @param a1
-     *
-     * @param sortiert
-     *
-     * @param alphabetgr
-     *
-     * @return
-     *
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @param sortiert an array of double.
+     * @param alphabetgr a int.
+     * @return an array of double.
      */
     public double[] calcbreakpoints(final Array a1, final double[] sortiert,
             final int alphabetgr) {
@@ -154,11 +147,9 @@ public class BreakPoints {
     }
 
     /**
+     * <p>Getter for the field <code>common</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of double.
      */
     public double[] getCommon() {
 

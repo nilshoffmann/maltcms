@@ -34,9 +34,10 @@ import org.openide.util.lookup.ServiceProvider;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
+ * <p>RidgeCost0 class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @ServiceProvider(service = IRidgeCost.class)
 public class RidgeCost0 implements IRidgeCost {
@@ -48,6 +49,7 @@ public class RidgeCost0 implements IRidgeCost {
      * maltcms.datastructures.ridge.IRidgeCost#getCost(maltcms.datastructures
      * .ridge.Ridge)
      */
+    /** {@inheritDoc} */
     @Override
     public double getCost(Ridge r) {
         double ridgePenalty = 0;

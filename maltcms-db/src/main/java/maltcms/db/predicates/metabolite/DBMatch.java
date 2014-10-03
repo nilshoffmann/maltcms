@@ -35,8 +35,10 @@ import lombok.Data;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
+ * <p>DBMatch class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class DBMatch implements Comparable {
@@ -45,6 +47,7 @@ public class DBMatch implements Comparable {
     private final double matchScore;
     private final IMetabolite metabolite;
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(Object t) {
         if (t instanceof DBMatch) {
@@ -53,6 +56,12 @@ public class DBMatch implements Comparable {
         return 0;
     }
 
+    /**
+     * <p>asMatchList.</p>
+     *
+     * @param c a {@link java.util.Collection} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Tuple2D<Double, IMetabolite>> asMatchList(Collection<DBMatch> c) {
         List<Tuple2D<Double, IMetabolite>> l = new ArrayList<>();
         for (DBMatch dbm : c) {

@@ -47,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Implementation of progressive, tree based multiple alignment.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @RequiresVariables(names = {"var.pairwise_distance_matrix"})
 @Data
@@ -58,6 +58,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
     @Configurable(value = "maltcms.commands.fragments.cluster.UPGMAAlgorithm")
     private String guideTreeClass = "maltcms.commands.fragments.cluster.UPGMAAlgorithm";
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -68,6 +69,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
      * 
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         // First step:
@@ -84,6 +86,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
         return tple;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        this.guideTreeClass = cfg.getString(getClass().getName()
@@ -91,6 +94,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
 //                "maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm");
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Creates a multiple alignment by following a guide tree, based on pairwise simlarities or distances. Creates meta-chromatogram as root of the tree and realigns all other chromatograms to that reference.";
@@ -101,6 +105,7 @@ public class ProgressiveTreeAlignment extends AFragmentCommand {
      * 
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;

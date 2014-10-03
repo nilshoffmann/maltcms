@@ -36,8 +36,10 @@ import maltcms.io.xlsx.bridge.impl.poi.POIWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
+ * <p>WorkbookBridge class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Slf4j
 public class WorkbookBridge {
@@ -51,10 +53,10 @@ public class WorkbookBridge {
      * May return null if no supporting api could read the corresponding
      * spreadsheet or if any other errors occur.
      *
-     * @param uri
-     * @param impl
-     * @param iisp
-     * @return
+     * @param uri a {@link java.net.URI} object.
+     * @param impl a {@link maltcms.io.xlsx.bridge.WorkbookBridge.IMPL} object.
+     * @param iisp a {@link maltcms.io.xlsx.bridge.IInputStreamProvider} object.
+     * @return a {@link maltcms.io.xlsx.bridge.IWorkbook} object.
      */
     public IWorkbook getWorkbook(URI uri, IMPL impl, IInputStreamProvider iisp) {
         switch (impl) {

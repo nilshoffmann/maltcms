@@ -46,6 +46,7 @@ import ucar.ma2.Array;
  * class will use a scanline as a vector of double(intensities).
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -61,9 +62,7 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
             value = "second_column_scan_index")
     private String secondColumnScanIndexVar = "second_column_scan_index";
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -73,9 +72,7 @@ public class ScanlineTicWarp extends ADynamicTimeWarp {
                 "var.second_column_scan_index", "second_column_scan_index");
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {

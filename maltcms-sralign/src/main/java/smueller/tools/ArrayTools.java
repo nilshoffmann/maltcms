@@ -32,20 +32,18 @@ import ucar.ma2.MAMath;
 
 // Ein paar Tools f�r Arrays
 /**
+ * <p>ArrayTools class.</p>
  *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class ArrayTools {
 
     /**
+     * <p>calcmax.</p>
      *
-     *
-     *
-     * @param a
-     *
-     * @return
-     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public static double calcmax(final Array a) {
 
@@ -54,13 +52,10 @@ public class ArrayTools {
     }
 
     /**
+     * <p>calcmin.</p>
      *
-     *
-     *
-     * @param a
-     *
-     * @return
-     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public static double calcmin(final Array a) {
 
@@ -69,15 +64,11 @@ public class ArrayTools {
     }
 
     /**
+     * <p>countChar.</p>
      *
-     *
-     *
-     * @param s
-     *
-     * @param c
-     *
-     * @return
-     *
+     * @param s a {@link java.lang.String} object.
+     * @param c a char.
+     * @return a int.
      */
     public static int countChar(final String s, final char c) {
 

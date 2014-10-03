@@ -30,9 +30,10 @@ package net.sf.maltcms.evaluation.api;
 import java.util.HashSet;
 
 /**
+ * <p>PerformanceMetrics class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public final class PerformanceMetrics {
 
@@ -41,6 +42,21 @@ public final class PerformanceMetrics {
     private final String toolname;
     private final HashSet<EntityGroup> unmatchedToolEnt, unmatchedGroundTruthEnt;
 
+    /**
+     * <p>Constructor for PerformanceMetrics.</p>
+     *
+     * @param toolname a {@link java.lang.String} object.
+     * @param tp a int.
+     * @param fp a int.
+     * @param tn a int.
+     * @param fn a int.
+     * @param N a int.
+     * @param M a int.
+     * @param K a int.
+     * @param dist a double.
+     * @param unmatchedTool a {@link java.util.HashSet} object.
+     * @param unmatchedGroundTruth a {@link java.util.HashSet} object.
+     */
     public PerformanceMetrics(String toolname, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup> unmatchedTool, HashSet<EntityGroup> unmatchedGroundTruth) {
         this.toolname = toolname;
         this.tp = tp;
@@ -58,54 +74,119 @@ public final class PerformanceMetrics {
         this.unmatchedGroundTruthEnt = unmatchedGroundTruth;
     }
 
+    /**
+     * <p>Getter for the field <code>dist</code>.</p>
+     *
+     * @return a double.
+     */
     public double getDist() {
         return dist;
     }
 
+    /**
+     * <p>Getter for the field <code>toolname</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getToolname() {
         return this.toolname;
     }
 
+    /**
+     * <p>getTP.</p>
+     *
+     * @return a int.
+     */
     public int getTP() {
         return this.tp;
     }
 
+    /**
+     * <p>getFP.</p>
+     *
+     * @return a int.
+     */
     public int getFP() {
         return this.fp;
     }
 
+    /**
+     * <p>getTN.</p>
+     *
+     * @return a int.
+     */
     public int getTN() {
         return this.tn;
     }
 
+    /**
+     * <p>getFNWithoutUnmatchedToolEntityGroups.</p>
+     *
+     * @return a int.
+     */
     public int getFNWithoutUnmatchedToolEntityGroups() {
         return this.realfn;
     }
 
+    /**
+     * <p>getFN.</p>
+     *
+     * @return a int.
+     */
     public int getFN() {
         return this.fn;
     }
 
+    /**
+     * <p>getToolEntities.</p>
+     *
+     * @return a int.
+     */
     public int getToolEntities() {
         return this.M;
     }
 
+    /**
+     * <p>getCommonEntities.</p>
+     *
+     * @return a int.
+     */
     public int getCommonEntities() {
         return this.tp + this.tn;
     }
 
+    /**
+     * <p>getGroundTruthEntities.</p>
+     *
+     * @return a int.
+     */
     public int getGroundTruthEntities() {
         return this.N;
     }
 
+    /**
+     * <p>getUnmatchedToolEntities.</p>
+     *
+     * @return a int.
+     */
     public int getUnmatchedToolEntities() {
         return this.unmatchedTool;
     }
 
+    /**
+     * <p>getUnmatchedGroundTruthEntities.</p>
+     *
+     * @return a int.
+     */
     public int getUnmatchedGroundTruthEntities() {
         return this.unmatchedGroundTruth;
     }
 
+    /**
+     * <p>getSensitivity.</p>
+     *
+     * @return a double.
+     */
     public double getSensitivity() {
         double tpv = tp;
         double fnv = fn;
@@ -113,6 +194,11 @@ public final class PerformanceMetrics {
         return sens;
     }
 
+    /**
+     * <p>getSpecificity.</p>
+     *
+     * @return a double.
+     */
     public double getSpecificity() {
         double tnv = tn;
         double fpv = fp;
@@ -120,14 +206,29 @@ public final class PerformanceMetrics {
         return spec;
     }
 
+    /**
+     * <p>getFPR.</p>
+     *
+     * @return a double.
+     */
     public double getFPR() {
         return 1 - getSpecificity();
     }
 
+    /**
+     * <p>getFNR.</p>
+     *
+     * @return a double.
+     */
     public double getFNR() {
         return 1 - getSensitivity();
     }
 
+    /**
+     * <p>getAccuracy.</p>
+     *
+     * @return a double.
+     */
     public double getAccuracy() {
         double tpv = tp;
         double tnv = tn;
@@ -137,6 +238,11 @@ public final class PerformanceMetrics {
         return acc;
     }
 
+    /**
+     * <p>getGain.</p>
+     *
+     * @return a double.
+     */
     public double getGain() {
         //System.out.println("tp+fn=" + (tp + fn));
         //System.out.println("tp+tn+fp+fn=" + (tp + tn + fp + fn));
@@ -147,6 +253,11 @@ public final class PerformanceMetrics {
         return gain;
     }
 
+    /**
+     * <p>getPrecision.</p>
+     *
+     * @return a double.
+     */
     public double getPrecision() {
         double tpv = tp;
         double fpv = fp;
@@ -154,10 +265,16 @@ public final class PerformanceMetrics {
         return prec;
     }
 
+    /**
+     * <p>getRecall.</p>
+     *
+     * @return a double.
+     */
     public double getRecall() {
         return getSensitivity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -201,6 +318,11 @@ public final class PerformanceMetrics {
         return a / b;
     }
 
+    /**
+     * <p>getF1.</p>
+     *
+     * @return a double.
+     */
     public double getF1() {
         double f = 2.0d * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
         return f;

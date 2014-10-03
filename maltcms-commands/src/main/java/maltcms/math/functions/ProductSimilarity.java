@@ -33,8 +33,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>ProductSimilarity class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IScalarArraySimilarity.class)
@@ -43,6 +45,7 @@ public class ProductSimilarity implements IScalarArraySimilarity {
     private IScalarSimilarity[] scalarSimilarities = new IScalarSimilarity[0];
     private IArraySimilarity[] arraySimilarities = new IArraySimilarity[0];
 
+    /** {@inheritDoc} */
     @Override
     public double apply(double[] s1, double[] s2, Array a1, Array a2) {
         double val = 1.0d;
@@ -59,6 +62,7 @@ public class ProductSimilarity implements IScalarArraySimilarity {
         return val;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IScalarArraySimilarity copy() {
         ProductSimilarity psim = new ProductSimilarity();
@@ -75,6 +79,7 @@ public class ProductSimilarity implements IScalarArraySimilarity {
         return psim;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -83,6 +88,7 @@ public class ProductSimilarity implements IScalarArraySimilarity {
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

@@ -28,9 +28,10 @@
 package maltcms.datastructures.quadTree;
 
 /**
+ * <p>ElementNotFoundException class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class ElementNotFoundException extends RuntimeException {
 

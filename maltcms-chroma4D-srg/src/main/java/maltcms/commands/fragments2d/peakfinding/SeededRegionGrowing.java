@@ -90,6 +90,7 @@ import ucar.ma2.InvalidRangeException;
  * Peakpicking + integration + identification + normalization + evaluation...
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -165,9 +166,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private PeakSeparator peakSeparator = new PeakSeparator();
     private List<List<Peak2D>> peakLists = new ArrayList<>();
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
@@ -292,9 +291,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
         return peaklist;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
@@ -435,9 +432,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
         return x * this.scansPerModulation + y;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Will do an initial peak finding and computes the 'snakes'";
@@ -466,9 +461,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
         return times;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;
@@ -561,7 +554,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
         IVariableFragment ticVar = ff.getChild(this.totalIntensityVar, true);
         IVariableFragment sciv = ff.getChild(this.secondScanIndexVar);
         ticVar.setIndex(sciv);
-        return CachedList.getList(ticVar);
+        return CachedList.getList(getWorkflow().getFactory(), ticVar);
     }
 
     private void createImage(final IFileFragment ff,

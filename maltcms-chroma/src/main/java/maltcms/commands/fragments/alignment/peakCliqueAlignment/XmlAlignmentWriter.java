@@ -39,12 +39,23 @@ import maltcms.datastructures.peak.IPeak;
 import maltcms.io.xml.bindings.alignment.Alignment;
 
 /**
+ * <p>XmlAlignmentWriter class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 public class XmlAlignmentWriter {
 
+    /**
+     * <p>saveToXMLAlignment.</p>
+     *
+     * @param out a {@link java.io.File} object.
+     * @param tuple a {@link cross.datastructures.tuple.TupleND} object.
+     * @param ll a {@link java.util.List} object.
+     * @return a {@link java.io.File} object.
+     */
     public File saveToXMLAlignment(final File out, final TupleND<IFileFragment> tuple,
             final List<List<IBipacePeak>> ll) {
         AlignmentFactory af = new AlignmentFactory();

@@ -32,11 +32,19 @@ import java.io.Serializable;
 import ucar.ma2.Array;
 
 /**
+ * <p>IPeakFinder interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPeakFinder extends Serializable, ICopyable<IPeakFinder> {
 
+    /**
+     * <p>findPeakPositions.</p>
+     *
+     * @param tic a {@link ucar.ma2.Array} object.
+     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet} object.
+     */
     PeakPositionsResultSet findPeakPositions(Array tic);
 
 }

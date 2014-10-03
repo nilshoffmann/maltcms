@@ -47,7 +47,7 @@ import ucar.ma2.Array;
  * time-point (scan).
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -76,6 +76,7 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
      * commons.configuration.Configuration)
      */
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -89,6 +90,7 @@ public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
         this.scan_index = cfg.getString("var.scan_index", "scan_index");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {

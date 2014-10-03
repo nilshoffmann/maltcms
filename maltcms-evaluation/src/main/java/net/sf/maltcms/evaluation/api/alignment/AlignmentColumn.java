@@ -35,9 +35,10 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>AlignmentColumn class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class AlignmentColumn implements IFeatureVector {
 
@@ -48,6 +49,11 @@ public class AlignmentColumn implements IFeatureVector {
     private final ArrayDouble.D1 values;
     private final UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>Constructor for AlignmentColumn.</p>
+     *
+     * @param rt a double.
+     */
     public AlignmentColumn(double... rt) {
         this.values = (ArrayDouble.D1) Array.factory(rt);
     }
@@ -56,6 +62,7 @@ public class AlignmentColumn implements IFeatureVector {
      * (non-Javadoc) @see
      * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         if (name.equals("RT")) {
@@ -68,15 +75,22 @@ public class AlignmentColumn implements IFeatureVector {
      * (non-Javadoc) @see
      * maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList("RT");
     }
 
+    /**
+     * <p>getRT.</p>
+     *
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
+     */
     public ArrayDouble.D1 getRT() {
         return this.values;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -84,6 +98,7 @@ public class AlignmentColumn implements IFeatureVector {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

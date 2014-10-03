@@ -62,11 +62,20 @@ import maltcms.db.ui.MetaboliteView;
 import maltcms.db.ui.MetaboliteViewModel;
 //import net.sf.maltcms.apps.Maltcms;
 
+/**
+ * <p>MetaboliteBrowser class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public final class MetaboliteBrowser extends JFrame {
 
     private HashMap<Integer, JCheckBoxMenuItem> selectTableHeaders = new HashMap<>();
     private MetaboliteViewModel mvm;
 
+    /**
+     * <p>Constructor for MetaboliteBrowser.</p>
+     */
     public MetaboliteBrowser() {
     }
 
@@ -92,6 +101,20 @@ public final class MetaboliteBrowser extends JFrame {
         }
     }
 
+    /**
+     * <p>getObjectContainer.</p>
+     *
+     * @param c a {@link net.sf.maltcms.apps.MetaboliteBrowser.Credentials} object.
+     * @return a {@link com.db4o.ObjectContainer} object.
+     * @throws java.net.MalformedURLException if any.
+     * @throws com.db4o.ext.Db4oIOException if any.
+     * @throws com.db4o.ext.DatabaseFileLockedException if any.
+     * @throws com.db4o.ext.IncompatibleFileFormatException if any.
+     * @throws com.db4o.ext.OldFormatException if any.
+     * @throws com.db4o.ext.DatabaseReadOnlyException if any.
+     * @throws com.db4o.ext.InvalidPasswordException if any.
+     * @throws java.net.URISyntaxException if any.
+     */
     public static final ObjectContainer getObjectContainer(Credentials c)
             throws MalformedURLException, Db4oIOException,
             DatabaseFileLockedException, IncompatibleFileFormatException,
@@ -131,6 +154,12 @@ public final class MetaboliteBrowser extends JFrame {
         return oc;
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param mb a {@link net.sf.maltcms.apps.MetaboliteBrowser} object.
+     */
     public static final void create(final ObjectContainer oc,
             final MetaboliteBrowser mb) {
 //        Maltcms m = Maltcms.getInstance();
@@ -148,12 +177,19 @@ public final class MetaboliteBrowser extends JFrame {
     }
 
     /**
-     * @param mvm2
+     * <p>setModel.</p>
+     *
+     * @param mvm2 a {@link maltcms.db.ui.MetaboliteViewModel} object.
      */
     protected void setModel(MetaboliteViewModel mvm2) {
         this.mvm = mvm2;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
 
         // opening dialog
@@ -271,7 +307,7 @@ public final class MetaboliteBrowser extends JFrame {
     /**
      * generates the menu bar for selecting the shown table columns
      *
-     * @param mvm
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
      */
     public void generateMenuBar(final MetaboliteViewModel mvm) {
 
@@ -334,6 +370,12 @@ public final class MetaboliteBrowser extends JFrame {
         return checkBox;
     }
 
+    /**
+     * <p>getQueryPanel.</p>
+     *
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     * @return a {@link javax.swing.JPanel} object.
+     */
     public JPanel getQueryPanel(MetaboliteViewModel mvm) {
         if (this.qpanel == null) {
             this.qpanel = new MetaboliteQueryPanel(mvm);
@@ -341,6 +383,9 @@ public final class MetaboliteBrowser extends JFrame {
         return this.qpanel;
     }
 
+    /**
+     * <p>setupUI.</p>
+     */
     public void setupUI() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //this.setTitle("MetaboliteBrowser: ");

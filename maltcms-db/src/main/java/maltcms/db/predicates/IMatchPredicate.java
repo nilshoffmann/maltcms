@@ -35,11 +35,32 @@ import java.lang.reflect.Method;
  * 
  * @param <T>
  */
+/**
+ * <p>IMatchPredicate interface.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public interface IMatchPredicate<T> {
 
+    /**
+     * <p>setMethodOnTargetType.</p>
+     *
+     * @param m a {@link java.lang.reflect.Method} object.
+     */
     public abstract void setMethodOnTargetType(Method m);
 
+    /**
+     * <p>setTargetType.</p>
+     *
+     * @param c a {@link java.lang.Class} object.
+     */
     public abstract void setTargetType(Class<T> c);
 
+    /**
+     * <p>getMethodOnTargetType.</p>
+     *
+     * @return a {@link java.lang.reflect.Method} object.
+     */
     public abstract Method getMethodOnTargetType();
 }

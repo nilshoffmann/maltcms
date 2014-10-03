@@ -41,6 +41,7 @@ import ucar.ma2.ArrayDouble;
  * backgroundimage.
  *
  * @author Mathias Wilhelm
+ * @version $Id: $Id
  */
 public class BHeatMapChart extends AChart<XYBPlot> {
 
@@ -73,9 +74,7 @@ public class BHeatMapChart extends AChart<XYBPlot> {
         this.label = seriesLabel;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public XYBPlot create() {
         final NumberAxis domain = new NumberAxis(xlabel);
@@ -104,17 +103,13 @@ public class BHeatMapChart extends AChart<XYBPlot> {
         return xybp;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

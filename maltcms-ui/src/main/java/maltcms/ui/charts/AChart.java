@@ -43,8 +43,8 @@ import ucar.ma2.Array;
  * Abstract base class for Charts of Type T extending Plot of JFreeChart.
  *
  * @author Nils Hoffmann
- *
  * @param <T extends Plot>
+ * @version $Id: $Id
  */
 public abstract class AChart<T extends Plot> implements IConfigurable {
 
@@ -63,6 +63,9 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
             new Color(255, 127, 0),
             new Color(106, 61, 154)};
 
+    /**
+     * <p>Constructor for AChart.</p>
+     */
     public AChart() {
         int cnt = 0;
         seriesColors = new Color[2 * baseColors.length];
@@ -80,15 +83,28 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @return a T object.
+     */
     public abstract T create();
 
+    /**
+     * <p>getTitle.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public abstract String getTitle();
 
     /**
+     * <p>Getter for the field <code>yaxis_max</code>.</p>
+     *
      * @return the yaxis_max
      */
     public double getYaxis_max() {
@@ -96,12 +112,22 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>yaxis_min</code>.</p>
+     *
      * @return the yaxis_min
      */
     public double getYaxis_min() {
         return this.yaxis_min;
     }
 
+    /**
+     * <p>normalize.</p>
+     *
+     * @param c a {@link java.util.List} object.
+     * @param normalization a {@link java.lang.String} object.
+     * @param normalize_global a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<Array> normalize(final List<Array> c,
             final String normalization, final boolean normalize_global) {
         final NormalizationFilter nf = new NormalizationFilter(normalization,
@@ -111,9 +137,16 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
         return Arrays.asList(as);
     }
 
+    /**
+     * <p>setTitle.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public abstract void setTitle(String s);
 
     /**
+     * <p>Setter for the field <code>yaxis_max</code>.</p>
+     *
      * @param yaxis_max the yaxis_max to set
      */
     public void setYaxis_max(final double yaxis_max) {
@@ -121,12 +154,21 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
     }
 
     /**
+     * <p>Setter for the field <code>yaxis_min</code>.</p>
+     *
      * @param yaxis_min the yaxis_min to set
      */
     public void setYaxis_min(final double yaxis_min) {
         this.yaxis_min = yaxis_min;
     }
     
+    /**
+     * <p>applySeriesColors.</p>
+     *
+     * @param plot a {@link org.jfree.chart.plot.XYPlot} object.
+     * @param plotColors an array of {@link java.awt.Color} objects.
+     * @param alpha a float.
+     */
     public static void applySeriesColors(XYPlot plot, Color[] plotColors, float alpha) {
         XYItemRenderer renderer = plot.getRenderer();
         int series = plot.getSeriesCount();
@@ -136,16 +178,34 @@ public abstract class AChart<T extends Plot> implements IConfigurable {
         }
     }
 
+    /**
+     * <p>withAlpha.</p>
+     *
+     * @param color a {@link java.awt.Color} object.
+     * @param alpha a float.
+     * @return a {@link java.awt.Color} object.
+     * @since 1.3.2
+     */
     public static Color withAlpha(Color color, float alpha) {
         Color ca = new Color(color.getRed(), color.getGreen(), color.getBlue(),
                 (int) (alpha * 255.0f));
         return ca;
     }
     
+    /**
+     * <p>Getter for the field <code>seriesColors</code>.</p>
+     *
+     * @return an array of {@link java.awt.Color} objects.
+     */
     public Color[] getSeriesColors() {
         return seriesColors;
     }
     
+    /**
+     * <p>Setter for the field <code>seriesColors</code>.</p>
+     *
+     * @param colors an array of {@link java.awt.Color} objects.
+     */
     public void setSeriesColors(Color[] colors) {
         this.seriesColors = colors;
     }

@@ -27,9 +27,17 @@
  */
 package maltcms.commands.filters.array.wavelet;
 
+/**
+ * <p>MexicanHatWavelet class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public final class MexicanHatWavelet implements IWavelet {
 
     /**
+     * {@inheritDoc}
+     *
      * First param in params is expected to be the variance sigma. For
      * performance reasons, no null checking is performed, so please ensure to
      * supply at least one value in params.
@@ -46,6 +54,7 @@ public final class MexicanHatWavelet implements IWavelet {
     }
     private final double admissConst = 4.0 * Math.sqrt(Math.PI) / 3.0;
 
+    /** {@inheritDoc} */
     @Override
     public final double getAdmissabilityConstant() {
         return admissConst;

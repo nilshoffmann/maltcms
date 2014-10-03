@@ -31,21 +31,25 @@ import java.util.Vector;
 
 // Enth�lt optimales Alignment
 /**
+ * <p>OptimalAlignmentVector class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class OptimalAlignmentVector implements Cloneable {
 
     private final Vector<AlignedPairVector> align = new Vector<>();
 
     /**
-     *
+     * <p>Constructor for OptimalAlignmentVector.</p>
      */
     public OptimalAlignmentVector() {
     }
 
     /**
+     * <p>addAlChars.</p>
      *
-     * @param a
+     * @param a a boolean.
      */
     public void addAlChars(final boolean a) {
         final AlignedPairVector ss = new AlignedPairVector(a);
@@ -53,9 +57,10 @@ public class OptimalAlignmentVector implements Cloneable {
     }
 
     /**
+     * <p>addAlChars.</p>
      *
-     * @param a
-     * @param b
+     * @param a a char.
+     * @param b a char.
      */
     public void addAlChars(final char a, final char b) {
         final AlignedPairVector ss = new AlignedPairVector(a, b);
@@ -63,11 +68,12 @@ public class OptimalAlignmentVector implements Cloneable {
     }
 
     /**
+     * <p>addAlChars.</p>
      *
-     * @param a
-     * @param b
-     * @param c
-     * @param d
+     * @param a a char.
+     * @param b a char.
+     * @param c a int.
+     * @param d a int.
      */
     public void addAlChars(final char a, final char b, final int c, final int d) {
         final AlignedPairVector ss = new AlignedPairVector(a, b, c, d);
@@ -75,17 +81,19 @@ public class OptimalAlignmentVector implements Cloneable {
     }
 
     /**
+     * <p>addALChars.</p>
      *
-     * @param ss
+     * @param ss a {@link smueller.alignment.AlignedPairVector} object.
      */
     public void addALChars(final AlignedPairVector ss) {
         this.align.add(ss);
     }
 
     /**
+     * <p>changeAlChars.</p>
      *
-     * @param a
-     * @param b
+     * @param a a int.
+     * @param b a int.
      */
     public void changeAlChars(final int a, final int b) {
         final AlignedPairVector ss = new AlignedPairVector();
@@ -94,10 +102,7 @@ public class OptimalAlignmentVector implements Cloneable {
         ss.setD(b);
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public Object clone() {
 
@@ -112,17 +117,19 @@ public class OptimalAlignmentVector implements Cloneable {
     }
 
     /**
+     * <p>countAlChars.</p>
      *
-     * @return
+     * @return a int.
      */
     public int countAlChars() {
         return this.align.size();
     }
 
     /**
+     * <p>getCharPair.</p>
      *
-     * @param i
-     * @return
+     * @param i a int.
+     * @return a {@link smueller.alignment.AlignedPairVector} object.
      */
     public AlignedPairVector getCharPair(final int i) {
         return this.align.get(i);

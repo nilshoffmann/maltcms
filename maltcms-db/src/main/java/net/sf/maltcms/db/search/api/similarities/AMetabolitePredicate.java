@@ -47,8 +47,10 @@ import net.sf.maltcms.db.search.api.IMatchPredicate;
 import ucar.ma2.Array;
 
 /**
+ * <p>Abstract AMetabolitePredicate class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implements IMatchPredicate<IMetabolite> {
 
@@ -59,6 +61,11 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
     private TreeMap<Double, Integer> spectrum;
     private TreeSet<Tuple2D<Double, IMetabolite>> scoreMap = null;
 
+    /**
+     * <p>Getter for the field <code>scoreMap</code>.</p>
+     *
+     * @return a {@link java.util.TreeSet} object.
+     */
     public TreeSet<Tuple2D<Double, IMetabolite>> getScoreMap() {
         if (scoreMap == null) {
             scoreMap = new TreeSet<>(getComparator());
@@ -66,9 +73,19 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
         return scoreMap;
     }
 
+    /**
+     * <p>getComparator.</p>
+     *
+     * @return a {@link java.util.Comparator} object.
+     */
     public abstract Comparator<Tuple2D<Double, IMetabolite>> getComparator();
     private ICacheDelegate<IMetabolite, TreeMap<Double, Integer>> cache = CacheFactory.createDefaultCache(getClass().getName());
 
+    /**
+     * <p>getMetabolites.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<Tuple2D<Double, IMetabolite>> getMetabolites() {
         ArrayList<Tuple2D<Double, IMetabolite>> results = new ArrayList<>();
         System.out.println("Adding " + getScoreMap().size() + " hits!");
@@ -82,6 +99,13 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
         return results.subList(0, Math.min(maxHits, results.size()));
     }
 
+    /**
+     * <p>filterMaskedMasses.</p>
+     *
+     * @param masses a {@link ucar.ma2.Array} object.
+     * @param intensities a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public Array filterMaskedMasses(Array masses, Array intensities) {
         if (getMaskedMasses() == null || getMaskedMasses().isEmpty()) {
             return intensities;
@@ -90,34 +114,74 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
         return ArrayTools.filterIndices(intensities, l1, 0.0d);
     }
 
+    /**
+     * <p>Getter for the field <code>maskedMasses</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Double> getMaskedMasses() {
         return maskedMasses;
     }
 
+    /**
+     * <p>Setter for the field <code>maskedMasses</code>.</p>
+     *
+     * @param masses a {@link java.util.List} object.
+     */
     public void setMaskedMasses(List<Double> masses) {
         this.maskedMasses = masses;
     }
 
+    /**
+     * <p>Getter for the field <code>maxHits</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMaxHits() {
         return maxHits;
     }
 
+    /**
+     * <p>Setter for the field <code>maxHits</code>.</p>
+     *
+     * @param maxHits a int.
+     */
     public void setMaxHits(int maxHits) {
         this.maxHits = maxHits;
     }
 
+    /**
+     * <p>Getter for the field <code>scoreThreshold</code>.</p>
+     *
+     * @return a double.
+     */
     public double getScoreThreshold() {
         return scoreThreshold;
     }
 
+    /**
+     * <p>Setter for the field <code>scoreThreshold</code>.</p>
+     *
+     * @param scoreThreshold a double.
+     */
     public void setScoreThreshold(double scoreThreshold) {
         this.scoreThreshold = scoreThreshold;
     }
 
+    /**
+     * <p>Getter for the field <code>scan</code>.</p>
+     *
+     * @return a {@link maltcms.datastructures.ms.IScan} object.
+     */
     public IScan getScan() {
         return scan;
     }
 
+    /**
+     * <p>Setter for the field <code>scan</code>.</p>
+     *
+     * @param scan a {@link maltcms.datastructures.ms.IScan} object.
+     */
     public void setScan(IScan scan) {
         this.scan = scan;
         spectrum = new TreeMap<>();
@@ -126,16 +190,32 @@ public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implem
         }
     }
 
+    /**
+     * <p>Getter for the field <code>spectrum</code>.</p>
+     *
+     * @return a {@link java.util.TreeMap} object.
+     */
     public TreeMap<Double, Integer> getSpectrum() {
         return this.spectrum;
     }
 
+    /**
+     * <p>Getter for the field <code>cache</code>.</p>
+     *
+     * @return a {@link cross.cache.ICacheDelegate} object.
+     */
     public ICacheDelegate<IMetabolite, TreeMap<Double, Integer>> getCache() {
         return cache;
     }
 
+    /**
+     * <p>copy.</p>
+     *
+     * @return a {@link net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate} object.
+     */
     public abstract AMetabolitePredicate copy();
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getSimpleName();

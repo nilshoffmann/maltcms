@@ -75,9 +75,10 @@ import org.jfree.ui.TextAnchor;
 import ucar.ma2.Array;
 
 /**
+ * <p>JFreeChartViewer class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * @version $Id: $Id
  */
 public class JFreeChartViewer extends JFrame {
 
@@ -88,26 +89,56 @@ public class JFreeChartViewer extends JFrame {
     private JTabbedPane jtp = null;
     private File lastOpenDir = null;
 
+    /**
+     * <p>Getter for the field <code>jtp</code>.</p>
+     *
+     * @return a {@link javax.swing.JTabbedPane} object.
+     */
     public JTabbedPane getJtp() {
         return jtp;
     }
 
+    /**
+     * <p>Setter for the field <code>jtp</code>.</p>
+     *
+     * @param jtp a {@link javax.swing.JTabbedPane} object.
+     */
     public void setJtp(JTabbedPane jtp) {
         this.jtp = jtp;
     }
 
+    /**
+     * <p>Getter for the field <code>jmb</code>.</p>
+     *
+     * @return a {@link javax.swing.JMenuBar} object.
+     */
     public JMenuBar getJmb() {
         return jmb;
     }
 
+    /**
+     * <p>Setter for the field <code>jmb</code>.</p>
+     *
+     * @param jmb a {@link javax.swing.JMenuBar} object.
+     */
     public void setJmb(JMenuBar jmb) {
         this.jmb = jmb;
     }
 
+    /**
+     * <p>Getter for the field <code>fileMenu</code>.</p>
+     *
+     * @return a {@link javax.swing.JMenu} object.
+     */
     public JMenu getFileMenu() {
         return fileMenu;
     }
 
+    /**
+     * <p>Setter for the field <code>fileMenu</code>.</p>
+     *
+     * @param fileMenu a {@link javax.swing.JMenu} object.
+     */
     public void setFileMenu(JMenu fileMenu) {
         this.fileMenu = fileMenu;
     }
@@ -115,14 +146,27 @@ public class JFreeChartViewer extends JFrame {
     private JMenu fileMenu = null;
     private JLabel status = null;
 
+    /**
+     * <p>Getter for the field <code>status</code>.</p>
+     *
+     * @return a {@link javax.swing.JLabel} object.
+     */
     public JLabel getStatus() {
         return status;
     }
 
+    /**
+     * <p>Setter for the field <code>status</code>.</p>
+     *
+     * @param status1 a {@link javax.swing.JLabel} object.
+     */
     public void setStatus(JLabel status1) {
         this.status = status1;
     }
 
+    /**
+     * <p>Constructor for JFreeChartViewer.</p>
+     */
     public JFreeChartViewer() {
         CompositeConfiguration cfg = new CompositeConfiguration();
         cfg.addConfiguration(new SystemConfiguration());
@@ -156,6 +200,12 @@ public class JFreeChartViewer extends JFrame {
         add(this.jtp);
     }
 
+    /**
+     * <p>addChart.</p>
+     *
+     * @param c a {@link org.jfree.chart.JFreeChart} object.
+     * @param name a {@link java.lang.String} object.
+     */
     public void addChart(JFreeChart c, String name) {
         ChartPanel cp2 = new ChartPanel(c);
         cp2.addChartMouseListener(new ChartPanelMouseListener(cp2));
@@ -170,12 +220,22 @@ public class JFreeChartViewer extends JFrame {
         cp2.getPopupMenu().add(csa);
     }
 
+    /**
+     * <p>getActiveChartPanel.</p>
+     *
+     * @return a {@link org.jfree.chart.ChartPanel} object.
+     */
     public ChartPanel getActiveChartPanel() {
         Object o = getJtp().getTabComponentAt(getJtp().getSelectedIndex());
         System.out.println("class: " + o.getClass().getName());
         return (ChartPanel) o;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         final JFrame jf2 = new JFreeChartViewer();
         System.setProperty("log4j.configuration", "cfg/log4j.properties");

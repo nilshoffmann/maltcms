@@ -49,7 +49,7 @@ import maltcms.datastructures.array.PartitionedArray;
  * set of anchors.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 public class TabbedPanel extends JPanel implements ActionListener {
 
@@ -82,6 +82,12 @@ public class TabbedPanel extends JPanel implements ActionListener {
     private RepaintRunnable rr = null;
     private AnchorPairSet aps = null;
 
+    /**
+     * <p>Constructor for TabbedPanel.</p>
+     *
+     * @param pa1 a {@link maltcms.datastructures.array.PartitionedArray} object.
+     * @param aps1 a {@link maltcms.datastructures.alignment.AnchorPairSet} object.
+     */
     public TabbedPanel(final PartitionedArray pa1, final AnchorPairSet aps1) {
         this.pa = pa1;
         this.aps = aps1;
@@ -91,6 +97,7 @@ public class TabbedPanel extends JPanel implements ActionListener {
         createPAIm(this.paIm);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(final ActionEvent evt) {
         // System.out.println("IEvent received!");
@@ -105,6 +112,11 @@ public class TabbedPanel extends JPanel implements ActionListener {
         // RepaintManager.currentManager(this).markCompletelyDirty(this);
     }
 
+    /**
+     * <p>createPAIm.</p>
+     *
+     * @param bi a {@link java.awt.image.BufferedImage} object.
+     */
     public void createPAIm(final BufferedImage bi) {
 
         final Graphics2D g2 = (Graphics2D) bi.getGraphics();
@@ -150,20 +162,28 @@ public class TabbedPanel extends JPanel implements ActionListener {
         g2.dispose();
     }
 
+    /**
+     * <p>getContent.</p>
+     *
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public BufferedImage getContent() {
         return this.paIm;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Dimension getMaximumSize() {
         return super.getMaximumSize();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Dimension getPreferredSize() {
         return super.getPreferredSize();
     }
 
+    /** {@inheritDoc} */
     @Override
     protected void paintComponent(final Graphics g) {
 

@@ -35,8 +35,10 @@ import java.util.UUID;
 import ucar.ma2.Array;
 
 /**
+ * <p>IFeatureVector interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IFeatureVector extends Serializable {
 
@@ -48,9 +50,9 @@ public interface IFeatureVector extends Serializable {
      *
      * @param name the name of the feature to retrieve
      * @return the array of the requested feature
-     * @throws ResourceNotAvailableException if a resource with the given name
+     * @throws cross.exception.ResourceNotAvailableException if a resource with the given name
      * is available but has not been initialized
-     * @throws IllegalArgumentException if a resource with the given name is
+     * @throws java.lang.IllegalArgumentException if a resource with the given name is
      * unknown to this feature vector
      */
     @NoFeature

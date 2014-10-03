@@ -31,9 +31,17 @@ package org.systemsbiology.jrap.staxnxt;
  * A demo program which uses the MSXMLParser to read in scans from a file you
  * specify on the command line.
  *
+ * @author hoffmann
+ * @version $Id: $Id
+ * @since 1.3.2
  */
 public class TestParser {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param asArg an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] asArg) {
         Scan myScan = null;
         ScanHeader myHeader = null;

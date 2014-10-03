@@ -65,6 +65,7 @@ import ucar.ma2.Index;
  * Default visualization pipeline command.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -106,9 +107,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
     private String visualizerClass = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer";
     private IVisualization visualizer;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
@@ -264,9 +263,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
         return t;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.warpPathi = cfg.getString("var.warp_path_i", "warp_path_i");
@@ -338,9 +335,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Creates an image containing both chromatograms in different"
@@ -366,9 +361,7 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
         return scanlines;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

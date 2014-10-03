@@ -1,3 +1,4 @@
+
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
@@ -16,6 +17,10 @@
  * arising in any way out of the use of this software, even * * if advised of
  * the possibility of such damage. * * *
  * *****************************************************************************
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 package org.systemsbiology.jrap.staxnxt;
 
@@ -29,7 +34,6 @@ import java.util.zip.Inflater;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 public class ScanAndHeaderParser {
 
     public ScanHeader tmpScanHeader;
@@ -39,22 +43,45 @@ public class ScanAndHeaderParser {
 
     boolean isScan = false;
 
+    /**
+     * <p>Setter for the field <code>isScan</code>.</p>
+     *
+     * @param isScan a boolean.
+     */
     public void setIsScan(boolean isScan) {
         this.isScan = isScan;
     }
 
+    /**
+     * <p>setFileInputStream.</p>
+     *
+     * @param in a {@link java.io.FileInputStream} object.
+     */
     public void setFileInputStream(FileInputStream in) {
         this.fileIN = in;
     }
 
+    /**
+     * <p>getHeader.</p>
+     *
+     * @return a {@link org.systemsbiology.jrap.staxnxt.ScanHeader} object.
+     */
     public ScanHeader getHeader() {
         return tmpScanHeader;
     }
 
+    /**
+     * <p>getScan.</p>
+     *
+     * @return a {@link org.systemsbiology.jrap.staxnxt.Scan} object.
+     */
     public Scan getScan() {
         return tmpScan;
     }
 
+    /**
+     * <p>parseScanAndHeader.</p>
+     */
     public void parseScanAndHeader() {
         XMLStreamReader xmlSR = null;
         try {
@@ -88,6 +115,12 @@ public class ScanAndHeaderParser {
         }
     }
 
+    /**
+     * <p>parseScanAndHeader.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @throws javax.xml.stream.XMLStreamException if any.
+     */
     public void parseScanAndHeader(XMLStreamReader xmlSR)
             throws XMLStreamException {
         boolean inPrecursorMZ = false;
@@ -182,6 +215,13 @@ public class ScanAndHeaderParser {
         }
     }
 
+    /**
+     * <p>getStringValue.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String getStringValue(XMLStreamReader xmlSR, String name) {
         String value = "";
         try {
@@ -196,6 +236,13 @@ public class ScanAndHeaderParser {
         return value;
     }
 
+    /**
+     * <p>getIntValue.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a int.
+     */
     public int getIntValue(XMLStreamReader xmlSR, String name) {
         int value = -1;
         try {
@@ -210,6 +257,13 @@ public class ScanAndHeaderParser {
         return value;
     }
 
+    /**
+     * <p>getFloatValue.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a float.
+     */
     public float getFloatValue(XMLStreamReader xmlSR, String name) {
         float value = -1f;
         try {
@@ -224,6 +278,11 @@ public class ScanAndHeaderParser {
         return value;
     }
 
+    /**
+     * <p>getPeaks.</p>
+     *
+     * @param peakData a {@link java.lang.String} object.
+     */
     public void getPeaks(String peakData) {
         //support non-zlib
         byte[] peakArray = peakData.getBytes();

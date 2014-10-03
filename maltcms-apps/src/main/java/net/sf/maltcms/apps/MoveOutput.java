@@ -33,9 +33,15 @@ package net.sf.maltcms.apps;
  * input location is specified with --in.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class MoveOutput {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         //TODO define cli parameters
         //-check for given workflow.xml file (--from)

@@ -38,6 +38,7 @@ import maltcms.datastructures.ms.Metabolite;
  * Dataholder for all important information about a peak.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public class Peak2D extends Peak1D implements Serializable {
 
@@ -55,8 +56,6 @@ public class Peak2D extends Peak1D implements Serializable {
 
     /**
      * Default constructor.
-     *
-     * @param pa peak area
      */
     public Peak2D() {
         super();
@@ -87,9 +86,9 @@ public class Peak2D extends Peak1D implements Serializable {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return name
+     * Getter.
      */
     @Override
     public String getName() {
@@ -103,7 +102,7 @@ public class Peak2D extends Peak1D implements Serializable {
     /**
      * Getter.
      *
-     * @return list of score an {@link IMetabolite}.
+     * @return list of score an {@link maltcms.datastructures.ms.IMetabolite}.
      */
     public List<Tuple2D<Double, IMetabolite>> getNames() {
         return this.identification;
@@ -161,7 +160,7 @@ public class Peak2D extends Peak1D implements Serializable {
     /**
      * Setter.
      *
-     * @param
+     * @param pa a {@link maltcms.datastructures.peak.PeakArea2D} object.
      */
     public void setPeakArea(final PeakArea2D pa) {
         this.peakArea = pa;
@@ -188,7 +187,7 @@ public class Peak2D extends Peak1D implements Serializable {
     /**
      * Setter.
      *
-     * @param l list of score an {@link IMetabolite}.
+     * @param l list of score an {@link maltcms.datastructures.ms.IMetabolite}.
      */
     public void setNames(final List<Tuple2D<Double, IMetabolite>> l) {
         this.identification = l;
@@ -212,23 +211,44 @@ public class Peak2D extends Peak1D implements Serializable {
         this.secondRetTime = nSecondRetTime;
     }
 
+    /**
+     * <p>getFirstScanIndex.</p>
+     *
+     * @return a int.
+     */
     public int getFirstScanIndex() {
         return this.peakArea.getSeedPoint().x;
     }
 
+    /**
+     * <p>getSecondScanIndex.</p>
+     *
+     * @return a int.
+     */
     public int getSecondScanIndex() {
         return this.peakArea.getSeedPoint().y;
     }
 
+    /**
+     * <p>normalizeTo.</p>
+     *
+     * @param reference a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public void normalizeTo(Peak2D reference) {
         this.reference = reference;
         this.peakArea.normalizeTo(reference);
     }
 
+    /**
+     * <p>Getter for the field <code>reference</code>.</p>
+     *
+     * @return a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public Peak2D getReference() {
         return this.reference;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getArea() {
         if (this.peakArea == null) {
@@ -237,12 +257,18 @@ public class Peak2D extends Peak1D implements Serializable {
         return this.peakArea.getAreaIntensity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setArea(double d) {
         throw new UnsupportedOperationException(
                 "Not supported in Peak2D. Please use the PeakArea Object to do this.");
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         Peak2D p = new Peak2D();
         p.setApexIndex(50);

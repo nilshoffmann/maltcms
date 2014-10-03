@@ -61,6 +61,7 @@ import ucar.ma2.Index;
  * function.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -94,9 +95,7 @@ public class GradientVisualizer extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean absolut = false;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ColorRampReader crr = new ColorRampReader();
@@ -181,9 +180,7 @@ public class GradientVisualizer extends AFragmentCommand {
         return t;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
@@ -200,17 +197,13 @@ public class GradientVisualizer extends AFragmentCommand {
         this.format = cfg.getString("maltcms.ui.charts.PlotRunner.filetype", "png");
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Will visualize the distance gradient in y direction for all modulations.";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

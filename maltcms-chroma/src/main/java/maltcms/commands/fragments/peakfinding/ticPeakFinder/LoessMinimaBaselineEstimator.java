@@ -42,6 +42,7 @@ import org.openide.util.lookup.ServiceProvider;
  * fit a Loess polynomial spline function.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -57,6 +58,7 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
     @Configurable
     private int minimaWindow = 100;
     
+    /** {@inheritDoc} */
     @Override
     public PolynomialSplineFunction findBaseline(double[] xValues, double[] yValues) {
         final ArrayList<Integer> ts = new ArrayList<>();
@@ -92,6 +94,7 @@ public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
         }
     }
     
+    /** {@inheritDoc} */
     @Override
     public LoessMinimaBaselineEstimator copy() {
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();

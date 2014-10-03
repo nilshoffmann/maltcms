@@ -37,6 +37,12 @@ import java.util.concurrent.Callable;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+/**
+ * <p>QueryCallable class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class QueryCallable<T> implements Callable<ObjectSet<T>> {
 
     protected Predicate<T> llap;
@@ -45,6 +51,12 @@ public class QueryCallable<T> implements Callable<ObjectSet<T>> {
     protected boolean done = false;
     protected ObjectContainer oc = null;
 
+    /**
+     * <p>Constructor for QueryCallable.</p>
+     *
+     * @param location a {@link java.lang.String} object.
+     * @param ap a {@link com.db4o.query.Predicate} object.
+     */
     public QueryCallable(String location, Predicate<T> ap) {
         lloc = location;
         this.log.debug("QueryCallable for {}", location);
@@ -55,6 +67,7 @@ public class QueryCallable<T> implements Callable<ObjectSet<T>> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public ObjectSet<T> call() throws Exception {
         if (new File(this.lloc).exists()) {
@@ -85,6 +98,9 @@ public class QueryCallable<T> implements Callable<ObjectSet<T>> {
         // }
     }
 
+    /**
+     * <p>terminate.</p>
+     */
     public void terminate() {
         if (this.oc != null) {
             this.log.debug("Closing DB connection!");

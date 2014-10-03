@@ -38,38 +38,83 @@ import java.util.Set;
 
 import maltcms.datastructures.ridge.Ridge;
 
+/**
+ * <p>Rank class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
 
     private final HashMap<String, Double> featureToRank = new LinkedHashMap<>();
     private final T t;
 
+    /**
+     * <p>Constructor for Rank.</p>
+     *
+     * @param t a T object.
+     */
     public Rank(T t) {
         this.t = t;
         //addRank("cwtResponse",t.getRidgePoints().get(0).getSecond());
     }
 
+    /**
+     * <p>getRidge.</p>
+     *
+     * @return a T object.
+     */
     public T getRidge() {
         return this.t;
     }
 
+    /**
+     * <p>addRank.</p>
+     *
+     * @param feature a {@link java.lang.String} object.
+     * @param rank a double.
+     */
     public void addRank(String feature, double rank) {
         featureToRank.put(feature, rank);
     }
 
+    /**
+     * <p>getRank.</p>
+     *
+     * @param feature a {@link java.lang.String} object.
+     * @return a {@link java.lang.Double} object.
+     */
     public Double getRank(String feature) {
         return featureToRank.get(feature);
     }
 
+    /**
+     * <p>getFeatures.</p>
+     *
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getFeatures() {
         return featureToRank.keySet();
     }
 
+    /**
+     * <p>getCommonFeatures.</p>
+     *
+     * @param r a {@link maltcms.datastructures.rank.Rank} object.
+     * @return a {@link java.util.Set} object.
+     */
     public Set<String> getCommonFeatures(Rank<? extends T> r) {
         HashSet<String> hs = new HashSet<>(featureToRank.keySet());
         hs.retainAll(r.getFeatures());
         return hs;
     }
 
+    /**
+     * <p>getFeatureRanks.</p>
+     *
+     * @param r a {@link maltcms.datastructures.rank.Rank} object.
+     * @return an array of double.
+     */
     public double[] getFeatureRanks(Rank<? extends T> r) {
         Set<String> features = getCommonFeatures(r);
         double[] vals = new double[2];
@@ -80,6 +125,13 @@ public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
         return vals;
     }
 
+    /**
+     * <p>compareRanks.</p>
+     *
+     * @param feature a {@link java.lang.String} object.
+     * @param r a {@link maltcms.datastructures.rank.Rank} object.
+     * @return a int.
+     */
     public int compareRanks(String feature, Rank<? extends T> r) {
         double[] vals = new double[2];
         Set<String> features = getCommonFeatures(r);
@@ -91,6 +143,7 @@ public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
         return Double.compare(vals[0], vals[1]);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -100,6 +153,7 @@ public class Rank<T extends Ridge> implements Comparable<Rank<? extends T>> {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(Rank<? extends T> o) {
         List<String> keys = new LinkedList<>(featureToRank.keySet());

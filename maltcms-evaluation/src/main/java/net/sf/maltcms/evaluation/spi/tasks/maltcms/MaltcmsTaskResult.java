@@ -41,8 +41,10 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
 /**
+ * <p>MaltcmsTaskResult class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class MaltcmsTaskResult extends DefaultTaskResult {
@@ -53,6 +55,11 @@ public class MaltcmsTaskResult extends DefaultTaskResult {
     private static final long serialVersionUID = -4395347427746465402L;
     private final File workflow;
 
+    /**
+     * <p>Constructor for MaltcmsTaskResult.</p>
+     *
+     * @param outputDirectory a {@link java.io.File} object.
+     */
     public MaltcmsTaskResult(File outputDirectory) {
         super();
         workflow = new File(outputDirectory, "workflow.xml");

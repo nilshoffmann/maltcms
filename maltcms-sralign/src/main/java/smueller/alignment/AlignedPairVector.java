@@ -30,7 +30,10 @@ package smueller.alignment;
 // Speichert alignierte Paare und deren Position, zusammen bilden die Objekte in
 // einem OAV ein Alignment
 /**
+ * <p>AlignedPairVector class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class AlignedPairVector implements Cloneable {
 
@@ -43,25 +46,27 @@ public class AlignedPairVector implements Cloneable {
     private boolean done;
 
     /**
-     *
+     * <p>Constructor for AlignedPairVector.</p>
      */
     public AlignedPairVector() {
     }
 
     /**
+     * <p>Constructor for AlignedPairVector.</p>
      *
-     * @param done1
+     * @param done1 a boolean.
      */
     public AlignedPairVector(final boolean done1) {
         this.done = done1;
     }
 
     /**
+     * <p>Constructor for AlignedPairVector.</p>
      *
-     * @param a1
-     * @param b1
-     * @param c1
-     * @param d1
+     * @param a1 a char.
+     * @param b1 a char.
+     * @param c1 a int.
+     * @param d1 a int.
      */
     public AlignedPairVector(final char a1, final char b1, final int c1,
             final int d1) {
@@ -72,19 +77,17 @@ public class AlignedPairVector implements Cloneable {
     }
 
     /**
+     * <p>Constructor for AlignedPairVector.</p>
      *
-     * @param c1
-     * @param d1
+     * @param c1 a int.
+     * @param d1 a int.
      */
     public AlignedPairVector(final int c1, final int d1) {
         this.c = c1;
         this.d = d1;
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public Object clone() {
         try {
@@ -97,112 +100,126 @@ public class AlignedPairVector implements Cloneable {
     }
 
     /**
+     * <p>Getter for the field <code>a</code>.</p>
      *
-     * @return
+     * @return a char.
      */
     public char getA() {
         return this.a;
     }
 
     /**
+     * <p>Getter for the field <code>b</code>.</p>
      *
-     * @return
+     * @return a char.
      */
     public char getB() {
         return this.b;
     }
 
     /**
+     * <p>Getter for the field <code>c</code>.</p>
      *
-     * @return
+     * @return a int.
      */
     public int getC() {
         return this.c;
     }
 
     /**
+     * <p>Getter for the field <code>d</code>.</p>
      *
-     * @return
+     * @return a int.
      */
     public int getD() {
         return this.d;
     }
 
     /**
+     * <p>Getter for the field <code>e</code>.</p>
      *
-     * @return
+     * @return a int.
      */
     public int getE() {
         return this.e;
     }
 
     /**
+     * <p>Getter for the field <code>f</code>.</p>
      *
-     * @return
+     * @return a int.
      */
     public int getF() {
         return this.f;
     }
 
     /**
+     * <p>isDone.</p>
      *
-     * @return
+     * @return a boolean.
      */
     public boolean isDone() {
         return this.done;
     }
 
     /**
+     * <p>Setter for the field <code>a</code>.</p>
      *
-     * @param a1
+     * @param a1 a char.
      */
     public void setA(final char a1) {
         this.a = a1;
     }
 
     /**
+     * <p>Setter for the field <code>b</code>.</p>
      *
-     * @param b1
+     * @param b1 a char.
      */
     public void setB(final char b1) {
         this.b = b1;
     }
 
     /**
+     * <p>Setter for the field <code>c</code>.</p>
      *
-     * @param c1
+     * @param c1 a int.
      */
     public void setC(final int c1) {
         this.c = c1;
     }
 
     /**
+     * <p>Setter for the field <code>d</code>.</p>
      *
-     * @param d1
+     * @param d1 a int.
      */
     public void setD(final int d1) {
         this.d = d1;
     }
 
     /**
+     * <p>Setter for the field <code>done</code>.</p>
      *
-     * @param done1
+     * @param done1 a boolean.
      */
     public void setDone(final boolean done1) {
         this.done = done1;
     }
 
     /**
+     * <p>Setter for the field <code>e</code>.</p>
      *
-     * @param e1
+     * @param e1 a int.
      */
     public void setE(final int e1) {
         this.e = e1;
     }
 
     /**
+     * <p>Setter for the field <code>f</code>.</p>
      *
-     * @param f1
+     * @param f1 a int.
      */
     public void setF(final int f1) {
         this.f = f1;

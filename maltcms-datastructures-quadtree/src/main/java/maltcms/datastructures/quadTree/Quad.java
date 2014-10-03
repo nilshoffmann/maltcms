@@ -28,9 +28,10 @@
 package maltcms.datastructures.quadTree;
 
 /**
+ * <p>Quad class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public enum Quad {
 

@@ -59,7 +59,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "supDescType", propOrder = {"supDataDesc", "supSourceFile"})
@@ -73,6 +74,7 @@ public class SupDescType implements Serializable {
     /**
      * Gets the value of the supDataArrayRef property.
      *
+     * @return a int.
      */
     public int getSupDataArrayRef() {
         return this.supDataArrayRef;
@@ -81,8 +83,7 @@ public class SupDescType implements Serializable {
     /**
      * Gets the value of the supDataDesc property.
      *
-     * @return possible object is {@link DescriptionType }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.DescriptionType}
      */
     public DescriptionType getSupDataDesc() {
         return this.supDataDesc;
@@ -107,9 +108,9 @@ public class SupDescType implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link SourceFileType }
+     * {@link maltcms.io.xml.mzData.SourceFileType}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<SourceFileType> getSupSourceFile() {
         if (this.supSourceFile == null) {
@@ -121,6 +122,7 @@ public class SupDescType implements Serializable {
     /**
      * Sets the value of the supDataArrayRef property.
      *
+     * @param value a int.
      */
     public void setSupDataArrayRef(final int value) {
         this.supDataArrayRef = value;
@@ -129,8 +131,7 @@ public class SupDescType implements Serializable {
     /**
      * Sets the value of the supDataDesc property.
      *
-     * @param value allowed object is {@link DescriptionType }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.DescriptionType}
      */
     public void setSupDataDesc(final DescriptionType value) {
         this.supDataDesc = value;

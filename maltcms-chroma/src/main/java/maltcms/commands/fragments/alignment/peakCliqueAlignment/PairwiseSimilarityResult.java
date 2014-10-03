@@ -31,8 +31,11 @@ import java.io.Serializable;
 import lombok.experimental.Value;
 
 /**
+ * <p>PairwiseSimilarityResult class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Value
 public class PairwiseSimilarityResult implements Serializable {

@@ -44,9 +44,11 @@ import org.jfree.data.statistics.BoxAndWhiskerCalculator;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
 
 /**
+ * <p>Clique class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 public class Clique<T extends IBipacePeak> {
@@ -61,14 +63,30 @@ public class Clique<T extends IBipacePeak> {
     private int bbhErrors = 0;
     private int bidiHits = 0;
 
+    /**
+     * <p>Constructor for Clique.</p>
+     */
     public Clique() {
         this.id = ++CLIQUEID;
     }
 
+    /**
+     * <p>getID.</p>
+     *
+     * @return a long.
+     */
     public long getID() {
         return this.id;
     }
 
+    /**
+     * <p>addPeak.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param p a T object.
+     * @param force a boolean.
+     * @return a boolean.
+     */
     public boolean addPeak(LongObjectMap<PeakEdge> edgeMap, T p, boolean force) {
         if (force) {
             if (clique.containsKey(p.getAssociationId())) {
@@ -86,6 +104,11 @@ public class Clique<T extends IBipacePeak> {
         }
     }
 
+    /**
+     * <p>size.</p>
+     *
+     * @return a int.
+     */
     public int size() {
         return clique.size();
     }
@@ -96,14 +119,23 @@ public class Clique<T extends IBipacePeak> {
      * clique, or if it has been successfully added, due to satisfaction of all
      * required criteria.
      *
-     * @param p
-     * @return
-     * @throws IllegalArgumentException
+     * @param p a T object.
+     * @throws java.lang.IllegalArgumentException if any.
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @return a boolean.
      */
     public boolean addPeak(LongObjectMap<PeakEdge> edgeMap, T p) throws IllegalArgumentException {
         return addPeak2(edgeMap, p);
     }
 
+    /**
+     * <p>addPeak2.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param p a T object.
+     * @return a boolean.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     public boolean addPeak2(LongObjectMap<PeakEdge> edgeMap, T p) throws IllegalArgumentException {
         if (clique.containsKey(p.getAssociationId())) {
             T q = clique.get(p.getAssociationId());
@@ -265,6 +297,13 @@ public class Clique<T extends IBipacePeak> {
         return bidiHits;
     }
 
+    /**
+     * <p>removePeak.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param p a T object.
+     * @return a boolean.
+     */
     public boolean removePeak(LongObjectMap<PeakEdge> edgeMap, T p) {
         if (clique.containsKey(p.getAssociationId())) {
             if (clique.get(p.getAssociationId()).equals(p)) {
@@ -284,6 +323,9 @@ public class Clique<T extends IBipacePeak> {
         return false;
     }
 
+    /**
+     * <p>clear.</p>
+     */
     public void clear() {
         cliqueMean = 0;
         cliqueVar = 0;
@@ -292,18 +334,39 @@ public class Clique<T extends IBipacePeak> {
         bidiHits = 0;
     }
 
+    /**
+     * <p>getBBHs.</p>
+     *
+     * @return a int.
+     */
     public int getBBHs() {
         return this.bidiHits;
     }
 
+    /**
+     * <p>getExpectedBBHs.</p>
+     *
+     * @return a int.
+     */
     public int getExpectedBBHs() {
         return getExpectedBBHs(this.clique.size());
     }
 
+    /**
+     * <p>getExpectedBBHs.</p>
+     *
+     * @param groupSize a int.
+     * @return a int.
+     */
     public int getExpectedBBHs(int groupSize) {
         return (int) Math.ceil((groupSize * (groupSize - 1)) / 2.0d);
     }
 
+    /**
+     * <p>createRTBoxAndWhisker.</p>
+     *
+     * @return a {@link org.jfree.data.statistics.BoxAndWhiskerItem} object.
+     */
     public BoxAndWhiskerItem createRTBoxAndWhisker() {
         List<Double> l = new ArrayList<>();
         for (int f : this.clique.keys().toArray()) {
@@ -313,6 +376,11 @@ public class Clique<T extends IBipacePeak> {
         return BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(l);
     }
 
+    /**
+     * <p>createApexTicBoxAndWhisker.</p>
+     *
+     * @return a {@link org.jfree.data.statistics.BoxAndWhiskerItem} object.
+     */
     public BoxAndWhiskerItem createApexTicBoxAndWhisker() {
         List<Double> l = new ArrayList<>();
         for (int f : this.clique.keys().toArray()) {
@@ -346,11 +414,23 @@ public class Clique<T extends IBipacePeak> {
         this.centroid = peaks[mindistIdx];
     }
 
+    /**
+     * <p>getRTDistanceToCentroid.</p>
+     *
+     * @param p a {@link maltcms.datastructures.peak.IPeak} object.
+     * @return a double.
+     */
     public double getRTDistanceToCentroid(IPeak p) {
         double mean = getCliqueRTMean();
         return Math.pow(mean - p.getScanAcquisitionTime(), 2);
     }
 
+    /**
+     * <p>getRatioOfRTDistanceToCentroidAndCliqueVariance.</p>
+     *
+     * @param p a {@link maltcms.datastructures.peak.IPeak} object.
+     * @return a double.
+     */
     public double getRatioOfRTDistanceToCentroidAndCliqueVariance(IPeak p) {
         double d = getRTDistanceToCentroid(p);
         return d / getCliqueRTVariance();
@@ -404,18 +484,34 @@ public class Clique<T extends IBipacePeak> {
 //				var, mean);
     }
 
+    /**
+     * <p>getCliqueRTVariance.</p>
+     *
+     * @return a double.
+     */
     public double getCliqueRTVariance() {
         return this.cliqueVar;
     }
 
+    /**
+     * <p>getCliqueRTMean.</p>
+     *
+     * @return a double.
+     */
     public double getCliqueRTMean() {
         return this.cliqueMean;
     }
 
+    /**
+     * <p>getCliqueCentroid.</p>
+     *
+     * @return a {@link maltcms.datastructures.peak.IPeak} object.
+     */
     public IPeak getCliqueCentroid() {
         return this.centroid;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -437,6 +533,11 @@ public class Clique<T extends IBipacePeak> {
         return sb.toString();
     }
 
+    /**
+     * <p>getPeakList.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<T> getPeakList() {
         List<T> peaks = Arrays.asList(this.clique.values().toArray(IBipacePeak.class));
         Collections.sort(peaks, new Comparator<T>() {
@@ -448,10 +549,19 @@ public class Clique<T extends IBipacePeak> {
         return peaks;
     }
 
+    /**
+     * <p>getSimilarityForPeaks.</p>
+     *
+     * @param a a int.
+     * @param b a int.
+     * @param peakEdgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @return a double.
+     */
     public double getSimilarityForPeaks(int a, int b, LongObjectMap<PeakEdge> peakEdgeMap) {
         return this.clique.get(a).getSimilarity(peakEdgeMap, this.clique.get(b));
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -459,6 +569,7 @@ public class Clique<T extends IBipacePeak> {
         return hash;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -474,22 +585,47 @@ public class Clique<T extends IBipacePeak> {
         return true;
     }
 
+    /**
+     * <p>Getter for the field <code>cliqueMean</code>.</p>
+     *
+     * @return a double.
+     */
     public double getCliqueMean() {
         return cliqueMean;
     }
 
+    /**
+     * <p>Getter for the field <code>cliqueVar</code>.</p>
+     *
+     * @return a double.
+     */
     public double getCliqueVar() {
         return cliqueVar;
     }
 
+    /**
+     * <p>Getter for the field <code>maxBBHErrors</code>.</p>
+     *
+     * @return a int.
+     */
     public int getMaxBBHErrors() {
         return maxBBHErrors;
     }
 
+    /**
+     * <p>Setter for the field <code>maxBBHErrors</code>.</p>
+     *
+     * @param maxBBHErrors a int.
+     */
     public void setMaxBBHErrors(int maxBBHErrors) {
         this.maxBBHErrors = maxBBHErrors;
     }
 
+    /**
+     * <p>Setter for the field <code>minBbhFraction</code>.</p>
+     *
+     * @param fraction a double.
+     */
     public void setMinBbhFraction(double fraction) {
         if (fraction <= 0.0d || fraction > 1.0d) {
             throw new IllegalArgumentException("Value of minBbhFraction must be in the left open interval (0,1] (zero exclusive, one inclusive). Was: " + fraction);
@@ -497,6 +633,11 @@ public class Clique<T extends IBipacePeak> {
         this.minBbhFraction = fraction;
     }
 
+    /**
+     * <p>Getter for the field <code>minBbhFraction</code>.</p>
+     *
+     * @return a double.
+     */
     public double getMinBbhFraction() {
         return this.minBbhFraction;
     }

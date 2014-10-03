@@ -31,19 +31,29 @@ import cross.datastructures.collections.CachedReadWriteList;
 import java.util.List;
 
 /**
+ * <p>CachedSpectrumList class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public class CachedSpectrumList extends SpectrumList {
 
     private final String name;
     private final int cacheSize;
 
+    /**
+     * <p>Constructor for CachedSpectrumList.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param cacheSize a int.
+     */
     public CachedSpectrumList(String name, int cacheSize) {
         this.name = name;
         this.cacheSize = cacheSize;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Spectrum> getSpectrum() {
         if (spectrum == null) {

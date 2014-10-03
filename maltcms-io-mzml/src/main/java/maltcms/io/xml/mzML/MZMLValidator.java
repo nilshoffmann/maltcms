@@ -42,6 +42,8 @@ import org.xml.sax.SAXException;
  * Validates a given mzML file against the indexed or plain mzML 1.1.0 schema.
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public class MZMLValidator {
 

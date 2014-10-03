@@ -28,36 +28,64 @@
 package net.sf.maltcms.evaluation.spi.xcalibur;
 
 /**
+ * <p>Creator class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Creator {
 
     private String name;
     private String creatorVersion;
 
+    /**
+     * <p>Constructor for Creator.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param creatorVersion a {@link java.lang.String} object.
+     */
     public Creator(String name, String creatorVersion) {
         this.name = name;
         this.creatorVersion = creatorVersion;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>creatorVersion</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getCreatorVersion() {
         return creatorVersion;
     }
 
+    /**
+     * <p>Setter for the field <code>creatorVersion</code>.</p>
+     *
+     * @param creatorVersion a {@link java.lang.String} object.
+     */
     public void setCreatorVersion(String creatorVersion) {
         this.creatorVersion = creatorVersion;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

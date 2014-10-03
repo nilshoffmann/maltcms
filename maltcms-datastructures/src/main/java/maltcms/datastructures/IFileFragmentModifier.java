@@ -31,10 +31,17 @@ import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 
 /**
- * @author Nils Hoffmann
+ * <p>IFileFragmentModifier interface.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 public interface IFileFragmentModifier extends IConfigurable {
 
+    /**
+     * <p>modify.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public void modify(IFileFragment iff);
 }

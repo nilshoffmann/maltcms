@@ -39,6 +39,12 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.peak.Peak2D;
 
 @Slf4j
+/**
+ * <p>Peak2DClique class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @Data
 public class Peak2DClique {
 
@@ -46,17 +52,30 @@ public class Peak2DClique {
     private Map<String, Double> ratios;
     private String id;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
+    /**
+     * <p>Constructor for Peak2DClique.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public Peak2DClique(String id) {
         this.id = id;
         this.peaks = new HashMap<>();
         this.ratios = new HashMap<>();
     }
 
+    /**
+     * <p>Constructor for Peak2DClique.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     * @param f a {@link java.util.Collection} object.
+     * @param peaks a {@link java.util.List} object.
+     */
     public Peak2DClique(String id, Collection<IFileFragment> f,
             List<Peak2D> peaks) {
         this(id);
@@ -67,14 +86,31 @@ public class Peak2DClique {
         }
     }
 
+    /**
+     * <p>add.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param peak a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public void add(IFileFragment ff, Peak2D peak) {
         this.peaks.put(ff, peak);
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public Peak2D get(IFileFragment ff) {
         return peaks.get(ff);
     }
 
+    /**
+     * <p>getAll.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak2D> getAll() {
         return new ArrayList<>(peaks.values());
         // final List<Peak2D> ret = new ArrayList<Peak2D>();
@@ -84,10 +120,24 @@ public class Peak2DClique {
         // return ret;
     }
 
+    /**
+     * <p>addRatio.</p>
+     *
+     * @param class1 a {@link java.lang.String} object.
+     * @param class2 a {@link java.lang.String} object.
+     * @param ratio a {@link java.lang.Double} object.
+     */
     public void addRatio(String class1, String class2, Double ratio) {
         this.ratios.put(class1 + "-" + class2, ratio);
     }
 
+    /**
+     * <p>getRatio.</p>
+     *
+     * @param class1 a {@link java.lang.String} object.
+     * @param class2 a {@link java.lang.String} object.
+     * @return a double.
+     */
     public double getRatio(String class1, String class2) {
         if (this.ratios.containsKey(class1 + "-" + class2)) {
             return this.ratios.get(class1 + "-" + class2);
@@ -95,6 +145,11 @@ public class Peak2DClique {
         return Double.NEGATIVE_INFINITY;
     }
 
+    /**
+     * <p>getID.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getID() {
         return this.id;
     }

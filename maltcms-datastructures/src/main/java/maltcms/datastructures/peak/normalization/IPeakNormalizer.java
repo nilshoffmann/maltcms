@@ -31,12 +31,26 @@ import cross.ICopyable;
 import cross.datastructures.fragments.IFileFragment;
 
 /**
+ * <p>IPeakNormalizer interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPeakNormalizer extends ICopyable<IPeakNormalizer> {
 
+    /**
+     * <p>getNormalizationFactor.</p>
+     *
+     * @param fragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param peakIndex a int.
+     * @return a double.
+     */
     double getNormalizationFactor(IFileFragment fragment, int peakIndex);
 
+    /**
+     * <p>getNormalizationName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getNormalizationName();
 }

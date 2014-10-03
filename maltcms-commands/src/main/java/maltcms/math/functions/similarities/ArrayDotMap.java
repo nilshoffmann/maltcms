@@ -41,6 +41,7 @@ import ucar.ma2.IndexIterator;
  * the standard deviation.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Data
 //@ServiceProvider(service = IArraySimilarity.class)
@@ -50,9 +51,7 @@ public class ArrayDotMap implements IArraySimilarity {
     private ArrayDouble.D1 std;
     private IArraySimilarity score = new ArrayCos();
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
 
@@ -98,6 +97,7 @@ public class ArrayDotMap implements IArraySimilarity {
         this.std = (ArrayDouble.D1) stdArray.copy();
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayDotMap ac = new ArrayDotMap();

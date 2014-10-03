@@ -31,9 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * <p>TreatmentGroup2D class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class TreatmentGroup2D implements ITreatmentGroup<IChromatogram2D> {
 
@@ -46,6 +47,7 @@ public class TreatmentGroup2D implements ITreatmentGroup<IChromatogram2D> {
      * @seemaltcms.datastructures.ms.ITreatmentGroup#addChromatogram(maltcms.
      * datastructures.ms.IChromatogram)
      */
+    /** {@inheritDoc} */
     @Override
     public void addChromatogram(IChromatogram2D t) {
         this.l.add(t);
@@ -56,6 +58,7 @@ public class TreatmentGroup2D implements ITreatmentGroup<IChromatogram2D> {
      * 
      * @see maltcms.datastructures.ms.ITreatmentGroup#getChromatograms()
      */
+    /** {@inheritDoc} */
     @Override
     public List<IChromatogram2D> getChromatograms() {
         return this.l;
@@ -66,6 +69,7 @@ public class TreatmentGroup2D implements ITreatmentGroup<IChromatogram2D> {
      * 
      * @see maltcms.datastructures.ms.ITreatmentGroup#getName()
      */
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return this.name;
@@ -76,6 +80,7 @@ public class TreatmentGroup2D implements ITreatmentGroup<IChromatogram2D> {
      * 
      * @see maltcms.datastructures.ms.ITreatmentGroup#setName(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public void setName(String name) {
         this.name = name;

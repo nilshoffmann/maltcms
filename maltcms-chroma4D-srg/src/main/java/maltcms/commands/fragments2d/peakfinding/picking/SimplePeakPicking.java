@@ -41,8 +41,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>SimplePeakPicking class.</p>
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -62,6 +64,7 @@ public class SimplePeakPicking implements IPeakPicking {
     @Configurable(value = "1")
     private double stdPerc = 1.0d;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -80,6 +83,7 @@ public class SimplePeakPicking implements IPeakPicking {
         return intensities;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
         this.log.info("Running {} with:", this.getClass().getName());
@@ -91,6 +95,7 @@ public class SimplePeakPicking implements IPeakPicking {
                 this.maxDy, this.stdPerc);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         // FIXME nicht statisch 7
@@ -170,9 +175,7 @@ public class SimplePeakPicking implements IPeakPicking {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.secondScanIndexVar = cfg.getString(this.getClass().getName() 

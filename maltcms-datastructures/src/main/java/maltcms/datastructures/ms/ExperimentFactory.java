@@ -35,15 +35,15 @@ import cross.datastructures.tools.EvalTools;
  * Factory to create Experiments.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class ExperimentFactory {
 
     /**
      * Create an instance of Experiment1D.
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.ms.IExperiment} object.
      */
     public static IExperiment createExperiment(final IFileFragment ff) {
         return ExperimentFactory.createExperiment1D(ff);
@@ -52,8 +52,7 @@ public class ExperimentFactory {
     /**
      * Create an instance of IExperiment1D and initialize with IFileFragment.
      *
-     * @param ff
-     * @param c
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @return null if an Exception was caught, else new instance of IExperiment
      */
     public static IExperiment1D createExperiment1D(final IFileFragment ff) {
@@ -68,8 +67,7 @@ public class ExperimentFactory {
     /**
      * Create an instance of IExperiment2D and initialize with IFileFragment.
      *
-     * @param ff
-     * @param c
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @return null if an Exception was caught, else new instance of IExperiment
      */
     public static IExperiment2D createExperiment2D(final IFileFragment ff) {

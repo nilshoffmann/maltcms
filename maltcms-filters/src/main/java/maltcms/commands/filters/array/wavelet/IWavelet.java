@@ -33,12 +33,24 @@ import java.io.Serializable;
  * Interface for Wavelet implementations.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IWavelet extends Serializable {
 
+    /**
+     * <p>applyMotherWavelet.</p>
+     *
+     * @param t a double.
+     * @param params a double.
+     * @return a double.
+     */
     public abstract double applyMotherWavelet(final double t,
             double... params);
 
+    /**
+     * <p>getAdmissabilityConstant.</p>
+     *
+     * @return a double.
+     */
     public abstract double getAdmissabilityConstant();
 }

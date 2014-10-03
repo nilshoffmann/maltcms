@@ -35,20 +35,52 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 
 /**
+ * <p>ITask interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface ITask<T extends Serializable> extends Callable<T>, Serializable {
 
+    /**
+     * <p>getPostProcessors.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<IPostProcessor> getPostProcessors();
 
+    /**
+     * <p>getAdditionalEnvironment.</p>
+     *
+     * @return a {@link java.util.HashMap} object.
+     */
     public HashMap<String, String> getAdditionalEnvironment();
 
+    /**
+     * <p>getCommandLine.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getCommandLine();
 
+    /**
+     * <p>getWorkingDirectory.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getWorkingDirectory();
 
+    /**
+     * <p>getOutputDirectory.</p>
+     *
+     * @return a {@link java.io.File} object.
+     */
     public File getOutputDirectory();
 
+    /**
+     * <p>getTaskId.</p>
+     *
+     * @return a {@link java.util.UUID} object.
+     */
     public UUID getTaskId();
 }

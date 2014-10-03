@@ -31,14 +31,26 @@ import java.util.Comparator;
 
 import maltcms.datastructures.ridge.Ridge;
 
+/**
+ * <p>RankComparator class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class RankComparator implements Comparator<Rank<Ridge>> {
 
     private final String feature;
 
+    /**
+     * <p>Constructor for RankComparator.</p>
+     *
+     * @param feature a {@link java.lang.String} object.
+     */
     public RankComparator(String feature) {
         this.feature = feature;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compare(Rank<Ridge> o1, Rank<Ridge> o2) {
         double d1 = o1.getRank(this.feature);

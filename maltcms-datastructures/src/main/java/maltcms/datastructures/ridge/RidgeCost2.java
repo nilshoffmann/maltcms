@@ -32,22 +32,23 @@ import java.awt.geom.Point2D;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>RidgeCost2 class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @ServiceProvider(service = IRidgeCost.class)
 public class RidgeCost2 implements IRidgeCost {
 
     /**
+     * {@inheritDoc}
+     *
      * Implements a path integral over the scale space ridge, starting from the
      * initial position x0. Then, for each subsequent scale, the scale space
      * response is squared and divided by (1+(x-x0)^{2}). This has the effect of
      * dampening ridges, which diverge far from the x0 over the scales. However,
      * if a ridge first diverges and then returns back to x0, this effect is
      * cancelled.
-     *
-     * @return
      */
     @Override
     public double getCost(Ridge r) {
@@ -64,6 +65,14 @@ public class RidgeCost2 implements IRidgeCost {
         return ridgePenalty;
     }
 
+    /**
+     * <p>getScoreContribution.</p>
+     *
+     * @param x0 a double.
+     * @param x a double.
+     * @param fx a double.
+     * @return a double.
+     */
     protected double getScoreContribution(double x0, double x, double fx) {
         return Math.pow(fx, 2.0d) / (1.0d + Math.pow(x - x0, 2.0d));
     }

@@ -46,9 +46,10 @@ import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
 /**
- * Will create a {@link XYPlot} bar chart.
+ * Will create a {@link org.jfree.chart.plot.XYPlot} bar chart.
  *
  * @author Mathias Wilhelm
+ * @version $Id: $Id
  */
 public class MassSpectrumPlot extends AChart<XYPlot> {
 
@@ -109,9 +110,7 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
         this.seriesColor.add(nColor);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public XYPlot create() {
         final XYSeriesCollection collection = new XYSeriesCollection();
@@ -197,17 +196,13 @@ public class MassSpectrumPlot extends AChart<XYPlot> {
         return plot;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

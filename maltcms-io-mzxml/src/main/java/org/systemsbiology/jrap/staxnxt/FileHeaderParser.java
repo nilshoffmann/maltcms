@@ -1,3 +1,4 @@
+
 /**
  * *****************************************************************************
  * --------------------------------------------------------------------------- *
@@ -15,6 +16,10 @@
  * (including negligence or otherwise) arising in any way out of the use of this
  * software, even if advised of the possibility of such damage. * * *
  * *********************************************************************************
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 package org.systemsbiology.jrap.staxnxt;
 
@@ -28,7 +33,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 public class FileHeaderParser {
 
     String inputMZXMLfile;
@@ -51,10 +55,18 @@ public class FileHeaderParser {
         }
     }
 
+    /**
+     * <p>Getter for the field <code>info</code>.</p>
+     *
+     * @return a {@link org.systemsbiology.jrap.staxnxt.MZXMLFileInfo} object.
+     */
     public MZXMLFileInfo getInfo() {
         return info;
     }
 
+    /**
+     * <p>parseFileHeader.</p>
+     */
     public void parseFileHeader() {
         if (isXML) {
             parseXMLFileHeader();
@@ -63,6 +75,12 @@ public class FileHeaderParser {
         }
     }
 
+    /**
+     * <p>parseFileHeader.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @throws javax.xml.stream.XMLStreamException if any.
+     */
     public void parseFileHeader(XMLStreamReader xmlSR) throws XMLStreamException {
         if (isXML) {
             parseXMLFileHeader(xmlSR);

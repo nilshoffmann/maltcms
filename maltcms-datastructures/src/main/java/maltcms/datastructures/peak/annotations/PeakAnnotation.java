@@ -32,8 +32,10 @@ import lombok.Data;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**
+ * <p>PeakAnnotation class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class PeakAnnotation implements Serializable{

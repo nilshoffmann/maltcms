@@ -51,6 +51,7 @@ import ucar.ma2.Array;
  * lines.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -96,9 +97,7 @@ public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
     @Configurable(value = "filter")
     private boolean filter = true;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -127,9 +126,7 @@ public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
 //                true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {

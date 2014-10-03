@@ -35,8 +35,7 @@ import maltcms.datastructures.array.IFeatureVector;
  * and a class label.
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Entity<T extends IFeatureVector> implements Serializable {
 
@@ -44,24 +43,47 @@ public class Entity<T extends IFeatureVector> implements Serializable {
     private final Category c;
     private final T featureVector;
 
+    /**
+     * <p>Constructor for Entity.</p>
+     *
+     * @param featureVector a T object.
+     * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @param classLabel a {@link java.lang.String} object.
+     */
     public Entity(T featureVector, Category c, String classLabel) {
         this.featureVector = featureVector;
         this.c = c;
         this.classLabel = classLabel;
     }
 
+    /**
+     * <p>Getter for the field <code>classLabel</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getClassLabel() {
         return classLabel;
     }
 
+    /**
+     * <p>getCategory.</p>
+     *
+     * @return a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     */
     public Category getCategory() {
         return c;
     }
 
+    /**
+     * <p>Getter for the field <code>featureVector</code>.</p>
+     *
+     * @return a T object.
+     */
     public T getFeatureVector() {
         return featureVector;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

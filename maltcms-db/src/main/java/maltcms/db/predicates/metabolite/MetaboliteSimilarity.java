@@ -52,6 +52,12 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
 @Data
+/**
+ * <p>MetaboliteSimilarity class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @EqualsAndHashCode(callSuper = true)
 public class MetaboliteSimilarity extends Predicate<IMetabolite> {
 
@@ -83,6 +89,14 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
                 }
             });
 
+    /**
+     * <p>Constructor for MetaboliteSimilarity.</p>
+     *
+     * @param scan a {@link maltcms.datastructures.ms.IScan} object.
+     * @param scoreThreshold a double.
+     * @param maxHits a int.
+     * @param normalize a boolean.
+     */
     public MetaboliteSimilarity(IScan scan, double scoreThreshold,
             int maxHits, boolean normalize) {
         this.scan = scan;
@@ -91,6 +105,15 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         this.normalize = normalize;
     }
 
+    /**
+     * <p>Constructor for MetaboliteSimilarity.</p>
+     *
+     * @param masses a {@link ucar.ma2.Array} object.
+     * @param intensities a {@link ucar.ma2.Array} object.
+     * @param scoreThreshold a double.
+     * @param maxHits a int.
+     * @param normalize a boolean.
+     */
     public MetaboliteSimilarity(Array masses, Array intensities,
             double scoreThreshold,
             int maxHits, boolean normalize) {
@@ -99,6 +122,14 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
                 normalize);
     }
 
+    /**
+     * <p>Constructor for MetaboliteSimilarity.</p>
+     *
+     * @param metabolite a {@link maltcms.datastructures.ms.IMetabolite} object.
+     * @param scoreThreshold a double.
+     * @param maxHits a int.
+     * @param normalize a boolean.
+     */
     public MetaboliteSimilarity(IMetabolite metabolite, double scoreThreshold,
             int maxHits, boolean normalize) {
         this(new Scan1D(metabolite.getMassSpectrum().getFirst(), metabolite.
@@ -107,11 +138,25 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
                 normalize);
     }
 
+    /**
+     * <p>Getter for the field <code>matches</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Double, IMetabolite>> getMatches() {
         Collections.sort(this.matches, comparator);
         return this.matches;
     }
 
+    /**
+     * <p>similarity.</p>
+     *
+     * @param massesRef a {@link ucar.ma2.Array} object.
+     * @param intensitiesRef a {@link ucar.ma2.Array} object.
+     * @param massesQuery a {@link ucar.ma2.Array} object.
+     * @param intensitiesQuery a {@link ucar.ma2.Array} object.
+     * @return a double.
+     */
     protected double similarity(Array massesRef, Array intensitiesRef,
             Array massesQuery, Array intensitiesQuery) {
         MinMax mm1 = MAMath.getMinMax(massesRef);
@@ -161,6 +206,7 @@ public class MetaboliteSimilarity extends Predicate<IMetabolite> {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite et) {
         Tuple2D<ArrayDouble.D1, ArrayInt.D1> etMs = et.getMassSpectrum();

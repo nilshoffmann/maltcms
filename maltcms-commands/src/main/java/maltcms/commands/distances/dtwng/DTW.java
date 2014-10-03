@@ -56,8 +56,10 @@ import org.apache.commons.configuration.Configuration;
 import ucar.ma2.ArrayDouble;
 
 /**
- * @author Nils Hoffmann
+ * <p>DTW class.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 public class DTW implements IAlignment, Serializable {
 
@@ -79,6 +81,7 @@ public class DTW implements IAlignment, Serializable {
      * maltcms.experimental.operation.PairwiseFeatureVectorSequenceOperation
      * #apply(java.util.List, java.util.List)
      */
+    /** {@inheritDoc} */
     @Override
     public Double apply(List<IFeatureVector> l1, List<IFeatureVector> l2) {
         final ArrayFactory f = Factory.getInstance().getObjectFactory()
@@ -258,56 +261,67 @@ public class DTW implements IAlignment, Serializable {
         saveImage(name, alignment, l, Color.WHITE);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> getMap() {
         return this.alignmentMap;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getLeftHandSideId() {
         return this.leftHandSideId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getRightHandSideId() {
         return this.rightHandSideId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setLeftHandSideId(String lhsid) {
         this.leftHandSideId = lhsid;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRightHandSideId(String rhsid) {
         this.rightHandSideId = rhsid;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setPairwiseFeatureVectorOperation(TwoFeatureVectorOperation tfvo) {
         this.similarity = tfvo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setConstraints(Area a) {
         this.area = a;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDefaultValue(double d) {
         this.defaultValue = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setOptimizationFunction(IOptimizationFunction iof) {
         this.optimizationFunction = iof;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IOptimizationFunction getOptimizationFunction() {
         return this.optimizationFunction;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TwoFeatureVectorOperation getPairwiseFeatureVectorOperation() {
         return this.similarity;
@@ -320,6 +334,7 @@ public class DTW implements IAlignment, Serializable {
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public void modify(IFileFragment iff) {
         String arrayComparatorVariableName = Factory
@@ -357,15 +372,18 @@ public class DTW implements IAlignment, Serializable {
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public Area getConstraints() {
         return area;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getDefaultValue() {
         return defaultValue;

@@ -65,6 +65,7 @@ import ucar.ma2.ArrayDouble;
  * Does the Peak Integration on basis of the unique masses.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -75,14 +76,13 @@ public class PeakIntegration implements IPeakIntegration {
     @Configurable(name = "plot", value = "false", type = boolean.class)
     private boolean plotIntegration = false;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        this.plotIntegration = cfg.getBoolean(this.getClass().getName()
@@ -112,9 +112,7 @@ public class PeakIntegration implements IPeakIntegration {
         return startEnd;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void integrate(final Peak2D peak, final IFileFragment ff,
             final List<Array> otic, final IWorkflow workflow) {

@@ -42,17 +42,34 @@ import maltcms.datastructures.alignment.AnchorPairSet;
  * Factory for pairwise DTW alignment layout constraints.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class ConstraintFactory {
 
     private static final ConstraintFactory cf = new ConstraintFactory();
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link maltcms.datastructures.constraint.ConstraintFactory} object.
+     */
     public static ConstraintFactory getInstance() {
         return ConstraintFactory.cf;
     }
 
+    /**
+     * <p>calculateLayout.</p>
+     *
+     * @param rows a int.
+     * @param cols a int.
+     * @param neighborhood1 a int.
+     * @param aps a {@link maltcms.datastructures.alignment.AnchorPairSet} object.
+     * @param band a double.
+     * @param rowoverlap a int.
+     * @param coloverlap a int.
+     * @return a {@link java.awt.geom.Area} object.
+     */
     public Area calculateLayout(final int rows, final int cols,
             final int neighborhood1, final AnchorPairSet aps,
             final double band, final int rowoverlap, final int coloverlap) {
@@ -133,6 +150,16 @@ public class ConstraintFactory {
         return bounds;
     }
 
+    /**
+     * <p>createBandConstraint.</p>
+     *
+     * @param x a int.
+     * @param y a int.
+     * @param rows a int.
+     * @param cols a int.
+     * @param r a double.
+     * @return a {@link java.awt.geom.Area} object.
+     */
     public Area createBandConstraint(final int x, final int y, final int rows,
             final int cols, final double r) {
         final double maxdev = Math.max(1, Math.ceil(Math.max(rows, cols) * r));

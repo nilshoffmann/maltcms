@@ -34,8 +34,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
- * @author Nils Hoffmann
+ * <p>ArrayDotLp class.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -45,6 +47,7 @@ public class ArrayDotLp implements IArraySimilarity {
     private final IArraySimilarity dot = new ArrayDot();
     private final IArraySimilarity lp = new ArrayLp();
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         final double dotv = this.dot.apply(t1, t2);
@@ -52,6 +55,7 @@ public class ArrayDotLp implements IArraySimilarity {
         return SimilarityTools.toSimilarity(d) * dotv;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         return new ArrayDotLp();

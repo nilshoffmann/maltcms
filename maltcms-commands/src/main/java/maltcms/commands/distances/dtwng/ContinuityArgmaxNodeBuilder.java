@@ -33,12 +33,23 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * <p>ContinuityArgmaxNodeBuilder class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
 
     // private final double[] penaltyLookupTable;
     private final double scale = 1.0;
     private final int maxlevel;
 
+    /**
+     * <p>Constructor for ContinuityArgmaxNodeBuilder.</p>
+     *
+     * @param levels a int.
+     */
     public ContinuityArgmaxNodeBuilder(int levels) {
         this.maxlevel = levels;
         // // this.scale = scale;
@@ -56,6 +67,7 @@ public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
         return (int) ((v / (max - min)) * scale);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> eval(List<double[]> points, int polyOrder) {
         Tuple2D<double[], double[]> minMax = getMinMax(points);

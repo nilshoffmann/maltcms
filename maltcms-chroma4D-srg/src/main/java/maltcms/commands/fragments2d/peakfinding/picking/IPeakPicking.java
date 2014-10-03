@@ -33,13 +33,30 @@ import java.awt.Point;
 import java.util.List;
 
 /**
+ * <p>IPeakPicking interface.</p>
  *
  * @author Mathias Wilhelm
+ * 
  */
 public interface IPeakPicking extends IConfigurable {
 
+    /**
+     * <p>findPeaks.</p>
+     *
+     * @param ffO a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.List} object.
+     */
     List<Point> findPeaks(IFileFragment ffO);
 
+    /**
+     * <p>findPeaksNear.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param p a {@link java.awt.Point} object.
+     * @param dx a int.
+     * @param dy a int.
+     * @return a {@link java.util.List} object.
+     */
     List<Point> findPeaksNear(IFileFragment ff, Point p, int dx,
             int dy);
 }

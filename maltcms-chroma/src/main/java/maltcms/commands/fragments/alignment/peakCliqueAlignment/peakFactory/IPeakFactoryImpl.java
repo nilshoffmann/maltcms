@@ -31,10 +31,19 @@ import java.io.Serializable;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak;
 
 /**
+ * <p>IPeakFactoryImpl interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPeakFactoryImpl extends Serializable {
 
+    /**
+     * <p>create.</p>
+     *
+     * @param peakIndex a int.
+     * @param scanIndex a int.
+     * @return a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     */
     public IBipacePeak create(int peakIndex, int scanIndex);
 }

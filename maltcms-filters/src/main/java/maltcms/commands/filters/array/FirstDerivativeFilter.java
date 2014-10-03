@@ -36,12 +36,15 @@ import ucar.ma2.IndexIterator;
  * Calculate first derivative on array stored in a new array.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
 public class FirstDerivativeFilter extends AArrayFilter {
 
+    /**
+     * <p>Constructor for FirstDerivativeFilter.</p>
+     */
     public FirstDerivativeFilter() {
         super();
     }
@@ -51,6 +54,7 @@ public class FirstDerivativeFilter extends AArrayFilter {
      *
      * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
      */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
@@ -87,6 +91,7 @@ public class FirstDerivativeFilter extends AArrayFilter {
         return der;
     }
 
+    /** {@inheritDoc} */
     @Override
     public FirstDerivativeFilter copy() {
         return new FirstDerivativeFilter();

@@ -30,21 +30,31 @@ package maltcms.commands.distances.dtwng;
 import java.awt.geom.Area;
 
 /**
+ * <p>AlignmentFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class AlignmentFactory {
 
     /**
      * Returns a new DTW instance, configured by ObjectFactory.
      *
-     * @return
+     * @return a {@link maltcms.commands.distances.dtwng.IAlignment} object.
      */
     public IAlignment getDTWInstance() {
         IAlignment ia = new DTW();
         return ia;
     }
 
+    /**
+     * <p>getDTWInstance.</p>
+     *
+     * @param iof a {@link maltcms.commands.distances.dtwng.IOptimizationFunction} object.
+     * @param tfvo a {@link maltcms.commands.distances.dtwng.TwoFeatureVectorOperation} object.
+     * @param constraints a {@link java.awt.geom.Area} object.
+     * @return a {@link maltcms.commands.distances.dtwng.IAlignment} object.
+     */
     public IAlignment getDTWInstance(IOptimizationFunction iof,
             TwoFeatureVectorOperation tfvo, Area constraints) {
         IAlignment ia = getDTWInstance();

@@ -45,7 +45,7 @@ import ucar.ma2.Array;
  * Writes 1D-variables to csv files, one entry per row.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @Slf4j
@@ -57,6 +57,7 @@ public class VariableDataExporter extends AFragmentCommand {
     @Configurable
     private ArrayList<String> varNames = new ArrayList<>(0);
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final CSVWriter csvw = new CSVWriter();

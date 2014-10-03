@@ -56,7 +56,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "cvParamType")
@@ -74,8 +75,7 @@ public class CvParamType implements Serializable {
     /**
      * Gets the value of the accession property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getAccession() {
         return this.accession;
@@ -84,8 +84,7 @@ public class CvParamType implements Serializable {
     /**
      * Gets the value of the cvLabel property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getCvLabel() {
         return this.cvLabel;
@@ -94,8 +93,7 @@ public class CvParamType implements Serializable {
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getName() {
         return this.name;
@@ -104,8 +102,7 @@ public class CvParamType implements Serializable {
     /**
      * Gets the value of the value property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getValue() {
         return this.value;
@@ -114,8 +111,7 @@ public class CvParamType implements Serializable {
     /**
      * Sets the value of the accession property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setAccession(final String value) {
         this.accession = value;
@@ -124,8 +120,7 @@ public class CvParamType implements Serializable {
     /**
      * Sets the value of the cvLabel property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setCvLabel(final String value) {
         this.cvLabel = value;
@@ -134,8 +129,7 @@ public class CvParamType implements Serializable {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setName(final String value) {
         this.name = value;
@@ -144,8 +138,7 @@ public class CvParamType implements Serializable {
     /**
      * Sets the value of the value property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setValue(final String value) {
         this.value = value;

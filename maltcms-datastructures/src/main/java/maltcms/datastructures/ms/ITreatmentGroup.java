@@ -29,13 +29,39 @@ package maltcms.datastructures.ms;
 
 import java.util.List;
 
+/**
+ * <p>ITreatmentGroup interface.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public interface ITreatmentGroup<T extends IChromatogram> {
 
+    /**
+     * <p>getChromatograms.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<T> getChromatograms();
 
+    /**
+     * <p>addChromatogram.</p>
+     *
+     * @param t a T object.
+     */
     public void addChromatogram(T t);
 
+    /**
+     * <p>setName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void setName(String name);
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName();
 }

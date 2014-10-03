@@ -43,6 +43,7 @@ import org.apache.commons.configuration.Configuration;
  * Will compute a list of bidirectional best hits.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -56,10 +57,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
     private IScalarArraySimilarity similarity;
     private final List<Map<Integer, Boolean>> doneList;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -86,9 +84,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
         this.doneList.add(new HashMap<Integer, Boolean>());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        this.threshold = cfg.getDouble(
@@ -101,12 +97,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
 //                this.distClass, IArrayDoubleComp.class);
     }
 
-    /**
-     *
-     * @param p
-     * @param np
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public double sim(Peak2D p, Peak2D np) {
         double sim = Double.NEGATIVE_INFINITY;
@@ -162,10 +153,9 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return a list of all bidirectional best hits. List contains the indices
-     * of peak in the peaklist.
+     * Getter.
      */
     @Override
     public List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists) {
@@ -242,9 +232,7 @@ public class BidirectionalBestHit implements IBidirectionalBestHit {
         return this.peaklists;
     }
 
-    /**
-     *
-     */
+    /** {@inheritDoc} */
     @Override
     public void clear() {
     }

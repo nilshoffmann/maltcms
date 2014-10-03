@@ -43,7 +43,7 @@ import ucar.ma2.InvalidRangeException;
  * subtraction.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @Slf4j
@@ -55,15 +55,20 @@ public class MedianBaselineFilter extends AArrayFilter {
     private int medianWindow = 0;
     private double snrMinimum = 1.0d;
 
+    /**
+     * <p>Constructor for MedianBaselineFilter.</p>
+     */
     public MedianBaselineFilter() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         return apply(new Array[]{a})[0];
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array[] apply(final Array[] a) {
         Array[] ret = null;
@@ -89,6 +94,7 @@ public class MedianBaselineFilter extends AArrayFilter {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.channels = cfg.getInt(this.getClass().getName() + ".numChannels",
@@ -101,11 +107,14 @@ public class MedianBaselineFilter extends AArrayFilter {
     }
 
     /**
-     * @param scans1
+     * <p>filterChromatogram.</p>
+     *
+     * @param scans1 a int.
+     * @param channels1 a int.
+     * @param a a {@link ucar.ma2.ArrayDouble.D2} object.
      * @param channels1
-     * @param a
-     * @param c
-     * @param median_window1
+     * @param c a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @param median_window1 a int.
      * @return filtered Chromatogram as ArrayDouble.D2
      */
     protected ArrayDouble.D2 filterChromatogram(final int scans1,
@@ -200,6 +209,7 @@ public class MedianBaselineFilter extends AArrayFilter {
         return c;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MedianBaselineFilter copy() {
         MedianBaselineFilter mbf = new MedianBaselineFilter();

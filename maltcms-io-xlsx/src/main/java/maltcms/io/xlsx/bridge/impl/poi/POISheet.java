@@ -34,19 +34,23 @@ import maltcms.io.xlsx.bridge.ISheet;
 import org.apache.poi.ss.usermodel.Sheet;
 
 /**
+ * <p>POISheet class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Data
 public class POISheet implements ISheet {
 
     private final Sheet sheet;
 
+    /** {@inheritDoc} */
     @Override
     public IRow getRow(int i) {
         return new POIRow(sheet.getRow(i));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<IRow> iterator() {
         return new Iterator<IRow>() {

@@ -38,6 +38,7 @@ import ucar.ma2.Array;
  * Provides some methods to do a peak integration.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public interface IPeakIntegration extends IConfigurable {
 

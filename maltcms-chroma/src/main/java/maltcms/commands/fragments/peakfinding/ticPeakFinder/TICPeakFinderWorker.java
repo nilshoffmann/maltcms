@@ -86,8 +86,11 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 
 /**
+ * <p>TICPeakFinderWorker class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Builder
 @Data
@@ -119,6 +122,7 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
 
     private final Properties properties;
 
+    /** {@inheritDoc} */
     @Override
     public TICPeakFinderWorkerResult call() {
         return findPeaks(new FileFragment(inputUri));
@@ -154,6 +158,19 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         Peak1D.append(ff, peakNormalizers, peaks, pprs.getCorrectedTIC(), ticPeakVarName, ticFilteredVarName);
     }
 
+    /**
+     * <p>findPeakAreas.</p>
+     *
+     * @param chromatogram a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param ts a {@link java.util.List} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @param rawTIC a {@link ucar.ma2.Array} object.
+     * @param filteredTIC a {@link ucar.ma2.Array} object.
+     * @param snr an array of double.
+     * @param baseline a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
             final List<Integer> ts, String filename, final Array sat, final Array rawTIC,
             final Array filteredTIC, final double[] snr, final PolynomialSplineFunction baseline) {
@@ -234,10 +251,11 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
     }
 
     /**
+     * <p>findPeakPositions.</p>
      *
-     * @param tic
-     * @param sat
-     * @return
+     * @param tic a {@link ucar.ma2.Array} object.
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet} object.
      */
     public PeakPositionsResultSet findPeakPositions(Array tic, Array sat) {
         EvalTools.notNull(tic, this);
@@ -776,10 +794,11 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
     }
 
     /**
+     * <p>savePeakAnnotations.</p>
      *
-     * @param l
-     * @param iff
-     * @return
+     * @param l a {@link java.util.List} object.
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult} object.
      */
     public WorkflowResult savePeakAnnotations(final List<Peak1D> l,
             final IFileFragment iff) {
@@ -797,16 +816,18 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
     }
 
     /**
+     * <p>visualize.</p>
      *
      * @param f
-     * @param sat
-     * @param intensities
      * @param filteredIntensities
-     * @param snr
-     * @param peaks
-     * @param peakThreshold
-     * @param baselineEstimator
-     * @return
+     * @param sat a {@link ucar.ma2.Array} object.
+     * @param intensities a {@link ucar.ma2.Array} object.
+     * @param filteredIntensities a {@link ucar.ma2.Array} object.
+     * @param snr an array of double.
+     * @param peaks a {@link ucar.ma2.ArrayInt.D1} object.
+     * @param peakThreshold a double.
+     * @param baselineEstimator a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     * @return a {@link java.util.Collection} object.
      */
     public Collection<WorkflowResult> visualize(final IFileFragment f, final Array sat, final Array intensities,
             final Array filteredIntensities,

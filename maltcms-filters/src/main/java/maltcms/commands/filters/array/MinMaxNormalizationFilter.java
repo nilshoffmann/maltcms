@@ -37,7 +37,7 @@ import ucar.ma2.Array;
  * Normalize all values of an array given a normalization string.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -48,16 +48,26 @@ public class MinMaxNormalizationFilter extends AArrayFilter {
     @Configurable
     private double max = 1;
 
+    /**
+     * <p>Constructor for MinMaxNormalizationFilter.</p>
+     */
     public MinMaxNormalizationFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for MinMaxNormalizationFilter.</p>
+     *
+     * @param min a double.
+     * @param max a double.
+     */
     public MinMaxNormalizationFilter(final double min, final double max) {
         this();
         this.min = min;
         this.max = max;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         // final Array[] b = super.apply(a);
@@ -71,11 +81,13 @@ public class MinMaxNormalizationFilter extends AArrayFilter {
         return c;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
     }
 
+    /** {@inheritDoc} */
     @Override
     public MinMaxNormalizationFilter copy() {
         return new MinMaxNormalizationFilter(min, max);

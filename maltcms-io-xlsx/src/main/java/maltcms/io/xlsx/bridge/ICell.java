@@ -28,13 +28,25 @@
 package maltcms.io.xlsx.bridge;
 
 /**
+ * <p>ICell interface.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public interface ICell {
 
+    /**
+     * <p>stringValue.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String stringValue();
 
+    /**
+     * <p>doubleValue.</p>
+     *
+     * @return a double.
+     */
     double doubleValue();
 
 }

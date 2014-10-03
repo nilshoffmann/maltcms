@@ -30,8 +30,10 @@ package maltcms.io.xlsx;
 import cross.io.IDataSource;
 
 /**
+ * <p>IXLSDataSource interface.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public interface IXLSDataSource extends IDataSource {
 

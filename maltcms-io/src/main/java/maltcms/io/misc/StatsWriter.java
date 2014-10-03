@@ -46,7 +46,7 @@ import org.jdom.Element;
  * Writes StatsMap objects to CSV Files.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class StatsWriter implements IWorkflowElement {
@@ -58,6 +58,7 @@ public class StatsWriter implements IWorkflowElement {
      *
      * @see cross.io.misc.IXMLSerializable#appendXML(org.jdom.Element)
      */
+    /** {@inheritDoc} */
     @Override
     public void appendXML(final Element e) {
     }
@@ -67,6 +68,7 @@ public class StatsWriter implements IWorkflowElement {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflow()
      */
+    /** {@inheritDoc} */
     @Override
     public IWorkflow getWorkflow() {
         return this.iwf;
@@ -77,6 +79,7 @@ public class StatsWriter implements IWorkflowElement {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.STATISTICS;
@@ -88,12 +91,18 @@ public class StatsWriter implements IWorkflowElement {
      * @seecross.datastructures.workflow.IWorkflowElement#setWorkflow(cross.
      * datastructures.workflow.IWorkflow)
      */
+    /** {@inheritDoc} */
     @Override
     public void setWorkflow(final IWorkflow iw) {
         this.iwf = iw;
 
     }
 
+    /**
+     * <p>write.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public void write(final IFileFragment ff) {
 
         final StatsMap sm = ff.getStats();
@@ -103,6 +112,11 @@ public class StatsWriter implements IWorkflowElement {
         }
     }
 
+    /**
+     * <p>write.</p>
+     *
+     * @param sm a {@link cross.datastructures.StatsMap} object.
+     */
     public void write(final StatsMap... sm) {
         if (sm != null) {
             log.info("Writing " + sm.length + " statsMaps to file!");

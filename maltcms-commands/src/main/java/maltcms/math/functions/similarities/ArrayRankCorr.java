@@ -40,7 +40,7 @@ import ucar.ma2.Array;
  * Calculates Spearman's rank correlation as similarity between arrays.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @EqualsAndHashCode
@@ -52,10 +52,14 @@ public class ArrayRankCorr implements IArraySimilarity {
     private transient final ICacheDelegate<Array, double[]> cache;
     private final SpearmansCorrelation sc = new SpearmansCorrelation();
 
+    /**
+     * <p>Constructor for ArrayRankCorr.</p>
+     */
     public ArrayRankCorr() {
         cache = SimilarityTools.newValueCache("ArrayCovCache");
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         double[] t1a = null, t2a = null;
@@ -76,6 +80,7 @@ public class ArrayRankCorr implements IArraySimilarity {
         return pcv;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayRankCorr alp = new ArrayRankCorr();
@@ -83,6 +88,7 @@ public class ArrayRankCorr implements IArraySimilarity {
         return alp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

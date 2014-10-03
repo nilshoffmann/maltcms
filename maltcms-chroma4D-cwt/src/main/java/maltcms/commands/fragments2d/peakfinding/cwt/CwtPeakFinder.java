@@ -43,7 +43,7 @@ import org.openide.util.lookup.ServiceProvider;
  * have fewer than <code>maxNeighbors</code> in <code>radius</code>.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -75,11 +75,13 @@ public class CwtPeakFinder extends AFragmentCommand {
     @Configurable(description = "Percentile of the intensity value distribution to use as minimum intensity for peaks.")
     private int minPercentile = 95;
 
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Finds peak locations in intensity profiles using the continuous wavelet transform.";
     }
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         ICompletionService<File> ics = createCompletionService(File.class);
@@ -104,6 +106,7 @@ public class CwtPeakFinder extends AFragmentCommand {
         return postProcess(ics, t);
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;

@@ -33,8 +33,10 @@ import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
+ * <p>BatchFilter class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class BatchFilter {
 
@@ -43,7 +45,6 @@ public class BatchFilter {
      *
      * @param filters a list of filters to be copied
      * @return the list of copied filters
-     *
      * @since 1.3.1
      */
     public static List<AArrayFilter> copy(List<AArrayFilter> filters) {

@@ -43,8 +43,10 @@ import net.sf.maltcms.evaluation.spi.tasks.maltcms.DefaultTaskResult;
 import net.sf.maltcms.evaluation.spi.tasks.maltcms.MaltcmsTaskResult;
 
 /**
+ * <p>Task class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class Task implements ITask<ITaskResult> {
 
@@ -57,6 +59,14 @@ public class Task implements ITask<ITaskResult> {
     @Indexed
     private UUID taskId;
 
+    /**
+     * <p>Constructor for Task.</p>
+     *
+     * @param commandLine a {@link java.util.List} object.
+     * @param workingDirectory a {@link java.io.File} object.
+     * @param postProcessors a {@link java.util.List} object.
+     * @param outputDirectory a {@link java.io.File} object.
+     */
     public Task(List<String> commandLine, File workingDirectory, List<IPostProcessor> postProcessors, File outputDirectory) {
         this.commandLine = commandLine;
         this.workingDirectory = workingDirectory;
@@ -65,6 +75,7 @@ public class Task implements ITask<ITaskResult> {
         taskId = UUID.fromString(commandLine.toString());
     }
 
+    /** {@inheritDoc} */
     @Override
     public ITaskResult call() throws Exception {
         ProcessBuilder pb = new ProcessBuilder(commandLine).directory(
@@ -101,31 +112,37 @@ public class Task implements ITask<ITaskResult> {
         return DefaultTaskResult.EMPTY;
     }
 
+    /** {@inheritDoc} */
     @Override
     public HashMap<String, String> getAdditionalEnvironment() {
         return additionalEnvironment;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getCommandLine() {
         return commandLine;
     }
 
+    /** {@inheritDoc} */
     @Override
     public File getOutputDirectory() {
         return outputDirectory;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<IPostProcessor> getPostProcessors() {
         return postProcessors;
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getTaskId() {
         return taskId;
     }
 
+    /** {@inheritDoc} */
     @Override
     public File getWorkingDirectory() {
         return workingDirectory;

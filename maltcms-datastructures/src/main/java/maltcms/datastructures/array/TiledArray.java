@@ -43,9 +43,10 @@ import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt.D1;
 
 /**
+ * <p>TiledArray class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class TiledArray implements IArrayD2Double {
 
@@ -62,6 +63,15 @@ public class TiledArray implements IArrayD2Double {
     private PriorityQueue<IArrayD2Double> pq;
     private long[] arrayATime;
 
+    /**
+     * <p>Constructor for TiledArray.</p>
+     *
+     * @param tilesRows a int.
+     * @param tilesCols a int.
+     * @param rows a int.
+     * @param cols a int.
+     * @param defaultValue a double.
+     */
     public TiledArray(int tilesRows, int tilesCols, int rows, int cols,
             double defaultValue) {
         this.tileSizeRows = (int) Math.ceil((float) rows / (float) tilesRows);
@@ -155,6 +165,13 @@ public class TiledArray implements IArrayD2Double {
         return null;
     }
 
+    /**
+     * <p>getTile.</p>
+     *
+     * @param x a int.
+     * @param y a int.
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     */
     public IArrayD2Double getTile(int x, int y) {
         final int index = idx(x, y);
         if (this.arrays[idx(x, y)] == null) {
@@ -174,6 +191,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#columns()
      */
+    /** {@inheritDoc} */
     @Override
     public int columns() {
         return this.cols;
@@ -184,6 +202,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#flatten()
      */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         // TODO Auto-generated method stub
@@ -195,6 +214,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#get(int, int)
      */
+    /** {@inheritDoc} */
     @Override
     public double get(int row, int col) {
         int index = idx(row, col);
@@ -206,6 +226,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getArray()
      */
+    /** {@inheritDoc} */
     @Override
     public D2 getArray() {
         // TODO Auto-generated method stub
@@ -217,6 +238,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
      */
+    /** {@inheritDoc} */
     @Override
     public int[] getColumnBounds(int row) {
         return new int[]{0, columns()};
@@ -227,6 +249,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getDefaultValue()
      */
+    /** {@inheritDoc} */
     @Override
     public double getDefaultValue() {
         return this.defaultValue;
@@ -238,6 +261,7 @@ public class TiledArray implements IArrayD2Double {
      * @see
      * maltcms.datastructures.array.IArrayD2Double#getNumberOfStoredElements()
      */
+    /** {@inheritDoc} */
     @Override
     public int getNumberOfStoredElements() {
         int cnt = 0;
@@ -254,6 +278,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getShape()
      */
+    /** {@inheritDoc} */
     @Override
     public Area getShape() {
         // TODO Auto-generated method stub
@@ -265,6 +290,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#inRange(int, int)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean inRange(int i, int j) {
         // TODO Auto-generated method stub
@@ -276,6 +302,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#rows()
      */
+    /** {@inheritDoc} */
     @Override
     public int rows() {
         // TODO Auto-generated method stub
@@ -287,6 +314,7 @@ public class TiledArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#set(int, int, double)
      */
+    /** {@inheritDoc} */
     @Override
     public void set(int row, int col, double d)
             throws ArrayIndexOutOfBoundsException {

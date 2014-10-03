@@ -59,9 +59,10 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
+ * <p>CwtTicPeakFinderCallable class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 @Slf4j
@@ -86,6 +87,7 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
     @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -128,6 +130,7 @@ public class CwtTicPeakFinderCallable implements Callable<URI>, Serializable {
         return p2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public URI call() {
         FileFragment ff = new FileFragment(input);

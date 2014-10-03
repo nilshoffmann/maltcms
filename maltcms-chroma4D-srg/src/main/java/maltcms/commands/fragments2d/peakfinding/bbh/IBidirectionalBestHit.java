@@ -34,15 +34,15 @@ import maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing;
 import maltcms.datastructures.peak.Peak2D;
 
 /**
- * Interface for an BBH algorithm used by {@link SeededRegionGrowing}.
+ * Interface for an BBH algorithm used by {@link maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing}.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public interface IBidirectionalBestHit extends IConfigurable {
 
     /**
      * Getter.
-     *
      *
      * @param peaklists list of peak list for all chromatograms
      * @return a list of all bidirectional best hits. List contains the indices
@@ -50,7 +50,17 @@ public interface IBidirectionalBestHit extends IConfigurable {
      */
     List<List<Point>> getBidiBestHitList(List<List<Peak2D>> peaklists);
 
+    /**
+     * <p>sim.</p>
+     *
+     * @param p1 a {@link maltcms.datastructures.peak.Peak2D} object.
+     * @param p2 a {@link maltcms.datastructures.peak.Peak2D} object.
+     * @return a double.
+     */
     double sim(Peak2D p1, Peak2D p2);
 
+    /**
+     * <p>clear.</p>
+     */
     void clear();
 }

@@ -43,6 +43,12 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
+/**
+ * <p>CosineWithMassBonus class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class CosineWithMassBonus extends AMetabolitePredicate {
 
@@ -67,25 +73,49 @@ public class CosineWithMassBonus extends AMetabolitePredicate {
             });
     private double threshold = 1.0;
 
+    /**
+     * <p>isNormalize.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNormalize() {
         return normalize;
     }
 
+    /**
+     * <p>Setter for the field <code>normalize</code>.</p>
+     *
+     * @param normalize a boolean.
+     */
     public void setNormalize(boolean normalize) {
         this.normalize = normalize;
     }
 
+    /**
+     * <p>Getter for the field <code>resolution</code>.</p>
+     *
+     * @return a double.
+     */
     public double getResolution() {
         return resolution;
     }
 
+    /**
+     * <p>Setter for the field <code>resolution</code>.</p>
+     *
+     * @param resolution a double.
+     */
     public void setResolution(double resolution) {
         this.resolution = resolution;
     }
 
+    /**
+     * <p>Constructor for CosineWithMassBonus.</p>
+     */
     public CosineWithMassBonus() {
     }
 
+    /** {@inheritDoc} */
     @Override
     public AMetabolitePredicate copy() {
         CosineWithMassBonus ms = new CosineWithMassBonus();
@@ -99,6 +129,16 @@ public class CosineWithMassBonus extends AMetabolitePredicate {
         return ms;
     }
 
+    /**
+     * <p>similarity.</p>
+     *
+     * @param massesRef a {@link ucar.ma2.Array} object.
+     * @param intensitiesRef a {@link ucar.ma2.Array} object.
+     * @param massesQuery a {@link ucar.ma2.Array} object.
+     * @param intensitiesQuery a {@link ucar.ma2.Array} object.
+     * @param mw a double.
+     * @return a double.
+     */
     protected double similarity(Array massesRef, Array intensitiesRef,
             Array massesQuery, Array intensitiesQuery, double mw) {
         //return new AMDISMSSimilarity().apply(new Tuple2D<Array,Array>(massesRef, intensitiesRef), new Tuple2D<Array,Array>(massesQuery,intensitiesQuery),mw);
@@ -157,6 +197,7 @@ public class CosineWithMassBonus extends AMetabolitePredicate {
         return (d + matchMW);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite et) {
         Tuple2D<ArrayDouble.D1, ArrayInt.D1> etMs = et.getMassSpectrum();
@@ -174,6 +215,7 @@ public class CosineWithMassBonus extends AMetabolitePredicate {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Comparator<Tuple2D<Double, IMetabolite>> getComparator() {
         return this.comparator;

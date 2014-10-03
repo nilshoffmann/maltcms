@@ -36,20 +36,57 @@ import ucar.ma2.ArrayByte;
  * programming.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IRecurrence extends IConfigurable {
 
+    /**
+     * <p>eval.</p>
+     *
+     * @param row a int.
+     * @param column a int.
+     * @param cumDistMatrix a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param dij a double.
+     * @param predecessors a {@link ucar.ma2.ArrayByte.D2} object.
+     * @return a double.
+     */
     public abstract double eval(int row, int column,
             IArrayD2Double cumDistMatrix, double dij, ArrayByte.D2 predecessors);
 
+    /**
+     * <p>eval.</p>
+     *
+     * @param row a int.
+     * @param column a int.
+     * @param previousRow a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param currentRow a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param dij a double.
+     * @return a double.
+     */
     public abstract double eval(int row, int column,
             IArrayD2Double previousRow, IArrayD2Double currentRow, double dij);
 
+    /**
+     * <p>set.</p>
+     *
+     * @param compression_weight a double.
+     * @param expansion_weight a double.
+     * @param diagonal_weight a double.
+     */
     public abstract void set(double compression_weight,
             double expansion_weight, double diagonal_weight);
 
+    /**
+     * <p>setMinimizing.</p>
+     *
+     * @param b a boolean.
+     */
     public abstract void setMinimizing(boolean b);
 
+    /**
+     * <p>getGlobalGapPenalty.</p>
+     *
+     * @return a double.
+     */
     public abstract double getGlobalGapPenalty();
 }

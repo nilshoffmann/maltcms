@@ -46,6 +46,7 @@ import ucar.ma2.Array;
  * (intensities).
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -55,11 +56,7 @@ public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
     @Configurable(name = "scale", description = "Whether scan line intensity arrays should be scaled using sqrt.", value = "true")
     private boolean scale = true;
 
-    /**
-     *
-     * @param t
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             Tuple2D<IFileFragment, IFileFragment> t) {

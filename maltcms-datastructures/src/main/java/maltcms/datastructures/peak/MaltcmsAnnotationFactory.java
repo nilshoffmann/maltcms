@@ -43,12 +43,19 @@ import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import maltcms.io.xml.bindings.annotation.ResourceType;
 
 /**
+ * <p>MaltcmsAnnotationFactory class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class MaltcmsAnnotationFactory {
 
+    /**
+     * <p>load.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     */
     public MaltcmsAnnotation load(File f) {
         JAXBContext jc;
         try {
@@ -61,6 +68,12 @@ public class MaltcmsAnnotationFactory {
         }
     }
 
+    /**
+     * <p>save.</p>
+     *
+     * @param mat a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     * @param f a {@link java.io.File} object.
+     */
     public void save(MaltcmsAnnotation mat, File f) {
         JAXBContext jc;
         try {
@@ -72,6 +85,12 @@ public class MaltcmsAnnotationFactory {
         }
     }
 
+    /**
+     * <p>createNewMaltcmsAnnotationType.</p>
+     *
+     * @param resource a {@link java.net.URI} object.
+     * @return a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     */
     public MaltcmsAnnotation createNewMaltcmsAnnotationType(URI resource) {
         MaltcmsAnnotation ma = new MaltcmsAnnotation();
         ResourceType rt = new ResourceType();
@@ -80,6 +99,14 @@ public class MaltcmsAnnotationFactory {
         return ma;
     }
 
+    /**
+     * <p>getAnnotationsTypeFor.</p>
+     *
+     * @param ma a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     * @param creator a {@link java.lang.String} object.
+     * @param annotationObject a {@link java.lang.Object} object.
+     * @return a {@link maltcms.io.xml.bindings.annotation.AnnotationsType} object.
+     */
     public AnnotationsType getAnnotationsTypeFor(MaltcmsAnnotation ma,
             String creator, Object annotationObject) {
         List<AnnotationsType> l = ma.getAnnotations();
@@ -99,6 +126,13 @@ public class MaltcmsAnnotationFactory {
         return mat;
     }
 
+    /**
+     * <p>addPeakAnnotation.</p>
+     *
+     * @param ma a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     * @param creator a {@link java.lang.String} object.
+     * @param p a {@link maltcms.datastructures.peak.IPeak} object.
+     */
     public void addPeakAnnotation(MaltcmsAnnotation ma, String creator, IPeak p) {
         AnnotationsType peaks = getAnnotationsTypeFor(ma, creator, p);
         AnnotationType at = new AnnotationType();
@@ -112,18 +146,36 @@ public class MaltcmsAnnotationFactory {
         addIfNew(at, peaks);
     }
 
+    /**
+     * <p>addIfNew.</p>
+     *
+     * @param anot a {@link maltcms.io.xml.bindings.annotation.AnnotationType} object.
+     * @param anost a {@link maltcms.io.xml.bindings.annotation.AnnotationsType} object.
+     */
     public void addIfNew(AnnotationType anot, AnnotationsType anost) {
         if (!anost.getAnnotation().contains(anot)) {
             anost.getAnnotation().add(anot);
         }
     }
 
+    /**
+     * <p>addIfNew.</p>
+     *
+     * @param at a {@link maltcms.io.xml.bindings.annotation.AttributeType} object.
+     * @param annt a {@link maltcms.io.xml.bindings.annotation.AnnotationType} object.
+     */
     public void addIfNew(AttributeType at, AnnotationType annt) {
         if (!annt.getAttribute().contains(at)) {
             annt.getAttribute().add(at);
         }
     }
 
+    /**
+     * <p>getPeak1D.</p>
+     *
+     * @param ma a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak1D> getPeak1D(MaltcmsAnnotation ma) {
         List<Peak1D> peaks = new ArrayList<>();
         for (AnnotationsType ann : ma.getAnnotations()) {
@@ -181,6 +233,13 @@ public class MaltcmsAnnotationFactory {
         return peaks;
     }
 
+    /**
+     * <p>addPeakAnnotation.</p>
+     *
+     * @param ma a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     * @param creator a {@link java.lang.String} object.
+     * @param p a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public void addPeakAnnotation(MaltcmsAnnotation ma, String creator, Peak1D p) {
         AnnotationsType peaks = getAnnotationsTypeFor(ma, creator, p);
 
@@ -244,6 +303,12 @@ public class MaltcmsAnnotationFactory {
         addIfNew(at, peaks);
     }
 
+    /**
+     * <p>getPeakAnnotation.</p>
+     *
+     * @param peak a {@link maltcms.io.xml.bindings.annotation.AnnotationType} object.
+     * @return a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public Peak2D getPeakAnnotation(AnnotationType peak) {
         Peak2D p = new Peak2D();
         for (AttributeType at : peak.getAttribute()) {
@@ -299,6 +364,13 @@ public class MaltcmsAnnotationFactory {
         return p;
     }
 
+    /**
+     * <p>addPeakAnnotation.</p>
+     *
+     * @param ma a {@link maltcms.io.xml.bindings.annotation.MaltcmsAnnotation} object.
+     * @param creator a {@link java.lang.String} object.
+     * @param p a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public void addPeakAnnotation(MaltcmsAnnotation ma, String creator, Peak2D p) {
         AnnotationsType peaks = getAnnotationsTypeFor(ma, creator, p);
 

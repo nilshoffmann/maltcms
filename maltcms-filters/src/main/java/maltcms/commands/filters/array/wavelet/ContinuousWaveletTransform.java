@@ -37,16 +37,29 @@ import java.util.List;
  * for real valued input.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public final class ContinuousWaveletTransform implements Serializable {
 
     private final IWavelet w;
 
+    /**
+     * <p>Constructor for ContinuousWaveletTransform.</p>
+     *
+     * @param w a {@link maltcms.commands.filters.array.wavelet.IWavelet} object.
+     */
     public ContinuousWaveletTransform(IWavelet w) {
         this.w = w;
     }
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param x an array of double.
+     * @param scale a double.
+     * @param params a double.
+     * @return an array of double.
+     */
     public final double[] apply(final double[] x, final double scale,
             final double... params) {
         final double[] arr = new double[x.length];
@@ -66,17 +79,40 @@ public final class ContinuousWaveletTransform implements Serializable {
         return arr;
     }
 
+    /**
+     * <p>getBoundsForWavelet.</p>
+     *
+     * @param tau a double.
+     * @param scale a double.
+     * @param length a int.
+     * @return an array of int.
+     */
     public final int[] getBoundsForWavelet(final double tau, final double scale, final int length) {
         final int mint = Math.max(0, (int) (tau - scale + 1));
         final int maxt = Math.min(length - 1, (int) (tau + scale - 1));
         return new int[]{mint, maxt};
     }
 
+    /**
+     * <p>applyInverseTransform.</p>
+     *
+     * @param scaleImages a {@link java.util.List} object.
+     * @param scales a {@link java.util.List} object.
+     * @return an array of double.
+     */
     public final double[] applyInverseTransform(
             final List<double[]> scaleImages, final List<Double> scales) {
         return applyInverse(scaleImages, scales);
     }
 
+    /**
+     * <p>applyInverse.</p>
+     *
+     * @param scaleImages a {@link java.util.List} object.
+     * @param scales a {@link java.util.List} object.
+     * @param params a double.
+     * @return an array of double.
+     */
     public final double[] applyInverse(final List<double[]> scaleImages,
             final List<Double> scales, final double... params) {
         final double[] arr = new double[scaleImages.get(0).length];

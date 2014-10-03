@@ -52,11 +52,12 @@ import ucar.ma2.Range;
 
 /**
  * This class is a dataholder for mass spectra. This class will cache all mass
- * spectra which were read an hold a {@link SoftReference} to it.
+ * spectra which were read an hold a {@link java.lang.ref.SoftReference} to it.
  *
- * TODO: Change to {@link AScanLineCache}
+ * TODO: Change to {@link maltcms.datastructures.caches.AScanLineCache}
  *
  * @author Mathias Wilhelm
+ * 
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
@@ -91,9 +92,9 @@ public class SparseScanLineCache implements IScanLine {
      * modulation and the last index.
      *
      * @param iff1 file fragment
-     * @param minMass
-     * @param maxMass
-     * @param massResolution
+     * @param minMass a double.
+     * @param maxMass a double.
+     * @param massResolution a double.
      */
     protected SparseScanLineCache(final IFileFragment iff1, double minMass, double maxMass, double massResolution) {
         this.iff = iff1;
@@ -119,6 +120,9 @@ public class SparseScanLineCache implements IScanLine {
      * @param iff1 file fragment
      * @param scansPerModulation1 scans per modulation
      * @param lastIndex1 index of the last scan
+     * @param minMass a double.
+     * @param maxMass a double.
+     * @param massResolution a double.
      */
     protected SparseScanLineCache(final IFileFragment iff1,
             final int scansPerModulation1, final int lastIndex1, final double minMass, final double maxMass, final double massResolution) {
@@ -150,9 +154,7 @@ public class SparseScanLineCache implements IScanLine {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
@@ -172,38 +174,32 @@ public class SparseScanLineCache implements IScanLine {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return bin size
+     * Getter.
      */
     @Override
     public int getBinsSize() {
         return MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massResolution);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean getCacheModulation() {
         return this.cacheModulations;
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return last index
+     * Getter.
      */
     @Override
     public int getLastIndex() {
         return this.lastIndex;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Array getMassSpectrum(final int x, final int y) {
         try {
@@ -220,9 +216,7 @@ public class SparseScanLineCache implements IScanLine {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Array getMassSpectrum(final Point p) {
         return getMassSpectrum(p.x, p.y);
@@ -255,9 +249,9 @@ public class SparseScanLineCache implements IScanLine {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return scan line count
+     * Getter.
      */
     @Override
     public int getScanLineCount() {
@@ -265,19 +259,16 @@ public class SparseScanLineCache implements IScanLine {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @param x scan line number
-     * @return complete ms list of this scan line
+     * Getter.
      */
     @Override
     public List<Array> getScanlineMS(final int x) {
         return getNormalizedArray(getScanlineSparseMS(x), x);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public int getScansPerModulation() {
         return this.scansPerModulation;
@@ -327,27 +318,25 @@ public class SparseScanLineCache implements IScanLine {
     }
 
     /**
-     * Setter.
+     * {@inheritDoc}
      *
-     * @param size bin size
+     * Setter.
      */
     @Override
     public void setBinSize(final int size) {
         throw new NotImplementedException("This method is deprecated!");
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
     }
 
     /**
-     * Setter.
+     * {@inheritDoc}
      *
-     * @param index last index
+     * Setter.
      */
     @Override
     public void setLastIndex(final int index) {
@@ -355,6 +344,8 @@ public class SparseScanLineCache implements IScanLine {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Will view some statistical information about the cache usage.
      */
     @Override
@@ -366,6 +357,7 @@ public class SparseScanLineCache implements IScanLine {
 //		this.log.info("	Cachemiss: {}", this.cachemiss);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Tuple2D<Array, Array>> getScanlineSparseMS(int x) {
         if (this.scanIndex == null) {
@@ -387,6 +379,7 @@ public class SparseScanLineCache implements IScanLine {
         return loadScanline(x);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(int x, int y) {
         try {
@@ -401,11 +394,13 @@ public class SparseScanLineCache implements IScanLine {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(Point p) {
         return getSparseMassSpectrum(p.x, p.y);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Point mapIndex(int scanIndex) {
         int x = scanIndex / getScansPerModulation();
@@ -413,19 +408,19 @@ public class SparseScanLineCache implements IScanLine {
         return new Point(x, y);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int mapPoint(int x, int y) {
         return (x * getScansPerModulation()) + y;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int mapPoint(Point p) {
         return mapPoint(p.x, p.y);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void clear() {
     }

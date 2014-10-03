@@ -34,26 +34,74 @@ import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>IOptimizationFunction interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IOptimizationFunction extends IFileFragmentModifier {
 
+    /**
+     * <p>init.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @param r a {@link java.util.List} object.
+     * @param cumulatedScores a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param pwScores a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param tfvo a {@link maltcms.commands.distances.dtwng.TwoFeatureVectorOperation} object.
+     */
     public abstract void init(List<IFeatureVector> l, List<IFeatureVector> r,
             IArrayD2Double cumulatedScores, IArrayD2Double pwScores,
             TwoFeatureVectorOperation tfvo);
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param is a int.
+     */
     public abstract void apply(int... is);
 
+    /**
+     * <p>getTrace.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public abstract List<Point> getTrace();
 
+    /**
+     * <p>getOptimalOperationSequenceString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public abstract String getOptimalOperationSequenceString();
 
+    /**
+     * <p>getStates.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public abstract String[] getStates();
 
+    /**
+     * <p>setWeight.</p>
+     *
+     * @param state a {@link java.lang.String} object.
+     * @param d a double.
+     */
     public abstract void setWeight(String state, double d);
 
+    /**
+     * <p>getWeight.</p>
+     *
+     * @param state a {@link java.lang.String} object.
+     * @return a double.
+     */
     public abstract double getWeight(String state);
 
+    /**
+     * <p>getOptimalValue.</p>
+     *
+     * @return a double.
+     */
     public abstract double getOptimalValue();
 }

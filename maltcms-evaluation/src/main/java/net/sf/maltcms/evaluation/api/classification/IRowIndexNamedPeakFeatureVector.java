@@ -28,11 +28,18 @@
 package net.sf.maltcms.evaluation.api.classification;
 
 /**
+ * <p>IRowIndexNamedPeakFeatureVector interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IRowIndexNamedPeakFeatureVector extends INamedPeakFeatureVector {
 
+    /**
+     * <p>getRowIndex.</p>
+     *
+     * @return a int.
+     */
     int getRowIndex();
 
 }

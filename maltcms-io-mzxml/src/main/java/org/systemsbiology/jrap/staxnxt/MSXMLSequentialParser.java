@@ -28,7 +28,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
+ * <p>MSXMLSequentialParser class.</p>
  *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 public class MSXMLSequentialParser {
 
@@ -53,9 +57,19 @@ public class MSXMLSequentialParser {
 
     private int currentScan = 0; // current scan number being read
 
+    /**
+     * <p>Constructor for MSXMLSequentialParser.</p>
+     */
     public MSXMLSequentialParser() {
     }
 
+    /**
+     * <p>open.</p>
+     *
+     * @param fileName a {@link java.lang.String} object.
+     * @throws java.io.FileNotFoundException if any.
+     * @throws javax.xml.stream.XMLStreamException if any.
+     */
     public void open(String fileName) throws FileNotFoundException, XMLStreamException {
         this.fileName = fileName;
 
@@ -86,6 +100,9 @@ public class MSXMLSequentialParser {
         }
     }
 
+    /**
+     * <p>close.</p>
+     */
     public void close() {
         if (this.xmlSR != null) {
             try {
@@ -125,7 +142,7 @@ public class MSXMLSequentialParser {
     /**
      * Returns true if there are more scans to be parsed in the file
      *
-     * @return
+     * @return a boolean.
      */
     public boolean hasNextScan() {
         return currentScan != maxScan;
@@ -134,8 +151,8 @@ public class MSXMLSequentialParser {
     /**
      * Returns a Scan object with its peaks and header information
      *
-     * @return
-     * @throws XMLStreamException
+     * @throws javax.xml.stream.XMLStreamException if any.
+     * @return a {@link org.systemsbiology.jrap.staxnxt.Scan} object.
      */
     public Scan getNextScan() throws XMLStreamException {
         if (isXML) {
@@ -176,6 +193,11 @@ public class MSXMLSequentialParser {
         return offsets.size();
     }
 
+    /**
+     * <p>getMaxScanNumber.</p>
+     *
+     * @return a int.
+     */
     public int getMaxScanNumber() {
         return maxScan;
     }

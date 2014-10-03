@@ -49,6 +49,8 @@ import org.apache.commons.configuration.Configuration;
  * TICPeakFinder.
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 @Data
@@ -56,6 +58,7 @@ public class TicPeakPicking implements IPeakPicking {
 
     private QuadTree<Peak1D> quadTree;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -73,6 +76,7 @@ public class TicPeakPicking implements IPeakPicking {
         return quadTree;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
         log.info("Running {} with:", this.getClass().getName());
@@ -85,6 +89,7 @@ public class TicPeakPicking implements IPeakPicking {
         return pointList;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
 
@@ -102,6 +107,7 @@ public class TicPeakPicking implements IPeakPicking {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         QuadTree<Peak1D> tree = getQuadTree(ff);

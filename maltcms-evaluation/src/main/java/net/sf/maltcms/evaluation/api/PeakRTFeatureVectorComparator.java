@@ -30,14 +30,20 @@ package net.sf.maltcms.evaluation.api;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>PeakRTFeatureVectorComparator class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
 
     private final double delta;
 
+    /**
+     * <p>Constructor for PeakRTFeatureVectorComparator.</p>
+     *
+     * @param delta a double.
+     */
     public PeakRTFeatureVectorComparator(double delta) {
         this.delta = delta;
     }
@@ -45,6 +51,7 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isFN(IFeatureVector gt, IFeatureVector test) {
         if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
@@ -60,6 +67,7 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isFP(IFeatureVector gt, IFeatureVector test) {
         if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
@@ -79,6 +87,7 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isTN(IFeatureVector gt, IFeatureVector test) {
         if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
@@ -95,6 +104,7 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isTP(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isTP(IFeatureVector gt, IFeatureVector test) {
         if (gt instanceof PeakRTFeatureVector && test instanceof PeakRTFeatureVector) {
@@ -113,12 +123,10 @@ public class PeakRTFeatureVectorComparator implements IFeatureVectorComparator {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * NaN's are treated as 0, giving a large distance for x!=y and 0 for x=y,
      * with either x=NaN and y!=NaN, x!=NaN and y==NaN, or x=NaN=y
-     *
-     * @param gt
-     * @param test
-     * @return
      */
     @Override
     public double getSquaredDiff(IFeatureVector gt, IFeatureVector test) {

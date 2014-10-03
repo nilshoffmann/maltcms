@@ -39,9 +39,10 @@ import maltcms.datastructures.ms.IScan1D;
 import maltcms.tools.ArrayTools;
 
 /**
+ * <p>RetentionIndexCalculator class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class RetentionIndexCalculator {
 
@@ -51,7 +52,7 @@ public class RetentionIndexCalculator {
     /**
      * Arguments must be sorted in increasing order of retention time.
      *
-     * @param riPeaks
+     * @param riPeaks a {@link maltcms.datastructures.ms.IMetabolite} object.
      */
     public RetentionIndexCalculator(
             IMetabolite... riPeaks) {
@@ -86,8 +87,8 @@ public class RetentionIndexCalculator {
     /**
      * Arguments must be sorted in increasing order of retention time.
      *
-     * @param numberOfCarbonAtoms
-     * @param riPeaks
+     * @param numberOfCarbonAtoms an array of int.
+     * @param riPeaks a {@link maltcms.datastructures.ms.IScan1D} object.
      */
     public RetentionIndexCalculator(int[] numberOfCarbonAtoms,
             IScan1D... riPeaks) {
@@ -104,14 +105,20 @@ public class RetentionIndexCalculator {
     /**
      * Arguments must be sorted in increasing order of retention time.
      *
-     * @param numberOfCarbonAtoms
-     * @param riRTs
+     * @param numberOfCarbonAtoms an array of int.
+     * @param riRTs a double.
      */
     public RetentionIndexCalculator(int[] numberOfCarbonAtoms, double... riRTs) {
         this.nCarbAtoms = numberOfCarbonAtoms;
         this.riRTs = riRTs;
     }
 
+    /**
+     * <p>parseCarbonNumberFromMolecularFormulas.</p>
+     *
+     * @param formulas an array of {@link java.lang.String} objects.
+     * @return an array of int.
+     */
     public static int[] parseCarbonNumberFromMolecularFormulas(String[] formulas) {
         int[] ns = new int[formulas.length];
         int i = 0;
@@ -130,6 +137,12 @@ public class RetentionIndexCalculator {
         return ns;
     }
 
+    /**
+     * <p>getIsothermalKovatsIndex.</p>
+     *
+     * @param rt a double.
+     * @return a double.
+     */
     public double getIsothermalKovatsIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
@@ -226,12 +239,28 @@ public class RetentionIndexCalculator {
         }
     }
 
+    /**
+     * <p>extrapolate.</p>
+     *
+     * @param x0 a double.
+     * @param y0 a double.
+     * @param x1 a double.
+     * @param y1 a double.
+     * @param x a double.
+     * @return a double.
+     */
     public double extrapolate(double x0, double y0, double x1, double y1, double x) {
         double value = MathTools.getLinearInterpolatedY(x0, y0, x1, y1, x);
 //        System.out.println("Extrapolated ri for rt="+x+" [x0="+x0+" y0="+y0+"; x1="+x1+" y1="+y1+"] = "+value);
         return value;
     }
 
+    /**
+     * <p>getTemperatureProgrammedKovatsIndex.</p>
+     *
+     * @param rt a double.
+     * @return a double.
+     */
     public double getTemperatureProgrammedKovatsIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
@@ -275,6 +304,12 @@ public class RetentionIndexCalculator {
         return ri;
     }
 
+    /**
+     * <p>getLinearIndex.</p>
+     *
+     * @param rt a double.
+     * @return a double.
+     */
     public double getLinearIndex(double rt) {
         int prevRIIdx = getIndexOfPreviousRI(rt);
         int nextRIIdx = getIndexOfNextRI(rt);
@@ -305,6 +340,11 @@ public class RetentionIndexCalculator {
         return extrapolate(x0, y0, x1, y1, rt);
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         int[] cs = (int[]) ArrayTools.indexArray(38, 10).get1DJavaArray(
                 int.class);

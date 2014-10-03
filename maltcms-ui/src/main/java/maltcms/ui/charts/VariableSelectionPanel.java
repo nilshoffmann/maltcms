@@ -28,8 +28,10 @@
 package maltcms.ui.charts;
 
 /**
+ * <p>VariableSelectionPanel class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public class VariableSelectionPanel extends javax.swing.JPanel {
 
@@ -45,11 +47,21 @@ public class VariableSelectionPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    /**
+     * <p>setAvailableVariables.</p>
+     *
+     * @param s an array of {@link java.lang.String} objects.
+     */
     public void setAvailableVariables(String[] s) {
         this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(s));
         this.jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(s));
     }
 
+    /**
+     * <p>getSelectedDomainVariable.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getSelectedDomainVariable() {
         if (this.jComboBox1.isEnabled()) {
             return (String) this.jComboBox1.getSelectedItem();
@@ -57,6 +69,11 @@ public class VariableSelectionPanel extends javax.swing.JPanel {
         return "";
     }
 
+    /**
+     * <p>getSelectedValuesVariable.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getSelectedValuesVariable() {
         return (String) this.jComboBox3.getSelectedItem();
     }

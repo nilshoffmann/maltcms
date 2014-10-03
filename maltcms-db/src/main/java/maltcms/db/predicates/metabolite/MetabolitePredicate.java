@@ -34,9 +34,10 @@ import maltcms.db.predicates.IMatchPredicate;
 import maltcms.db.predicates.MatchPredicate;
 
 /**
+ * <p>Abstract MetabolitePredicate class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public abstract class MetabolitePredicate extends Predicate<IMetabolite>
         implements IMatchPredicate<IMetabolite> {
@@ -46,17 +47,20 @@ public abstract class MetabolitePredicate extends Predicate<IMetabolite>
      */
     private static final long serialVersionUID = 4401086253537298137L;
 
+    /** {@inheritDoc} */
     @Override
     public Method getMethodOnTargetType() {
         return this.im.getMethodOnTargetType();
     }
     protected IMatchPredicate<IMetabolite> im = new MatchPredicate<>();
 
+    /** {@inheritDoc} */
     @Override
     public void setMethodOnTargetType(Method m) {
         this.im.setMethodOnTargetType(m);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTargetType(Class<IMetabolite> c) {
         this.im.setTargetType(c);

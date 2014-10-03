@@ -40,9 +40,11 @@ import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 
 /**
+ * <p>ArrayWeightedCosine2 class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
+ * @since 1.3.2
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -53,6 +55,9 @@ public class ArrayWeightedCosine2 implements IArraySimilarity {
 
     private double minimumSimilarity = 0.0d;
 
+    /**
+     * <p>Constructor for ArrayWeightedCosine2.</p>
+     */
     public ArrayWeightedCosine2() {
         cache = SimilarityTools.newValueCache("ArrayWeightedCosineCache");
     }
@@ -68,6 +73,7 @@ public class ArrayWeightedCosine2 implements IArraySimilarity {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         double s1 = 0, s2 = 0, c = 0;
@@ -95,6 +101,7 @@ public class ArrayWeightedCosine2 implements IArraySimilarity {
         return mass * mass * intensity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayWeightedCosine2 alp = new ArrayWeightedCosine2();
@@ -102,6 +109,7 @@ public class ArrayWeightedCosine2 implements IArraySimilarity {
         return alp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

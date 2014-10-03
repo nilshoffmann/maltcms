@@ -51,8 +51,10 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <p>BeansXmlGenerator class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
 
@@ -64,6 +66,14 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
     private final HashMap<String, String> tokenMap;
     private static org.slf4j.Logger log = LoggerFactory.getLogger(BeansXmlGenerator.class);
 
+    /**
+     * <p>Constructor for BeansXmlGenerator.</p>
+     *
+     * @param parameterMap a {@link java.util.LinkedHashMap} object.
+     * @param template a {@link java.io.File} object.
+     * @param outputDirectory a {@link java.io.File} object.
+     * @param tokenMap a {@link java.util.HashMap} object.
+     */
     public BeansXmlGenerator(LinkedHashMap<String, List<?>> parameterMap,
             File template, File outputDirectory, HashMap<String, String> tokenMap) {
         keys = parameterMap.keySet();
@@ -74,15 +84,22 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
         this.tokenMap = tokenMap;
     }
 
+    /**
+     * <p>size.</p>
+     *
+     * @return a int.
+     */
     public int size() {
         return choices.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         return (idx < choices.size() - 1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public File next() {
         UUID instanceId = UUID.randomUUID();
@@ -170,11 +187,13 @@ public class BeansXmlGenerator implements Iterable<File>, Iterator<File> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void remove() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<File> iterator() {
         return this;

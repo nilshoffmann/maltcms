@@ -34,19 +34,23 @@ import maltcms.io.xlsx.bridge.IRow;
 import org.apache.poi.ss.usermodel.Row;
 
 /**
+ * <p>POIRow class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Data
 public class POIRow implements IRow {
 
     private final Row row;
 
+    /** {@inheritDoc} */
     @Override
     public ICell getCell(int i) {
         return new POICell(row.getCell(i));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Iterator<ICell> iterator() {
         return new Iterator<ICell>() {

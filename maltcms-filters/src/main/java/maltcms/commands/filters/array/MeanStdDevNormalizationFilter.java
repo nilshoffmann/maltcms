@@ -37,7 +37,7 @@ import ucar.ma2.Array;
  * Normalize all values of an array given a normalization string.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -48,16 +48,26 @@ public class MeanStdDevNormalizationFilter extends AArrayFilter {
     @Configurable
     private double stddev = 1;
 
+    /**
+     * <p>Constructor for MeanStdDevNormalizationFilter.</p>
+     */
     public MeanStdDevNormalizationFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for MeanStdDevNormalizationFilter.</p>
+     *
+     * @param mean a double.
+     * @param stddev a double.
+     */
     public MeanStdDevNormalizationFilter(final double mean, final double stddev) {
         this();
         this.mean = mean;
         this.stddev = stddev;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         // final Array[] b = super.apply(a);
@@ -71,11 +81,13 @@ public class MeanStdDevNormalizationFilter extends AArrayFilter {
         return c;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
     }
 
+    /** {@inheritDoc} */
     @Override
     public MeanStdDevNormalizationFilter copy() {
         return new MeanStdDevNormalizationFilter(mean, stddev);

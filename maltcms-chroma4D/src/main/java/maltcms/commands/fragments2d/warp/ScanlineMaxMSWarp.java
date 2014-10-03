@@ -46,6 +46,7 @@ import ucar.ma2.Array;
  * lines.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -78,9 +79,7 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
     @Configurable(value = "true")
     private boolean filter = true;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -99,9 +98,7 @@ public class ScanlineMaxMSWarp extends ADynamicTimeWarp {
 //                true);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> createTuple(
             final Tuple2D<IFileFragment, IFileFragment> t) {

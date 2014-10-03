@@ -46,7 +46,7 @@ import ucar.ma2.MAVector;
  * max values.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -59,10 +59,20 @@ public class NormalizationFilter extends AArrayFilter {
     @Configurable
     private boolean log = false;
 
+    /**
+     * <p>Constructor for NormalizationFilter.</p>
+     */
     public NormalizationFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for NormalizationFilter.</p>
+     *
+     * @param normalization1 a {@link java.lang.String} object.
+     * @param log1 a boolean.
+     * @param global a boolean.
+     */
     public NormalizationFilter(final String normalization1, final boolean log1,
             final boolean global) {
         this();
@@ -71,6 +81,7 @@ public class NormalizationFilter extends AArrayFilter {
         this.normalizeGlobal = global;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array[] apply(final Array[] a) {
         final Array[] b = super.apply(a);
@@ -86,6 +97,13 @@ public class NormalizationFilter extends AArrayFilter {
         return b;
     }
 
+    /**
+     * <p>applyGlobalNormalization.</p>
+     *
+     * @param a an array of {@link ucar.ma2.Array} objects.
+     * @param ass a {@link maltcms.commands.scanners.ArrayStatsScanner} object.
+     * @param log1 a boolean.
+     */
     protected void applyGlobalNormalization(final Array[] a,
             final ArrayStatsScanner ass, final boolean log1) {
         ass.apply(a);
@@ -96,12 +114,20 @@ public class NormalizationFilter extends AArrayFilter {
         }
     }
 
+    /**
+     * <p>applyNormalization.</p>
+     *
+     * @param arr a {@link ucar.ma2.Array} object.
+     * @param ass a {@link maltcms.commands.scanners.ArrayStatsScanner} object.
+     * @param log1 a boolean.
+     */
     protected void applyNormalization(final Array arr,
             final ArrayStatsScanner ass, final boolean log1) {
         final StatsMap sm = ass.apply(new Array[]{arr})[0];
         normalize(arr, sm, this.normalization, this.log);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -112,30 +138,69 @@ public class NormalizationFilter extends AArrayFilter {
         this.log = cfg.getBoolean(this.getClass().getName() + ".log", false);
     }
 
+    /**
+     * <p>Getter for the field <code>normalization</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getNormalization() {
         return this.normalization;
     }
 
+    /**
+     * <p>isLog.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isLog() {
         return this.log;
     }
 
+    /**
+     * <p>isNormalizeGlobal.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isNormalizeGlobal() {
         return this.normalizeGlobal;
     }
 
+    /**
+     * <p>Setter for the field <code>log</code>.</p>
+     *
+     * @param log1 a boolean.
+     */
     public void setLog(final boolean log1) {
         this.log = log1;
     }
 
+    /**
+     * <p>Setter for the field <code>normalization</code>.</p>
+     *
+     * @param normalization1 a {@link java.lang.String} object.
+     */
     public void setNormalization(final String normalization1) {
         this.normalization = normalization1;
     }
 
+    /**
+     * <p>Setter for the field <code>normalizeGlobal</code>.</p>
+     *
+     * @param normalizeGlobal1 a boolean.
+     */
     public void setNormalizeGlobal(final boolean normalizeGlobal1) {
         this.normalizeGlobal = normalizeGlobal1;
     }
 
+    /**
+     * <p>normalize.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param sm a {@link cross.datastructures.StatsMap} object.
+     * @param normalization a {@link java.lang.String} object.
+     * @param log1 a boolean.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array normalize(final Array a, final StatsMap sm,
             final String normalization, final boolean log1) {
         final MultiplicationFilter mf = new MultiplicationFilter(
@@ -144,6 +209,13 @@ public class NormalizationFilter extends AArrayFilter {
         return mf.apply(new Array[]{a})[0];
     }
 
+    /**
+     * <p>normalize.</p>
+     *
+     * @param al a {@link java.util.List} object.
+     * @param normalization a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Array> normalize(final List<Array> al,
             final String normalization) {
         final NormalizationFilter nf = Factory.getInstance().getObjectFactory().
@@ -154,6 +226,12 @@ public class NormalizationFilter extends AArrayFilter {
         return Arrays.asList(nf.apply(al.toArray(new Array[]{})));
     }
 
+    /**
+     * <p>normalizeGlobal.</p>
+     *
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Array> normalizeGlobal(final List<Array> al) {
         final NormalizationFilter nf = Factory.getInstance().getObjectFactory().
                 instantiate(NormalizationFilter.class);
@@ -163,6 +241,12 @@ public class NormalizationFilter extends AArrayFilter {
         return Arrays.asList(nf.apply(al.toArray(new Array[]{})));
     }
 
+    /**
+     * <p>normalizeLocalToUnitLength.</p>
+     *
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Array> normalizeLocalToUnitLength(final List<Array> al) {
         for (final Array a : al) {
             if (a.getRank() == 1) {
@@ -177,6 +261,7 @@ public class NormalizationFilter extends AArrayFilter {
         return al;
     }
 
+    /** {@inheritDoc} */
     @Override
     public NormalizationFilter copy() {
         return new NormalizationFilter(normalization, log, normalizeGlobal);

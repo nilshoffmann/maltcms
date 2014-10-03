@@ -50,6 +50,10 @@ import javax.xml.stream.XMLStreamReader;
  *
  * F Levander changing 2010-02-11. Changed parsing of CVparams from names to
  * accession numbers since those are stable.
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 public class MLScanAndHeaderParser {
 
@@ -60,18 +64,38 @@ public class MLScanAndHeaderParser {
 
     boolean isScan = false;
 
+    /**
+     * <p>Setter for the field <code>isScan</code>.</p>
+     *
+     * @param isScan a boolean.
+     */
     public void setIsScan(boolean isScan) {
         this.isScan = isScan;
     }
 
+    /**
+     * <p>setFileInputStream.</p>
+     *
+     * @param in a {@link java.io.FileInputStream} object.
+     */
     public void setFileInputStream(FileInputStream in) {
         this.fileIN = in;
     }
 
+    /**
+     * <p>getHeader.</p>
+     *
+     * @return a {@link org.systemsbiology.jrap.staxnxt.ScanHeader} object.
+     */
     public ScanHeader getHeader() {
         return tmpScanHeader;
     }
 
+    /**
+     * <p>getScan.</p>
+     *
+     * @return a {@link org.systemsbiology.jrap.staxnxt.Scan} object.
+     */
     public Scan getScan() {
         return tmpScan;
     }
@@ -82,7 +106,7 @@ public class MLScanAndHeaderParser {
      * multiple name-value pairs; the name of the name-value pair containing the
      * scan number is "scan", so I'm knocking off everything but that pair.
      *
-     * @param idString
+     * @param idString a {@link java.lang.String} object.
      * @return The scan number or if a numeric value couldn't be parsed.
      */
     protected int parseScanNumberFromSpectrumIdField(String idString) {
@@ -104,6 +128,9 @@ public class MLScanAndHeaderParser {
         return retval;
     }
 
+    /**
+     * <p>parseMLScanAndHeader.</p>
+     */
     public void parseMLScanAndHeader() {
         XMLStreamReader xmlSR = null;
         try {
@@ -130,6 +157,12 @@ public class MLScanAndHeaderParser {
         }
     }
 
+    /**
+     * <p>parseMLScanAndHeader.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @throws javax.xml.stream.XMLStreamException if any.
+     */
     public void parseMLScanAndHeader(XMLStreamReader xmlSR)
             throws XMLStreamException {
         boolean inSpectrum = false;
@@ -320,6 +353,13 @@ public class MLScanAndHeaderParser {
         }
     }
 
+    /**
+     * <p>getStringValue.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
+     */
     public String getStringValue(XMLStreamReader xmlSR, String name) {
         String value = "";
         try {
@@ -334,6 +374,13 @@ public class MLScanAndHeaderParser {
         return value;
     }
 
+    /**
+     * <p>getIntValue.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a int.
+     */
     public int getIntValue(XMLStreamReader xmlSR, String name) {
         int value = -1;
         try {
@@ -348,6 +395,13 @@ public class MLScanAndHeaderParser {
         return value;
     }
 
+    /**
+     * <p>getFloatValue.</p>
+     *
+     * @param xmlSR a {@link javax.xml.stream.XMLStreamReader} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a float.
+     */
     public float getFloatValue(XMLStreamReader xmlSR, String name) {
         float value = -1f;
         try {
@@ -362,6 +416,12 @@ public class MLScanAndHeaderParser {
         return value;
     }
 
+    /**
+     * <p>getPeaks.</p>
+     *
+     * @param peakData a {@link java.lang.String} object.
+     * @param count a int.
+     */
     public void getPeaks(String peakData, int count) {
         int precision = -1;
         if (count == 1) {

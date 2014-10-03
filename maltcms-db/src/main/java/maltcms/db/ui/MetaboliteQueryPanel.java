@@ -39,6 +39,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+/**
+ * <p>MetaboliteQueryPanel class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteQueryPanel extends JPanel implements KeyListener {
 
     /**
@@ -50,6 +56,11 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
     private JButton spb = null;
     private MetaboliteViewModel mvm = null;
 
+    /**
+     * <p>Constructor for MetaboliteQueryPanel.</p>
+     *
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     */
     public MetaboliteQueryPanel(MetaboliteViewModel mvm) {
         this.mvm = mvm;
         add(getJTextField());
@@ -90,6 +101,7 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void keyPressed(KeyEvent e) {
         // TODO Auto-generated method stub
@@ -98,6 +110,7 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void keyReleased(KeyEvent e) {
         Object o = e.getSource();
@@ -126,6 +139,7 @@ public class MetaboliteQueryPanel extends JPanel implements KeyListener {
     /* (non-Javadoc)
      * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void keyTyped(KeyEvent e) {
     }

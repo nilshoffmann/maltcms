@@ -38,22 +38,39 @@ import java.util.TreeMap;
 import cross.datastructures.tuple.Tuple2D;
 
 /**
+ * <p>WarpMap2D class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class WarpMap2D {
 
     private Image im1, im2;
     private List<Tuple2D<Point, Point>> anchors;
 
+    /**
+     * <p>setWarpFrom.</p>
+     *
+     * @param im1 a {@link java.awt.Image} object.
+     */
     public void setWarpFrom(Image im1) {
         this.im1 = im1;
     }
 
+    /**
+     * <p>setWarpTo.</p>
+     *
+     * @param im2 a {@link java.awt.Image} object.
+     */
     public void setWarpTo(Image im2) {
         this.im2 = im2;
     }
 
+    /**
+     * <p>Setter for the field <code>anchors</code>.</p>
+     *
+     * @param p a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public void setAnchors(Tuple2D<Point, Point>... p) {
         this.anchors = new ArrayList<>(Arrays.asList(p));
     }
@@ -63,7 +80,7 @@ public class WarpMap2D {
      * are supplied or any of the images is null, the original source image is
      * returned unwarped.
      *
-     * @return
+     * @return a {@link java.awt.Image} object.
      */
     public Image applyWarp() {
         if (this.im1 != null && this.im2 != null && this.anchors != null) {

@@ -8,6 +8,13 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * <p>ByteBufferIterator class.</p>
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
+ */
 public class ByteBufferIterator implements Iterator {
 
     private int INITIAL_BUFFERSIZE = 10000;
@@ -19,27 +26,58 @@ public class ByteBufferIterator implements Iterator {
     private ByteBuffer bb = null;
     private long totBytesRead = 0;
 
+    /**
+     * <p>Setter for the field <code>bufferSize</code>.</p>
+     *
+     * @param b a int.
+     */
     public void setBufferSize(int b) {
         this.bufferSize = b;
         //bb = ByteBuffer.allocate(bufferSize);
     }
 
+    /**
+     * <p>Getter for the field <code>bufferSize</code>.</p>
+     *
+     * @return a int.
+     */
     public int getBufferSize() {
         return this.bufferSize;
     }
 
+    /**
+     * <p>getFileSize.</p>
+     *
+     * @return a long.
+     */
     public long getFileSize() {
         return this.fSize;
     }
 
+    /**
+     * <p>getPath.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getPath() {
         return this.fPath;
     }
 
+    /**
+     * <p>getFilePos.</p>
+     *
+     * @return a long.
+     */
     public long getFilePos() {
         return totBytesRead;
     }
 
+    /**
+     * <p>Constructor for ByteBufferIterator.</p>
+     *
+     * @param fN a {@link java.lang.String} object.
+     * @throws java.io.IOException if any.
+     */
     public ByteBufferIterator(String fN) throws IOException {
         fPath = fN;
         System.out.println("Processing file " + fN);
@@ -50,11 +88,19 @@ public class ByteBufferIterator implements Iterator {
         fSize = fc.size();
     }
 
+    /**
+     * <p>Constructor for ByteBufferIterator.</p>
+     *
+     * @param fN a {@link java.lang.String} object.
+     * @param buflen a int.
+     * @throws java.io.IOException if any.
+     */
     public ByteBufferIterator(String fN, int buflen) throws IOException {
         this(fN);
         bufferSize = buflen;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean hasNext() {
         boolean hasNext = totBytesRead < fSize;
@@ -101,6 +147,7 @@ public class ByteBufferIterator implements Iterator {
      }
      */
 
+    /** {@inheritDoc} */
     @Override
     public ByteBuffer next() {
         try {
@@ -140,6 +187,7 @@ public class ByteBufferIterator implements Iterator {
         return bb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void remove() {
     }

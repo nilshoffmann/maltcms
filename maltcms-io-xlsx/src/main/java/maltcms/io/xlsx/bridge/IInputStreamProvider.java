@@ -30,12 +30,22 @@ package maltcms.io.xlsx.bridge;
 import java.io.InputStream;
 
 /**
+ * <p>IInputStreamProvider interface.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public interface IInputStreamProvider {
 
+    /**
+     * <p>openStream.</p>
+     *
+     * @return a {@link java.io.InputStream} object.
+     */
     public InputStream openStream();
 
+    /**
+     * <p>closeStream.</p>
+     */
     public void closeStream();
 }

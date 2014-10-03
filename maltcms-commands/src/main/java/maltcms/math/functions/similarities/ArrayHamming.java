@@ -37,12 +37,13 @@ import ucar.ma2.IndexIterator;
  * Hamming distance between binary vectors.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayHamming implements IArraySimilarity {
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         int d = 0;
@@ -59,6 +60,7 @@ public class ArrayHamming implements IArraySimilarity {
         return SimilarityTools.toSimilarity(d);
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         return new ArrayHamming();

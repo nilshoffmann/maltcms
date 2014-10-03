@@ -34,8 +34,22 @@ import java.util.List;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.peak.PeakArea2D;
 
+/**
+ * <p>IRegionGrowing interface.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public interface IRegionGrowing extends IConfigurable {
 
+    /**
+     * <p>getAreasFor.</p>
+     *
+     * @param seeds a {@link java.util.List} object.
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @return a {@link java.util.List} object.
+     */
     List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IScanLine slc);
 
 }

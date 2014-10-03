@@ -47,8 +47,10 @@ import maltcms.io.misc.StatsWriter;
 import maltcms.tools.MaltcmsTools;
 
 /**
+ * <p>PairwiseDistanceWorker class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -63,10 +65,7 @@ public class PairwiseDistanceWorker implements
     private int jobNumber;
     private int nJobs;
 
-    /**
-     *
-     * @return @throws Exception
-     */
+    /** {@inheritDoc} */
     @Override
     public PairwiseDistanceResult call() throws Exception {
         similarity.setWorkflow(getWorkflow());

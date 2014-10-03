@@ -70,7 +70,7 @@ import ucar.ma2.MAMath.MinMax;
  * of intensity values, using a user defined sample model and color model.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @RequiresVariables(names = {"var.scan_acquisition_time", "var.mass_values",
     "var.binned_intensity_values", "var.binned_scan_index"})
@@ -98,6 +98,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
     @Configurable
     private String timeUnit = "min";
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ColorRampReader crr = new ColorRampReader();
@@ -220,6 +221,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
         return t;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.scanAcquisitionTimeVariableName = cfg.getString(

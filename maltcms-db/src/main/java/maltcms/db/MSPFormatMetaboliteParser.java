@@ -44,6 +44,12 @@ import maltcms.datastructures.ms.Metabolite;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
+/**
+ * <p>MSPFormatMetaboliteParser class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MSPFormatMetaboliteParser {
 
     private ArrayDouble.D1 masses = null;
@@ -69,6 +75,11 @@ public class MSPFormatMetaboliteParser {
     private boolean nextIsPeakData = false;
     private int nnpeaks = 0;
 
+    /**
+     * <p>handleLine.</p>
+     *
+     * @param line a {@link java.lang.String} object.
+     */
     public void handleLine(String line) {
         if (line.startsWith("Name: ")) {
             handleName(line.substring("Name: ".length()));
@@ -107,6 +118,9 @@ public class MSPFormatMetaboliteParser {
         linecounter++;
     }
 
+    /**
+     * <p>createMetabolite.</p>
+     */
     public void createMetabolite() {
         if (this.id == null) {
             this.id = this.name;
@@ -149,10 +163,20 @@ public class MSPFormatMetaboliteParser {
         this.nextIsPeakData = false;
     }
 
+    /**
+     * <p>handleName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void handleName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>handleSynon.</p>
+     *
+     * @param synon a {@link java.lang.String} object.
+     */
     public void handleSynon(String synon) {
         if (synon.startsWith("DATE:")) {
             handleSynonDate(synon.substring("DATE:".length()));
@@ -181,36 +205,71 @@ public class MSPFormatMetaboliteParser {
         }
     }
 
+    /**
+     * <p>handleSynonDate.</p>
+     *
+     * @param date a {@link java.lang.String} object.
+     */
     public void handleSynonDate(String date) {
         // System.out.println("Date: "+date);
         this.syndate = date;
     }
 
+    /**
+     * <p>handleSynonName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void handleSynonName(String name) {
         // System.out.println("Name: "+name);
         this.synname = name;
     }
 
+    /**
+     * <p>handleSynonSP.</p>
+     *
+     * @param sp a {@link java.lang.String} object.
+     */
     public void handleSynonSP(String sp) {
         // System.out.println("Synon: SP:"+sp);
         this.sp = sp;
     }
 
+    /**
+     * <p>handleSynonMPIMPID.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public void handleSynonMPIMPID(String id) {
         // System.out.println("Synon: MPIMP-ID:"+id);
         handleSynonID(id);
     }
 
+    /**
+     * <p>handleSynonID.</p>
+     *
+     * @param id a {@link java.lang.String} object.
+     */
     public void handleSynonID(String id) {
         // System.out.println("Synon: ID:"+id);
         this.id = id;
     }
 
+    /**
+     * <p>handleSynonRI.</p>
+     *
+     * @param ri a {@link java.lang.String} object.
+     */
     public void handleSynonRI(String ri) {
         // System.out.println("Synon: RI:"+ri);
         this.ri = Double.parseDouble(ri);
     }
 
+    /**
+     * <p>handleSynonRT.</p>
+     *
+     * @param rt a {@link java.lang.String} object.
+     */
     public void handleSynonRT(String rt) {
         // System.out.println("Synon: RT:"+rt);
         // this.rt = Double.parseDouble(rt);
@@ -225,15 +284,30 @@ public class MSPFormatMetaboliteParser {
 
     }
 
+    /**
+     * <p>handleSynonMATCH.</p>
+     *
+     * @param match a {@link java.lang.String} object.
+     */
     public void handleSynonMATCH(String match) {
         System.out.println("IGNORING ATTRIBUTE MATCH=" + match);
     }
 
+    /**
+     * <p>handleFormula.</p>
+     *
+     * @param formula a {@link java.lang.String} object.
+     */
     public void handleFormula(String formula) {
         // System.out.println("formula: "+formula);
         this.formula = formula;
     }
 
+    /**
+     * <p>handleMW.</p>
+     *
+     * @param mw a {@link java.lang.String} object.
+     */
     public void handleMW(String mw) {
         // System.out.println("MW: "+mw);
         try {
@@ -249,21 +323,41 @@ public class MSPFormatMetaboliteParser {
         }
     }
 
+    /**
+     * <p>handleComments.</p>
+     *
+     * @param comments a {@link java.lang.String} object.
+     */
     public void handleComments(String comments) {
         // System.out.println("Comments: "+comments);
         this.comments = comments;
     }
 
+    /**
+     * <p>handleDBNo.</p>
+     *
+     * @param dbno a {@link java.lang.String} object.
+     */
     public void handleDBNo(String dbno) {
         // System.out.println("DB#: "+dbno);
         this.dbno = Integer.parseInt(dbno);
     }
 
+    /**
+     * <p>handleNumPeaks.</p>
+     *
+     * @param numpeaks a {@link java.lang.String} object.
+     */
     public void handleNumPeaks(String numpeaks) {
         // System.out.println("Num Peaks: "+numpeaks);
         this.npeaks = Integer.parseInt(numpeaks);
     }
 
+    /**
+     * <p>handleData.</p>
+     *
+     * @param data a {@link java.lang.String} object.
+     */
     public void handleData(String data) {
         if (this.masses == null) {
             this.masses = new ArrayDouble.D1(this.npeaks);
@@ -307,6 +401,12 @@ public class MSPFormatMetaboliteParser {
         }
     }
 
+    /**
+     * <p>parse.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link java.util.ArrayList} object.
+     */
     public ArrayList<IMetabolite> parse(File f) {
         this.metabolites = new ArrayList<>();
         try {
@@ -328,6 +428,11 @@ public class MSPFormatMetaboliteParser {
         return this.metabolites;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         MSPFormatMetaboliteParser gmp = new MSPFormatMetaboliteParser();
         if (args.length > 1) {

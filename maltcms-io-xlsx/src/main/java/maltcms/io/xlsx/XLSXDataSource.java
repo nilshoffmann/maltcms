@@ -48,13 +48,16 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>XLSXDataSource class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Slf4j
 @ServiceProvider(service = IDataSource.class)
 public final class XLSXDataSource implements IDataSource {
 
+    /** {@inheritDoc} */
     @Override
     public int canRead(IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
@@ -72,31 +75,37 @@ public final class XLSXDataSource implements IDataSource {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
         return getDataSourceFor(f).readAll(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(IVariableFragment f) throws IOException, ResourceNotAvailableException {
         return getDataSourceFor(f.getParent()).readIndexed(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(IVariableFragment f) throws IOException, ResourceNotAvailableException {
         return getDataSourceFor(f.getParent()).readSingle(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(IFileFragment f) throws IOException {
         return getDataSourceFor(f).readStructure(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(IVariableFragment f) throws IOException, ResourceNotAvailableException {
         return getDataSourceFor(f.getParent()).readStructure(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         final Set<String> al = new HashSet<>();
@@ -126,6 +135,7 @@ public final class XLSXDataSource implements IDataSource {
                 + StringTools.getFileExtension(f.getName()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean write(IFileFragment f) {
         return getDataSourceFor(f).write(f);
@@ -142,10 +152,12 @@ public final class XLSXDataSource implements IDataSource {
 //		return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(ConfigurationEvent ce) {
     }

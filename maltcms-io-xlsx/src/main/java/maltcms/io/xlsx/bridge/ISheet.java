@@ -28,10 +28,18 @@
 package maltcms.io.xlsx.bridge;
 
 /**
+ * <p>ISheet interface.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public interface ISheet extends Iterable<IRow> {
 
+    /**
+     * <p>getRow.</p>
+     *
+     * @param i a int.
+     * @return a {@link maltcms.io.xlsx.bridge.IRow} object.
+     */
     public IRow getRow(int i);
 }

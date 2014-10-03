@@ -28,10 +28,18 @@
 package maltcms.io.xlsx.bridge;
 
 /**
+ * <p>IWorkbook interface.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public interface IWorkbook {
 
+    /**
+     * <p>getSheet.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link maltcms.io.xlsx.bridge.ISheet} object.
+     */
     public ISheet getSheet(String name);
 }

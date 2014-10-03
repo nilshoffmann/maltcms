@@ -51,11 +51,16 @@ import jxl.write.WriteException;
  * http://jexcelapi.sourceforge.net/
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class XLSIOProvider {
 
+    /**
+     * <p>getCompoundNames.</p>
+     *
+     * @param w a {@link jxl.Workbook} object.
+     * @return a {@link java.util.Vector} object.
+     */
     public static Vector<String> getCompoundNames(Workbook w) {
         Vector<String> compounds = new Vector<>();
         if (w != null) {
@@ -71,6 +76,15 @@ public class XLSIOProvider {
         return compounds;
     }
 
+    /**
+     * <p>getPeaks.</p>
+     *
+     * @param w a {@link jxl.Workbook} object.
+     * @param rows a int.
+     * @param creator a {@link net.sf.maltcms.evaluation.spi.xcalibur.Creator} object.
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @return a {@link java.util.Vector} object.
+     */
     public static Vector<Peak> getPeaks(Workbook w, int rows, Creator creator, ObjectContainer oc) {
         Vector<Peak> peaks = new Vector<>();
         if (w != null) {
@@ -129,6 +143,12 @@ public class XLSIOProvider {
         return peaks;
     }
 
+    /**
+     * <p>toString.</p>
+     *
+     * @param c an array of {@link jxl.Cell} objects.
+     * @return a {@link java.lang.String} object.
+     */
     public static String toString(Cell[] c) {
         StringBuilder sb = new StringBuilder();
         for (Cell cell : c) {
@@ -137,6 +157,12 @@ public class XLSIOProvider {
         return sb.toString();
     }
 
+    /**
+     * <p>getContent.</p>
+     *
+     * @param c a {@link jxl.Cell} object.
+     * @return a double.
+     */
     public static double getContent(Cell c) {
         String s = getCellContent(c);
         if (s.isEmpty() || s.equals("N/A") || s.equals("N/F") || s.equals("Peak Not Found")) {
@@ -151,10 +177,22 @@ public class XLSIOProvider {
         }
     }
 
+    /**
+     * <p>getCellContent.</p>
+     *
+     * @param c a {@link jxl.Cell} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getCellContent(Cell c) {
         return c.getContents().trim();
     }
 
+    /**
+     * <p>getWorkbook.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link jxl.Workbook} object.
+     */
     public static Workbook getWorkbook(File f) {
         try {
             Workbook w = Workbook.getWorkbook(f);
@@ -166,26 +204,62 @@ public class XLSIOProvider {
         return null;
     }
 
+    /**
+     * <p>getAreaColumn.</p>
+     *
+     * @param s a {@link jxl.Sheet} object.
+     * @return a int.
+     */
     public static int getAreaColumn(Sheet s) {
         return s.findCell("Area").getColumn();
     }
 
+    /**
+     * <p>getHeightColumn.</p>
+     *
+     * @param s a {@link jxl.Sheet} object.
+     * @return a int.
+     */
     public static int getHeightColumn(Sheet s) {
         return s.findCell("Height").getColumn();
     }
 
+    /**
+     * <p>getRTColumn.</p>
+     *
+     * @param s a {@link jxl.Sheet} object.
+     * @return a int.
+     */
     public static int getRTColumn(Sheet s) {
         return s.findCell("RT").getColumn();
     }
 
+    /**
+     * <p>getStartTimeColumn.</p>
+     *
+     * @param s a {@link jxl.Sheet} object.
+     * @return a int.
+     */
     public static int getStartTimeColumn(Sheet s) {
         return s.findCell("Start Time").getColumn();
     }
 
+    /**
+     * <p>getEndTimeColumn.</p>
+     *
+     * @param s a {@link jxl.Sheet} object.
+     * @return a int.
+     */
     public static int getEndTimeColumn(Sheet s) {
         return s.findCell("End Time").getColumn();
     }
 
+    /**
+     * <p>getFilenames.</p>
+     *
+     * @param w a {@link jxl.Workbook} object.
+     * @return a {@link java.util.Vector} object.
+     */
     public static Vector<String> getFilenames(Workbook w) {
         Vector<String> filenames = new Vector<>();
         if (w != null) {
@@ -206,6 +280,11 @@ public class XLSIOProvider {
         return filenames;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         for (String arg : args) {
             File f = new File(arg);
@@ -225,6 +304,12 @@ public class XLSIOProvider {
         }
     }
 
+    /**
+     * <p>getCharacteristicMass.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Integer> getCharacteristicMass(String s) {
         final String name = s;
         int sidx = 0;
@@ -272,6 +357,13 @@ public class XLSIOProvider {
         return l;
     }
 
+    /**
+     * <p>importXLS.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param sheetNo a int.
+     * @return a {@link java.util.Vector} object.
+     */
     public static Vector<String[]> importXLS(File f, int sheetNo) {
         Vector<String[]> data = new Vector<>();
         if (f != null) {
@@ -303,6 +395,12 @@ public class XLSIOProvider {
         return data;
     }
 
+    /**
+     * <p>exportXLS.</p>
+     *
+     * @param content a {@link java.util.Vector} object.
+     * @param file a {@link java.io.File} object.
+     */
     public static void exportXLS(Vector<String[]> content, File file) {
         try {
             WritableWorkbook workbook = Workbook.createWorkbook(file);
@@ -324,6 +422,12 @@ public class XLSIOProvider {
         }
     }
 
+    /**
+     * <p>exportXLS.</p>
+     *
+     * @param table a {@link javax.swing.JTable} object.
+     * @param file a {@link java.io.File} object.
+     */
     public static void exportXLS(JTable table, File file) {
         Vector<String[]> v = new Vector<>();
 
@@ -348,6 +452,11 @@ public class XLSIOProvider {
         exportXLS(v, file);
     }
 
+    /**
+     * <p>exportXLS.</p>
+     *
+     * @param table a {@link javax.swing.JTable} object.
+     */
     public static void exportXLS(JTable table) {
         JFileChooser chooser = new JFileChooser();
         int returnVal = chooser.showOpenDialog(null);

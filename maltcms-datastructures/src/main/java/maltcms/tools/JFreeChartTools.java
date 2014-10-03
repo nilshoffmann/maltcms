@@ -33,12 +33,21 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYZDataset;
 
 /**
+ * <p>JFreeChartTools class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class JFreeChartTools {
 
+    /**
+     * <p>addXYZDataset.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @param result an array of double.
+     * @param row a int.
+     * @return a {@link java.util.List} object.
+     */
     public static List<double[]> addXYZDataset(List<double[]> l,
             double[] result, int row) {
         for (int i = 0; i < result.length; i++) {
@@ -51,12 +60,25 @@ public class JFreeChartTools {
         return l;
     }
 
+    /**
+     * <p>getXYDataset.</p>
+     *
+     * @param d an array of double.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link org.jfree.data.xy.DefaultXYDataset} object.
+     */
     public static DefaultXYDataset getXYDataset(double[] d, String name) {
         DefaultXYDataset dx = new DefaultXYDataset();
         dx.addSeries(name, getXYDataSeries(d));
         return dx;
     }
 
+    /**
+     * <p>getXYDataSeries.</p>
+     *
+     * @param d an array of double.
+     * @return an array of double.
+     */
     public static double[][] getXYDataSeries(double[] d) {
         double[][] data = new double[2][d.length];
         for (int i = 0; i < d.length; i++) {
@@ -66,6 +88,13 @@ public class JFreeChartTools {
         return data;
     }
 
+    /**
+     * <p>getXYZDataset.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link org.jfree.data.xy.XYZDataset} object.
+     */
     public static XYZDataset getXYZDataset(List<double[]> l, String name) {
         DefaultXYZDataset d = new DefaultXYZDataset();
         double[][] data = new double[3][l.size()];

@@ -50,7 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
  * (see cfg/maltcmsvars.properties).
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
@@ -66,6 +66,7 @@ public class DefaultVarLoader extends AFragmentCommand {
     @Configurable
     private List<String> additionalVariables = Collections.emptyList();
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(
             final TupleND<IFileFragment> inputFileFragments) {

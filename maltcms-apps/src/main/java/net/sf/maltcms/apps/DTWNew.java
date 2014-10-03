@@ -59,11 +59,18 @@ import org.apache.commons.configuration.CompositeConfiguration;
 import ucar.ma2.Array;
 
 /**
+ * <p>DTWNew class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class DTWNew {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         //i "input.basedir"
         //o "output.basedir"
@@ -180,6 +187,12 @@ public class DTWNew {
 
     }
 
+    /**
+     * <p>getStringFromFile.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link java.lang.String} object.
+     */
     public static String getStringFromFile(File f) {
         StringBuilder sb = new StringBuilder();
         try {

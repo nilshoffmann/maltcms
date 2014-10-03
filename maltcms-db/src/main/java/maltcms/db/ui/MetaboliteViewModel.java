@@ -41,6 +41,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>MetaboliteViewModel class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteViewModel extends AbstractTableModel {
 
     public final String COMMENTS = "Comments";
@@ -75,6 +81,11 @@ public class MetaboliteViewModel extends AbstractTableModel {
     private MetaboliteView mv = null;
     private boolean[] headerVisible = null;
 
+    /**
+     * <p>Constructor for MetaboliteViewModel.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     */
     public MetaboliteViewModel(ObjectContainer oc) {
         this.oc = oc;
         elements = new Vector<>();
@@ -146,11 +157,22 @@ public class MetaboliteViewModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * <p>setMetaboliteView.</p>
+     *
+     * @param mv a {@link maltcms.db.ui.MetaboliteView} object.
+     */
     public void setMetaboliteView(MetaboliteView mv) {
         this.mv = mv;
     }
 
     //HIER----------------------------------------------------------------------------
+    /**
+     * <p>setTableColumnVisible.</p>
+     *
+     * @param header a {@link java.lang.String} object.
+     * @param b a boolean.
+     */
     public void setTableColumnVisible(String header, boolean b) {
         //System.out.println("Visible table headers: "+Arrays.toString(headers));
         //System.out.println("All table headers: "+Arrays.toString(tableHeader));
@@ -183,10 +205,20 @@ public class MetaboliteViewModel extends AbstractTableModel {
 //		Method m = pmg.getMethodForGetterName(tableHeader[columnIndex]);
 //		return m.getReturnType();
 //    }
+    /**
+     * <p>Getter for the field <code>tableHeader</code>.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public String[] getTableHeader() {
         return tableHeader;
     }
 
+    /**
+     * <p>getVisibleTableHeader.</p>
+     *
+     * @return an array of {@link java.lang.String} objects.
+     */
     public String[] getVisibleTableHeader() {
         String[] s = new String[this.tableHeader.length - getNumberOfHiddenColumns()];
         for (int i = 0; i < s.length; i++) {
@@ -195,15 +227,26 @@ public class MetaboliteViewModel extends AbstractTableModel {
         return s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getColumnName(int column) {
         return tableHeader[getVisibleColumn(column)];
     }
 
+    /**
+     * <p>getObjectContainer.</p>
+     *
+     * @return a {@link com.db4o.ObjectContainer} object.
+     */
     public ObjectContainer getObjectContainer() {
         return oc;
     }
 
+    /**
+     * <p>query.</p>
+     *
+     * @param p a {@link com.db4o.query.Predicate} object.
+     */
     public void query(final Predicate<IMetabolite> p) {
         this.elements.clear();
         if (mv != null) {
@@ -299,6 +342,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
         return 0;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object getValueAt(int arg0, int arg1) {
         //return super.getValueAt(arg0, arg1);
@@ -322,6 +366,12 @@ public class MetaboliteViewModel extends AbstractTableModel {
         return "";
     }
 
+    /**
+     * <p>getMetaboliteAtRow.</p>
+     *
+     * @param arg0 a int.
+     * @return a {@link maltcms.datastructures.ms.IMetabolite} object.
+     */
     public IMetabolite getMetaboliteAtRow(int arg0) {
         if (arg0 < elements.size() && arg0 >= 0) {
             return elements.get(arg0);
@@ -329,6 +379,12 @@ public class MetaboliteViewModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * <p>getMethodForGetterName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link java.lang.reflect.Method} object.
+     */
     public Method getMethodForGetterName(String name) {
         Method method = pmg.getMethodForGetterName(name);
         return method;
@@ -337,6 +393,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getColumnCount()
      */
+    /** {@inheritDoc} */
     @Override
     public int getColumnCount() {
         return this.tableHeader.length - getNumberOfHiddenColumns();
@@ -345,6 +402,7 @@ public class MetaboliteViewModel extends AbstractTableModel {
     /* (non-Javadoc)
      * @see javax.swing.table.TableModel#getRowCount()
      */
+    /** {@inheritDoc} */
     @Override
     public int getRowCount() {
         return this.elements.size();

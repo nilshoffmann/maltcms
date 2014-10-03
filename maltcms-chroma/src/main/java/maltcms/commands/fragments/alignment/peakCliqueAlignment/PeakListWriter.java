@@ -46,12 +46,25 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 /**
+ * <p>PeakListWriter class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 public class PeakListWriter {
 
+    /**
+     * <p>savePeakList.</p>
+     *
+     * @param outputDirectory a {@link java.io.File} object.
+     * @param nameToFragment a {@link java.util.Map} object.
+     * @param peaks a {@link java.util.Collection} object.
+     * @param filename a {@link java.lang.String} object.
+     * @param type a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
+     */
     public File savePeakList(File outputDirectory, Map<String, IFileFragment> nameToFragment, Collection<IBipacePeak> peaks, String filename, String type) {
         File output = new File(outputDirectory, filename);
         output.getParentFile().mkdirs();

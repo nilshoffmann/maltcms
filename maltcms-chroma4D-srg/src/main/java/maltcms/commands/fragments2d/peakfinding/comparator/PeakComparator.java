@@ -32,16 +32,15 @@ import java.util.Comparator;
 import maltcms.datastructures.peak.Peak2D;
 
 /**
+ * <p>PeakComparator class.</p>
  *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 public class PeakComparator implements Comparator<Peak2D> {
 
-    /**
-     *
-     * @param o1
-     * @param o2
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public int compare(Peak2D o1, Peak2D o2) {
         Point p1 = o1.getPeakArea().getSeedPoint();

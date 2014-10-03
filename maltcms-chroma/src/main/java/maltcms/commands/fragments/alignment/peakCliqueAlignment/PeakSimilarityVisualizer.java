@@ -50,8 +50,10 @@ import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
 /**
+ * <p>PeakSimilarityVisualizer class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -60,6 +62,21 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
     private IWorkflow workflow;
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
 
+    /**
+     * <p>visualizePairwisePeakSimilarities.</p>
+     *
+     * @param outputDir a {@link java.io.File} object.
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param lhsName a {@link java.lang.String} object.
+     * @param lhsPeaks a {@link java.util.List} object.
+     * @param rhsName a {@link java.lang.String} object.
+     * @param rhsPeaks a {@link java.util.List} object.
+     * @param samples a int.
+     * @param prefix a {@link java.lang.String} object.
+     * @param minimize a boolean.
+     * @return a {@link java.io.File} object.
+     * @since 1.3.2
+     */
     public File visualizePairwisePeakSimilarities(File outputDir, final LongObjectMap<PeakEdge> edgeMap,
             final String lhsName, final List<? extends IBipacePeak> lhsPeaks,
             final String rhsName, final List<? extends IBipacePeak> rhsPeaks,
@@ -115,6 +132,14 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
         return null;
     }
 
+    /**
+     * <p>visualizePeakSimilarities.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param hm a {@link java.util.Map} object.
+     * @param samples a int.
+     * @param prefix a {@link java.lang.String} object.
+     */
     public void visualizePeakSimilarities(final LongObjectMap<PeakEdge> edgeMap,
             final Map<String, List<? extends IBipacePeak>> hm, final int samples,
             final String prefix) {
@@ -142,6 +167,7 @@ public class PeakSimilarityVisualizer implements IWorkflowElement {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void appendXML(Element e) {
     }

@@ -35,9 +35,17 @@ import java.awt.geom.Point2D;
  * useful for range searches along a given line/dimension.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PerpendicularDistance {
 
+    /**
+     * <p>distance.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param l a {@link java.awt.geom.Line2D} object.
+     * @return a double.
+     */
     public double distance(Point2D p, Line2D l) {
         double m = getM(l);
         double b = getB(l);

@@ -50,7 +50,8 @@ import ucar.ma2.Array;
  * Shorthand class for peaks.
  *
  * @author Nils Hoffmann
- *
+ * 
+ * @since 1.3.2
  */
 @Data
 @Slf4j
@@ -78,6 +79,15 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
     @Setter(AccessLevel.NONE)
     private int associationId;
 
+    /**
+     * <p>Constructor for PeakNG.</p>
+     *
+     * @param scanIndex a int.
+     * @param array a {@link ucar.ma2.Array} object.
+     * @param sat a double.
+     * @param association a {@link java.lang.String} object.
+     * @param associationId a int.
+     */
     public PeakNG(int scanIndex, Array array, double sat, String association, int associationId) {
         super(UUID.nameUUIDFromBytes((association + "-" + scanIndex).getBytes()));
         this.scanIndex = scanIndex;
@@ -89,11 +99,13 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         this.peakId = peakIDs++;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getMsIntensities() {
         return msIntensities;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMsIntensities(Array a) {
         if (a == null) {
@@ -104,14 +116,13 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Add a similarity to Peak p. Resets the sortedPeaks list for the
      * associated FileFragment of Peak p, so that a subsequent call to
      * getPeakWithHighestSimilarity or getPeaksSortedBySimilarity will rebuild
      * the list of peaks sorted ascending according to their similarity to this
      * peakId.
-     *
-     * @param p
-     * @param similarity
      */
     @Override
     public void addSimilarity(LongObjectMap<PeakEdge> bestHits, final IBipacePeak p, final double similarity) {
@@ -132,11 +143,13 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public long keyTo(IBipacePeak p) {
         return keyTo(p.getAssociationId());
     }
 
+    /** {@inheritDoc} */
     @Override
     public long keyTo(int associationId) {
         return keyTo(associationId, peakId);
@@ -147,26 +160,61 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 //		s1 = (s1 * (s1 + 1)) / 2;
 //		return s1 + peak;
 //	}
+    /**
+     * <p>keyTo.</p>
+     *
+     * @param source a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @param target a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @return a long.
+     */
     public long keyTo(IBipacePeak source, IBipacePeak target) {
         return keyTo(target.getAssociationId(), source.getPeakId());
     }
 
+    /**
+     * <p>keyTo.</p>
+     *
+     * @param source a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @param targetPartitionIndex a int.
+     * @return a long.
+     */
     public long keyTo(IBipacePeak source, int targetPartitionIndex) {
         return keyTo(targetPartitionIndex, source.getPeakId());
     }
 
+    /**
+     * <p>keyTo.</p>
+     *
+     * @param partitionKey a int.
+     * @param peakId a int.
+     * @return a long.
+     */
     public long keyTo(int partitionKey, int peakId) {
         return highLowPair(partitionKey, peakId);
     }
 
+    /**
+     * <p>highLowPair.</p>
+     *
+     * @param x a int.
+     * @param y a int.
+     * @return a long.
+     */
     public static long highLowPair(int x, int y) {
         return ((long) x) << 32 | (long) y;
     }
 
+    /**
+     * <p>highLowUnPair.</p>
+     *
+     * @param z a long.
+     * @return an array of int.
+     */
     public static int[] highLowUnPair(long z) {
         return new int[]{(int) (z >> 32), (int) (z & 0xFFFFFFFF)};
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clearSimilarities(LongObjectMap<PeakEdge> bestHits, int associationId) {
         long key = keyTo(associationId);
@@ -177,10 +225,9 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 //		return bestHits;
 //	}
     /**
-     * Only call this method, after having added all similarities!
+     * {@inheritDoc}
      *
-     * @param associationId
-     * @return
+     * Only call this method, after having added all similarities!
      */
     @Override
     public List<UUID> getPeaksSortedBySimilarity(LongObjectMap<PeakEdge> bestHits, final int associationId) {
@@ -192,6 +239,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         return java.util.Collections.emptyList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getPeakWithHighestSimilarity(LongObjectMap<PeakEdge> bestHits, final int associationId) {
         long key = keyTo(associationId);
@@ -202,16 +250,19 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         return null;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getScanAcquisitionTime() {
         return this.sat;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getScanIndex() {
         return this.scanIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSimilarity(LongObjectMap<PeakEdge> bestHits, final IBipacePeak p) {
         long key = keyTo(p);
@@ -222,6 +273,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         return Double.NaN;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isBidiBestHitFor(LongObjectMap<PeakEdge> bestHits, final IBipacePeak p) {
         final UUID pT = getPeakWithHighestSimilarity(bestHits, p.getAssociationId());
@@ -236,6 +288,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void retainSimilarityRemoveRest(LongObjectMap<PeakEdge> bestHits, final IBipacePeak p) {
 //		for (String association : keyMap.keySet()) {
@@ -247,11 +300,13 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 //		}
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return getUniqueId().hashCode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -266,6 +321,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
      * @see
      * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         switch (name) {
@@ -288,6 +344,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
      *
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         List<String> superFeatureNames = super.getFeatureNames();
@@ -297,6 +354,7 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
         return allFeatures;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if (o != null && o instanceof PeakNG) {

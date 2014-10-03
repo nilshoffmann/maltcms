@@ -40,7 +40,7 @@ import org.jfree.chart.plot.XYPlot;
  * that they are vertically stacked (default).
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 public class CombinedDomainXYChart extends AChart<XYPlot> {
 
@@ -50,6 +50,14 @@ public class CombinedDomainXYChart extends AChart<XYPlot> {
     private CombinedDomainXYPlot cdxyp = null;
     private int gap = 10;
 
+    /**
+     * <p>Constructor for CombinedDomainXYChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param domain_axis_name a {@link java.lang.String} object.
+     * @param headless a boolean.
+     * @param subplots1 a {@link java.util.List} object.
+     */
     public CombinedDomainXYChart(final String title1,
             final String domain_axis_name, final boolean headless,
             final List<XYPlot> subplots1) {
@@ -58,6 +66,7 @@ public class CombinedDomainXYChart extends AChart<XYPlot> {
         this.subplots = subplots1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public XYPlot create() {
         this.cdxyp = new CombinedDomainXYPlot(new NumberAxis(this.x_axis));
@@ -79,15 +88,22 @@ public class CombinedDomainXYChart extends AChart<XYPlot> {
         return this.cdxyp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
+    /**
+     * <p>Setter for the field <code>gap</code>.</p>
+     *
+     * @param i a int.
+     */
     public void setGap(final int i) {
         this.gap = i;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

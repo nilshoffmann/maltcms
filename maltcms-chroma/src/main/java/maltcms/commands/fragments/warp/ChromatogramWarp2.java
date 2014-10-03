@@ -71,7 +71,7 @@ import ucar.ma2.MAMath;
  * chromatogram to the time/scans of reference chromatogram.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @RequiresVariables(names = {"var.multiple_alignment",
     "var.multiple_alignment_names", "var.multiple_alignment_type",
@@ -128,11 +128,12 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     }
 
     /**
+     * <p>copyReference.</p>
      *
-     * @param ref
-     * @param copy
-     * @param iw
-     * @return
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param copy a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment copyReference(final IFileFragment ref,
             final IFileFragment copy, final IWorkflow iw) {
@@ -166,6 +167,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         TupleND<IFileFragment> wt = createWorkFragments(t);
@@ -314,6 +316,7 @@ public class ChromatogramWarp2 extends AFragmentCommand {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.anchorScanIndexVariableName = cfg.getString(
@@ -333,11 +336,13 @@ public class ChromatogramWarp2 extends AFragmentCommand {
      * file, not originalFile, since we want to keep additional information,
      * which we already found out.
      *
-     * @param ref
-     * @param query
-     * @param path
-     * @param toLHS
-     * @return
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param path a {@link java.util.List} object.
+     * @param toLHS a boolean.
+     * @param querySource a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param queryTarget a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public IFileFragment warp(final IFileFragment ref,
             final IFileFragment querySource, final IFileFragment queryTarget,
@@ -438,10 +443,10 @@ public class ChromatogramWarp2 extends AFragmentCommand {
      * @param ref reference IFileFragment
      * @param toBeWarped the to-be-warped IFileFragment
      * @param path alignment path of alignment between a and b
-     * @param plainVars list of variable names, which should be warped
      * @param toLHS whether warping should be done from right to left (true) or
      * vice versa (false)
      * @return FileFragment containing warped data
+     * @param indexedVars a {@link java.util.List} object.
      */
     public IFileFragment warp2D(final IFileFragment warpedB,
             final IFileFragment ref, final IFileFragment toBeWarped,
@@ -582,12 +587,13 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     }
 
     /**
+     * <p>projectToLHS.</p>
      *
-     * @param lhs
-     * @param al
-     * @param rhs
-     * @param average
-     * @return
+     * @param lhs a {@link ucar.ma2.Array} object.
+     * @param al a {@link java.util.List} object.
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param average a boolean.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
             final Array rhs, final boolean average) {
@@ -602,12 +608,13 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     }
 
     /**
+     * <p>projectToRHS.</p>
      *
-     * @param rhs
-     * @param al
-     * @param lhs
-     * @param average
-     * @return
+     * @param rhs a {@link ucar.ma2.Array} object.
+     * @param al a {@link java.util.List} object.
+     * @param lhs a {@link ucar.ma2.Array} object.
+     * @param average a boolean.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
             final Array lhs, final boolean average) {
@@ -627,10 +634,10 @@ public class ChromatogramWarp2 extends AFragmentCommand {
      * assumes target scale of warp on left side of path, processedFile should
      * contain the data to the right side of the path.
      *
-     * @param queryTarget
-     * @param processedFile
-     * @param path
-     * @param toLHS
+     * @param queryTarget a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param path a {@link java.util.List} object.
+     * @param toLHS a boolean.
+     * @param querySource a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public void warpAnchors(final IFileFragment queryTarget,
             final IFileFragment querySource, final List<Tuple2DI> path,

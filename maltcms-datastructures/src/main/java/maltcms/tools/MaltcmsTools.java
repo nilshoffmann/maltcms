@@ -89,7 +89,7 @@ import ucar.nc2.Dimension;
  * andims compatible variables. Sort of an abstraction layer.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class MaltcmsTools {
@@ -104,12 +104,12 @@ public class MaltcmsTools {
      * Calculates the normalized index of massValues, by subtracting minmz and
      * dividing by maxmz-minmz.
      *
-     * @param massValues mass value to bin
      * @param minmz minimum massValues of all mass values over all
      * chromatograms, can be zero
      * @param maxmz maximum massValues of all mass values over all chromatograms
      * @param resolution multiplication factor to scale the mass range
      * @return an integer bin for massValues, starting at 0
+     * @param mz a double.
      */
     public static int binMZ(final double mz, final double minmz,
             final double maxmz, final double resolution) {
@@ -148,8 +148,8 @@ public class MaltcmsTools {
     /**
      * Use standard rounding.
      *
-     * @param massValues
-     * @return
+     * @param mz a double.
+     * @return a int.
      */
     public static int binMZDefault(final double mz) {
         return (int) Math.rint(mz);
@@ -160,9 +160,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>binMZFloor.</p>
      *
-     * @param massValues
-     * @return
+     * @param mz a double.
+     * @return a int.
      */
     public static int binMZFloor(final double mz) {
         return (int) Math.floor(mz);
@@ -171,8 +172,8 @@ public class MaltcmsTools {
     /**
      * Use rounding according to Heiko's distribution analysis.
      *
-     * @param massValues
-     * @return
+     * @param mz a double.
+     * @return a int.
      */
     public static int binMZHeiko(final double mz) {
         final int preComma = (int) (mz);
@@ -184,14 +185,15 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>buildBinaryMassVectors.</p>
      *
-     * @param denseArrays
-     * @param binary_mass_values
-     * @param mass_values
-     * @param intensity_values
-     * @param scan_index
-     * @param maskedMasses
-     * @return
+     * @param denseArrays a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param binary_mass_values a {@link java.lang.String} object.
+     * @param mass_values a {@link java.lang.String} object.
+     * @param intensity_values a {@link java.lang.String} object.
+     * @param scan_index a {@link java.lang.String} object.
+     * @param maskedMasses a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment buildBinaryMassVectors(
             final IFileFragment denseArrays, final String binary_mass_values,
@@ -238,10 +240,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>chrom2crs.</p>
      *
-     * @param arrays
      * @return a tuple containing the index offsets as first array and the
      * flattened masses and intensities within the second tuple
+     * @param chrom a {@link maltcms.datastructures.ms.Chromatogram1D} object.
      */
     public static Tuple2D<Array, Tuple2D<Array, Array>> chrom2crs(
             final Chromatogram1D chrom) {
@@ -268,10 +271,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>copyEics.</p>
      *
-     * @param intensities
-     * @param eics
-     * @return
+     * @param intensities a {@link java.util.List} object.
+     * @param eics an array of {@link java.lang.Integer} objects.
+     * @return a {@link java.util.List} object.
      */
     public static List<Array> copyEics(final List<Array> intensities,
             final Integer[] eics) {
@@ -295,11 +299,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>createFlattenedArrays.</p>
      *
-     * @param file
-     * @param masses
-     * @param intensities
-     * @return
+     * @param file a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param masses a {@link java.util.List} object.
+     * @param intensities a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<VariableFragment, Tuple2D<VariableFragment, VariableFragment>> createFlattenedArrays(
             final IFileFragment file, final List<Array> masses,
@@ -351,11 +356,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>createIntegratedValueArray.</p>
      *
-     * @param file
-     * @param varname
-     * @param values
-     * @return
+     * @param file a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param varname a {@link java.lang.String} object.
+     * @param values a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.fragments.IVariableFragment} object.
      */
     public static IVariableFragment createIntegratedValueArray(
             final IFileFragment file, final String varname,
@@ -371,8 +377,10 @@ public class MaltcmsTools {
     }
 
     /**
-     * @param fileFragment
-     * @param a
+     * <p>createIntensitiesArray.</p>
+     *
+     * @param fileFragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param a a {@link ucar.ma2.Array} object.
      */
     public static void createIntensitiesArray(final IFileFragment fileFragment,
             final Array a) {
@@ -384,10 +392,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>createMinMaxMassValueArrays.</p>
      *
-     * @param file
-     * @param scans
-     * @return
+     * @param file a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param scans a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<IVariableFragment, IVariableFragment> createMinMaxMassValueArrays(
             final IFileFragment file, final List<Array> scans) {
@@ -440,14 +449,15 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>createSparse.</p>
      *
-     * @param index
-     * @param values
-     * @param minindex
-     * @param maxindex
-     * @param nbins
-     * @param massBinResolution
-     * @return
+     * @param index a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @param values a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @param minindex a int.
+     * @param maxindex a int.
+     * @param nbins a int.
+     * @param massBinResolution a double.
+     * @return a {@link ucar.ma2.Sparse} object.
      */
     public static Sparse createSparse(final IVariableFragment index,
             final IVariableFragment values, final int minindex,
@@ -464,12 +474,13 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>findGlobalMinMax.</p>
      *
-     * @param ff
-     * @param mmin
-     * @param mmax
-     * @param fallback
-     * @return
+     * @param ff a {@link cross.datastructures.tuple.TupleND} object.
+     * @param mmin a {@link java.lang.String} object.
+     * @param mmax a {@link java.lang.String} object.
+     * @param fallback a {@link java.lang.String} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Double, Double> findGlobalMinMax(
             final TupleND<IFileFragment> ff, final String mmin,
@@ -527,10 +538,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getAnchors.</p>
      *
-     * @param ff1
-     * @param ff2
-     * @return
+     * @param ff1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param ff2 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<List<IAnchor>, List<IAnchor>> getAnchors(
             final IFileFragment ff1, final IFileFragment ff2) {
@@ -577,10 +589,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getBinnedMS.</p>
      *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param iff
-     * @param i
-     * @return
+     * @param i a int.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Array> getBinnedMS(final IFileFragment iff,
             final int i) {
@@ -596,9 +610,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getBinnedMZIs.</p>
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<List<Array>, List<Array>> getBinnedMZIs(
             final IFileFragment ff) {
@@ -619,15 +634,16 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getEIC.</p>
      *
-     * @param f
-     * @param eicStart
-     * @param eicStop
-     * @param normalize
-     * @param keepMaxInBin
-     * @param start
-     * @param nscans
-     * @return
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param eicStart a double.
+     * @param eicStop a double.
+     * @param normalize a boolean.
+     * @param keepMaxInBin a boolean.
+     * @param start a int.
+     * @param nscans a int.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array getEIC(final IFileFragment f, final double eicStart,
             final double eicStop, final boolean normalize,
@@ -718,13 +734,15 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getEICs.</p>
      *
-     * @param f
-     * @param resolution
-     * @param start
-     * @param nscans
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param resolution a double.
+     * @param start a int.
+     * @param nscans a int.
      * @return a pair holding an array with the binned mass values and a list
      * with eics corresponding to each binned mass value
+     * @since 1.3.2
      */
     public static Tuple2D<Array, List<Array>> getEICs(final IFileFragment f, final double resolution, int start, int nscans) {
         Range[] originalRange = null;
@@ -799,13 +817,14 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getEIC.</p>
      *
-     * @param f
-     * @param eicStart
-     * @param eicStop
-     * @param normalize
-     * @param keepMaxInBin
-     * @return
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param eicStart a double.
+     * @param eicStop a double.
+     * @param normalize a boolean.
+     * @param keepMaxInBin a boolean.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array getEIC(final IFileFragment f, final double eicStart,
             final double eicStop, final boolean normalize,
@@ -821,10 +840,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getFileFragmentsFromStringArray.</p>
      *
-     * @param pwdFile
-     * @param varname
-     * @return
+     * @param pwdFile a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param varname a {@link java.lang.String} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
      */
     public static TupleND<IFileFragment> getFileFragmentsFromStringArray(
             final IFileFragment pwdFile, final String varname) {
@@ -848,9 +868,9 @@ public class MaltcmsTools {
      * Applies a filter array before, which sets all ranks to -1 if that index
      * is masked. Then the first index with rank >=0 is searched and returned.
      *
-     * @param intens
-     * @param maskedMassesIndices
-     * @return
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @param maskedMassesIndices an array of int.
+     * @return a int.
      */
     public static int getIndexOfMaxIntensity(final Array intens,
             final int[] maskedMassesIndices) {
@@ -867,9 +887,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getIndexOfMaxIntensity.</p>
      *
-     * @param intens
-     * @return
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @return a int.
      */
     public static int getIndexOfMaxIntensity(final Array intens) {
         final int[] ranksByIntensity = MaltcmsTools.ranksByIntensity(intens);
@@ -877,10 +898,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getTopKIndicesOfMaxIntensity.</p>
      *
-     * @param intens
-     * @param k
-     * @return
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @param k a int.
+     * @return an array of int.
      */
     public static int[] getTopKIndicesOfMaxIntensity(final Array intens,
             final int k) {
@@ -891,9 +913,9 @@ public class MaltcmsTools {
     /**
      * Returns mass of signal with maximum intensity.
      *
-     * @param masses
-     * @param intens
-     * @return
+     * @param masses a {@link ucar.ma2.Array} object.
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public static double getMaxMass(final Array masses, final Array intens
     ) {
@@ -912,11 +934,11 @@ public class MaltcmsTools {
      * the same (within epsilon) of maxMass. Returns -1 if no mass was found
      * within epsilon and otherwise the index of the mass within the scan.
      *
-     * @param masses
-     * @param intens
-     * @param maxMass
-     * @param epsilon
-     * @return
+     * @param masses a {@link ucar.ma2.Array} object.
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @param maxMass a double.
+     * @param epsilon a double.
+     * @return a {@link java.util.List} object.
      */
     public static List<Integer> isMaxMass(final Array masses,
             final Array intens, final double maxMass, final double epsilon) {
@@ -967,8 +989,8 @@ public class MaltcmsTools {
     /**
      * Returns maximum intensity in scan.
      *
-     * @param intens
-     * @return
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public static double getMaxMassIntensity(final Array intens) {
         final Index idx = intens.getIndex();
@@ -985,12 +1007,12 @@ public class MaltcmsTools {
      *
      * apex is from 0...nscans-1
      *
-     * @param f
-     * @param apex
-     * @param start
-     * @param nscans
-     * @param massResolution
-     * @return
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param apex a int.
+     * @param start a int.
+     * @param nscans a int.
+     * @param massResolution a double.
+     * @return a {@link java.util.List} object.
      */
     public static List<Tuple2D<Double, Double>> getPeakingMasses(
             final IFileFragment f, int apex, int start, int nscans,
@@ -1035,11 +1057,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>isMassWithinEpsilon.</p>
      *
-     * @param refMass
-     * @param testMass
-     * @param epsilon
-     * @return
+     * @param refMass a double.
+     * @param testMass a double.
+     * @param epsilon a double.
+     * @return a boolean.
      */
     public static boolean isMassWithinEpsilon(final double refMass,
             final double testMass, final double epsilon) {
@@ -1050,10 +1073,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMaxMassIntensity.</p>
      *
-     * @param intens
-     * @param epsilon
-     * @return
+     * @param intens a {@link ucar.ma2.Array} object.
+     * @param epsilon a double.
+     * @return a double.
      */
     public static double getMaxMassIntensity(final Array intens,
             final double epsilon) {
@@ -1063,9 +1087,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMinMaxMassRange.</p>
      *
-     * @param f
-     * @return
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Double, Double> getMinMaxMassRange(
             final IFileFragment f) {
@@ -1091,9 +1116,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMinMaxMassRange.</p>
      *
-     * @param fragments
-     * @return
+     * @param fragments a {@link java.util.Collection} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Double, Double> getMinMaxMassRange(Collection<IFileFragment> fragments) {
         double min_mass = Double.POSITIVE_INFINITY;
@@ -1107,10 +1133,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMinMaxMassRange.</p>
      *
-     * @param reference
-     * @param query
-     * @return
+     * @param reference a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Double, Double> getMinMaxMassRange(
             final IFileFragment reference, final IFileFragment query) {
@@ -1122,10 +1149,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMS.</p>
      *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param iff
-     * @param i
-     * @return
+     * @param i a int.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Array> getMS(final IFileFragment iff,
             final int i) {
@@ -1139,9 +1168,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMZIs.</p>
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<List<Array>, List<Array>> getMZIs(
             final IFileFragment ff) {
@@ -1161,11 +1191,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getNumberOfIntegerMassBins.</p>
      *
-     * @param minMass
-     * @param maxMass
-     * @param resolution
-     * @return
+     * @param minMass a double.
+     * @param maxMass a double.
+     * @param resolution a double.
+     * @return a int.
      */
     public static int getNumberOfIntegerMassBins(final double minMass,
             final double maxMass, final double resolution) {
@@ -1174,9 +1205,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getNumberOfBinnedScans.</p>
      *
-     * @param iff
-     * @return
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a int.
      */
     public static int getNumberOfBinnedScans(final IFileFragment iff) {
         final IVariableFragment scan_index = iff.getChild(Factory.getInstance().getConfiguration().getString("var.binned_scan_index",
@@ -1186,9 +1218,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getNumberOfScans.</p>
      *
-     * @param iff
-     * @return
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a int.
      */
     public static int getNumberOfScans(final IFileFragment iff) {
         final IVariableFragment scan_index = iff.getChild(Factory.getInstance().getConfiguration().getString("var.scan_index", "scan_index"));
@@ -1196,11 +1229,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getPairwiseDistanceFragment.</p>
      *
-     * @param f
-     * @param pwdExtension
-     * @return
-     * @throws ResourceNotAvailableException
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param pwdExtension a {@link java.lang.String} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment getPairwiseDistanceFragment(
             final IFileFragment f, final String pwdExtension
@@ -1213,10 +1247,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getPairwiseDistanceFragment.</p>
      *
-     * @param t
-     * @return
-     * @throws ResourceNotAvailableException
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment getPairwiseDistanceFragment(
             final TupleND<IFileFragment> t)
@@ -1225,11 +1260,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getPairwiseDistanceFragment.</p>
      *
-     * @param t
-     * @param pwdExtension
-     * @return
-     * @throws ResourceNotAvailableException
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     * @param pwdExtension a {@link java.lang.String} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment getPairwiseDistanceFragment(
             final TupleND<IFileFragment> t, final String pwdExtension)
@@ -1239,9 +1275,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getAlignmentsFromFragment.</p>
      *
-     * @param pwd
-     * @return
+     * @param pwd a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
      */
     public static TupleND<IFileFragment> getAlignmentsFromFragment(
             final IFileFragment pwd) {
@@ -1251,9 +1288,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getPairwiseAlignments.</p>
      *
-     * @param pwdf
-     * @return
+     * @param pwdf a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
      */
     public static TupleND<IFileFragment> getPairwiseAlignments(
             final IFileFragment pwdf) {
@@ -1264,11 +1302,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getPairwiseAlignment.</p>
      *
-     * @param pwdf
-     * @param ref
-     * @param query
-     * @return
+     * @param pwdf a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment getPairwiseAlignment(final IFileFragment pwdf,
             final IFileFragment ref, final IFileFragment query) {
@@ -1276,11 +1315,12 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getPairwiseAlignment.</p>
      *
-     * @param pwalignments
-     * @param ref
-     * @param query
-     * @return
+     * @param pwalignments a {@link cross.datastructures.tuple.TupleND} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param query a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment getPairwiseAlignment(
             final TupleND<IFileFragment> pwalignments, final IFileFragment ref,
@@ -1300,10 +1340,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getScanAcquisitionTime.</p>
      *
-     * @param iff
-     * @param scan
-     * @return
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param scan a int.
+     * @return a double.
      */
     public static double getScanAcquisitionTime(final IFileFragment iff,
             final int scan) {
@@ -1317,9 +1358,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getTIC.</p>
      *
-     * @param f
-     * @return
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array getTIC(final IFileFragment f) {
         EvalTools.notNull(f, MaltcmsTools.class);
@@ -1331,10 +1373,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getTIC.</p>
      *
-     * @param iff
-     * @param scan
-     * @return
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param scan a int.
+     * @return a double.
      */
     public static double getTIC(final IFileFragment iff, final int scan) {
         final String sat = Factory.getInstance().getConfiguration().getString(
@@ -1347,9 +1390,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getWarpPath.</p>
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Tuple2DI> getWarpPath(final IFileFragment ff) {
         final String wpi = Factory.getInstance().getConfiguration().getString(
@@ -1365,10 +1409,11 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>pairedEICs.</p>
      *
-     * @param eics1
-     * @param eics2
-     * @return
+     * @param eics1 a {@link java.util.List} object.
+     * @param eics2 a {@link java.util.List} object.
+     * @return an array of {@link java.lang.Integer} objects.
      */
     public static Integer[] pairedEICs(
             final List<Tuple2D<Double, Double>> eics1,
@@ -1390,9 +1435,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>parseMaskedMassesList.</p>
      *
-     * @param l
-     * @return
+     * @param l a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Double> parseMaskedMassesList(final List<?> l) {
         if (l.size() > 0) {
@@ -1421,9 +1467,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>prepareAnchors.</p>
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<IAnchor> prepareAnchors(final IFileFragment ff) {
         EvalTools.notNull(ff, MaltcmsTools.class);
@@ -1556,14 +1603,15 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>prepareArraysMZIasList.</p>
      *
-     * @param ff
-     * @param index_name
-     * @param mz_name
-     * @param intens_name
-     * @param mass_range_min_name
-     * @param mass_range_max_name
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param index_name a {@link java.lang.String} object.
+     * @param mz_name a {@link java.lang.String} object.
+     * @param intens_name a {@link java.lang.String} object.
+     * @param mass_range_min_name a {@link java.lang.String} object.
+     * @param mass_range_max_name a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Array> prepareArraysMZIasList(final IFileFragment ff,
             final String index_name, final String mz_name,
@@ -1613,19 +1661,21 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>prepareDenseArraysMZI.</p>
      *
-     * @param input
+     * @param input a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param output
-     * @param scan_index
-     * @param mass_values
-     * @param intensity_values
-     * @param binned_scan_index
-     * @param binned_mass_values
-     * @param binned_intensity_values
-     * @param min_mass
-     * @param max_mass
      * @param outputDir
-     * @return
+     * @param scan_index a {@link java.lang.String} object.
+     * @param mass_values a {@link java.lang.String} object.
+     * @param intensity_values a {@link java.lang.String} object.
+     * @param binned_scan_index a {@link java.lang.String} object.
+     * @param binned_mass_values a {@link java.lang.String} object.
+     * @param binned_intensity_values a {@link java.lang.String} object.
+     * @param min_mass a {@link java.lang.Double} object.
+     * @param max_mass a {@link java.lang.Double} object.
+     * @param outputDir a {@link java.io.File} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment prepareDenseArraysMZI(final IFileFragment input, final IFileFragment output,
             final String scan_index, final String mass_values,
@@ -1722,18 +1772,19 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>prepareDenseArraysMZI.</p>
      *
-     * @param ff
-     * @param scan_index
-     * @param mass_values
-     * @param intensity_values
-     * @param binned_scan_index
-     * @param binned_mass_values
-     * @param binned_intensity_values
-     * @param min_mass
-     * @param max_mass
-     * @param outputDir
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param scan_index a {@link java.lang.String} object.
+     * @param mass_values a {@link java.lang.String} object.
+     * @param intensity_values a {@link java.lang.String} object.
+     * @param binned_scan_index a {@link java.lang.String} object.
+     * @param binned_mass_values a {@link java.lang.String} object.
+     * @param binned_intensity_values a {@link java.lang.String} object.
+     * @param min_mass a {@link java.lang.Double} object.
+     * @param max_mass a {@link java.lang.Double} object.
+     * @param outputDir a {@link java.io.File} object.
+     * @return a {@link cross.datastructures.fragments.IFileFragment} object.
      */
     public static IFileFragment prepareDenseArraysMZI(final IFileFragment ff,
             final String scan_index, final String mass_values,
@@ -1751,10 +1802,12 @@ public class MaltcmsTools {
     }
 
     /**
-     * @param t
-     * @param caller
-     * @param d
-     * @return
+     * <p>prepareEICFragments.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     * @param caller a {@link java.lang.Class} object.
+     * @param outputDir a {@link java.io.File} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<IFileFragment> prepareEICFragments(
             final TupleND<IFileFragment> t, final Class<?> caller,
@@ -1801,9 +1854,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>prepareInputArraysTICasList.</p>
      *
-     * @param t
-     * @return
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<List<Array>, List<Array>> prepareInputArraysTICasList(
             final Tuple2D<IFileFragment, IFileFragment> t) {
@@ -1822,14 +1876,15 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>prepareSparseMZI.</p>
      *
-     * @param ff
-     * @param scan_index
-     * @param mass_values
-     * @param intensity_values
-     * @param min_mass
-     * @param max_mass
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param scan_index a {@link java.lang.String} object.
+     * @param mass_values a {@link java.lang.String} object.
+     * @param intensity_values a {@link java.lang.String} object.
+     * @param min_mass a {@link java.lang.Double} object.
+     * @param max_mass a {@link java.lang.Double} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Array> prepareSparseMZI(final IFileFragment ff,
             final String scan_index, final String mass_values,
@@ -1880,9 +1935,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>calculateMeanVarSparse.</p>
      *
-     * @param arrays
-     * @return
+     * @param arrays a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<ArrayDouble.D1, ArrayDouble.D1> calculateMeanVarSparse(
             final List<Array> arrays) {
@@ -1931,13 +1987,14 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>rankEICsByVariance.</p>
      *
-     * @param f
-     * @param intensities
-     * @param k
-     * @param creator
-     * @param outputDir
-     * @return
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param intensities a {@link java.util.List} object.
+     * @param k a int.
+     * @param creator a {@link java.lang.Class} object.
+     * @param outputDir a {@link java.io.File} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Tuple2D<Double, Double>> rankEICsByVariance(
             final IFileFragment f, final List<Array> intensities, final int k,
@@ -1959,18 +2016,20 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>ranksByIntensity.</p>
      *
-     * @param intensities
-     * @return
+     * @param intensities a {@link ucar.ma2.Array} object.
+     * @return an array of int.
      */
     public static int[] ranksByIntensity(final Array intensities) {
         return ranksByIntensity(intensities, 1.0d);
     }
 
     /**
+     * <p>getMassesToFilterByCoefficientOfVariation.</p>
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     public static ArrayDouble.D1 getMassesToFilterByCoefficientOfVariation(
             IFileFragment ff) {
@@ -2053,9 +2112,10 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>getMassesToFilterByCoefficientOfVariation2.</p>
      *
-     * @param ff
-     * @return
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.ArrayList} object.
      */
     public static ArrayList<Integer> getMassesToFilterByCoefficientOfVariation2(
             IFileFragment ff) {
@@ -2138,9 +2198,9 @@ public class MaltcmsTools {
      * intensities sorted ascending by intensity, so the index of the mass
      * channel with highest intensity is at intensities.getShape()[0]-1.
      *
-     * @param intensities
+     * @param intensities a {@link ucar.ma2.Array} object.
      * @param intensityRangeToCover between 0 and 1
-     * @return
+     * @return an array of int.
      */
     public static int[] ranksByIntensity(final Array intensities,
             final double intensityRangeToCover) {
@@ -2187,7 +2247,7 @@ public class MaltcmsTools {
     }
 
     /**
-     *
+     * <p>setBinMZbyConfig.</p>
      */
     public static void setBinMZbyConfig() {
         MaltcmsTools.setBinMZDefault(Factory.getInstance().getConfiguration().getString("MaltcmsTools.binMZ.mode",
@@ -2195,17 +2255,22 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>setBinMZDefault.</p>
      *
-     * @param s
+     * @param s a {@link java.lang.String} object.
      */
     public static void setBinMZDefault(final String s) {
         MaltcmsTools.binMZMode = RoundMode.valueOf(s);
     }
 
     /**
-     * @param masses
+     * <p>findMaskedMasses.</p>
+     *
+     * @param masses a {@link ucar.ma2.Array} object.
      * @return FIXME this could be implemented more efficiently Complexity:
      * every element in masses needs to be checked once
+     * @param maskedMasses a {@link java.util.List} object.
+     * @param epsilon a double.
      */
     public static List<Integer> findMaskedMasses(final Array masses,
             final List<Double> maskedMasses, final double epsilon
@@ -2236,8 +2301,9 @@ public class MaltcmsTools {
      * Creates a copy of l, then sorts the list and returns a condensed version
      * of the list, with only one instance of every Object remaining.
      *
-     * @param l
-     * @return
+     * @param l a {@link java.util.List} object.
+     * @param <T> a T object.
+     * @return a {@link java.util.List} object.
      */
     public static <T extends Comparable<T>> List<T> unique(final List<T> l) {
         List<T> sorted = new ArrayList<>(l);
@@ -2264,8 +2330,9 @@ public class MaltcmsTools {
     }
 
     /**
+     * <p>main.</p>
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         List<Integer> l = Arrays.asList(1, 2, 3, 4, 5, 5, 5, 6, 3, 3, 2, 2, 1,

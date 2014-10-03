@@ -36,13 +36,19 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
+ * <p>CliqueFactory class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 public class CliqueFactory {
 
+    /**
+     * <p>createPeakClique.</p>
+     *
+     * @return a {@link maltcms.datastructures.cluster.Clique} object.
+     */
     public static Clique<Peak1D> createPeakClique() {
         Comparator<Peak1D> comp = new Comparator<Peak1D>() {
             @Override

@@ -36,10 +36,11 @@ import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.peak.Peak1D;
 
 /**
+ * <p>Peak1DBidiBestHitsCriterion class.</p>
+ *
  * @author Nils Hoffmann
  * @param <T>
- *
- *
+ * 
  */
 public class Peak1DBidiBestHitsCriterion implements
         ICliqueMemberCriterion<Peak1D> {
@@ -136,6 +137,7 @@ public class Peak1DBidiBestHitsCriterion implements
      * (maltcms.datastructures.cluster.Clique,
      * maltcms.datastructures.array.IFeatureVector)
      */
+    /** {@inheritDoc} */
     @Override
     public boolean shouldBeMemberOf(IClique<Peak1D> c, Peak1D t) {
         // test t against all members of c

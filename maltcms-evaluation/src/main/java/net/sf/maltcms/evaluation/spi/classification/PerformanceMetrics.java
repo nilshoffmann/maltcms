@@ -35,9 +35,10 @@ import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 import net.sf.maltcms.evaluation.api.classification.IPerformanceMetrics;
 
 /**
+ * <p>PerformanceMetrics class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanceMetrics {
 
@@ -47,6 +48,22 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
     private HashSet<EntityGroup<T>> unmatchedToolEnt, unmatchedGroundTruthEnt;
     private HashMap<EntityGroup<T>, EntityGroupClassificationResult> groundTruthToToolMatchResults;
 
+    /**
+     * <p>Constructor for PerformanceMetrics.</p>
+     *
+     * @param toolName a {@link java.lang.String} object.
+     * @param tp a int.
+     * @param fp a int.
+     * @param tn a int.
+     * @param fn a int.
+     * @param N a int.
+     * @param M a int.
+     * @param K a int.
+     * @param dist a double.
+     * @param unmatchedTool a {@link java.util.HashSet} object.
+     * @param unmatchedGroundTruth a {@link java.util.HashSet} object.
+     * @param gtToClsRes a {@link java.util.HashMap} object.
+     */
     public PerformanceMetrics(String toolName, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup<T>> unmatchedTool, HashSet<EntityGroup<T>> unmatchedGroundTruth, HashMap<EntityGroup<T>, EntityGroupClassificationResult> gtToClsRes) {
         this.toolName = toolName;
         this.tp = tp;
@@ -72,62 +89,112 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         this.f1 = 2.0d * ((getPrecision() * getRecall()) / (getPrecision() + getRecall()));
     }
 
+    /**
+     * <p>Getter for the field <code>dist</code>.</p>
+     *
+     * @return a double.
+     */
     public double getDist() {
         return dist;
     }
 
+    /**
+     * <p>Getter for the field <code>toolName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getToolName() {
         return this.toolName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getTp() {
         return this.tp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getFp() {
         return this.fp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getTn() {
         return this.tn;
     }
 
+    /**
+     * <p>getFnWithoutUnmatchedToolEntityGroups.</p>
+     *
+     * @return a int.
+     */
     public int getFnWithoutUnmatchedToolEntityGroups() {
         return this.realfn;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getFn() {
         return this.fn;
     }
 
+    /**
+     * <p>Getter for the field <code>toolEntities</code>.</p>
+     *
+     * @return a int.
+     */
     public int getToolEntities() {
         return this.toolEntities;
     }
 
+    /**
+     * <p>getCommonEntities.</p>
+     *
+     * @return a int.
+     */
     public int getCommonEntities() {
         return this.tp + this.tn;
     }
 
+    /**
+     * <p>Getter for the field <code>groundTruthEntities</code>.</p>
+     *
+     * @return a int.
+     */
     public int getGroundTruthEntities() {
         return this.groundTruthEntities;
     }
 
+    /**
+     * <p>getUnmatchedToolEntities.</p>
+     *
+     * @return a int.
+     */
     public int getUnmatchedToolEntities() {
         return this.unmatchedTool;
     }
 
+    /**
+     * <p>getUnmatchedGroundTruthEntities.</p>
+     *
+     * @return a int.
+     */
     public int getUnmatchedGroundTruthEntities() {
         return this.unmatchedGroundTruth;
     }
 
+    /**
+     * <p>Getter for the field <code>groundTruthToToolMatchResults</code>.</p>
+     *
+     * @return a {@link java.util.Map} object.
+     */
     public Map<EntityGroup<T>, EntityGroupClassificationResult> getGroundTruthToToolMatchResults() {
         return this.groundTruthToToolMatchResults;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSensitivity() {
         double tpv = tp;
@@ -136,6 +203,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         return sens;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSpecificity() {
         double tnv = tn;
@@ -144,16 +212,19 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         return spec;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFPR() {
         return 1 - getSpecificity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFNR() {
         return 1 - getSensitivity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getAccuracy() {
         double tpv = tp;
@@ -164,6 +235,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         return acc;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getGain() {
         //System.out.println("tp+fn=" + (tp + fn));
@@ -175,6 +247,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         return gain;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getPrecision() {
         double tpv = tp;
@@ -183,11 +256,13 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         return prec;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRecall() {
         return getSensitivity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -231,6 +306,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
         return a / b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getF1() {
         return f1;

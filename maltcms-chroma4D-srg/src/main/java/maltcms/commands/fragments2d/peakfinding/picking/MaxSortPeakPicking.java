@@ -42,8 +42,10 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>MaxSortPeakPicking class.</p>
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -65,6 +67,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
     @Configurable(value = "100")
     private int k = 100;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -107,9 +110,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
         return finalPeaks;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaks(IFileFragment ff) {
         log.info("Running {} with:", this.getClass().getName());
@@ -137,9 +138,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         dx = Math.max(dx, 3);
@@ -203,9 +202,7 @@ public class MaxSortPeakPicking implements IPeakPicking {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.secondScanIndexVar = cfg.getString(this.getClass().getName()

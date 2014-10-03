@@ -42,6 +42,7 @@ import ucar.ma2.Array;
  * Implementation of a Factory for some common FeatureVector types.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class FeatureVectorFactory {
 
@@ -50,10 +51,21 @@ public class FeatureVectorFactory {
     private FeatureVectorFactory() {
     }
 
+    /**
+     * <p>getInstance.</p>
+     *
+     * @return a {@link maltcms.datastructures.feature.FeatureVectorFactory} object.
+     */
     public static FeatureVectorFactory getInstance() {
         return FeatureVectorFactory.fvf;
     }
 
+    /**
+     * <p>createMSFeatureVectorList.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<IFeatureVector> createMSFeatureVectorList(IFileFragment iff) {
         List<IFeatureVector> l = new ArrayList<>();
         Chromatogram1D c = new Chromatogram1D(iff);
@@ -63,6 +75,15 @@ public class FeatureVectorFactory {
         return l;
     }
 
+    /**
+     * <p>createBinnedMSFeatureVectorList.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param start a int.
+     * @param stop a int.
+     * @param useFastFeatureVector a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<IFeatureVector> createBinnedMSFeatureVectorList(
             IFileFragment iff, int start, int stop, boolean useFastFeatureVector) {
         List<IFeatureVector> l = new ArrayList<>();
@@ -89,12 +110,25 @@ public class FeatureVectorFactory {
         return l;
     }
 
+    /**
+     * <p>createBinnedMSFeatureVectorList.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param useFastFeatureVector a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public List<IFeatureVector> createBinnedMSFeatureVectorList(
             IFileFragment iff, boolean useFastFeatureVector) {
         int ns = MaltcmsTools.getNumberOfBinnedScans(iff);
         return createBinnedMSFeatureVectorList(iff, 0, ns, useFastFeatureVector);
     }
 
+    /**
+     * <p>createFeatureVectorList.</p>
+     *
+     * @param la a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<IFeatureVector> createFeatureVectorList(List<Array> la) {
         List<IFeatureVector> l = new ArrayList<>();
         int i = 0;
@@ -106,10 +140,25 @@ public class FeatureVectorFactory {
         return l;
     }
 
+    /**
+     * <p>createFeatureVector.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param featureName a {@link java.lang.String} object.
+     * @return a {@link maltcms.datastructures.feature.DefaultFeatureVector} object.
+     */
     public DefaultFeatureVector createFeatureVector(Array a, String featureName) {
         return addFeatureToFeatureVector(null, a, featureName);
     }
 
+    /**
+     * <p>addFeatureToFeatureVector.</p>
+     *
+     * @param ifv a {@link maltcms.datastructures.feature.DefaultFeatureVector} object.
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param featureName a {@link java.lang.String} object.
+     * @return a {@link maltcms.datastructures.feature.DefaultFeatureVector} object.
+     */
     public DefaultFeatureVector addFeatureToFeatureVector(
             DefaultFeatureVector ifv, Array a, String featureName) {
         DefaultFeatureVector dfv = ifv;
@@ -120,6 +169,14 @@ public class FeatureVectorFactory {
         return dfv;
     }
 
+    /**
+     * <p>addFeaturesToFeatureVectorList.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @param la a {@link java.util.List} object.
+     * @param featureName a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<DefaultFeatureVector> addFeaturesToFeatureVectorList(
             List<DefaultFeatureVector> l, List<Array> la, String featureName) {
         EvalTools.eqI(l.size(), la.size(), this);
@@ -131,6 +188,13 @@ public class FeatureVectorFactory {
         return l;
     }
 
+    /**
+     * <p>createFeatureVectorList.</p>
+     *
+     * @param la a {@link java.util.List} object.
+     * @param featureName a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<IFeatureVector> createFeatureVectorList(List<Array> la,
             String featureName) {
         List<IFeatureVector> l = new ArrayList<>();

@@ -41,6 +41,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 /**
+ * <p>MetaboliteSearchPreferences class.</p>
  *
  * @author -rhilker-
  *
@@ -49,7 +50,7 @@ import javax.swing.border.TitledBorder;
  * Opens a JFrame, which allows to specify the search preferences for a certain
  *
  * metabolite
- *
+ * 
  */
 public class MetaboliteSearchPreferences extends JFrame {
 
@@ -82,12 +83,8 @@ public class MetaboliteSearchPreferences extends JFrame {
      *
      * Returns an instance of this class, if there is not an instance yet
      *
-     *
-     *
-     * @param mvm
-     *
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
      * @return msp
-     *
      */
     public static MetaboliteSearchPreferences getInstance(
             MetaboliteViewModel mvm) {

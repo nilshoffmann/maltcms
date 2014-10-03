@@ -40,7 +40,7 @@ import ucar.ma2.IndexIterator;
  * deviation.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -52,17 +52,27 @@ public class AddRandomNoise extends AArrayFilter {
     @Configurable
     private double stddev = 1.0d;
 
+    /**
+     * <p>Constructor for AddRandomNoise.</p>
+     */
     public AddRandomNoise() {
         super();
         this.rg = new Random();
     }
 
+    /**
+     * <p>Constructor for AddRandomNoise.</p>
+     *
+     * @param mean1 a double.
+     * @param stddev1 a double.
+     */
     public AddRandomNoise(final double mean1, final double stddev1) {
         this();
         this.mean = mean1;
         this.stddev = stddev1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array b = super.apply(a);
@@ -75,12 +85,14 @@ public class AddRandomNoise extends AArrayFilter {
         return b;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.mean = cfg.getDouble(this.getClass().getName() + ".mean");
         this.stddev = cfg.getDouble(this.getClass().getName() + ".stddev");
     }
 
+    /** {@inheritDoc} */
     @Override
     public AddRandomNoise copy() {
         return new AddRandomNoise(mean, stddev);

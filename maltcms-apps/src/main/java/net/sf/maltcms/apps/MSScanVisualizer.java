@@ -28,6 +28,7 @@
 package net.sf.maltcms.apps;
 
 import cross.Factory;
+import cross.IFactory;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.FileTools;
@@ -57,27 +58,35 @@ import ucar.ma2.Array;
 import ucar.ma2.Index;
 
 /**
- * @author Nils Hoffmann
+ * <p>MSScanVisualizer class.</p>
  *
+ * @author Nils Hoffmann
+ * 
  */
 public class MSScanVisualizer {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(final String[] args) {
         final Maltcms m = Maltcms.getInstance();
+        IFactory factory = Factory.getInstance();
         System.out.println("Starting Maltcms");
-        Factory.getInstance().configure(m.parseCommandLine(args));
+        factory.configure(m.parseCommandLine(args));
         System.out.println("Configured Factory");
-        final String[] s = Factory.getInstance().getConfiguration()
+        final String[] s = factory.getConfiguration()
                 .getStringArray("input.dataInfo");
-        final int imwidth = Factory.getInstance().getConfiguration().getInt(
+        final int imwidth = factory.getConfiguration().getInt(
                 "images.width", 640);
-        final int imheight = Factory.getInstance().getConfiguration().getInt(
+        final int imheight = factory.getConfiguration().getInt(
                 "images.height", 480);
-        final String mv = Factory.getInstance().getConfiguration().getString(
+        final String mv = factory.getConfiguration().getString(
                 "var.mass_values", "mass_values");
-        final String iv = Factory.getInstance().getConfiguration().getString(
+        final String iv = factory.getConfiguration().getString(
                 "var.intensity_values", "intensity_values");
-        final String si = Factory.getInstance().getConfiguration().getString(
+        final String si = factory.getConfiguration().getString(
                 "var.scan_index", "scan_index");
         final Date date = new Date();
         // String mmin = ArrayFactory.getConfiguration().getString(
@@ -88,7 +97,7 @@ public class MSScanVisualizer {
         // "var.scan_index", "scan_index");
         for (final String str : s) {
             System.out.println("Reading input.DataInfo: " + str);
-            final IFileFragment parent = new FragmentStringParser().parse(str);
+            final IFileFragment parent = new FragmentStringParser().parse(factory, str);
             //
             final IFileFragment al = new FileFragment(
                     new File(FileTools.getDefaultDirs(date), parent

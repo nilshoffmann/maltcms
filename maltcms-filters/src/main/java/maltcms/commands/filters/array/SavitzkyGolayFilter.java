@@ -44,7 +44,7 @@ import ucar.ma2.Array;
  * +/-window points around the current point.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -55,15 +55,25 @@ public class SavitzkyGolayFilter extends AArrayFilter {
     @Configurable
     private int polynomialDegree = 2;
 
+    /**
+     * <p>Constructor for SavitzkyGolayFilter.</p>
+     */
     public SavitzkyGolayFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for SavitzkyGolayFilter.</p>
+     *
+     * @param window a int.
+     * @since 1.3.2
+     */
     public SavitzkyGolayFilter(int window) {
         this();
         this.window = window;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         switch (polynomialDegree) {
@@ -110,6 +120,7 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         return applyFilter(a, index, pointNumber, quarticQuinticCoefficients, quarticQuinticNorms);
     }
 
+    /** {@inheritDoc} */
     @Override
     public SavitzkyGolayFilter copy() {
         return new SavitzkyGolayFilter(window);
@@ -122,7 +133,7 @@ public class SavitzkyGolayFilter extends AArrayFilter {
      *
      * @param filterCoeffs an array of size 2n+1 of filter coefficients
      * @param d the data array
-     * @return
+     * @return an array of double.
      */
     public static double[] convolve(final double[] filterCoeffs, final double[] d) {
         double[] ret = new double[d.length];
@@ -146,11 +157,25 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
 //        this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
     }
+    /** Constant <code>quadCubicCoefficients={
+        {17, 12, -3},
+        {7, 6, 3, -2},
+        {59, 54, 39, 14, -21},
+        {89, 84, 69, 44, 9, -36},
+        {25, 24, 21, 16, 9, 0, -11},
+        {167, 162, 147, 122, 87, 42, -13, -78},
+        {43, 42, 39, 34, 27, 18, 7, -6, -21},
+        {269, 264, 249, 224, 189, 144, 89, 24, -51, -136},
+        {329, 324, 309, 284, 249, 204, 149, 84, 9, -76, -171},
+        {79, 78, 75, 70, 63, 54, 43, 30, 15, -2, -21, -42},
+        {467, 462, 447, 422, 387, 343, 287, 222, 147, 62, -33, -138, -253}
+    }</code> */
     public static final int[][] quadCubicCoefficients = {
         {17, 12, -3},
         {7, 6, 3, -2},
@@ -164,6 +189,18 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         {79, 78, 75, 70, 63, 54, 43, 30, 15, -2, -21, -42},
         {467, 462, 447, 422, 387, 343, 287, 222, 147, 62, -33, -138, -253}
     };
+    /** Constant <code>quarticQuinticCoefficients={
+        {131, 75, -30, 5},
+        {179, 135, 30, -55, 15},
+        {143, 120, 60, -10, -45, 18},
+        {677, 600, 390, 110, -160, -198, 110},
+        {11063, 10125, 7500, 3755, -165, -2937, -2860, 2145},
+        {883, 825, 660, 415, 135, -117, -260, -195, 195},
+        {1393, 1320, 1110, 790, 405, 18, -290, -420, -255, 340},
+        {44003, 42120, 36660, 28190, 17655, 6375, -3940, -11220, -13005, -6460, 11628},
+        {1011, 975, 870, 705, 495, 261, 30, -165, -285, -285, -114, 285},
+        {4253, 4125, 3750, 3155, 2385, 1503, 590, -255, -915, -1255, -1122, -345, 1265}
+    }</code> */
     public static final int[][] quarticQuinticCoefficients = {
         {131, 75, -30, 5},
         {179, 135, 30, -55, 15},
@@ -176,8 +213,23 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         {1011, 975, 870, 705, 495, 261, 30, -165, -285, -285, -114, 285},
         {4253, 4125, 3750, 3155, 2385, 1503, 590, -255, -915, -1255, -1122, -345, 1265}
     };
+    /** Constant <code>quadCubicPoints={5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25}</code> */
     public static final int[] quadCubicPoints = {5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
+    /** Constant <code>quarticQuinticPoints={7, 9, 11, 13, 15, 17, 19, 21, 23, 25}</code> */
     public static final int[] quarticQuinticPoints = {7, 9, 11, 13, 15, 17, 19, 21, 23, 25};
+    /** Constant <code>quadCubicNorms={
+        35,
+        21,
+        231,
+        429,
+        143,
+        1105,
+        323,
+        2261,
+        3059,
+        8059,
+        5175
+    }</code> */
     public static final int[] quadCubicNorms = {
         35,
         21,
@@ -191,6 +243,18 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         8059,
         5175
     };
+    /** Constant <code>quarticQuinticNorms={
+        231,
+        429,
+        429,
+        2431,
+        46189,
+        4199,
+        7429,
+        260015,
+        6555,
+        30015
+    }</code> */
     public static final int[] quarticQuinticNorms = {
         231,
         429,

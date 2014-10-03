@@ -46,9 +46,10 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 
 /**
+ * <p>RawMSQuery class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
 
@@ -58,7 +59,9 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
     private Tuple2D<Array, Array> query;
 
     /**
-     * @param args
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         //opening dialog
@@ -115,6 +118,11 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         System.exit(0);
     }
 
+    /**
+     * <p>Constructor for RawMSQuery.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public RawMSQuery(Tuple2D<Array, Array> t) {
         this.query = t;
     }
@@ -123,6 +131,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
     /* (non-Javadoc)
      * @see maltcms.db.IDBQuery#setDB(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public void setDB(final String dbLocation) {
         this.dbloc = dbLocation;
@@ -131,6 +140,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
     /* (non-Javadoc)
      * @see maltcms.db.IDBQuery#getBestHits(int)
      */
+    /** {@inheritDoc} */
     @Override
     public Collection<Tuple2D<Double, IMetabolite>> getBestHits(final int k,
             final MSimilarityPredicate ssp) {

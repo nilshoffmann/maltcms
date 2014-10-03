@@ -35,9 +35,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>BottomHatFilter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -46,10 +47,14 @@ public class BottomHatFilter extends AArrayFilter {
     @Configurable
     private int window = 10;
 
+    /**
+     * <p>Constructor for BottomHatFilter.</p>
+     */
     public BottomHatFilter() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         Array arr = super.apply(a);
@@ -64,12 +69,14 @@ public class BottomHatFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
         this.window = cfg.getInt(this.getClass().getName() + ".window", 10);
     }
 
+    /** {@inheritDoc} */
     @Override
     public BottomHatFilter copy() {
         BottomHatFilter bhf = new BottomHatFilter();

@@ -37,12 +37,13 @@ import ucar.ma2.IndexIterator;
  * Lp-norm based distance between arrays.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
 public class ArrayLp implements IArraySimilarity {
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         double value = 0.0d;
@@ -55,6 +56,7 @@ public class ArrayLp implements IArraySimilarity {
         return -Math.sqrt(value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayLp alp = new ArrayLp();

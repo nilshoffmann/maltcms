@@ -60,6 +60,12 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
 
+/**
+ * <p>MetaboliteListSelectionListener class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteListSelectionListener implements ListSelectionListener,
         WindowListener, MouseListener {
 
@@ -80,6 +86,13 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
     protected MetaboliteViewModel mvm2 = null;
     private ExecutorService es = Executors.newFixedThreadPool(5);
 
+    /**
+     * <p>Constructor for MetaboliteListSelectionListener.</p>
+     *
+     * @param metaboliteView a {@link maltcms.db.ui.MetaboliteView} object.
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     * @param table a {@link javax.swing.JTable} object.
+     */
     public MetaboliteListSelectionListener(MetaboliteView metaboliteView,
             MetaboliteViewModel mvm, JTable table) {
         this.metaboliteView = metaboliteView;
@@ -87,6 +100,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         this.table = table;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void valueChanged(ListSelectionEvent e) {
         // final int first_index = e.getFirstIndex();
@@ -204,11 +218,13 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         updatePlot();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowActivated(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowClosed(WindowEvent e) {
         if (e.getWindow() instanceof JFrame) {
@@ -222,6 +238,7 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowClosing(WindowEvent e) {
         // if(e.getWindow() instanceof JFrame) {
@@ -231,26 +248,31 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         // }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowDeactivated(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowDeiconified(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowIconified(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void windowOpened(WindowEvent e) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseClicked(MouseEvent me) {
         if (me.getButton() == MouseEvent.BUTTON3) {
@@ -286,18 +308,22 @@ public class MetaboliteListSelectionListener implements ListSelectionListener,
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mousePressed(MouseEvent me) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseReleased(MouseEvent me) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseEntered(MouseEvent me) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void mouseExited(MouseEvent me) {
     }

@@ -34,6 +34,9 @@ import java.io.Serializable;
  * components of massIntensityList. dhmay noting this on 2009/03/10 but not
  * touching it, in case there are unknown dependencies on this separation.
  *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
  */
 public final class Scan implements Serializable {
 
@@ -56,40 +59,82 @@ public final class Scan implements Serializable {
     public double[] doubleMassList = null;
     public double[] doubleIntensityList = null;
 
+    /**
+     * <p>Setter for the field <code>header</code>.</p>
+     *
+     * @param header a {@link org.systemsbiology.jrap.staxnxt.ScanHeader} object.
+     */
     public void setHeader(ScanHeader header) {
         this.header = header;
     }
 
+    /**
+     * <p>Getter for the field <code>header</code>.</p>
+     *
+     * @return a {@link org.systemsbiology.jrap.staxnxt.ScanHeader} object.
+     */
     public ScanHeader getHeader() {
         return header;
     }
 
+    /**
+     * <p>Setter for the field <code>doubleMassList</code>.</p>
+     *
+     * @param newValue an array of double.
+     */
     public void setDoubleMassList(double[] newValue) {
         doubleMassList = newValue;
     }
 
+    /**
+     * <p>Getter for the field <code>doubleMassList</code>.</p>
+     *
+     * @return an array of double.
+     */
     public double[] getDoubleMassList() {
         return doubleMassList;
     }
 
+    /**
+     * <p>Setter for the field <code>doubleIntensityList</code>.</p>
+     *
+     * @param newValue an array of double.
+     */
     public void setDoubleIntensityList(double[] newValue) {
         doubleIntensityList = newValue;
     }
 
+    /**
+     * <p>Getter for the field <code>doubleIntensityList</code>.</p>
+     *
+     * @return an array of double.
+     */
     public double[] getDoubleIntensityList() {
         return doubleIntensityList;
     }
 
     //for support mzXML
+    /**
+     * <p>Setter for the field <code>massIntensityList</code>.</p>
+     *
+     * @param massIntensityList an array of double.
+     */
     public void setMassIntensityList(double[][] massIntensityList) {
         this.massIntensityList = massIntensityList;
     }
 
+    /**
+     * <p>Getter for the field <code>massIntensityList</code>.</p>
+     *
+     * @return an array of double.
+     */
     public double[][] getMassIntensityList() {
         return massIntensityList;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * String respresentation of a Scan object.
      *
      * Note: This is most likely not an optimal way to build the string.

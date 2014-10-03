@@ -49,11 +49,12 @@ import ucar.ma2.IndexIterator;
  * Array tools.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public class ArrayTools2 {
 
     /**
-     * Creates an {@link ArrayInt} out of an other array.
+     * Creates an {@link ucar.ma2.ArrayInt} out of an other array.
      *
      * @param array array
      * @return intarray
@@ -70,7 +71,7 @@ public class ArrayTools2 {
     }
 
     /**
-     * Creates an {@link ArrayInt} out of an other array. All listed masses in
+     * Creates an {@link ucar.ma2.ArrayInt} out of an other array. All listed masses in
      * masqMasses will be set to 0.
      *
      * @param array array
@@ -98,10 +99,10 @@ public class ArrayTools2 {
     }
 
     /**
-     * Creates an {@link ArrayInt} from a given {@link Vector}.
+     * Creates an {@link ucar.ma2.ArrayInt} from a given {@link java.util.Vector}.
      *
      * @param list list of Integers.
-     * @return {@link ArrayInt}
+     * @return {@link ucar.ma2.ArrayInt}
      */
     public static ArrayInt.D1 createIntegerArray(final Vector<Integer> list) {
         final ArrayInt.D1 array = new ArrayInt.D1(list.size());
@@ -469,10 +470,10 @@ public class ArrayTools2 {
      *
      * @param massValuesA mass values
      * @param massIntensitiesA intensity values
-     * @param massResolution
+     * @param massResolution a double.
      * @param log log
-     * @param minMass
-     * @param maxMass
+     * @param minMass a double.
+     * @param maxMass a double.
      * @return new Array containing all mass bins
      */
     public static Array normalize(final Array massValuesA,
@@ -530,6 +531,12 @@ public class ArrayTools2 {
         return ArrayTools2.filter(list, new SqrtFilter());
     }
 
+    /**
+     * <p>getWarpPath.</p>
+     *
+     * @param warpPath a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     protected static Tuple2D<Array, Array> getWarpPath(
             final List<Point> warpPath) {
         final ArrayInt.D1 pathi = new ArrayInt.D1(warpPath.size());
@@ -566,6 +573,13 @@ public class ArrayTools2 {
     //
     // return new AlignmentPath2D(horizontalL, verticalL);
     // }
+    /**
+     * <p>getUsedMasses.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param usedMassValuesVar a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Integer> getUsedMasses(final IFileFragment ff,
             final String usedMassValuesVar) {
         final List<Integer> sdd = new ArrayList<>();
@@ -577,6 +591,12 @@ public class ArrayTools2 {
         return sdd;
     }
 
+    /**
+     * <p>getIndexArray.</p>
+     *
+     * @param data a {@link java.util.List} object.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     public static Array getIndexArray(final List<Array> data) {
         final Array index = new ArrayInt.D1(data.size());
 
@@ -591,6 +611,13 @@ public class ArrayTools2 {
         return index;
     }
 
+    /**
+     * <p>excludeSparse.</p>
+     *
+     * @param ms a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param hold a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<Array, Array> excludeSparse(Tuple2D<Array, Array> ms,
             List<Integer> hold) {
 
@@ -621,6 +648,13 @@ public class ArrayTools2 {
         return newms;
     }
 
+    /**
+     * <p>glue.</p>
+     *
+     * @param scanlineMS a {@link java.util.List} object.
+     * @param scansPerModulation a int.
+     * @return an array of {@link ucar.ma2.Array} objects.
+     */
     public static Array[] glue(List<Tuple2D<Array, Array>> scanlineMS,
             int scansPerModulation) {
         List<Array> mzs = new ArrayList<>();

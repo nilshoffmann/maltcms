@@ -38,7 +38,7 @@ import ucar.ma2.ArrayDouble;
  * Creates a chart with labeled domain axis, displaying a heatmap.
  *
  * @author Nils.Hoffman@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class HeatMapChart extends AChart<XYPlot> {
 
@@ -50,6 +50,15 @@ public class HeatMapChart extends AChart<XYPlot> {
     private ArrayDouble.D1 xaxis = null;
     private ArrayDouble.D1 yaxis = null;
 
+    /**
+     * <p>Constructor for HeatMapChart.</p>
+     *
+     * @param heatMap a {@link java.awt.image.BufferedImage} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param y_label a {@link java.lang.String} object.
+     * @param axis a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param seriesLabel a {@link java.lang.String} object.
+     */
     public HeatMapChart(final BufferedImage heatMap, final String x_label,
             final String y_label,
             final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
@@ -65,6 +74,7 @@ public class HeatMapChart extends AChart<XYPlot> {
         this.label = seriesLabel;
     }
 
+    /** {@inheritDoc} */
     @Override
     public XYPlot create() {
         final XYPlot xyp = new XYPlot();
@@ -92,11 +102,13 @@ public class HeatMapChart extends AChart<XYPlot> {
         return xyp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

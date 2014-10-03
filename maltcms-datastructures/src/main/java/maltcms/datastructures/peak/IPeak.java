@@ -32,8 +32,10 @@ import java.util.UUID;
 import ucar.ma2.Array;
 
 /**
+ * <p>IPeak interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPeak {
 
@@ -43,6 +45,12 @@ public interface IPeak {
      * @see
      * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /**
+     * <p>getFeature.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @return a {@link ucar.ma2.Array} object.
+     */
     Array getFeature(String name);
 
     /*
@@ -50,21 +58,66 @@ public interface IPeak {
      *
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /**
+     * <p>getFeatureNames.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     List<String> getFeatureNames();
 
+    /**
+     * <p>getScanAcquisitionTime.</p>
+     *
+     * @return a double.
+     */
     double getScanAcquisitionTime();
 
+    /**
+     * <p>getScanIndex.</p>
+     *
+     * @return a int.
+     */
     int getScanIndex();
 
+    /**
+     * <p>getAssociation.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getAssociation();
 
+    /**
+     * <p>setName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     void setName(String name);
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getName();
 
+    /**
+     * <p>getPeakIndex.</p>
+     *
+     * @return a int.
+     */
     int getPeakIndex();
 
+    /**
+     * <p>setPeakIndex.</p>
+     *
+     * @param index a int.
+     */
     void setPeakIndex(int index);
 
+    /**
+     * <p>getUniqueId.</p>
+     *
+     * @return a {@link java.util.UUID} object.
+     */
     UUID getUniqueId();
 }

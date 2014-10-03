@@ -60,9 +60,10 @@ import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
 
 /**
+ * <p>TICPeakListImporter class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 @Data
@@ -80,6 +81,7 @@ public class TICPeakListImporter extends AFragmentCommand {
     @Configurable(value = "var.tic_peaks")
     private String ticPeakVarName = "tic_peaks";
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -91,6 +93,7 @@ public class TICPeakListImporter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> retf = new TupleND<>();

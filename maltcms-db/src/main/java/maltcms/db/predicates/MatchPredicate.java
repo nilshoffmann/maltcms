@@ -29,6 +29,12 @@ package maltcms.db.predicates;
 
 import java.lang.reflect.Method;
 
+/**
+ * <p>MatchPredicate class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MatchPredicate<T> implements IMatchPredicate<T> {
 
     protected Method m;
@@ -37,6 +43,7 @@ public class MatchPredicate<T> implements IMatchPredicate<T> {
     /* (non-Javadoc)
      * @see maltcms.db.predicates.IMatchPredicate#setMethodOnTargetType(java.lang.reflect.Method)
      */
+    /** {@inheritDoc} */
     @Override
     public void setMethodOnTargetType(Method m) {
         this.m = m;
@@ -45,11 +52,13 @@ public class MatchPredicate<T> implements IMatchPredicate<T> {
     /* (non-Javadoc)
      * @see maltcms.db.predicates.IMatchPredicate#setTargetType(java.lang.Class)
      */
+    /** {@inheritDoc} */
     @Override
     public void setTargetType(Class<T> c) {
         this.c = c;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Method getMethodOnTargetType() {
         return this.m;

@@ -39,7 +39,7 @@ import ucar.ma2.Array;
  * Calculates Pearson's product moment correlation as similarity between arrays.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @EqualsAndHashCode
@@ -50,10 +50,14 @@ public class ArrayCorr implements IArraySimilarity {
     private boolean returnCoeffDetermination = false;
     private final PearsonsCorrelation pc = new PearsonsCorrelation();
 
+    /**
+     * <p>Constructor for ArrayCorr.</p>
+     */
     public ArrayCorr() {
         cache = SimilarityTools.newValueCache("ArrayCorrCache");
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         double[] t1a = null, t2a = null;
@@ -74,6 +78,7 @@ public class ArrayCorr implements IArraySimilarity {
         return pcv;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayCorr ac = new ArrayCorr();
@@ -81,6 +86,7 @@ public class ArrayCorr implements IArraySimilarity {
         return ac;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -44,8 +44,10 @@ import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>Worker2DFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @EqualsAndHashCode
@@ -58,6 +60,9 @@ public class Worker2DFactory implements IWorkerFactory {
     private boolean assumeSymmetricSimilarity = false;
     private boolean savePeakSimilarities = false;
 
+    /**
+     * <p>Constructor for Worker2DFactory.</p>
+     */
     public Worker2DFactory() {
         similarityFunction = new ProductSimilarity();
         GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
@@ -67,6 +72,7 @@ public class Worker2DFactory implements IWorkerFactory {
         similarityFunction.setArraySimilarities(ac);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Callable<PairwiseSimilarityResult>> create(File outputDirectory, TupleND<IFileFragment> input, Map<String, List<IBipacePeak>> fragmentToPeaks) {
         List<Callable<PairwiseSimilarityResult>> worker = new LinkedList<>();

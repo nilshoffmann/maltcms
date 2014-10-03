@@ -36,8 +36,10 @@ import lombok.ToString;
 import maltcms.tools.ArrayTools;
 
 /**
+ * <p>TicAreaNormalizer class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ToString(exclude = "cache")
@@ -58,16 +60,19 @@ public class TicAreaNormalizer implements IPeakNormalizer {
         return this.cache;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getNormalizationFactor(IFileFragment fragment, int peakIndex) {
         return 1.0d / getCache().get(fragment);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getNormalizationName() {
         return "normalization to sum of " + ticVariableName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public TicAreaNormalizer copy() {
         TicAreaNormalizer tan = new TicAreaNormalizer();

@@ -31,13 +31,33 @@ package maltcms.datastructures.ms;
  * Interface representing a 1-dimensional chromatogram.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IChromatogram1D extends IChromatogram, IScan1DProvider {
 
+    /**
+     * <p>subsetByScanAcquisitionTime.</p>
+     *
+     * @param startSat a double.
+     * @param stopSat a double.
+     * @return a {@link java.lang.Iterable} object.
+     */
     public Iterable<IScan1D> subsetByScanAcquisitionTime(double startSat, double stopSat);
 
+    /**
+     * <p>subsetByScanIndex.</p>
+     *
+     * @param startIndex a int.
+     * @param stopIndex a int.
+     * @return a {@link java.lang.Iterable} object.
+     */
     public Iterable<IScan1D> subsetByScanIndex(int startIndex, int stopIndex);
 
+    /**
+     * <p>subsetByMsLevel.</p>
+     *
+     * @param msLevel a short.
+     * @return a {@link java.lang.Iterable} object.
+     */
     public Iterable<IScan1D> subsetByMsLevel(short msLevel);
 }

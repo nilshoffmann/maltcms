@@ -35,7 +35,7 @@ import ucar.ma2.Array;
  * some function and returning a double value as result.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IDtwSimilarityFunction extends IConfigurable {
 
@@ -43,26 +43,63 @@ public interface IDtwSimilarityFunction extends IConfigurable {
      * if i1 && i2 > 0 => apply distance to indices only else apply to all
      * elements of array
      *
-     * @param i1
-     * @param i2
-     * @param t1
-     * @param t2
-     * @return
+     * @param i1 a int.
+     * @param i2 a int.
+     * @param t1 a {@link ucar.ma2.Array} object.
+     * @param t2 a {@link ucar.ma2.Array} object.
+     * @param time1 a double.
+     * @param time2 a double.
+     * @return a double.
      */
     public abstract double apply(int i1, int i2, double time1, double time2, Array t1,
             Array t2);
 
+    /**
+     * <p>getCompressionWeight.</p>
+     *
+     * @return a double.
+     */
     public double getCompressionWeight();
 
+    /**
+     * <p>getMatchWeight.</p>
+     *
+     * @return a double.
+     */
     public double getMatchWeight();
 
+    /**
+     * <p>getExpansionWeight.</p>
+     *
+     * @return a double.
+     */
     public double getExpansionWeight();
 
+    /**
+     * <p>setCompressionWeight.</p>
+     *
+     * @param d a double.
+     */
     public void setCompressionWeight(double d);
 
+    /**
+     * <p>setMatchWeight.</p>
+     *
+     * @param d a double.
+     */
     public void setMatchWeight(double d);
 
+    /**
+     * <p>setExpansionWeight.</p>
+     *
+     * @param d a double.
+     */
     public void setExpansionWeight(double d);
 
+    /**
+     * <p>minimize.</p>
+     *
+     * @return a boolean.
+     */
     public abstract boolean minimize();
 }

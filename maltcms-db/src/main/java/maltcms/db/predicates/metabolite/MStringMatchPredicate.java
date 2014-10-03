@@ -31,6 +31,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import maltcms.datastructures.ms.IMetabolite;
 
+/**
+ * <p>MStringMatchPredicate class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MStringMatchPredicate extends MetabolitePredicate {
 
     /**
@@ -40,18 +46,34 @@ public class MStringMatchPredicate extends MetabolitePredicate {
     protected String match;
     private boolean matchCaseInsensitive = true;
 
+    /**
+     * <p>Constructor for MStringMatchPredicate.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public MStringMatchPredicate(String s) {
         this.match = s;
     }
 
+    /**
+     * <p>setCaseInsensitiveMatching.</p>
+     *
+     * @param b a boolean.
+     */
     public void setCaseInsensitiveMatching(boolean b) {
         this.matchCaseInsensitive = b;
     }
 
+    /**
+     * <p>isCaseInsensitiveMatching.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isCaseInsensitiveMatching() {
         return this.matchCaseInsensitive;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite m) {
         if (getMethodOnTargetType() != null) {

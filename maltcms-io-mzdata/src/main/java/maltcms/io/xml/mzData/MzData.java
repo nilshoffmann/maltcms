@@ -91,7 +91,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {"cvLookup", "description", "spectrumList"})
@@ -315,8 +316,7 @@ public class MzData implements Serializable {
     /**
      * Gets the value of the accessionNumber property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getAccessionNumber() {
         return this.accessionNumber;
@@ -341,9 +341,9 @@ public class MzData implements Serializable {
      *
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link CvLookupType }
+     * {@link maltcms.io.xml.mzData.CvLookupType}
      *
-     *
+     * @return a {@link java.util.List} object.
      */
     public List<CvLookupType> getCvLookup() {
         if (this.cvLookup == null) {
@@ -355,8 +355,7 @@ public class MzData implements Serializable {
     /**
      * Gets the value of the description property.
      *
-     * @return possible object is {@link MzData.Description }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.MzData.Description}
      */
     public MzData.Description getDescription() {
         return this.description;
@@ -365,8 +364,7 @@ public class MzData implements Serializable {
     /**
      * Gets the value of the spectrumList property.
      *
-     * @return possible object is {@link MzData.SpectrumList }
-     *
+     * @return possible object is {@link maltcms.io.xml.mzData.MzData.SpectrumList}
      */
     public MzData.SpectrumList getSpectrumList() {
         return this.spectrumList;
@@ -375,8 +373,7 @@ public class MzData implements Serializable {
     /**
      * Gets the value of the version property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getVersion() {
         if (this.version == null) {
@@ -389,8 +386,7 @@ public class MzData implements Serializable {
     /**
      * Sets the value of the accessionNumber property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setAccessionNumber(final String value) {
         this.accessionNumber = value;
@@ -399,8 +395,7 @@ public class MzData implements Serializable {
     /**
      * Sets the value of the description property.
      *
-     * @param value allowed object is {@link MzData.Description }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.MzData.Description}
      */
     public void setDescription(final MzData.Description value) {
         this.description = value;
@@ -409,8 +404,7 @@ public class MzData implements Serializable {
     /**
      * Sets the value of the spectrumList property.
      *
-     * @param value allowed object is {@link MzData.SpectrumList }
-     *
+     * @param value allowed object is {@link maltcms.io.xml.mzData.MzData.SpectrumList}
      */
     public void setSpectrumList(final MzData.SpectrumList value) {
         this.spectrumList = value;
@@ -419,8 +413,7 @@ public class MzData implements Serializable {
     /**
      * Sets the value of the version property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setVersion(final String value) {
         this.version = value;

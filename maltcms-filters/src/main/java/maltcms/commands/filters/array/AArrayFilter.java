@@ -39,7 +39,7 @@ import ucar.ma2.Array;
  * AArrayFilter applicable to Array objects, returning Array objects.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<AArrayFilter> {
@@ -53,6 +53,7 @@ public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<
      *
      * @see maltcms.ucar.ma2.Filter#filter(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         if (this.copyArray) {
@@ -61,6 +62,12 @@ public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<
         return a;
     }
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param a an array of {@link ucar.ma2.Array} objects.
+     * @return an array of {@link ucar.ma2.Array} objects.
+     */
     public Array[] apply(final Array[] a) {
         Array[] ret = new Array[a.length];
         for (int i = 0; i < a.length; i++) {
@@ -69,6 +76,7 @@ public abstract class AArrayFilter implements ICommand<Array, Array>, ICopyable<
         return ret;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.copyArray = cfg.getBoolean(this.getClass().getName()

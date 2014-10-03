@@ -58,7 +58,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "supDataBinaryType", propOrder = {"arrayName", "data"})
@@ -74,8 +75,7 @@ public class SupDataBinaryType implements Serializable {
     /**
      * Gets the value of the arrayName property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getArrayName() {
         return this.arrayName;
@@ -85,8 +85,7 @@ public class SupDataBinaryType implements Serializable {
      * Gets the value of the data property.
      *
      * @return possible object is
-     *         {@link maltcms.io.xml.mzData.PeakListBinaryType.Data }
-     *
+     *         {@link maltcms.io.xml.mzData.PeakListBinaryType.Data}
      */
     public maltcms.io.xml.mzData.PeakListBinaryType.Data getData() {
         return this.data;
@@ -95,6 +94,7 @@ public class SupDataBinaryType implements Serializable {
     /**
      * Gets the value of the id property.
      *
+     * @return a int.
      */
     public int getId() {
         return this.id;
@@ -103,8 +103,7 @@ public class SupDataBinaryType implements Serializable {
     /**
      * Sets the value of the arrayName property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setArrayName(final String value) {
         this.arrayName = value;
@@ -114,8 +113,7 @@ public class SupDataBinaryType implements Serializable {
      * Sets the value of the data property.
      *
      * @param value allowed object is
-     *              {@link maltcms.io.xml.mzData.PeakListBinaryType.Data }
-     *
+     *              {@link maltcms.io.xml.mzData.PeakListBinaryType.Data}
      */
     public void setData(
             final maltcms.io.xml.mzData.PeakListBinaryType.Data value) {
@@ -125,6 +123,7 @@ public class SupDataBinaryType implements Serializable {
     /**
      * Sets the value of the id property.
      *
+     * @param value a int.
      */
     public void setId(final int value) {
         this.id = value;

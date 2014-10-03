@@ -38,15 +38,17 @@ import ucar.ma2.IndexIterator;
 
 /**
  * This class is a dataholder for mass spectra. This class will cache all mass
- * spectra which were read an hold a {@link SoftReference} to it.
+ * spectra which were read an hold a {@link java.lang.ref.SoftReference} to it.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
 public abstract class AScanLineCache implements IScanLine {
 
+    /** {@inheritDoc} */
     @Override
     public Point mapIndex(int scanIndex) {
         int x = scanIndex / getScansPerModulation();
@@ -54,11 +56,13 @@ public abstract class AScanLineCache implements IScanLine {
         return new Point(x, y);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int mapPoint(int x, int y) {
         return (x * getScansPerModulation()) + y;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int mapPoint(Point p) {
         return mapPoint(p.x, p.y);
@@ -94,9 +98,9 @@ public abstract class AScanLineCache implements IScanLine {
     }
 
     /**
-     * Setter.
+     * {@inheritDoc}
      *
-     * @param size bin size
+     * Setter.
      */
     @Override
     public void setBinSize(final int size) {
@@ -104,9 +108,9 @@ public abstract class AScanLineCache implements IScanLine {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return bin size
+     * Getter.
      */
     @Override
     public int getBinsSize() {
@@ -133,9 +137,9 @@ public abstract class AScanLineCache implements IScanLine {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return last index
+     * Getter.
      */
     @Override
     public int getLastIndex() {
@@ -143,9 +147,9 @@ public abstract class AScanLineCache implements IScanLine {
     }
 
     /**
-     * Setter.
+     * {@inheritDoc}
      *
-     * @param index last index
+     * Setter.
      */
     @Override
     public void setLastIndex(final int index) {
@@ -160,9 +164,7 @@ public abstract class AScanLineCache implements IScanLine {
                 .getShape()[0] - 1;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.scanIndexVar = cfg.getString("var.scan_index", "scan_index");
@@ -174,6 +176,8 @@ public abstract class AScanLineCache implements IScanLine {
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Will view some statistical information about the cache usage.
      */
     @Override
@@ -181,52 +185,40 @@ public abstract class AScanLineCache implements IScanLine {
     }
 
     /**
-     * Getter.
+     * {@inheritDoc}
      *
-     * @return scan line count
+     * Getter.
      */
     @Override
     public int getScanLineCount() {
         return (int) (this.lastIndex / this.scansPerModulation);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Array getMassSpectrum(final Point p) {
         return getMassSpectrum(p.x, p.y);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean getCacheModulation() {
         return this.cacheModulations;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public int getScansPerModulation() {
         return this.scansPerModulation;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void clear() {
     }

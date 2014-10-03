@@ -33,19 +33,27 @@ import java.util.LinkedList;
 import java.util.Stack;
 
 /**
+ * <p>QuadTreeNodeDepthFirstVisitor class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class QuadTreeNodeDepthFirstVisitor<T> implements QuadTreeNodeVisitor<T> {
 
     private final QuadTreeNode<T> root;
     private final Stack<QuadTreeNode<T>> stack;
 
+    /**
+     * <p>Constructor for QuadTreeNodeDepthFirstVisitor.</p>
+     *
+     * @param root a {@link maltcms.datastructures.quadTree.QuadTreeNode} object.
+     */
     public QuadTreeNodeDepthFirstVisitor(QuadTreeNode<T> root) {
         this.root = root;
         this.stack = new Stack<>();
     }
 
+    /** {@inheritDoc} */
     @Override
     public LinkedList<Tuple2D<Point2D, T>> visit(LinkedList<Tuple2D<Point2D, T>> l) {
         if (this.root == null) {

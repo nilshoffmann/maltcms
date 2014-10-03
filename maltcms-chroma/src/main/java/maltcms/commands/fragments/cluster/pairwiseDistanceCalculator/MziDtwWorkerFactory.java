@@ -36,8 +36,10 @@ import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>MziDtwWorkerFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = AWorkerFactory.class)
@@ -63,10 +65,7 @@ public class MziDtwWorkerFactory extends AWorkerFactory {
     private boolean savePairwiseSimilarityMatrix = false;
     private boolean normalizeAlignmentValue = false;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public PairwiseDistanceWorker create() {
         PairwiseDistanceWorker worker = new PairwiseDistanceWorker();

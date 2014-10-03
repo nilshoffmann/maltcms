@@ -47,12 +47,19 @@ import maltcms.io.xml.bindings.alignment.PointType.Dimension;
 import maltcms.io.xml.bindings.alignment.ResourceType;
 
 /**
+ * <p>AlignmentFactory class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * @version $Id: $Id
  */
 public class AlignmentFactory {
 
+    /**
+     * <p>load.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link maltcms.io.xml.bindings.alignment.Alignment} object.
+     */
     public Alignment load(File f) {
         JAXBContext jc;
         try {
@@ -65,6 +72,12 @@ public class AlignmentFactory {
         }
     }
 
+    /**
+     * <p>save.</p>
+     *
+     * @param mat a {@link maltcms.io.xml.bindings.alignment.Alignment} object.
+     * @param f a {@link java.io.File} object.
+     */
     public void save(Alignment mat, File f) {
         JAXBContext jc;
         try {
@@ -76,6 +89,13 @@ public class AlignmentFactory {
         }
     }
 
+    /**
+     * <p>createNewAlignment.</p>
+     *
+     * @param creator a {@link java.lang.String} object.
+     * @param isCompleteMap a boolean.
+     * @return a {@link maltcms.io.xml.bindings.alignment.Alignment} object.
+     */
     public Alignment createNewAlignment(String creator, boolean isCompleteMap) {
         Alignment ma = new Alignment();
         ma.setGenerator(creator);
@@ -83,6 +103,14 @@ public class AlignmentFactory {
         return ma;
     }
 
+    /**
+     * <p>getMappedPoints.</p>
+     *
+     * @param a a {@link maltcms.io.xml.bindings.alignment.Alignment} object.
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.io.xml.bindings.alignment.MappedPointsType} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     public MappedPointsType getMappedPoints(Alignment a, IFileFragment f)
             throws ResourceNotAvailableException {
         List<MappedPointsType> l = a.getMappedPoints();
@@ -99,6 +127,13 @@ public class AlignmentFactory {
                 + f.getUri());
     }
 
+    /**
+     * <p>convertToScanIndexMap.</p>
+     *
+     * @param mpt a {@link maltcms.io.xml.bindings.alignment.MappedPointsType} object.
+     * @return a {@link java.util.List} object.
+     * @throws java.lang.IllegalArgumentException if any.
+     */
     public List<Integer> convertToScanIndexMap(MappedPointsType mpt)
             throws IllegalArgumentException {
         PointMapType pmt = mpt.getPointMap();
@@ -118,6 +153,14 @@ public class AlignmentFactory {
         return list;
     }
 
+    /**
+     * <p>getDimensionByName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param pt a {@link maltcms.io.xml.bindings.alignment.PointType} object.
+     * @return a {@link maltcms.io.xml.bindings.alignment.PointType.Dimension} object.
+     * @throws cross.exception.ResourceNotAvailableException if any.
+     */
     public Dimension getDimensionByName(String name, PointType pt)
             throws ResourceNotAvailableException {
         List<Dimension> l = pt.getDimension();
@@ -131,6 +174,14 @@ public class AlignmentFactory {
                 + " for PointType!");
     }
 
+    /**
+     * <p>addScanIndexMap.</p>
+     *
+     * @param a a {@link maltcms.io.xml.bindings.alignment.Alignment} object.
+     * @param resource a {@link java.net.URI} object.
+     * @param l a {@link java.util.List} object.
+     * @param isAlignmentReference a boolean.
+     */
     public void addScanIndexMap(Alignment a, URI resource, List<Integer> l,
             boolean isAlignmentReference) {
         List<MappedPointsType> mp = a.getMappedPoints();

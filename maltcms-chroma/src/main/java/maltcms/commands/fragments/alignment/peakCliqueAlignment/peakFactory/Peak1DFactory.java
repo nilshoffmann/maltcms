@@ -38,8 +38,10 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>Peak1DFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service=IPeakFactory.class)
@@ -48,6 +50,7 @@ public class Peak1DFactory implements IPeakFactory {
     private String peakAreaVar = "total_intensity";
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
+    /** {@inheritDoc} */
     @Override
     public IPeakFactoryImpl createInstance(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId) {
         return new Peak1DFactoryImpl(sourceFile, minMaxMassRange, size, massBinResolution, useSparseArrays, associationId);

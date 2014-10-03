@@ -32,8 +32,10 @@ import maltcms.math.functions.IScalarSimilarity;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>InverseGaussianDifferenceSimilarity class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IScalarSimilarity.class)
@@ -46,11 +48,9 @@ public class InverseGaussianDifferenceSimilarity implements
     private boolean normalize = false;
 
     /**
-     * Calculates the scalar
+     * {@inheritDoc}
      *
-     * @param time1
-     * @param time2
-     * @return
+     * Calculates the scalar
      */
     @Override
     public double apply(double time1, double time2) {
@@ -70,6 +70,7 @@ public class InverseGaussianDifferenceSimilarity implements
         return weight;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IScalarSimilarity copy() {
         InverseGaussianDifferenceSimilarity gds = new InverseGaussianDifferenceSimilarity();

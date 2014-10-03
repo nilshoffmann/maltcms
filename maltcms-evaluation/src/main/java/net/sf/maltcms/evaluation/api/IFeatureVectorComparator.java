@@ -30,19 +30,55 @@ package net.sf.maltcms.evaluation.api;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>IFeatureVectorComparator interface.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public interface IFeatureVectorComparator {
 
+    /**
+     * <p>isTP.</p>
+     *
+     * @param gt a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @param test a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @return a boolean.
+     */
     public abstract boolean isTP(IFeatureVector gt, IFeatureVector test);
 
+    /**
+     * <p>isTN.</p>
+     *
+     * @param gt a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @param test a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @return a boolean.
+     */
     public abstract boolean isTN(IFeatureVector gt, IFeatureVector test);
 
+    /**
+     * <p>isFP.</p>
+     *
+     * @param gt a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @param test a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @return a boolean.
+     */
     public abstract boolean isFP(IFeatureVector gt, IFeatureVector test);
 
+    /**
+     * <p>isFN.</p>
+     *
+     * @param gt a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @param test a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @return a boolean.
+     */
     public abstract boolean isFN(IFeatureVector gt, IFeatureVector test);
 
+    /**
+     * <p>getSquaredDiff.</p>
+     *
+     * @param gt a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @param test a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @return a double.
+     */
     public abstract double getSquaredDiff(IFeatureVector gt, IFeatureVector test);
 }

@@ -30,28 +30,50 @@ package net.sf.maltcms.evaluation.spi.xcalibur;
 import java.util.List;
 
 /**
+ * <p>Group class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Group {
 
     private final String name;
     private List<Chromatogram> chromatograms;
 
+    /**
+     * <p>Constructor for Group.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param chromatograms a {@link java.util.List} object.
+     */
     public Group(String name, List<Chromatogram> chromatograms) {
         this.name = name;
         this.chromatograms = chromatograms;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Getter for the field <code>chromatograms</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Chromatogram> getChromatograms() {
         return chromatograms;
     }
 
+    /**
+     * <p>Setter for the field <code>chromatograms</code>.</p>
+     *
+     * @param chromatograms a {@link java.util.List} object.
+     */
     public void setChromatograms(List<Chromatogram> chromatograms) {
         this.chromatograms = chromatograms;
     }

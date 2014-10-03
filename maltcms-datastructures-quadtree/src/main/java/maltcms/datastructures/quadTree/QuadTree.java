@@ -41,9 +41,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * <p>QuadTree class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class QuadTree<T> {
 
@@ -52,10 +53,24 @@ public class QuadTree<T> {
     private final int capacity;
     private HashMap<T, QuadTreeNode<T>> hs = new HashMap<>();
 
+    /**
+     * <p>Constructor for QuadTree.</p>
+     *
+     * @param dataBounds a {@link java.awt.geom.Rectangle2D} object.
+     */
     public QuadTree(Rectangle2D dataBounds) {
         this(dataBounds.getX(), dataBounds.getY(), dataBounds.getWidth(), dataBounds.getHeight(), 20);
     }
 
+    /**
+     * <p>Constructor for QuadTree.</p>
+     *
+     * @param x a double.
+     * @param y a double.
+     * @param width a double.
+     * @param height a double.
+     * @param capacity a int.
+     */
     public QuadTree(double x, double y, double width, double height, int capacity) {
         this.x = x;
         this.y = y;
@@ -64,14 +79,32 @@ public class QuadTree<T> {
         this.capacity = capacity;
     }
 
+    /**
+     * <p>getDataBounds.</p>
+     *
+     * @return a {@link java.awt.geom.Rectangle2D} object.
+     */
     public Rectangle2D getDataBounds() {
         return new Rectangle2D.Double(x, y, width, height);
     }
 
+    /**
+     * <p>Getter for the field <code>root</code>.</p>
+     *
+     * @return a {@link maltcms.datastructures.quadTree.QuadTreeNode} object.
+     * @since 1.3.2
+     */
     public QuadTreeNode<T> getRoot() {
         return root;
     }
 
+    /**
+     * <p>put.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param t a T object.
+     * @return a T object.
+     */
     public T put(Point2D p, T t) {
         //long s = System.nanoTime();
         if (root == null) {
@@ -84,6 +117,12 @@ public class QuadTree<T> {
         return t;
     }
 
+    /**
+     * <p>remove.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @return a T object.
+     */
     public T remove(Point2D p) {
         //long s = System.nanoTime();
         T t = this.root.remove(p);
@@ -92,6 +131,13 @@ public class QuadTree<T> {
         return t;
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @return a T object.
+     * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
+     */
     public T get(Point2D p) throws ElementNotFoundException {
         //long s = System.nanoTime();
         if (this.root == null) {
@@ -102,6 +148,14 @@ public class QuadTree<T> {
         return t;
     }
 
+    /**
+     * <p>getClosestInRadius.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param radius a double.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
+     */
     public Tuple2D<Point2D, T> getClosestInRadius(Point2D p, double radius) throws ElementNotFoundException {
         //long s = System.nanoTime();
         if (this.root == null) {
@@ -112,6 +166,13 @@ public class QuadTree<T> {
         return t;
     }
 
+    /**
+     * <p>getNeighborsInRadius.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param radius a double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getNeighborsInRadius(Point2D p, double radius) {
         if (this.root == null) {
             return Collections.emptyList();
@@ -119,6 +180,13 @@ public class QuadTree<T> {
         return this.root.getChildrenInRadius(new LinkedList<Tuple2D<Point2D, T>>(), p, radius);
     }
 
+    /**
+     * <p>getClosestPerpendicularToLine.</p>
+     *
+     * @param l a {@link java.awt.geom.Line2D} object.
+     * @param maxPerpendicularDistance a double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getClosestPerpendicularToLine(Line2D l, double maxPerpendicularDistance) {
         if (this.root == null) {
             throw new ElementNotFoundException();
@@ -126,6 +194,13 @@ public class QuadTree<T> {
         return root.getClosestChildrenPerpendicularToLine(new LinkedList<Tuple2D<Point2D, T>>(), l, maxPerpendicularDistance);
     }
 
+    /**
+     * <p>getHorizontalNeighborsInRadius.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param radius a double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getHorizontalNeighborsInRadius(Point2D p, double radius) {
         List<Tuple2D<Point2D, T>> neighs = getNeighborsInRadius(p, radius);
         List<Tuple2D<Point2D, T>> hneighs = new LinkedList<>();
@@ -138,6 +213,13 @@ public class QuadTree<T> {
         return hneighs;
     }
 
+    /**
+     * <p>getVerticalNeighborsInRadius.</p>
+     *
+     * @param p a {@link java.awt.geom.Point2D} object.
+     * @param radius a double.
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Point2D, T>> getVerticalNeighborsInRadius(Point2D p, double radius) {
         List<Tuple2D<Point2D, T>> neighs = getNeighborsInRadius(p, radius);
         List<Tuple2D<Point2D, T>> vneighs = new LinkedList<>();
@@ -150,6 +232,13 @@ public class QuadTree<T> {
         return vneighs;
     }
 
+    /**
+     * <p>getChildrenInRange.</p>
+     *
+     * @param r a {@link java.awt.geom.Rectangle2D} object.
+     * @return a {@link java.util.List} object.
+     * @throws maltcms.datastructures.quadTree.ElementNotFoundException if any.
+     */
     public List<Tuple2D<Point2D, T>> getChildrenInRange(Rectangle2D r) throws ElementNotFoundException {
         if (this.root == null) {
             throw new ElementNotFoundException();
@@ -157,6 +246,9 @@ public class QuadTree<T> {
         return this.root.getChildrenInRange(r);
     }
 
+    /**
+     * <p>clear.</p>
+     */
     public void clear() {
         if (this.root != null) {
             this.root = null;
@@ -164,25 +256,51 @@ public class QuadTree<T> {
         }
     }
 
+    /**
+     * <p>size.</p>
+     *
+     * @return a int.
+     */
     public int size() {
         return this.hs.size();
     }
 
+    /**
+     * <p>isEmpty.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isEmpty() {
         return size() == 0;
     }
 
+    /**
+     * <p>contains.</p>
+     *
+     * @param o a {@link java.lang.Object} object.
+     * @return a boolean.
+     */
     @SuppressWarnings("element-type-mismatch")
     public boolean contains(Object o) {
         return this.hs.containsKey(o);
     }
 
+    /**
+     * <p>iterator.</p>
+     *
+     * @return a {@link java.util.Iterator} object.
+     */
     public Iterator<Tuple2D<Point2D, T>> iterator() {
         QuadTreeNodeDepthFirstVisitor<T> qtn = new QuadTreeNodeDepthFirstVisitor<>(root);
         LinkedList<Tuple2D<Point2D, T>> l = new LinkedList<>();
         return qtn.visit(l).iterator();
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         double maxx = Math.pow(2.0d, 64.0d);
         QuadTree<String> qt = new QuadTree<>(0, 0, maxx, maxx, 5);

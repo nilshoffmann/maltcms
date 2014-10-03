@@ -28,9 +28,10 @@
 package net.sf.maltcms.evaluation.spi.xcalibur;
 
 /**
+ * <p>RTUnit class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public enum RTUnit {
 

@@ -37,9 +37,10 @@ import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
 /**
+ * <p>ArrayWeightedCosine class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Data
 @EqualsAndHashCode
@@ -51,6 +52,9 @@ public class ArrayWeightedCosine implements IArraySimilarity {
 
     private double minimumSimilarity = 0.0d;
 
+    /**
+     * <p>Constructor for ArrayWeightedCosine.</p>
+     */
     public ArrayWeightedCosine() {
         cache = SimilarityTools.newValueCache("ArrayWeightedCosineCache");
     }
@@ -65,6 +69,7 @@ public class ArrayWeightedCosine implements IArraySimilarity {
         return d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         final double maxI1 = getMaximumIntensity(t1);
@@ -83,6 +88,7 @@ public class ArrayWeightedCosine implements IArraySimilarity {
         return mass * mass * intensity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayWeightedCosine alp = new ArrayWeightedCosine();
@@ -90,6 +96,7 @@ public class ArrayWeightedCosine implements IArraySimilarity {
         return alp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

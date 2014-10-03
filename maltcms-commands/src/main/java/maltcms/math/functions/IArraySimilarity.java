@@ -43,16 +43,16 @@ import ucar.ma2.Array;
  * determinable or was not calculated due to an unmet threshold criterion.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IArraySimilarity extends Serializable {
 
     /**
      * Applies this similarity to the given argument arrays.
      *
-     * @param t1
-     * @param t2
-     * @return
+     * @param t1 a {@link ucar.ma2.Array} object.
+     * @param t2 a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
     public abstract double apply(Array t1,
             Array t2);
@@ -60,7 +60,8 @@ public interface IArraySimilarity extends Serializable {
     /**
      * Creates and returns a semantic deep copy of this similarity.
      *
-     * @return
+     * @return a {@link maltcms.math.functions.IArraySimilarity} object.
+     * @since 1.3.2
      */
     public IArraySimilarity copy();
 }

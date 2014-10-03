@@ -37,8 +37,10 @@ import net.sf.mpaxs.spi.concurrent.MpaxsCompletionService;
 import net.sf.mpaxs.spi.concurrent.MpaxsResubmissionCompletionService;
 
 /**
+ * <p>Abstract APipeline class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public abstract class APipeline<T extends Serializable> implements IPipeline<T> {
 
@@ -47,14 +49,29 @@ public abstract class APipeline<T extends Serializable> implements IPipeline<T> 
     protected ICompletionService<T> ics = new MpaxsResubmissionCompletionService<>(
             new MpaxsCompletionService<T>());
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Getter for the field <code>pipelines</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Callable<T>> getPipelines() {
         return pipelines;
     }
 
+    /**
+     * <p>Setter for the field <code>pipelines</code>.</p>
+     *
+     * @param pipelines a {@link java.util.List} object.
+     */
     public void setPipelines(List<Callable<T>> pipelines) {
         this.pipelines = pipelines;
     }

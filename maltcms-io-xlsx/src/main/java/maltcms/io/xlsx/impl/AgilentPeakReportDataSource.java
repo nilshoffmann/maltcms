@@ -73,8 +73,10 @@ import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 
 /**
+ * <p>AgilentPeakReportDataSource class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Slf4j
 @ServiceProvider(service = IXLSDataSource.class)
@@ -87,6 +89,9 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
     private static final ICacheDelegate<String, Array> variableToArrayCache = CacheFactory.createVolatileCache("maltcms.io.readcache");
     private static final HashMap<URI, WorkbookBridge.IMPL> uriToImpl = new HashMap<>();
 
+    /**
+     * <p>Constructor for AgilentPeakReportDataSource.</p>
+     */
     public AgilentPeakReportDataSource() {
         log.info("Initializing AgilentPeakReportDataSource");
         varnameToMapping.put("scan_acquisition_time", new Mapping("IntResults1", "RetTime", DataType.DOUBLE));
@@ -231,6 +236,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         throw new RuntimeException("Failed to load workbook for " + uri);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int canRead(IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
@@ -266,6 +272,13 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         private final DataType dataType;
     }
 
+    /**
+     * <p>dimensions.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param ivf a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @return an array of {@link ucar.nc2.Dimension} objects.
+     */
     public Dimension[] dimensions(Array a, IVariableFragment ivf) {
         int[] shape = a.getShape();
         switch (ivf.getName()) {
@@ -282,6 +295,13 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         return new Dimension[]{};
     }
 
+    /**
+     * <p>ranges.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param ivf a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @return an array of {@link ucar.ma2.Range} objects.
+     */
     public Range[] ranges(Array a, IVariableFragment ivf) {
         int[] shape = a.getShape();
         switch (ivf.getName()) {
@@ -312,6 +332,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
         IWorkbook w = open(f);
@@ -400,6 +421,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         return Array.factory(mass_range_max);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(IVariableFragment f) throws IOException, ResourceNotAvailableException {
         switch (f.getName()) {
@@ -428,29 +450,34 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
                 "Unknown varname to xls/xlsx mapping for varname " + f.getName());
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(IVariableFragment f) throws IOException, ResourceNotAvailableException {
         IWorkbook w = open(f.getParent());
         return createArray(f, f.getParent(), w);
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(IFileFragment f) throws IOException {
         readAll(f);
         return new ArrayList<>(f.getImmediateChildren());
     }
 
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(IVariableFragment f) throws IOException, ResourceNotAvailableException {
         readSingle(f);
         return f;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean write(IFileFragment f) {
         // TODO Implement real write support
@@ -466,10 +493,12 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(ConfigurationEvent ce) {
     }

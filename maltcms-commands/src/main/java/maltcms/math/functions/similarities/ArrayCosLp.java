@@ -36,9 +36,10 @@ import ucar.ma2.Array;
 import ucar.ma2.MAVector;
 
 /**
- * Combinded distance of {@link ArrayCos} and {@link ArrayLp}.
+ * Combinded distance of {@link maltcms.math.functions.similarities.ArrayCos} and {@link maltcms.math.functions.similarities.ArrayLp}.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Data
 @ServiceProvider(service = IArraySimilarity.class)
@@ -48,9 +49,7 @@ public class ArrayCosLp implements IArraySimilarity {
     private final IArraySimilarity cos = new ArrayCos();
     private final IArraySimilarity lp = new ArrayLp();
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public double apply(final Array t1, final Array t2) {
         final MAVector mav1 = new MAVector(t1);
@@ -65,6 +64,7 @@ public class ArrayCosLp implements IArraySimilarity {
         return SimilarityTools.toSimilarity(dist);
     }
 
+    /** {@inheritDoc} */
     @Override
     public IArraySimilarity copy() {
         ArrayCosLp acl = new ArrayCosLp();

@@ -42,12 +42,21 @@ import ucar.ma2.ArrayBoolean;
 /**
  *
  * CliqueTable allows for easy retrieval of common clique information.
+ *
+ * @author hoffmann
+ * 
  */
 public class CliqueTable {
 
     private ArrayBoolean.D2 arr = null;
     private HashMap<String, Integer> placeMap = null;
 
+    /**
+     * <p>Constructor for CliqueTable.</p>
+     *
+     * @param fragments a {@link cross.datastructures.tuple.TupleND} object.
+     * @param l a {@link java.util.List} object.
+     */
     public CliqueTable(TupleND<IFileFragment> fragments, List<Clique<IBipacePeak>> l) {
         arr = new ArrayBoolean.D2(l.size(), fragments.size());
         placeMap = new LinkedHashMap<>();
@@ -64,6 +73,12 @@ public class CliqueTable {
         }
     }
 
+    /**
+     * <p>getNumberOfPeaksWithinCliques.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a int.
+     */
     public int getNumberOfPeaksWithinCliques(IFileFragment iff) {
         int sum = 0;
         int j = placeMap.get(iff.getName());
@@ -74,6 +89,14 @@ public class CliqueTable {
         return sum;
     }
 
+    /**
+     * <p>getCommonCliques.</p>
+     *
+     * @param a a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param b a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param cliques a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Clique<IBipacePeak>> getCommonCliques(IFileFragment a, IFileFragment b,
             List<Clique<IBipacePeak>> cliques) {
         List<Clique<IBipacePeak>> commonCliques = new ArrayList<>();

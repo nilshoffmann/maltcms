@@ -37,6 +37,7 @@ import ucar.ma2.IndexIterator;
  * This class will set all elements smaller than minimum to zero.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -45,6 +46,9 @@ public class MinimumFilter extends AArrayFilter {
     private AElementFilter aef = null;
     private double minimum = 0.0d;
 
+    /**
+     * <p>Constructor for MinimumFilter.</p>
+     */
     public MinimumFilter() {
         super();
     }
@@ -52,7 +56,7 @@ public class MinimumFilter extends AArrayFilter {
     /**
      * Default constructor.
      *
-     * @param iMinimum minimum
+     * @param minimum a double.
      */
     public MinimumFilter(final double minimum) {
         this();
@@ -69,9 +73,7 @@ public class MinimumFilter extends AArrayFilter {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         Array arr = super.apply(a);
@@ -82,6 +84,7 @@ public class MinimumFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MinimumFilter copy() {
         return new MinimumFilter(minimum);

@@ -32,8 +32,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
+ * <p>IPipeline interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPipeline<T extends Serializable> extends Callable<List<T>>, Serializable {
 }

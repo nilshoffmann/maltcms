@@ -42,7 +42,7 @@ import ucar.ma2.Index;
  * variable's value.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 @Slf4j
 public class XYZChart extends AChart<XYPlot> {
@@ -55,6 +55,17 @@ public class XYZChart extends AChart<XYPlot> {
     private String yaxis = "";
     private String title = "";
 
+    /**
+     * <p>Constructor for XYZChart.</p>
+     *
+     * @param title1 a {@link java.lang.String} object.
+     * @param name1 a {@link java.lang.String} object.
+     * @param xaxis1 a {@link java.lang.String} object.
+     * @param yaxis1 a {@link java.lang.String} object.
+     * @param x1 a {@link ucar.ma2.Array} object.
+     * @param y1 a {@link java.util.ArrayList} object.
+     * @param z1 a {@link java.util.ArrayList} object.
+     */
     public XYZChart(final String title1, final String name1,
             final String xaxis1, final String yaxis1, final Array x1,
             final ArrayList<Array> y1, final ArrayList<Array> z1) {
@@ -67,6 +78,7 @@ public class XYZChart extends AChart<XYPlot> {
         this.yaxis = yaxis1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public XYPlot create() {
         final DefaultXYZDataset data = new DefaultXYZDataset();
@@ -109,11 +121,13 @@ public class XYZChart extends AChart<XYPlot> {
         return p;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

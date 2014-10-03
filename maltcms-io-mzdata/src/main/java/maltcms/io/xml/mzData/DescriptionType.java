@@ -52,7 +52,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "descriptionType")
@@ -64,8 +65,7 @@ public class DescriptionType extends ParamType {
     /**
      * Gets the value of the comment property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getComment() {
         return this.comment;
@@ -74,8 +74,7 @@ public class DescriptionType extends ParamType {
     /**
      * Sets the value of the comment property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setComment(final String value) {
         this.comment = value;

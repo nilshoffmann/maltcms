@@ -28,8 +28,10 @@
 package net.sf.maltcms.evaluation.spi.alignment;
 
 /**
+ * <p>ColumnWiseComparison class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class ColumnWiseComparison {
 }

@@ -44,6 +44,7 @@ import ucar.ma2.Array;
  * Reprensents a singel snake.
  *
  * @author Mathias Wilhelm
+ * 
  */
 public class PeakArea2D implements Serializable {
 
@@ -120,6 +121,9 @@ public class PeakArea2D implements Serializable {
         this.intensities = new HashMap<>();
     }
 
+    /**
+     * <p>clear.</p>
+     */
     public void clear() {
         this.regionList = new ArrayList<>();
         this.boundary = new ArrayList<>();
@@ -182,6 +186,7 @@ public class PeakArea2D implements Serializable {
      *
      * @param p center
      * @return active list is not empty
+     * @since 1.3.2
      */
     public boolean addNeighborOf(final Point p) {
         final List<Point> neigh = getNeighbours(p, false);
@@ -425,6 +430,11 @@ public class PeakArea2D implements Serializable {
         return pixelMapContainsPoint || seedPointIsPoint;
     }
 
+    /**
+     * <p>Setter for the field <code>seedPoint</code>.</p>
+     *
+     * @param p a {@link java.awt.Point} object.
+     */
     public void setSeedPoint(Point p) {
         this.seedPoint = p;
     }
@@ -438,6 +448,9 @@ public class PeakArea2D implements Serializable {
         return this.regionList.size();
     }
 
+    /**
+     * <p>findAndSetBoundary.</p>
+     */
     public void findAndSetBoundary() {
         for (Point p : this.regionList) {
             for (Point b : getNeighbours(p, false)) {
@@ -450,10 +463,20 @@ public class PeakArea2D implements Serializable {
         // }
     }
 
+    /**
+     * <p>Setter for the field <code>merged</code>.</p>
+     *
+     * @param merged a boolean.
+     */
     public void setMerged(boolean merged) {
         this.merged = merged;
     }
 
+    /**
+     * <p>isMerged.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isMerged() {
         return this.merged;
     }
@@ -467,11 +490,17 @@ public class PeakArea2D implements Serializable {
 //	public Map<Point, Double> getIntensities() {
 //		return this.intensities;
 //	}
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.hashCode() + ": " + seedPoint.x + "," + seedPoint.y;
     }
 
+    /**
+     * <p>normalizeTo.</p>
+     *
+     * @param reference a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public void normalizeTo(Peak2D reference) {
         this.areaIntensity /= reference.getPeakArea().getAreaIntensity();
     }

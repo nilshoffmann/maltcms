@@ -54,8 +54,7 @@ import ucar.ma2.ArrayInt;
  * var.total_intensity=ordinate_values.
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @ProvidesVariables(names = {"var.scan_acquisition_time", "var.total_intensity", "var.mass_values", "var.intensity_values"})
 @RequiresVariables(names = {"var.ordinate_values", "var.actual_sampling_interval", "var.actual_delay_time"})
@@ -73,6 +72,7 @@ public class ANDIChromImporter extends AFragmentCommand {
     @Configurable(name = "var.actual_delay_time")
     private String actualDelayTimeVariable = "actual_delay_time";
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -83,6 +83,7 @@ public class ANDIChromImporter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<>();
@@ -133,6 +134,7 @@ public class ANDIChromImporter extends AFragmentCommand {
         return new TupleND<>(ret);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -151,6 +153,7 @@ public class ANDIChromImporter extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Maps data in ANDIChrom format to Maltcms/ANDIMS compatible naming scheme.";
@@ -161,6 +164,7 @@ public class ANDIChromImporter extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILECONVERSION;

@@ -45,7 +45,7 @@ import ucar.ma2.MAMath.MinMax;
  * Concrete implementation of a Metabolite.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class Metabolite implements IMetabolite {
 
@@ -70,9 +70,31 @@ public class Metabolite implements IMetabolite {
     private double molecularWeight;
     private URI link;
 
+    /**
+     * <p>Constructor for Metabolite.</p>
+     */
     public Metabolite() {
     }
 
+    /**
+     * <p>Constructor for Metabolite.</p>
+     *
+     * @param name1 a {@link java.lang.String} object.
+     * @param id1 a {@link java.lang.String} object.
+     * @param id_type1 a {@link java.lang.String} object.
+     * @param dbno1 a int.
+     * @param comments1 a {@link java.lang.String} object.
+     * @param formula1 a {@link java.lang.String} object.
+     * @param date1 a {@link java.lang.String} object.
+     * @param ri1 a double.
+     * @param retentionTime1 a double.
+     * @param retentionTimeUnit1 a {@link java.lang.String} object.
+     * @param mw1 a int.
+     * @param sp1 a {@link java.lang.String} object.
+     * @param shortName a {@link java.lang.String} object.
+     * @param masses1 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param intensities1 a {@link ucar.ma2.ArrayInt.D1} object.
+     */
     public Metabolite(final String name1, final String id1,
             final String id_type1, final int dbno1, final String comments1,
             final String formula1, final String date1, final double ri1,
@@ -97,6 +119,7 @@ public class Metabolite implements IMetabolite {
         setMassSpectrum(masses1, intensities1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(final IAnchor o) {
         if (o instanceof IMetabolite) {
@@ -126,135 +149,170 @@ public class Metabolite implements IMetabolite {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getComments() {
         return this.comments;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getDate() {
         return this.date;
     }
 
+    /**
+     * <p>getDBNO.</p>
+     *
+     * @return a int.
+     */
     public int getDBNO() {
         return this.dbno;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getFormula() {
         return this.formula;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getID() {
         return this.id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public URI getLink() {
         return this.link;
     }
 
+    /**
+     * <p>getIDType.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getIDType() {
         return this.id_type;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayInt.D1> getMassSpectrum() {
         return new Tuple2D<>(this.masses,
                 this.intensities);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getMaxIntensity() {
         return this.max_intensity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getMaxMass() {
         return this.max_mass;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getMinIntensity() {
         return this.min_intensity;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getMinMass() {
         return this.min_mass;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getMW() {
         return this.mw;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getMw() {
         return this.molecularWeight;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetentionIndex() {
         return this.ri;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetentionTime() {
         return this.retentionTime;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getRetentionTimeUnit() {
         return this.retentionTimeUnit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getScanIndex() {
         return this.scanIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getShortName() {
         return this.sname;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getSP() {
         return this.sp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setComments(final String comments1) {
         this.comments = comments1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDate(final String date1) {
         this.date = date1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFormula(final String formula1) {
         this.formula = formula1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setID(final String id1) {
         this.id = id1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setLink(final URI link) {
         this.link = link;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMassSpectrum(final D1 masses1,
             final ucar.ma2.ArrayInt.D1 intensities1) {
@@ -276,73 +334,87 @@ public class Metabolite implements IMetabolite {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMaxIntensity(final double intens) {
         this.max_intensity = intens;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMaxMass(final double m) {
         this.max_mass = m;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMinIntensity(final double intens) {
         this.min_intensity = intens;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMinMass(final double m) {
         this.min_mass = m;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMW(final int mw1) {
         this.mw = mw1;
         this.molecularWeight = mw1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMw(final double mw1) {
         this.molecularWeight = mw1;
         this.mw = (int) mw1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(final String s) {
         this.name = s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionIndex(final double d) {
         this.ri = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionTime(final double d) {
         this.retentionTime = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionTimeUnit(final String s) {
         this.retentionTimeUnit = s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setScanIndex(final int scan) {
         this.scanIndex = scan;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setShortName(final String sname1) {
         this.sname = sname1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setSP(final String sp1) {
         this.sp = sp1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
@@ -402,6 +474,7 @@ public class Metabolite implements IMetabolite {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(final IMetabolite m) {
         if (getID().equals(m.getID())) {

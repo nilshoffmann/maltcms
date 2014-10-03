@@ -32,10 +32,18 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
 /**
+ * <p>QuadTreeNodeVisitor interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface QuadTreeNodeVisitor<T> {
 
+    /**
+     * <p>visit.</p>
+     *
+     * @param l a {@link java.util.LinkedList} object.
+     * @return a {@link java.util.LinkedList} object.
+     */
     public LinkedList<Tuple2D<Point2D, T>> visit(LinkedList<Tuple2D<Point2D, T>> l);
 }

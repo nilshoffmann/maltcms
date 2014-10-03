@@ -51,7 +51,10 @@ import ucar.ma2.Array;
 
 // Speichern der optimalen Alignments in einem vom User gewählten Format
 /**
+ * <p>AlignmentOutput class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 @Slf4j
 public class AlignmentOutput {
@@ -219,17 +222,19 @@ public class AlignmentOutput {
     }
 
     /**
+     * <p>Getter for the field <code>al</code>.</p>
      *
-     * @return
+     * @return a {@link java.util.ArrayList} object.
      */
     public ArrayList<Tuple2DI> getAl() {
         return this.al;
     }
 
     /**
+     * <p>getAsPairList.</p>
      *
-     * @param path
-     * @return
+     * @param path an array of int.
+     * @return a {@link java.util.ArrayList} object.
      */
     public ArrayList<Tuple2DI> getAsPairList(final int[][] path) {
         this.al = new ArrayList<>(path.length);
@@ -244,8 +249,9 @@ public class AlignmentOutput {
     }
 
     /**
+     * <p>Getter for the field <code>result</code>.</p>
      *
-     * @return
+     * @return a {@link maltcms.datastructures.fragments.PairwiseAlignment} object.
      */
     public PairwiseAlignment getResult() {
         return this.result;
@@ -253,19 +259,25 @@ public class AlignmentOutput {
 
     // Speichern der Files
     /**
+     * <p>writefile.</p>
      *
      * @param a
-     * @param b
      * @param all
-     * @param matrix
-     * @param format
-     * @param dima
-     * @param location
      * @param alnumber
      * @param ali
      * @param aoriglen
+     * @param b
      * @param boriglen
-     * @param iw
+     * @param all a {@link java.util.Vector} object.
+     * @param matrix an array of double.
+     * @param format a {@link java.lang.String} object.
+     * @param dima an array of double.
+     * @param location a {@link java.lang.String} object.
+     * @param alnumber a int.
+     * @param ali a {@link smueller.alignment.Alignment} object.
+     * @param aoriglen a int.
+     * @param boriglen a int.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
      */
     public void writefile(final String a, final String b,
             final Vector<OptimalAlignmentVector> all, final double[][] matrix,

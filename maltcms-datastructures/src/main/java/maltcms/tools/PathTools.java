@@ -69,7 +69,7 @@ import ucar.nc2.Dimension;
  * alignment.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class PathTools implements IConfigurable {
@@ -86,6 +86,14 @@ public class PathTools implements IConfigurable {
     @Configurable
     private double threshold = 0.95;
 
+    /**
+     * <p>allInfinite.</p>
+     *
+     * @param a a double.
+     * @param b a double.
+     * @param c a double.
+     * @return a boolean.
+     */
     public static boolean allInfinite(final double a, final double b,
             final double c) {
         return (Double.isInfinite(a) && Double.isInfinite(b) && Double
@@ -95,9 +103,9 @@ public class PathTools implements IConfigurable {
     /**
      * Constructs List of pairs of indices from array representation.
      *
-     * @param i
-     * @param j
-     * @return
+     * @param i a {@link ucar.ma2.Array} object.
+     * @param j a {@link ucar.ma2.Array} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Tuple2DI> fromArrays(final Array i, final Array j) {
         final IndexIterator jiter = j.getIndexIterator();
@@ -112,9 +120,9 @@ public class PathTools implements IConfigurable {
     /**
      * Constructs List of pairs of indices from array representation.
      *
-     * @param i
-     * @param j
-     * @return
+     * @param i a {@link ucar.ma2.Array} object.
+     * @param j a {@link ucar.ma2.Array} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Point> pointListFromArrays(final Array i, final Array j) {
         final IndexIterator jiter = j.getIndexIterator();
@@ -130,9 +138,9 @@ public class PathTools implements IConfigurable {
      * Adds VariableFragments and arrays corresponding to path to parent
      * FileFragment.
      *
-     * @param parent
-     * @param al
-     * @param ia
+     * @param parent a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param al a {@link java.util.List} object.
+     * @param ia a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public static void getFragments(final IFileFragment parent,
             final List<Tuple2DI> al, final IArrayD2Double ia) {
@@ -162,6 +170,14 @@ public class PathTools implements IConfigurable {
         wpj.setArray(t.getSecond());
     }
 
+    /**
+     * <p>nequal.</p>
+     *
+     * @param a a double.
+     * @param b a double.
+     * @param c a double.
+     * @return a int.
+     */
     public static int nequal(final double a, final double b, final double c) {
         if ((a == b) && (a == c)) {
             return 3;
@@ -172,6 +188,14 @@ public class PathTools implements IConfigurable {
         return 0;
     }
 
+    /**
+     * <p>ninf.</p>
+     *
+     * @param a a double.
+     * @param b a double.
+     * @param c a double.
+     * @return a int.
+     */
     public static int ninf(final double a, final double b, final double c) {
         int n = (Double.isInfinite(a) ? 1 : 0);
         n += (Double.isInfinite(b) ? 1 : 0);
@@ -182,8 +206,8 @@ public class PathTools implements IConfigurable {
     /**
      * Inverts pairs of matching indices.
      *
-     * @param path
-     * @return
+     * @param path a {@link java.util.ArrayList} object.
+     * @return a {@link java.util.ArrayList} object.
      */
     public static ArrayList<Tuple2DI> swapPath(final ArrayList<Tuple2DI> path) {
         final ArrayList<Tuple2DI> swapped = new ArrayList<>(path.size());
@@ -196,8 +220,8 @@ public class PathTools implements IConfigurable {
     /**
      * Constructs array representation from List of pairs of indices.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Array> toArrays(final List<Tuple2DI> al) {
         final ArrayInt.D1 js = new ArrayInt.D1(al.size());
@@ -216,8 +240,8 @@ public class PathTools implements IConfigurable {
     /**
      * Constructs array representation from List of pairs of indices.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Array> pointListToArrays(final List<Point> al) {
         final ArrayInt.D1 js = new ArrayInt.D1(al.size());
@@ -236,8 +260,8 @@ public class PathTools implements IConfigurable {
     /**
      * Converts a tuple 2D list into a point list.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Point> toPointList(final List<Tuple2DI> al) {
         final ArrayList<Point> ret = new ArrayList<>(al.size());
@@ -250,8 +274,8 @@ public class PathTools implements IConfigurable {
     /**
      * Converts a point list into a tuple 2D list.
      *
-     * @param al
-     * @return
+     * @param al a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     public static List<Tuple2DI> toTupleList(final List<Point> al) {
         final ArrayList<Tuple2DI> ret = new ArrayList<>(al.size());
@@ -268,12 +292,13 @@ public class PathTools implements IConfigurable {
     private int window = 1;
 
     /**
+     * <p>addStepN.</p>
      *
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
-     * @return
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2DI} object.
      */
     @Deprecated
     public Tuple2DI addStepN(final Integer a, final Integer b,
@@ -286,12 +311,13 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>addStepNW.</p>
      *
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
-     * @return
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2DI} object.
      */
     @Deprecated
     public Tuple2DI addStepNW(final Integer a, final Integer b,
@@ -304,12 +330,13 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>addStepW.</p>
      *
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
-     * @return
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2DI} object.
      */
     @Deprecated
     public Tuple2DI addStepW(final Integer a, final Integer b,
@@ -328,6 +355,7 @@ public class PathTools implements IConfigurable {
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.window = cfg.getInt(this.getClass().getName() + ".window", 1);
@@ -336,9 +364,10 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>createSmoothPath.</p>
      *
-     * @param map1
-     * @return
+     * @param map1 a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
      */
     @Deprecated
     public List<Tuple2DI> createSmoothPath(final List<Tuple2DI> map1) {
@@ -394,6 +423,12 @@ public class PathTools implements IConfigurable {
         return ret;
     }
 
+    /**
+     * <p>decorate.</p>
+     *
+     * @param parent a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param ia a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     */
     public void decorate(final IFileFragment parent, final IArrayD2Double ia) {
         PathTools.getFragments(parent, this.map, ia);
         // Tuple2D<Array, Array> tp = PathTools.toArrays(map);
@@ -503,6 +538,8 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>Getter for the field <code>map</code>.</p>
+     *
      * @return the map
      */
     public List<Tuple2DI> getMap() {
@@ -532,19 +569,36 @@ public class PathTools implements IConfigurable {
 
     }
 
+    /**
+     * <p>Getter for the field <code>ncomp</code>.</p>
+     *
+     * @return a int.
+     */
     public int getNcomp() {
         return this.ncomp;
     }
 
+    /**
+     * <p>Getter for the field <code>ndiag</code>.</p>
+     *
+     * @return a int.
+     */
     public int getNdiag() {
         return this.ndiag;
     }
 
+    /**
+     * <p>Getter for the field <code>nexp</code>.</p>
+     *
+     * @return a int.
+     */
     public int getNexp() {
         return this.nexp;
     }
 
     /**
+     * <p>Getter for the field <code>symbolicPath</code>.</p>
+     *
      * @return the symbolicPath
      */
     public String getSymbolicPath() {
@@ -552,16 +606,17 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>handleOneInfinite.</p>
      *
-     * @param neq
-     * @param val
-     * @param i
-     * @param j
-     * @param k
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
+     * @param neq a int.
+     * @param val a double.
+     * @param i a double.
+     * @param j a double.
+     * @param k a double.
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
      */
     @Deprecated
     public void handleOneInfinite(final int neq, final double val,
@@ -608,13 +663,15 @@ public class PathTools implements IConfigurable {
     }
 
     /**
-     * @param i
-     * @param j
-     * @param k
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
+     * <p>handleThreeEqual.</p>
+     *
+     * @param i a double.
+     * @param j a double.
+     * @param k a double.
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
      */
     @Deprecated
     public void handleThreeEqual(final double i, final double j,
@@ -629,14 +686,15 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>handleTwoEqual.</p>
      *
-     * @param i
-     * @param j
-     * @param k
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
+     * @param i a double.
+     * @param j a double.
+     * @param k a double.
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
      */
     @Deprecated
     public void handleTwoEqual(final double i, final double j, final double k,
@@ -665,14 +723,15 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>handleTwoInfinites.</p>
      *
-     * @param i
-     * @param j
-     * @param k
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
+     * @param i a double.
+     * @param j a double.
+     * @param k a double.
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
      */
     @Deprecated
     public void handleTwoInfinites(final double i, final double j,
@@ -688,15 +747,16 @@ public class PathTools implements IConfigurable {
     }
 
     /**
+     * <p>handleZeroEqual.</p>
      *
-     * @param val
-     * @param i
-     * @param j
-     * @param k
-     * @param a
-     * @param b
-     * @param l
-     * @param sb
+     * @param val a double.
+     * @param i a double.
+     * @param j a double.
+     * @param k a double.
+     * @param a a {@link java.lang.Integer} object.
+     * @param b a {@link java.lang.Integer} object.
+     * @param l a {@link java.util.List} object.
+     * @param sb a {@link java.lang.StringBuffer} object.
      */
     @Deprecated
     public void handleZeroEqual(final double val, final double i,
@@ -752,6 +812,16 @@ public class PathTools implements IConfigurable {
         return false;
     }
 
+    /**
+     * <p>savePathCSV.</p>
+     *
+     * @param parent a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param cdist a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param pwdist a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param map1 a {@link java.util.List} object.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @param isDist a boolean.
+     */
     public void savePathCSV(final IFileFragment parent,
             final IArrayD2Double cdist, final IArrayD2Double pwdist,
             final List<Tuple2DI> map1, final IWorkflow iw, final boolean isDist) {
@@ -822,8 +892,10 @@ public class PathTools implements IConfigurable {
      * <code>predecessors</code>. Expects 1 for diagonal steps, 2 for vertical
      * steps and 3 for horizontal steps.
      *
-     * @param predecessors
-     * @return
+     * @param predecessors a {@link ucar.ma2.ArrayByte.D2} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param target a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.List} object.
      */
     public List<Tuple2DI> traceback(final ArrayByte.D2 predecessors,
             final IFileFragment ref, final IFileFragment target) {

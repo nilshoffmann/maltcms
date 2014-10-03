@@ -34,15 +34,30 @@ import org.apache.commons.configuration.Configuration;
 import cross.IConfigurable;
 
 /**
+ * <p>Abstract TwoFeatureVectorOperation class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public abstract class TwoFeatureVectorOperation implements IConfigurable {
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param f1 a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @param f2 a {@link maltcms.datastructures.array.IFeatureVector} object.
+     * @return a double.
+     */
     public abstract double apply(IFeatureVector f1, IFeatureVector f2);
 
+    /**
+     * <p>isMinimize.</p>
+     *
+     * @return a boolean.
+     */
     public abstract boolean isMinimize();
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
     }

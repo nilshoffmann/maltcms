@@ -54,11 +54,16 @@ import lombok.extern.slf4j.Slf4j;
  * Configurable Reader for CSV-like files.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class CSVReader {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(final String[] args) {
         final JFrame jf = new JFrame();
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -110,12 +115,24 @@ public class CSVReader {
         return lv;
     }
 
+    /**
+     * <p>addLine.</p>
+     *
+     * @param rows a {@link java.util.Vector} object.
+     * @param line a {@link java.lang.String} object.
+     */
     public void addLine(final Vector<Vector<String>> rows, final String line) {
         this.log.debug("Adding line " + line);
         final Vector<String> lv = addColumns(line);
         rows.add(lv);
     }
 
+    /**
+     * <p>getColumns.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @return a {@link java.util.HashMap} object.
+     */
     public HashMap<String, Vector<String>> getColumns(
             final Tuple2D<Vector<Vector<String>>, Vector<String>> t) {
         final int columns = t.getFirst().size();
@@ -153,30 +170,66 @@ public class CSVReader {
         return hm;
     }
 
+    /**
+     * <p>Getter for the field <code>comment</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getComment() {
         return this.comment;
     }
 
+    /**
+     * <p>Getter for the field <code>fieldSeparator</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getFieldSeparator() {
         return this.fieldSeparator;
     }
 
+    /**
+     * <p>Getter for the field <code>skip</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getSkip() {
         return this.skip;
     }
 
+    /**
+     * <p>Getter for the field <code>skippedLines</code>.</p>
+     *
+     * @return a {@link java.util.Vector} object.
+     */
     public Vector<String> getSkippedLines() {
         return this.skippedLines;
     }
 
+    /**
+     * <p>isFirstLineHeaders.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isFirstLineHeaders() {
         return this.firstLineHeaders;
     }
 
+    /**
+     * <p>isSkipCommentLines.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isSkipCommentLines() {
         return this.skipCommentLines;
     }
 
+    /**
+     * <p>read.</p>
+     *
+     * @param is a {@link java.io.InputStream} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<Vector<Vector<String>>, Vector<String>> read(
             final InputStream is) {
 
@@ -256,6 +309,12 @@ public class CSVReader {
                 new Vector<Vector<String>>(), new Vector<String>());
     }
 
+    /**
+     * <p>read.</p>
+     *
+     * @param url a {@link java.lang.String} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<Vector<Vector<String>>, Vector<String>> read(final String url) {
         if (new File(url).exists()) {
             this.log.info("Reading from file {}", url);
@@ -280,26 +339,58 @@ public class CSVReader {
                 new Vector<Vector<String>>(), new Vector<String>());
     }
 
+    /**
+     * <p>Setter for the field <code>comment</code>.</p>
+     *
+     * @param comment1 a {@link java.lang.String} object.
+     */
     public void setComment(final String comment1) {
         this.comment = comment1;
     }
 
+    /**
+     * <p>Setter for the field <code>fieldSeparator</code>.</p>
+     *
+     * @param sep a {@link java.lang.String} object.
+     */
     public void setFieldSeparator(final String sep) {
         this.fieldSeparator = sep;
     }
 
+    /**
+     * <p>Setter for the field <code>firstLineHeaders</code>.</p>
+     *
+     * @param firstLineHeaders1 a boolean.
+     */
     public void setFirstLineHeaders(final boolean firstLineHeaders1) {
         this.firstLineHeaders = firstLineHeaders1;
     }
 
+    /**
+     * <p>Setter for the field <code>skip</code>.</p>
+     *
+     * @param skip1 a {@link java.lang.String} object.
+     */
     public void setSkip(final String skip1) {
         this.skip = skip1;
     }
 
+    /**
+     * <p>Setter for the field <code>skipCommentLines</code>.</p>
+     *
+     * @param skipCommentLines1 a boolean.
+     */
     public void setSkipCommentLines(final boolean skipCommentLines1) {
         this.skipCommentLines = skipCommentLines1;
     }
 
+    /**
+     * <p>split.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @param split_token a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
+     */
     public String[] split(final String s, final String split_token) {
         return s.split(split_token);
     }

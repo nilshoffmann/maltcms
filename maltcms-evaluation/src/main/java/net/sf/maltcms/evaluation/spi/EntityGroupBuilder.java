@@ -60,17 +60,18 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 
 /**
+ * <p>EntityGroupBuilder class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class EntityGroupBuilder {
 
     /**
      * Peak association in xcalibur reports is via peak/compound name.
      *
-     * @param e
-     * @param oc
+     * @param e a {@link net.sf.maltcms.evaluation.spi.hohenheim.Eval} object.
+     * @param oc a {@link com.db4o.ObjectContainer} object.
      * @return list of EntityGroups, possibly not in any particular order
      */
     public List<EntityGroup<IFeatureVector>> buildXcaliburPeakAssociationGroups(Eval e, ObjectContainer oc) {
@@ -102,7 +103,7 @@ public class EntityGroupBuilder {
      * FEAT1_2\tFEAT2_2\tFEAT3_2... ... where FEATY_X is the value of the
      * grouped feature,e.g. class label, time point or comparable things
      *
-     * @param par
+     * @param par a {@link java.io.File} object.
      * @return list of EntityGroups in order of row appearance in source file
      * par
      */
@@ -151,8 +152,8 @@ public class EntityGroupBuilder {
      * FEAT1_2\tFEAT2_2\tFEAT3_2... ... where FEATY_X is the value of the
      * grouped feature,e.g. class label, time point or comparable things
      *
-     * @param par
-     * @param plet
+     * @param par a {@link java.io.File} object.
+     * @param plet a {@link net.sf.maltcms.evaluation.spi.classification.ChromaTOFPeakListEntityTable} object.
      * @return list of EntityGroups in order of row appearance in source file
      * par
      */
@@ -206,6 +207,13 @@ public class EntityGroupBuilder {
         return Collections.emptyList();
     }
 
+    /**
+     * <p>addGroup.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     * @param lhs a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     * @param rhs a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     */
     public void addGroup(List<EntityGroup<INamedPeakFeatureVector>> l, Entity<INamedPeakFeatureVector> lhs, Entity<INamedPeakFeatureVector> rhs) {
         int lhsRowIndex = ((IRowIndexNamedPeakFeatureVector) lhs.getFeatureVector()).getRowIndex();
         int rhsRowIndex = ((IRowIndexNamedPeakFeatureVector) rhs.getFeatureVector()).getRowIndex();
@@ -248,10 +256,10 @@ public class EntityGroupBuilder {
      * FEAT1_2\tFEAT2_2\tFEAT3_2... ... where FEATY_X is the value of the
      * grouped feature,e.g. class label, time point or comparable things
      *
-     * @param plet
-     * @param pal
+     * @param plet a {@link net.sf.maltcms.evaluation.spi.classification.ChromaTOFPeakListEntityTable} object.
      * @return list of EntityGroups in order of row appearance in source files
      * pal
+     * @param baseDir a {@link java.io.File} object.
      */
     public List<EntityGroup<INamedPeakFeatureVector>> buildMSPAPeak2DAssociationGroups(File baseDir, ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> plet) {
         ArrayList<EntityGroup<INamedPeakFeatureVector>> al = new ArrayList<>();
@@ -349,7 +357,7 @@ public class EntityGroupBuilder {
      * FILE3\tFEAT1_3\tFEAT2_3... ... where FEATY_X is the value of the grouped
      * feature,e.g. class label, time point or comparable things
      *
-     * @param par
+     * @param par a {@link java.io.File} object.
      * @return list of EntityGroups in order of row appearance in source file
      * par
      */

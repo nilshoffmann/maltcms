@@ -52,6 +52,7 @@ import ucar.ma2.Array;
  * Visualizes value distribution of a matrix.
  *
  * @author Nils Hoffmann
+ * 
  */
 @RequiresVariables(names = {"var.pairwise_distance"})
 @Slf4j
@@ -64,6 +65,7 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
     @Configurable(name = "var.pairwise_distance")
     private String pairwiseDistanceVariable = "pairwise_distance";
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration config) {
         this.pairwiseDistanceVariable = config.getString("var.pairwise_distance", "pairwise_distance");
@@ -74,6 +76,7 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment iff : t) {

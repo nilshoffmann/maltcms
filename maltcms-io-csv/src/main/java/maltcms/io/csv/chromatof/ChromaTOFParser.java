@@ -51,15 +51,26 @@ import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.Peak2D;
 
 /**
+ * <p>ChromaTOFParser class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class ChromaTOFParser {
 
+    /** Constant <code>FIELD_SEPARATOR="\t"</code> */
     public static String FIELD_SEPARATOR = "\t";
+    /** Constant <code>QUOTATION_CHARACTER="\""</code> */
     public static String QUOTATION_CHARACTER = "\"";
+    /** Constant <code>defaultLocale</code> */
     public static Locale defaultLocale = Locale.getDefault();
 
+    /**
+     * <p>getFilenameToGroupMap.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link java.util.HashMap} object.
+     */
     public static HashMap<String, String> getFilenameToGroupMap(File f) {
         List<String> header = null;
         HashMap<String, String> filenameToGroupMap = new LinkedHashMap<>();
@@ -94,6 +105,13 @@ public class ChromaTOFParser {
         return filenameToGroupMap;
     }
 
+    /**
+     * <p>getIndexOfHeaderColumn.</p>
+     *
+     * @param header a {@link java.util.List} object.
+     * @param columnName a {@link java.lang.String} object.
+     * @return a int.
+     */
     public static int getIndexOfHeaderColumn(List<String> header,
             String columnName) {
         int idx = 0;
@@ -106,6 +124,12 @@ public class ChromaTOFParser {
         return -1;
     }
 
+    /**
+     * <p>convertMassSpectrum.</p>
+     *
+     * @param massSpectrum a {@link java.lang.String} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<double[], int[]> convertMassSpectrum(
             String massSpectrum) {
         if (massSpectrum == null) {
@@ -134,6 +158,13 @@ public class ChromaTOFParser {
         return new Tuple2D<>(masses, intensities);
     }
 
+    /**
+     * <p>getHeader.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @return a {@link java.util.LinkedHashSet} object.
+     */
     public static LinkedHashSet<String> getHeader(File f, boolean normalizeColumnNames) {
         LinkedHashSet<String> globalHeader = new LinkedHashSet<>();
         ArrayList<String> header = null;
@@ -178,9 +209,19 @@ public class ChromaTOFParser {
         globalHeader.addAll(header);
         return globalHeader;
     }
+    /** Constant <code>doubleQuotePattern=""</code> */
     public static final String doubleQuotePattern = "";
+    /** Constant <code>msPattern=""</code> */
     public static final String msPattern = "";
 
+    /**
+     * <p>splitLine.</p>
+     *
+     * @param line a {@link java.lang.String} object.
+     * @param fieldSeparator a {@link java.lang.String} object.
+     * @param quoteSymbol a {@link java.lang.String} object.
+     * @return an array of {@link java.lang.String} objects.
+     */
     public static String[] splitLine(String line, String fieldSeparator, String quoteSymbol) {
         switch (fieldSeparator) {
             case ",":
@@ -204,6 +245,14 @@ public class ChromaTOFParser {
         }
     }
 
+    /**
+     * <p>parseBody.</p>
+     *
+     * @param globalHeader a {@link java.util.LinkedHashSet} object.
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @return a {@link java.util.List} object.
+     */
     public static List<TableRow> parseBody(LinkedHashSet<String> globalHeader,
             File f, boolean normalizeColumnNames) {
         List<TableRow> body = new ArrayList<>();
@@ -256,11 +305,24 @@ public class ChromaTOFParser {
         return body;
     }
 
+    /**
+     * <p>parseReport.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<LinkedHashSet<String>, List<TableRow>> parseReport(
             File f) {
         return parseReport(f, true);
     }
 
+    /**
+     * <p>parseReport.</p>
+     *
+     * @param f a {@link java.io.File} object.
+     * @param normalizeColumnNames a boolean.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public static Tuple2D<LinkedHashSet<String>, List<TableRow>> parseReport(
             File f, boolean normalizeColumnNames) {
         if (f.getName().toLowerCase().endsWith("csv")) {
@@ -277,6 +339,13 @@ public class ChromaTOFParser {
         return new Tuple2D<>(header, table);
     }
 
+    /**
+     * <p>create1DPeak.</p>
+     *
+     * @param peakReport a {@link java.io.File} object.
+     * @param tr a {@link maltcms.io.csv.chromatof.TableRow} object.
+     * @return a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public static Peak1D create1DPeak(File peakReport, TableRow tr) {
         //System.out.println("1D chromatogram peak data detected");
         Peak1D p1 = new Peak1D();
@@ -286,6 +355,15 @@ public class ChromaTOFParser {
         return p1;
     }
 
+    /**
+     * <p>create2DPeak.</p>
+     *
+     * @param peakReport a {@link java.io.File} object.
+     * @param tr a {@link maltcms.io.csv.chromatof.TableRow} object.
+     * @param rt1 a double.
+     * @param rt2 a double.
+     * @return a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public static Peak2D create2DPeak(File peakReport, TableRow tr, double rt1, double rt2) {
         //System.out.println("Adding peak "+tr.get("NAME"));
         Peak2D p2 = new Peak2D();
@@ -296,6 +374,14 @@ public class ChromaTOFParser {
         return p2;
     }
 
+    /**
+     * <p>parseDoubleArray.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object.
+     * @param row a {@link maltcms.io.csv.chromatof.TableRow} object.
+     * @param elementSeparator a {@link java.lang.String} object.
+     * @return an array of double.
+     */
     public static double[] parseDoubleArray(String fieldName, TableRow row,
             String elementSeparator) {
         if (row.get(fieldName).contains(elementSeparator)) {
@@ -309,6 +395,13 @@ public class ChromaTOFParser {
         return new double[]{parseDouble(row.get(fieldName))};
     }
 
+    /**
+     * <p>parseDouble.</p>
+     *
+     * @param fieldName a {@link java.lang.String} object.
+     * @param tr a {@link maltcms.io.csv.chromatof.TableRow} object.
+     * @return a double.
+     */
     public static double parseDouble(String fieldName, TableRow tr) {
 //        System.out.println("Retrieving " + fieldName);
         String value = tr.get(fieldName);
@@ -316,10 +409,23 @@ public class ChromaTOFParser {
         return parseDouble(value);
     }
 
+    /**
+     * <p>parseDouble.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a double.
+     */
     public static double parseDouble(String s) {
         return parseDouble(s, defaultLocale);
     }
 
+    /**
+     * <p>parseDouble.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @param locale a {@link java.util.Locale} object.
+     * @return a double.
+     */
     public static double parseDouble(String s, Locale locale) {
         if (s == null || s.isEmpty()) {
             return Double.NaN;
@@ -336,6 +442,12 @@ public class ChromaTOFParser {
         }
     }
 
+    /**
+     * <p>parseIntegrationStartEnd.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a double.
+     */
     public static double parseIntegrationStartEnd(String s) {
         if (s == null || s.isEmpty()) {
             return Double.NaN;

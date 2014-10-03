@@ -49,8 +49,11 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>OneByOneRegionGrowing class.</p>
+ *
  * @author Mathias Wilhelm
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -76,30 +79,32 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
     private IScanLine slc;
     private IFileFragment ff;
 
+    /**
+     * <p>setUseAlternativeFiltering.</p>
+     *
+     * @param b a boolean.
+     * @since 1.3.2
+     */
     public void setUseAlternativeFiltering(boolean b) {
         log.warn("Parameter useAlternativeFiltering has been deprecated. Please use maltcms.commands.fragments.preprocessing.MassFilter for selective removal or inclusion of m/z,intensity pairs!");
     }
 
+    /**
+     * <p>setFilterMS.</p>
+     *
+     * @param b a boolean.
+     */
     public void setFilterMS(boolean b) {
         log.warn("Parameter filterMS has been deprecated. Please use maltcms.commands.fragments.preprocessing.MassFilter for selective removal or inclusion of m/z,intensity pairs!");
     }
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /**
-     *
-     * @param seeds
-     * @param ff
-     * @param slc
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff,
             IScanLine slc) {
@@ -274,10 +279,7 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         return x * this.scansPerModulation + y;
     }
 
-    /**
-     *
-     * @param cfg
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()

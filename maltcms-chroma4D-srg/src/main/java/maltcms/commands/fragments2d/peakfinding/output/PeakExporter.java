@@ -71,6 +71,7 @@ import ucar.ma2.MAMath;
  * Implementation of an peak exporter.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -86,14 +87,13 @@ public class PeakExporter implements IPeakExporter {
     private NumberFormat formatter = new DecimalFormat(this.formatString,
             DecimalFormatSymbols.getInstance(Locale.US));
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        this.formatString = cfg.getString(this.getClass().getName()
@@ -104,9 +104,7 @@ public class PeakExporter implements IPeakExporter {
 //                + ".compareAllAgainstAll", false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportBBHInformation(final List<List<Point>> bidiBestHitList,
             List<List<Peak2D>> peaklist, final IBidirectionalBestHit bbh,
@@ -160,9 +158,7 @@ public class PeakExporter implements IPeakExporter {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportBBHMultipleAlignmentRT(
             final List<List<Point>> bidiBestHitList,
@@ -199,9 +195,7 @@ public class PeakExporter implements IPeakExporter {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportDetailedBBHInformation(
             final List<List<Point>> bidiBestHitList,
@@ -390,9 +384,7 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportPeakOccurrenceMap(
             final List<List<Point>> bidiBestHitList,
@@ -440,9 +432,7 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportDetailedPeakInformation(final String name,
             final List<Peak2D> ps) {
@@ -500,9 +490,7 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportPeakInformation(final String name, final List<Peak2D> ps) {
 //		final List<Peak2D> peaklist = new ArrayList<Peak2D>();
@@ -554,9 +542,7 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportPeaksToMSP(final String name, final List<Peak2D> ps,
             final IScanLine isl) {
@@ -631,9 +617,7 @@ public class PeakExporter implements IPeakExporter {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void exportPeakNames(final List<Peak2D> peaklist,
             final String chomatogramName) {
@@ -666,9 +650,7 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public void setCaller(final Class nCaller) {
@@ -677,11 +659,13 @@ public class PeakExporter implements IPeakExporter {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILEIO;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void appendXML(Element e) {
     }

@@ -52,8 +52,10 @@ import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
+ * <p>ThreePredecessorsOptimization class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class ThreePredecessorsOptimization implements IOptimizationFunction {
@@ -99,11 +101,13 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
     @Configurable(name = "alignment.normalizeAlignmentValueByMapWeights")
     private boolean normalizeAlignmentValueByMapWeights;
 
+    /** {@inheritDoc} */
     @Override
     public String getOptimalOperationSequenceString() {
         return this.stateSequenceString;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getWeight(String state) {
         return weights[State.valueOf(state).ordinal()];
@@ -127,6 +131,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void init(List<IFeatureVector> l, List<IFeatureVector> r,
             IArrayD2Double cumulatedScore, IArrayD2Double pwScores,
@@ -146,6 +151,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void apply(int... current) {
         cumDistM(current[0], current[1], l.get(current[0]), r.get(current[1]),
@@ -217,11 +223,13 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setWeight(String state, double weight) {
         this.weights[State.valueOf(state).ordinal()] = weight;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Point> getTrace() {
         int a = this.traceMatrix.length - 1;
@@ -341,6 +349,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public void modify(IFileFragment iff) {
         if (this.saveCDM) {
@@ -377,6 +386,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.saveCDM = cfg.getBoolean(
@@ -397,6 +407,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      * @see
      * maltcms.experimental.operations.IOptimizationFunction#getOptimalValue()
      */
+    /** {@inheritDoc} */
     @Override
     public double getOptimalValue() {
         if (this.normalizeAlignmentValueByMapWeights) {
@@ -415,6 +426,9 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         return this.cumulatedScores.get(this.l.size() - 1, this.r.size() - 1);
     }
 
+    /**
+     * <p>showCumScoreMatrix.</p>
+     */
     public void showCumScoreMatrix() {
         System.out.println("");
         for (int i = 0; i < this.cumulatedScores.getShape().getBounds2D().
@@ -428,6 +442,9 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
         }
     }
 
+    /**
+     * <p>showPwScoreMatrix.</p>
+     */
     public void showPwScoreMatrix() {
         System.out.println("");
         for (int i = 0; i < this.pwScores.getShape().getBounds2D().getMaxX(); i++) {
@@ -444,6 +461,7 @@ public class ThreePredecessorsOptimization implements IOptimizationFunction {
      *
      * @see maltcms.experimental.operations.IOptimizationFunction#getStates()
      */
+    /** {@inheritDoc} */
     @Override
     public String[] getStates() {
         State[] s = State.values();

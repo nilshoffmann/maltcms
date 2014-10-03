@@ -30,23 +30,30 @@ package maltcms.datastructures.ms;
 import ucar.ma2.Array;
 
 /**
+ * <p>IScan1D interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IScan1D extends IScan {
 
+    /** {@inheritDoc} */
     @Override
     Array getIntensities();
 
+    /** {@inheritDoc} */
     @Override
     Array getMasses();
 
+    /** {@inheritDoc} */
     @Override
     double getScanAcquisitionTime();
 
+    /** {@inheritDoc} */
     @Override
     int getScanIndex();
 
+    /** {@inheritDoc} */
     @Override
     double getTotalIntensity();
 }

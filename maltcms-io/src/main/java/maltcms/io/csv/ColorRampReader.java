@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  * Reads in custom color ramps.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class ColorRampReader {
@@ -106,10 +106,21 @@ public class ColorRampReader {
     {255, 19, 0}, {255, 15, 0}, {255, 11, 0}, {255, 7, 0},
     {255, 3, 0}, {255, 0, 0}};
 
+    /**
+     * <p>Getter for the field <code>defaultRamp</code>.</p>
+     *
+     * @return an array of int.
+     */
     public int[][] getDefaultRamp() {
         return ColorRampReader.defaultRamp;
     }
 
+    /**
+     * <p>readColorRamp.</p>
+     *
+     * @param url a {@link java.lang.String} object.
+     * @return an array of int.
+     */
     public int[][] readColorRamp(final String url) {
         final CSVReader csvr = new CSVReader();
         csvr.setFirstLineHeaders(false);

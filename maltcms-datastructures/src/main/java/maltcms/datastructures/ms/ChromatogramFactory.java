@@ -36,28 +36,53 @@ import cross.datastructures.fragments.IFileFragment;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+/**
+ * <p>ChromatogramFactory class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class ChromatogramFactory implements IConfigurable {
 
     private Configuration cfg = new PropertiesConfiguration();
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.cfg = new PropertiesConfiguration();
         ConfigurationUtils.copy(cfg, this.cfg);
     }
 
+    /**
+     * <p>createChromatogram1D.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.ms.IChromatogram1D} object.
+     */
     public IChromatogram1D createChromatogram1D(IFileFragment f) {
         Chromatogram1D c = new Chromatogram1D(f);
         c.configure(this.cfg);
         return c;
     }
 
+    /**
+     * <p>createProfileChromatogram1D.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.ms.ProfileChromatogram1D} object.
+     */
     public ProfileChromatogram1D createProfileChromatogram1D(IFileFragment f) {
         ProfileChromatogram1D c = new ProfileChromatogram1D(f);
         c.configure(this.cfg);
         return c;
     }
 
+    /**
+     * <p>createChromatogram2D.</p>
+     *
+     * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.ms.IChromatogram2D} object.
+     */
     public IChromatogram2D createChromatogram2D(IFileFragment f) {
         Chromatogram2D c = new Chromatogram2D(f);
         c.configure(this.cfg);

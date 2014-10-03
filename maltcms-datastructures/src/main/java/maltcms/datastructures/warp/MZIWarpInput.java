@@ -42,7 +42,7 @@ import ucar.ma2.Array;
  * Specialization for MZIWarp, using mass spectra.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class MZIWarpInput implements IWarpInput {
@@ -53,6 +53,12 @@ public class MZIWarpInput implements IWarpInput {
     private IFileFragment queryFile = null;
     private Tuple2D<List<Array>, List<Array>> tuple = null;
 
+    /**
+     * <p>Constructor for MZIWarpInput.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param iw a {@link cross.datastructures.workflow.IWorkflow} object.
+     */
     public MZIWarpInput(final IFileFragment ff, final IWorkflow iw) {
         log
                 .info("#############################################################################");
@@ -76,6 +82,15 @@ public class MZIWarpInput implements IWarpInput {
         init(MaltcmsTools.getWarpPath(ff), t, referenceFile, queryFile1, target);
     }
 
+    /**
+     * <p>Constructor for MZIWarpInput.</p>
+     *
+     * @param path1 a {@link java.util.List} object.
+     * @param tuple1 a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param referenceFile a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param queryFile1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param targetFile1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public MZIWarpInput(final List<Tuple2DI> path1,
             final Tuple2D<List<Array>, List<Array>> tuple1,
             final IFileFragment referenceFile, final IFileFragment queryFile1,
@@ -83,36 +98,51 @@ public class MZIWarpInput implements IWarpInput {
         init(path1, tuple1, referenceFile, queryFile1, targetFile1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getAlgorithm() {
         return "MZI";
     }
 
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<List<Array>, List<Array>> getArrays() {
         return this.tuple;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getFileFragment() {
         return this.targetFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<Tuple2DI> getPath() {
         return this.path;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getQueryFileFragment() {
         return this.queryFile;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getReferenceFileFragment() {
         return this.refFile;
     }
 
+    /**
+     * <p>init.</p>
+     *
+     * @param path1 a {@link java.util.List} object.
+     * @param tuple1 a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param referenceFile a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param queryFile1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param targetFile1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     protected void init(final List<Tuple2DI> path1,
             final Tuple2D<List<Array>, List<Array>> tuple1,
             final IFileFragment referenceFile, final IFileFragment queryFile1,

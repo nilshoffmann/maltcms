@@ -46,6 +46,12 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt;
 
+/**
+ * <p>PairwiseDistances class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         IWorkflowElement {
 
@@ -53,8 +59,8 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
      * Static factory method which reconstructs a PairwiseDistances object from
      * the given FileFragment.
      *
-     * @param pwd the FileFragment from which to construct PairwiseDistances
-     * @return
+     * @param pwdFrag a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.fragments.PairwiseDistances} object.
      */
     public static PairwiseDistances fromFileFragment(final IFileFragment pwdFrag) {
         final PairwiseDistances pwd = new PairwiseDistances();
@@ -73,6 +79,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     private TupleND<IFileFragment> alignments;
     private IWorkflow iw;
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.pwDistMatrixVariableName = cfg.getString(
@@ -87,16 +94,24 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
 
     }
 
+    /**
+     * <p>Getter for the field <code>alignments</code>.</p>
+     *
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public TupleND<IFileFragment> getAlignments() {
         return this.alignments;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IWorkflow getWorkflow() {
         return this.iw;
     }
 
     /**
+     * <p>Getter for the field <code>minArrayComp</code>.</p>
+     *
      * @return the minArrayComp
      */
     public String getMinArrayComp() {
@@ -104,17 +119,26 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>pairwiseDistances</code>.</p>
+     *
      * @return the pairwiseDistances
      */
     public ArrayDouble.D2 getPairwiseDistances() {
         return this.pairwiseDistances;
     }
 
+    /**
+     * <p>Getter for the field <code>pwDistAlignmentsVarName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getPwDistAlignmentsVarName() {
         return this.pwDistAlignmentsVarName;
     }
 
     /**
+     * <p>Getter for the field <code>pwDistMatrixVariableName</code>.</p>
+     *
      * @return the pwDistMatrixVariableName
      */
     public String getPwDistMatrixVariableName() {
@@ -122,6 +146,8 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     }
 
     /**
+     * <p>Getter for the field <code>pwDistVariableName</code>.</p>
+     *
      * @return the pwDistVariableName
      */
     public String getPwDistVariableName() {
@@ -129,6 +155,8 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     }
 
     /**
+     * <p>isMinimize.</p>
+     *
      * @return the minimize
      */
     public boolean isMinimize() {
@@ -142,6 +170,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
      * maltcms.experimental.datastructures.IFileFragmentModifier#decorate(cross
      * .datastructures.fragments.IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public void modify(IFileFragment f) {
         final IVariableFragment pwd = new VariableFragment(f,
@@ -172,16 +201,24 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         alignments.setArray(anames);
     }
 
+    /**
+     * <p>Setter for the field <code>alignments</code>.</p>
+     *
+     * @param t a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public void setAlignments(final TupleND<IFileFragment> t) {
         this.alignments = t;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setWorkflow(final IWorkflow iw1) {
         this.iw = iw1;
     }
 
     /**
+     * <p>Setter for the field <code>minArrayComp</code>.</p>
+     *
      * @param minArrayComp the minArrayComp to set
      */
     public void setMinArrayComp(final String minArrayComp) {
@@ -189,31 +226,55 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>minimize</code>.</p>
+     *
      * @param minimize the minimize to set
      */
     public void setMinimize(final boolean minimize) {
         this.minimize = minimize;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name1 a {@link java.lang.String} object.
+     */
     public void setName(final String name1) {
         this.name = name1;
     }
 
+    /**
+     * <p>Setter for the field <code>names</code>.</p>
+     *
+     * @param names1 a {@link ucar.ma2.ArrayChar.D2} object.
+     */
     public void setNames(final ucar.ma2.ArrayChar.D2 names1) {
         EvalTools.notNull(names1, this);
         this.names = names1;
     }
 
+    /**
+     * <p>Setter for the field <code>pairwiseDistances</code>.</p>
+     *
+     * @param pairwiseDistances1 a {@link ucar.ma2.ArrayDouble.D2} object.
+     */
     public void setPairwiseDistances(final D2 pairwiseDistances1) {
         EvalTools.notNull(pairwiseDistances1, this);
         this.pairwiseDistances = pairwiseDistances1;
     }
 
+    /**
+     * <p>Setter for the field <code>pwDistAlignmentsVarName</code>.</p>
+     *
+     * @param pwDistAlignmentsVarName a {@link java.lang.String} object.
+     */
     public void setPwDistAlignmentsVarName(final String pwDistAlignmentsVarName) {
         this.pwDistAlignmentsVarName = pwDistAlignmentsVarName;
     }
 
     /**
+     * <p>Setter for the field <code>pwDistMatrixVariableName</code>.</p>
+     *
      * @param pwDistMatrixVariableName the pwDistMatrixVariableName to set
      */
     public void setPwDistMatrixVariableName(
@@ -222,6 +283,8 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
     }
 
     /**
+     * <p>Setter for the field <code>pwDistVariableName</code>.</p>
+     *
      * @param pwDistVariableName the pwDistVariableName to set
      */
     public void setPwDistVariableName(final String pwDistVariableName) {
@@ -233,6 +296,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.CLUSTERING;
@@ -243,6 +307,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
      *
      * @see cross.io.xml.IXMLSerializable#appendXML(org.jdom.Element)
      */
+    /** {@inheritDoc} */
     @Override
     public void appendXML(Element e) {
         throw new NotImplementedException();

@@ -39,15 +39,39 @@ import maltcms.tools.MaltcmsTools;
 import ucar.ma2.InvalidRangeException;
 
 /**
+ * <p>PeakFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class PeakFactory {
 
+    /**
+     * <p>createPeak1DEicRaw.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param startIndex a int.
+     * @param apexIndex a int.
+     * @param stopIndex a int.
+     * @param startMass a double.
+     * @param stopMass a double.
+     * @return a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public static Peak1D createPeak1DEicRaw(File file, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
         return createPeak1DEicRaw(new FileFragment(file), startIndex, apexIndex, stopIndex, startMass, stopMass);
     }
 
+    /**
+     * <p>createPeak1DEicRaw.</p>
+     *
+     * @param fragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param startIndex a int.
+     * @param apexIndex a int.
+     * @param stopIndex a int.
+     * @param startMass a double.
+     * @param stopMass a double.
+     * @return a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public static Peak1D createPeak1DEicRaw(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
         Peak1D peak = new Peak1D();
         peak.setPeakType(PeakType.EIC_RAW);
@@ -82,10 +106,28 @@ public class PeakFactory {
 //        peak.setStopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
 //        return peak;
 //    }
+    /**
+     * <p>createPeak1DTic.</p>
+     *
+     * @param file a {@link java.io.File} object.
+     * @param startIndex a int.
+     * @param apexIndex a int.
+     * @param stopIndex a int.
+     * @return a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public static Peak1D createPeak1DTic(File file, int startIndex, int apexIndex, int stopIndex) {
         return createPeak1DTic(new FileFragment(file), startIndex, apexIndex, stopIndex);
     }
 
+    /**
+     * <p>createPeak1DTic.</p>
+     *
+     * @param fragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param startIndex a int.
+     * @param apexIndex a int.
+     * @param stopIndex a int.
+     * @return a {@link maltcms.datastructures.peak.Peak1D} object.
+     */
     public static Peak1D createPeak1DTic(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex) {
         Peak1D peak = new Peak1D();
         peak.setPeakType(PeakType.TIC_RAW);

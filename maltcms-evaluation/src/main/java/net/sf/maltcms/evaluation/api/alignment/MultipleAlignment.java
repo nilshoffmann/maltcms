@@ -36,86 +36,104 @@ import java.util.Set;
 import net.sf.maltcms.evaluation.api.Category;
 
 /**
+ * <p>MultipleAlignment class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class MultipleAlignment implements Map<Category, AlignmentColumn> {
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return map.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return map.hashCode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         return map.equals(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Collection<AlignmentColumn> values() {
         return map.values();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int size() {
         return map.size();
     }
 
+    /** {@inheritDoc} */
     @Override
     public AlignmentColumn remove(Object o) {
         return map.remove(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void putAll(Map<? extends Category, ? extends AlignmentColumn> map) {
         this.map.putAll(map);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AlignmentColumn put(Category k, AlignmentColumn v) {
         return map.put(k, v);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<Category> keySet() {
         return map.keySet();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isEmpty() {
         return map.isEmpty();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<Entry<Category, AlignmentColumn>> entrySet() {
         return map.entrySet();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean containsKey(Object o) {
         return map.containsKey(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object clone() {
         return map.clone();
     }
 
+    /** {@inheritDoc} */
     @Override
     public AlignmentColumn get(Object o) {
         return map.get(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean containsValue(Object o) {
         return map.containsValue(o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         map.clear();

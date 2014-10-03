@@ -39,8 +39,10 @@ import lombok.Data;
 import ucar.ma2.Array;
 
 /**
+ * <p>Peak2D class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 public class Peak2D extends PeakNG {
@@ -48,10 +50,20 @@ public class Peak2D extends PeakNG {
     private double firstColumnElutionTime;
     private double secondColumnElutionTime;
 
+    /**
+     * <p>Constructor for Peak2D.</p>
+     *
+     * @param scanIndex a int.
+     * @param array a {@link ucar.ma2.Array} object.
+     * @param sat a double.
+     * @param association a {@link java.lang.String} object.
+     * @param associationId a int.
+     */
     public Peak2D(int scanIndex, Array array, double sat, String association, int associationId) {
         super(scanIndex, array, sat, association, associationId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -66,6 +78,7 @@ public class Peak2D extends PeakNG {
      * @see
      * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         switch (name) {
@@ -86,6 +99,7 @@ public class Peak2D extends PeakNG {
      *
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         List<String> superFeatureNames = super.getFeatureNames();
@@ -94,6 +108,7 @@ public class Peak2D extends PeakNG {
         return allFeatures;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object o) {
         if (o != null && o instanceof Peak2D) {
@@ -102,6 +117,7 @@ public class Peak2D extends PeakNG {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return getUniqueId().hashCode();

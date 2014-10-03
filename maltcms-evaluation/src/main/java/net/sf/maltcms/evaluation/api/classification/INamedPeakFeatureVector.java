@@ -30,13 +30,25 @@ package net.sf.maltcms.evaluation.api.classification;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>INamedPeakFeatureVector interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface INamedPeakFeatureVector extends IFeatureVector {
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     String getName();
 
+    /**
+     * <p>getArea.</p>
+     *
+     * @return a double.
+     */
     double getArea();
 
 }

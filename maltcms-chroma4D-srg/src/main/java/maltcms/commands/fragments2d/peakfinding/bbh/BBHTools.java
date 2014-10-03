@@ -36,8 +36,22 @@ import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.Peak2DClique;
 
+/**
+ * <p>BBHTools class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class BBHTools {
 
+    /**
+     * <p>getPeak2DCliqueList.</p>
+     *
+     * @param f a {@link java.util.Collection} object.
+     * @param bidiBestHitList a {@link java.util.List} object.
+     * @param peaklist a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Peak2DClique> getPeak2DCliqueList(
             Collection<IFileFragment> f, List<List<Point>> bidiBestHitList,
             List<List<Peak2D>> peaklist) {
@@ -68,7 +82,7 @@ public class BBHTools {
      *
      * This method will change the y component of the Point of the BBH list.
      * This is needed to assure the correctness of the export by
-     * {@link IPeakExporter} (method exportDetailedBBH)
+     * {@link maltcms.commands.fragments2d.peakfinding.output.IPeakExporter} (method exportDetailedBBH)
      *
      * @param i ith chromatogram
      * @param j jth chromatogram
@@ -95,7 +109,7 @@ public class BBHTools {
     }
 
     /**
-     * This Method will call all methods of {@link IPeakExporter}. Furthermore
+     * This Method will call all methods of {@link maltcms.commands.fragments2d.peakfinding.output.IPeakExporter}. Furthermore
      * it creates all pairwise BBH information.
      *
      * @param bidiBestHitList bidirection best hit list
@@ -157,6 +171,14 @@ public class BBHTools {
         // return bidiBestHitList;
     }
 
+    /**
+     * <p>getMissingPeaks.</p>
+     *
+     * @param bidiBestHitList a {@link java.util.List} object.
+     * @param peaklist a {@link java.util.List} object.
+     * @param scansPerModulation a int.
+     * @return a {@link java.util.List} object.
+     */
     public static List<MissingPeak2D> getMissingPeaks(
             List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
             int scansPerModulation) {

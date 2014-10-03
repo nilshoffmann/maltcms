@@ -33,15 +33,19 @@ import cross.tools.MathTools;
 
 // Reduktion der Daten durch Ueberfuehrung in die PAA Repraesentation
 /**
+ * <p>DimensionReduce class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class DimensionReduce {
 
     /**
+     * <p>paa.</p>
      *
-     * @param a1
-     * @param windowsize
-     * @return
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @param windowsize a int.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array paa(final Array a1, final int windowsize) {
         final Array a = a1.copy();

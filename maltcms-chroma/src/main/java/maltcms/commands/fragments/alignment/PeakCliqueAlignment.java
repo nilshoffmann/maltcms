@@ -102,6 +102,12 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 
+/**
+ * <p>PeakCliqueAlignment class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @RequiresVariables(names = {
     "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
     "var.scan_index"})
@@ -194,6 +200,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     @Configurable
     private boolean postProcessCliques = false;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -450,6 +457,12 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 (minimize ? -optVal : optVal));
     }
 
+    /**
+     * <p>saveToCSV.</p>
+     *
+     * @param distances a {@link ucar.ma2.ArrayDouble.D2} object.
+     * @param names a {@link ucar.ma2.ArrayChar.D2} object.
+     */
     public void saveToCSV(final ArrayDouble.D2 distances,
             final ArrayChar.D2 names) {
         final CSVWriter csvw = Factory.getInstance().getObjectFactory().
@@ -466,6 +479,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment iff : t) {
@@ -574,6 +588,16 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         return definedAnchors;
     }
 
+    /**
+     * <p>checkUserSuppliedAnchors.</p>
+     *
+     * @param t a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param associationId a int.
+     * @param massBinResolution a double.
+     * @param minMaxMassRange a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param size a int.
+     * @return a {@link java.util.List} object.
+     */
     public List<IBipacePeak> checkUserSuppliedAnchors(final IFileFragment t, final int associationId, final double massBinResolution, final Tuple2D<Double, Double> minMaxMassRange, final int size) {
         IVariableFragment anames = null;
         IVariableFragment ascans = null;
@@ -607,6 +631,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -638,9 +663,11 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     }
 
     /**
+     * <p>saveSimilarityMatrix.</p>
      *
-     * @param al
-     * @param fragmentToPeaks
+     * @param al a {@link cross.datastructures.tuple.TupleND} object.
+     * @param fragmentToPeaks a {@link java.util.HashMap} object.
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectOpenHashMap} object.
      */
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
             final HashMap<String, List<IBipacePeak>> fragmentToPeaks, final LongObjectOpenHashMap<PeakEdge> edgeMap) {
@@ -672,10 +699,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Assigns peak candidates as pairs and groups them into cliques of size k";
@@ -693,10 +717,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKMATCHING;

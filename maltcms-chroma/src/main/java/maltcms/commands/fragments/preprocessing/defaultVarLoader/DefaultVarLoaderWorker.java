@@ -55,8 +55,8 @@ import lombok.extern.slf4j.Slf4j;
  * Uses
  * @see FragmentStringParser to decode String representation of
  * @param fileToLoad.
- *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -67,6 +67,7 @@ public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
     private List<String> defaultVariables = Collections.emptyList();
     private List<String> additionalVariables = Collections.emptyList();
 
+    /** {@inheritDoc} */
     @Override
     public File call() throws Exception {
         EvalTools.notNull(fileToLoad, this);
@@ -103,6 +104,12 @@ public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
         return targetVar;
     }
 
+    /**
+     * <p>loadDefaultVariables.</p>
+     *
+     * @param input a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param output a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public void loadDefaultVariables(IFileFragment input, IFileFragment output) {
         for (String var : defaultVariables) {
             if (!var.equals("") && !var.trim().isEmpty()) {
@@ -112,6 +119,12 @@ public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
         }
     }
 
+    /**
+     * <p>loadAdditionalVariables.</p>
+     *
+     * @param input a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param output a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public void loadAdditionalVariables(IFileFragment input, IFileFragment output) {
         for (String var : additionalVariables) {
             if (var.equals("*")) { // load all available Variables

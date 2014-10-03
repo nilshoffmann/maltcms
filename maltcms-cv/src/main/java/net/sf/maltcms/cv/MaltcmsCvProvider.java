@@ -43,8 +43,10 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>MaltcmsCvProvider class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @ServiceProvider(service = IControlledVocabularyProvider.class)
@@ -53,6 +55,9 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
     private PropertiesConfiguration pc;
     private Set<String> deprecatedVariables;
 
+    /**
+     * <p>Constructor for MaltcmsCvProvider.</p>
+     */
     public MaltcmsCvProvider() {
         String homeDir = System.getProperty("maltcms.home");
         URL file = null;
@@ -84,6 +89,14 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
         }
     }
 
+    /**
+     * <p>checkDeprecation.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @param pc a {@link org.apache.commons.configuration.PropertiesConfiguration} object.
+     * @param message a {@link java.lang.StringBuilder} object.
+     * @return a {@link java.lang.String} object.
+     */
     protected final String checkDeprecation(String s, PropertiesConfiguration pc, StringBuilder message) {
         String key = "";
         if (s.contains(":")) {
@@ -108,6 +121,7 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
         return key;
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String translate(String variable) throws MappingNotAvailableException {
         String resolvedVariableName = variable;
@@ -122,16 +136,19 @@ public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
         throw new MappingNotAvailableException("No mapping for " + variable);
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String getName() {
         return "maltcms";
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String getNamespace() {
         return "var";
     }
 
+    /** {@inheritDoc} */
     @Override
     public final String getVersion() {
         if (pc == null) {

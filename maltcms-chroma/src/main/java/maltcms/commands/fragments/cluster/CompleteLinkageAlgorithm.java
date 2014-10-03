@@ -36,12 +36,13 @@ import org.openide.util.lookup.ServiceProvider;
  * Work in progress. Implements CompleteLinkage clustering.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @ServiceProvider(service = AFragmentCommand.class)
 public class CompleteLinkageAlgorithm extends ClusteringAlgorithm {
 
+    /** {@inheritDoc} */
     @Override
     public double[] dmat(final int i, final int j, final int k) {
         final double[] dmat = new double[getNames().length];
@@ -64,6 +65,7 @@ public class CompleteLinkageAlgorithm extends ClusteringAlgorithm {
         return dmat;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void findBestD(final int numclust) {
         int i = -1;
@@ -107,6 +109,7 @@ public class CompleteLinkageAlgorithm extends ClusteringAlgorithm {
 
     }
 
+    /** {@inheritDoc} */
     @Override
     public void joinIJtoK(final int i, final int j, final int k,
             final double[] dist) {

@@ -12,8 +12,11 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
+ * <p>ThreadTimer class.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public final class ThreadTimer
         extends Thread {
@@ -34,6 +37,8 @@ public final class ThreadTimer
 
     /**
      * Create a polling thread to track times.
+     *
+     * @param interval a long.
      */
     public ThreadTimer(final long interval) {
         super("Thread time monitor");
@@ -93,6 +98,8 @@ public final class ThreadTimer
 
     /**
      * Get total CPU time so far in nanoseconds.
+     *
+     * @return a long.
      */
     public long getTotalCpuTime() {
         final Collection<Times> hist = history.values();
@@ -105,6 +112,8 @@ public final class ThreadTimer
 
     /**
      * Get total user time so far in nanoseconds.
+     *
+     * @return a long.
      */
     public long getTotalUserTime() {
         final Collection<Times> hist = history.values();
@@ -117,11 +126,18 @@ public final class ThreadTimer
 
     /**
      * Get total system time so far in nanoseconds.
+     *
+     * @return a long.
      */
     public long getTotalSystemTime() {
         return getTotalCpuTime() - getTotalUserTime();
     }
 
+    /**
+     * <p>getElapsedWallClockTime.</p>
+     *
+     * @return a long.
+     */
     public long getElapsedWallClockTime() {
         return System.nanoTime() - startTime;
     }

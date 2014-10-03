@@ -55,6 +55,7 @@ import ucar.ma2.IndexIterator;
  * Computes relative deltamasses.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -67,18 +68,13 @@ public class DeltaMasses extends AFragmentCommand {
     @Configurable(name = "images.thresholdLow", value = "0.0")
     private double lowThreshold = 0.0d;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment ff : t) {
@@ -179,25 +175,19 @@ public class DeltaMasses extends AFragmentCommand {
         return a;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Visualization of delta masses";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         colorrampLocation = cfg.getString("images.colorramp", "res/colorRamps/bcgyr.csv");

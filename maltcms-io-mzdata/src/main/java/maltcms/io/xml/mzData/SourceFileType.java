@@ -58,7 +58,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sourceFileType", propOrder = {"nameOfFile", "pathToFile",
@@ -75,8 +76,7 @@ public class SourceFileType implements Serializable {
     /**
      * Gets the value of the fileType property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getFileType() {
         return this.fileType;
@@ -85,8 +85,7 @@ public class SourceFileType implements Serializable {
     /**
      * Gets the value of the nameOfFile property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getNameOfFile() {
         return this.nameOfFile;
@@ -95,8 +94,7 @@ public class SourceFileType implements Serializable {
     /**
      * Gets the value of the pathToFile property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getPathToFile() {
         return this.pathToFile;
@@ -105,8 +103,7 @@ public class SourceFileType implements Serializable {
     /**
      * Sets the value of the fileType property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setFileType(final String value) {
         this.fileType = value;
@@ -115,8 +112,7 @@ public class SourceFileType implements Serializable {
     /**
      * Sets the value of the nameOfFile property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setNameOfFile(final String value) {
         this.nameOfFile = value;
@@ -125,8 +121,7 @@ public class SourceFileType implements Serializable {
     /**
      * Sets the value of the pathToFile property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setPathToFile(final String value) {
         this.pathToFile = value;

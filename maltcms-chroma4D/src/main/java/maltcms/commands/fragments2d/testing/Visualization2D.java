@@ -47,8 +47,10 @@ import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>Visualization2D class.</p>
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -67,12 +69,13 @@ public class Visualization2D {
     private int binSize = 256;
 
     /**
+     * <p>createImage.</p>
      *
-     * @param scanlinesi
-     * @param scanlinesj
-     * @param horizontal
-     * @param vertical
-     * @return
+     * @param scanlinesi a {@link java.util.List} object.
+     * @param scanlinesj a {@link java.util.List} object.
+     * @param horizontal a {@link java.util.List} object.
+     * @param vertical a {@link java.util.List} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     public BufferedImage createImage(List<Array> scanlinesi,
             List<Array> scanlinesj, final List<Point> horizontal,
@@ -104,13 +107,14 @@ public class Visualization2D {
     }
 
     /**
+     * <p>createNewScanlines.</p>
      *
-     * @param scanlinesi
-     * @param scanlinesj
-     * @param warpPath
-     * @param holdi
-     * @param holdj
-     * @return
+     * @param scanlinesi a {@link java.util.List} object.
+     * @param scanlinesj a {@link java.util.List} object.
+     * @param warpPath a {@link java.util.List} object.
+     * @param holdi a boolean.
+     * @param holdj a boolean.
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public Tuple2D<List<Array>, List<Array>> createNewScanlines(
             List<Array> scanlinesi, List<Array> scanlinesj,
@@ -203,13 +207,14 @@ public class Visualization2D {
     }
 
     /**
+     * <p>ci.</p>
      *
-     * @param scanlinesi
-     * @param scanlinesj
-     * @param samples
-     * @param breakpointsi
-     * @param breakpointsj
-     * @return
+     * @param scanlinesi a {@link java.util.List} object.
+     * @param scanlinesj a {@link java.util.List} object.
+     * @param samples an array of double.
+     * @param breakpointsi an array of double.
+     * @param breakpointsj an array of double.
+     * @return a {@link java.awt.image.BufferedImage} object.
      */
     protected BufferedImage ci(final List<Array> scanlinesi,
             final List<Array> scanlinesj, final double[] samples,

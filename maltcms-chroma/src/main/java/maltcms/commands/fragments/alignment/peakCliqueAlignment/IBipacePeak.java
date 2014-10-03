@@ -34,8 +34,11 @@ import maltcms.datastructures.peak.IPeak;
 import ucar.ma2.Array;
 
 /**
+ * <p>IBipacePeak interface.</p>
  *
  * @author Nils Hoffmann
+ * 
+ * @since 1.3.2
  */
 public interface IBipacePeak extends IPeak {
 
@@ -46,31 +49,76 @@ public interface IBipacePeak extends IPeak {
      * the list of peaks sorted ascending according to their similarity to this
      * peak.
      *
-     * @param p
-     * @param similarity
+     * @param p a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @param similarity a double.
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
      */
     void addSimilarity(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p, final double similarity);
 
+    /**
+     * <p>clearSimilarities.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param associationId a int.
+     */
     void clearSimilarities(LongObjectMap<PeakEdge> edgeMap, int associationId);
 
+    /**
+     * <p>getMsIntensities.</p>
+     *
+     * @return a {@link ucar.ma2.Array} object.
+     */
     Array getMsIntensities();
 
+    /**
+     * <p>setMsIntensities.</p>
+     *
+     * @param a a {@link ucar.ma2.Array} object.
+     */
     void setMsIntensities(Array a);
 
+    /**
+     * <p>getPeakWithHighestSimilarity.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param associationId a int.
+     * @return a {@link java.util.UUID} object.
+     */
     UUID getPeakWithHighestSimilarity(LongObjectMap<PeakEdge> edgeMap, final int associationId);
 
     /**
      * Only call this method, after having added all similarities!
      *
-     * @param associationId
-     * @return
+     * @param associationId a int.
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @return a {@link java.util.List} object.
      */
     List<UUID> getPeaksSortedBySimilarity(LongObjectMap<PeakEdge> edgeMap, final int associationId);
 
+    /**
+     * <p>getSimilarity.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param p a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @return a double.
+     */
     double getSimilarity(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 
+    /**
+     * <p>isBidiBestHitFor.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param p a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @return a boolean.
+     */
     boolean isBidiBestHitFor(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 
+    /**
+     * <p>retainSimilarityRemoveRest.</p>
+     *
+     * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
+     * @param p a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     */
     void retainSimilarityRemoveRest(LongObjectMap<PeakEdge> edgeMap, final IBipacePeak p);
 
     /**
@@ -78,14 +126,31 @@ public interface IBipacePeak extends IPeak {
      * created. Do not use this for unequivocal identification. Use
      * getUniqueId() instead.
      *
-     * @return
+     * @return a int.
      */
     public int getPeakId();
 
+    /**
+     * <p>getAssociationId.</p>
+     *
+     * @return a int.
+     */
     public int getAssociationId();
 
+    /**
+     * <p>keyTo.</p>
+     *
+     * @param p a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.IBipacePeak} object.
+     * @return a long.
+     */
     public long keyTo(IBipacePeak p);
 
+    /**
+     * <p>keyTo.</p>
+     *
+     * @param associationId a int.
+     * @return a long.
+     */
     public long keyTo(int associationId);
 
 }

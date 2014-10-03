@@ -27,28 +27,60 @@
  */
 package maltcms.commands.fragments2d.peakfinding.bbh;
 
+/**
+ * <p>Reliability class.</p>
+ *
+ * @author hoffmann
+ * 
+ * @since 1.3.2
+ */
 public class Reliability {
 
     double min = 0, max = 0, rel = 0;
 
+    /**
+     * <p>Constructor for Reliability.</p>
+     *
+     * @param rel a double.
+     */
     public Reliability(double rel) {
         this.min = rel;
         this.max = rel;
         this.rel = rel;
     }
 
+    /**
+     * <p>Getter for the field <code>min</code>.</p>
+     *
+     * @return a double.
+     */
     public double getMin() {
         return min;
     }
 
+    /**
+     * <p>Getter for the field <code>max</code>.</p>
+     *
+     * @return a double.
+     */
     public double getMax() {
         return max;
     }
 
+    /**
+     * <p>getReliability.</p>
+     *
+     * @return a double.
+     */
     public double getReliability() {
         return rel;
     }
 
+    /**
+     * <p>addRel.</p>
+     *
+     * @param newRel a double.
+     */
     public void addRel(double newRel) {
         if (newRel < this.min) {
             this.min = newRel;

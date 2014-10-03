@@ -31,13 +31,14 @@ import cross.datastructures.fragments.IFileFragment;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * This Factory creates all {@link IScanLine} caches. Each IScanLine instance is
+ * This Factory creates all {@link maltcms.datastructures.caches.IScanLine} caches. Each IScanLine instance is
  * created new every time any of the <code>get*</code> methods is invoked.
  *
  * Previously created instances are not cached and returned due to memory leak
  * issues.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 public class ScanLineCacheFactory {
@@ -48,21 +49,39 @@ public class ScanLineCacheFactory {
     private static double maxMass = 1000;
     private static double massResolution = 1.0;
 
+    /**
+     * <p>Setter for the field <code>minMass</code>.</p>
+     *
+     * @param minMass a double.
+     * @since 1.3.2
+     */
     public static void setMinMass(double minMass) {
         ScanLineCacheFactory.minMass = minMass;
     }
 
+    /**
+     * <p>Setter for the field <code>maxMass</code>.</p>
+     *
+     * @param maxMass a double.
+     * @since 1.3.2
+     */
     public static void setMaxMass(double maxMass) {
         ScanLineCacheFactory.maxMass = maxMass;
     }
 
+    /**
+     * <p>Setter for the field <code>massResolution</code>.</p>
+     *
+     * @param massResolution a double.
+     * @since 1.3.2
+     */
     public static void setMassResolution(double massResolution) {
         ScanLineCacheFactory.massResolution = massResolution;
     }
     /**
-     * This method will automatically create a new {@link IScanLine} for the
-     * given {@link IFileFragment} if no one is cached. Otherwise it will return
-     * the known {@link IScanLine}.
+     * This method will automatically create a new {@link maltcms.datastructures.caches.IScanLine} for the
+     * given {@link cross.datastructures.fragments.IFileFragment} if no one is cached. Otherwise it will return
+     * the known {@link maltcms.datastructures.caches.IScanLine}.
      *
      * @param ff file fragment
      * @return scanline cache for this file fragment
@@ -71,6 +90,12 @@ public class ScanLineCacheFactory {
         return ScanLineCacheFactory.getSparseScanLineCache(ff);
     }
 
+    /**
+     * <p>getSparseScanLineCache.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link maltcms.datastructures.caches.IScanLine} object.
+     */
     public static IScanLine getSparseScanLineCache(final IFileFragment ff) {
         IScanLine slc = null;
         slc = new SparseScanLineCache(ff, minMass, maxMass, massResolution);

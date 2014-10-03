@@ -31,7 +31,7 @@ package maltcms.datastructures.ms;
  * Concrete implementation of {@link maltcms.datastructures.ms.IRetentionInfo}.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class RetentionInfo implements IRetentionInfo {
 
@@ -41,6 +41,7 @@ public class RetentionInfo implements IRetentionInfo {
     private String name = "";
     private int scanIndex = -1;
 
+    /** {@inheritDoc} */
     @Override
     public int compareTo(final IAnchor o) {
         if (o instanceof IRetentionInfo) {
@@ -61,56 +62,67 @@ public class RetentionInfo implements IRetentionInfo {
         return toString().compareTo(o.toString());
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetentionIndex() {
         return this.ri;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetentionTime() {
         return this.rt;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getRetentionTimeUnit() {
         return this.rtu;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getScanIndex() {
         return this.scanIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setName(final String s) {
         this.name = s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionIndex(final double d) {
         this.ri = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionTime(final double d) {
         this.rt = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionTimeUnit(final String s) {
         this.rtu = s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setScanIndex(final int scan) {
         this.scanIndex = scan;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         if (getRetentionIndex() <= 0) {

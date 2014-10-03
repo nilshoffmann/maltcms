@@ -39,6 +39,12 @@ import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 
 import com.db4o.query.Predicate;
 
+/**
+ * <p>MetaboliteQueryAction class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteQueryAction extends javax.swing.AbstractAction {
 
     /**
@@ -51,6 +57,14 @@ public class MetaboliteQueryAction extends javax.swing.AbstractAction {
     private String filter = null;
     private IAggregatePredicateFactory af = null;
 
+    /**
+     * <p>Constructor for MetaboliteQueryAction.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param icon a {@link javax.swing.Icon} object.
+     * @param jtf a {@link javax.swing.JTextField} object.
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     */
     public MetaboliteQueryAction(String name, Icon icon, JTextField jtf, MetaboliteViewModel mvm) {
         super(name, icon);
         this.af = new MAggregatePredicateFactory(new MAggregatePredicate());
@@ -58,6 +72,14 @@ public class MetaboliteQueryAction extends javax.swing.AbstractAction {
         this.mvm = mvm;
     }
 
+    /**
+     * <p>Constructor for MetaboliteQueryAction.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param icon a {@link javax.swing.Icon} object.
+     * @param filter a {@link java.lang.String} object.
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     */
     public MetaboliteQueryAction(String name, Icon icon, String filter, MetaboliteViewModel mvm) {
         super(name, icon);
         this.af = new MAggregatePredicateFactory(new MAggregatePredicate());
@@ -65,6 +87,7 @@ public class MetaboliteQueryAction extends javax.swing.AbstractAction {
         this.mvm = mvm;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void actionPerformed(ActionEvent e) {
 //		SwingWorker<Void,Integer> sw = new SwingWorker<Void,Integer>() {

@@ -38,15 +38,15 @@ import ucar.ma2.Array;
  * A factory abstraction for creation of IArrayD2Double implementations.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class ArrayFactory {
 
     /**
      * Wraps an Array within a DenseArray. Data of a is copied.
      *
-     * @param a
-     * @return
+     * @param a a {@link ucar.ma2.Array} object.
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public IArrayD2Double create(final Array a) {
         return new DenseArray(a);
@@ -60,14 +60,14 @@ public class ArrayFactory {
      * PartitionedArray with the corresponding band constraint. Otherwise, a
      * DenseArray is returned.
      *
-     * @param rows
-     * @param cols
-     * @param aps
-     * @param neighborhood
-     * @param band
-     * @param default_value
-     * @param globalBand
-     * @return
+     * @param rows a int.
+     * @param cols a int.
+     * @param aps a {@link maltcms.datastructures.alignment.AnchorPairSet} object.
+     * @param neighborhood a int.
+     * @param band a double.
+     * @param default_value a double.
+     * @param globalBand a boolean.
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public IArrayD2Double create(final int rows, final int cols,
             final AnchorPairSet aps, final int neighborhood, final double band,
@@ -88,10 +88,10 @@ public class ArrayFactory {
      * Creates a DenseArray with given number of rows, columns and default_value
      * as initial value of elements.
      *
-     * @param rows
-     * @param cols
-     * @param default_value
-     * @return
+     * @param rows a int.
+     * @param cols a int.
+     * @param default_value a double.
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public IArrayD2Double create(final int rows, final int cols,
             final double default_value) {
@@ -102,11 +102,11 @@ public class ArrayFactory {
      * Create an optimized array storing only those elements contained within
      * the area bounds.
      *
-     * @param rows
-     * @param cols
-     * @param default_value
-     * @param bounds
-     * @return
+     * @param rows a int.
+     * @param cols a int.
+     * @param default_value a double.
+     * @param bounds a {@link java.awt.geom.Area} object.
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public IArrayD2Double create(final int rows, final int cols,
             final double default_value, final Area bounds) {
@@ -119,7 +119,7 @@ public class ArrayFactory {
      * virtual columns are copied.
      *
      * @param ia the array used as blueprint for layout
-     * @return
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public IArrayD2Double createCopiedLayout(final IArrayD2Double ia) {
         if (ia instanceof PartitionedArray) {
@@ -128,6 +128,12 @@ public class ArrayFactory {
         return create(ia.rows(), ia.columns(), ia.getDefaultValue());
     }
 
+    /**
+     * <p>createLayoutImage.</p>
+     *
+     * @param ia a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public BufferedImage createLayoutImage(final IArrayD2Double ia) {
         if (ia instanceof DenseArray) {
             return DenseArray.createLayoutImage((DenseArray) ia,
@@ -161,9 +167,9 @@ public class ArrayFactory {
      * implementation (rcs or hashing). Virtual layout size is given by rows and
      * columns. Default value is fixed to 0.
      *
-     * @param rows
-     * @param columns
-     * @return
+     * @param rows a int.
+     * @param columns a int.
+     * @return a {@link maltcms.datastructures.array.IArrayD2Double} object.
      */
     public IArrayD2Double createSparseArray(final int rows, final int columns) {
         return new SparseArray(rows, columns);

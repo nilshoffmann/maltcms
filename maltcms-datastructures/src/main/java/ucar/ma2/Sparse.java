@@ -44,13 +44,20 @@ import ucar.ma2.MAMath.MinMax;
  *
  * sparse arrays like dense arrays.
  *
- *
- *
  * @author Nils Hoffmann
- *
+ * 
+ * @since 1.3.2
  */
 public final class Sparse extends Array {
 
+    /**
+     * <p>create.</p>
+     *
+     * @param indices a {@link ucar.ma2.Array} object.
+     * @param values a {@link ucar.ma2.Array} object.
+     * @param massBinResolution a double.
+     * @return a {@link ucar.ma2.Sparse} object.
+     */
     public static Sparse create(Array indices, Array values,
             double massBinResolution) {
         MinMax mm = MAMath.getMinMax(indices);
@@ -62,6 +69,17 @@ public final class Sparse extends Array {
                 .ceil(max), nbins, massBinResolution);
     }
 
+    /**
+     * <p>create.</p>
+     *
+     * @param indices a {@link ucar.ma2.Array} object.
+     * @param values a {@link ucar.ma2.Array} object.
+     * @param minindex a int.
+     * @param maxindex a int.
+     * @param nbins a int.
+     * @param massBinResolution a double.
+     * @return a {@link ucar.ma2.Sparse} object.
+     */
     public static Sparse create(Array indices, Array values,
             int minindex, int maxindex, int nbins,
             double massBinResolution) {
@@ -73,6 +91,16 @@ public final class Sparse extends Array {
     private int maxindex = 0;
     private int bins = 0;
 
+    /**
+     * <p>Constructor for Sparse.</p>
+     *
+     * @param indices a {@link ucar.ma2.Array} object.
+     * @param values a {@link ucar.ma2.Array} object.
+     * @param minindex1 a int.
+     * @param maxindex1 a int.
+     * @param nbins a int.
+     * @param massBinResolution a double.
+     */
     public Sparse(Array indices, Array values, int minindex1,
             int maxindex1, int nbins, double massBinResolution) {
         super(Index.factory(new int[]{maxindex1 - minindex1}));
@@ -99,6 +127,13 @@ public final class Sparse extends Array {
         }
     }
 
+    /**
+     * <p>Constructor for Sparse.</p>
+     *
+     * @param arg0 a int.
+     * @param minindex1 a int.
+     * @param maxindex1 a int.
+     */
     public Sparse(int arg0, int minindex1, int maxindex1) {
         super(Index.factory(new int[]{maxindex1 - minindex1}));
         this.bins = arg0;
@@ -107,6 +142,11 @@ public final class Sparse extends Array {
         this.maxindex = maxindex1;
     }
 
+    /**
+     * <p>Constructor for Sparse.</p>
+     *
+     * @param sparse a {@link ucar.ma2.Sparse} object.
+     */
     public Sparse(Sparse sparse) {
         super(Index.factory(new int[]{sparse.maxindex - sparse.minindex}));
         this.bins = sparse.bins;
@@ -115,6 +155,12 @@ public final class Sparse extends Array {
         this.maxindex = sparse.maxindex;
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param arg0 a int.
+     * @return a double.
+     */
     public double get(int arg0) {
         if (arg0 >= this.indToVal.cardinality()) {
             return 0.0;
@@ -122,58 +168,87 @@ public final class Sparse extends Array {
         return this.indToVal.get(arg0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getDouble(Index arg0) {
         return get(arg0.currentElement());
     }
 
+    /** {@inheritDoc} */
     @Override
     public Class<?> getElementType() {
         return DataType.DOUBLE.getClass();
     }
 
+    /** {@inheritDoc} */
     @Override
     public float getFloat(Index arg0) {
         return (float) getDouble(arg0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public IndexIterator getIndexIteratorFast() {
         return getIndexIterator();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getInt(Index arg0) {
         return (int) getDouble(arg0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getLong(Index arg0) {
         return (long) getDouble(arg0);
     }
 
+    /**
+     * <p>getMaxIndex.</p>
+     *
+     * @return a int.
+     */
     public int getMaxIndex() {
         return this.maxindex;
     }
 
+    /**
+     * <p>getMinIndex.</p>
+     *
+     * @return a int.
+     */
     public int getMinIndex() {
         return this.minindex;
     }
 
+    /**
+     * <p>getNumKeys.</p>
+     *
+     * @return a int.
+     */
     public int getNumKeys() {
         return this.indToVal.cardinality();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int[] getShape() {
         return new int[]{this.indToVal.size()};// this.maxindex -
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getSize() {
         return getShape()[0];
     }
 
+    /**
+     * <p>set.</p>
+     *
+     * @param arg0 a int.
+     * @param arg1 a double.
+     */
     public void set(int arg0, double arg1) {
         if (arg0 < minindex || arg0 > maxindex) {
             throw new ArrayIndexOutOfBoundsException(arg0);
@@ -181,26 +256,35 @@ public final class Sparse extends Array {
         this.indToVal.set(arg0, arg1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDouble(Index arg0, double arg1) {
         set(arg0.currentElement(), arg1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFloat(Index arg0, float arg1) {
         setDouble(arg0, arg1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setInt(Index arg0, int arg1) {
         setDouble(arg0, arg1);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setLong(Index arg0, long arg1) {
         setDouble(arg0, arg1);
     }
 
+    /**
+     * <p>toArrays.</p>
+     *
+     * @return a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public Tuple2D<ArrayDouble.D1, ArrayDouble.D1> toArrays() {
         ArrayDouble.D1 indices = new ArrayDouble.D1(this.indToVal
                 .cardinality());
@@ -220,40 +304,53 @@ public final class Sparse extends Array {
         return new Tuple2D<>(indices, values);
     }
 
+    /**
+     * <p>get.</p>
+     *
+     * @param i a {@link ucar.ma2.Index} object.
+     * @return a double.
+     */
     public double get(Index i) {
         return getDouble(i);
     }
 
+    /** {@inheritDoc} */
     @Override
     public short getShort(Index i) {
         return (short) getDouble(i);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setShort(Index i, short value) {
         setDouble(i, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public byte getByte(Index i) {
         return (byte) getDouble(i);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setByte(Index i, byte value) {
         setDouble(i, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public char getChar(Index i) {
         return (char) getDouble(i);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChar(Index i, char value) {
         setDouble(i, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getBoolean(Index i) {
         double d = getDouble(i);
@@ -263,76 +360,91 @@ public final class Sparse extends Array {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getDouble(int index) {
         return get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setDouble(int index, double value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public float getFloat(int index) {
         return (float) get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFloat(int index, float value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getLong(int index) {
         return (long) get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setLong(int index, long value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getInt(int index) {
         return (int) get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setInt(int index, int value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public short getShort(int index) {
         return (short) get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setShort(int index, short value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public byte getByte(int index) {
         return (byte) get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setByte(int index, byte value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public char getChar(int index) {
         return (char) get(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChar(int index, char value) {
         set(index, value);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean getBoolean(int index) {
         double d = get(index);
@@ -342,6 +454,7 @@ public final class Sparse extends Array {
         return true;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setBoolean(int index, boolean value) {
         if (value) {
@@ -351,31 +464,37 @@ public final class Sparse extends Array {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object getStorage() {
         return indToVal.toArray();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setBoolean(Index index, boolean bln) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object getObject(Index index) {
         return getDouble(index);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setObject(Index index, Object o) {
         setDouble(index, (double) o);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Object getObject(int i) {
         return getDouble(i);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setObject(int i, Object o) {
         setDouble(i, (double) o);
@@ -396,6 +515,7 @@ public final class Sparse extends Array {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array copy() {
         return new Sparse(this);

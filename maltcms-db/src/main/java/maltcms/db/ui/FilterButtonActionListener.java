@@ -38,11 +38,10 @@ import maltcms.db.predicates.metabolite.MAggregatePredicate;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 
 /**
+ * <p>FilterButtonActionListener class.</p>
  *
  * @author -rhilker-
- *
- *
- *
+ * 
  */
 public class FilterButtonActionListener implements ActionListener {
 
@@ -58,6 +57,14 @@ public class FilterButtonActionListener implements ActionListener {
 
     private MetaboliteSearchPreferences msp = null;
 
+    /**
+     * <p>Constructor for FilterButtonActionListener.</p>
+     *
+     * @param mvm a {@link maltcms.db.ui.MetaboliteViewModel} object.
+     * @param error a boolean.
+     * @param textFields a {@link java.util.HashMap} object.
+     * @param msp a {@link maltcms.db.ui.MetaboliteSearchPreferences} object.
+     */
     public FilterButtonActionListener(MetaboliteViewModel mvm, boolean error, HashMap<Integer, JTextField> textFields, MetaboliteSearchPreferences msp) {
 
         this.mvm = mvm;
@@ -72,6 +79,7 @@ public class FilterButtonActionListener implements ActionListener {
 
     }
 
+    /** {@inheritDoc} */
     @Override
 
     public void actionPerformed(ActionEvent e) {
@@ -217,10 +225,7 @@ public class FilterButtonActionListener implements ActionListener {
      *
      * Submit filter method for the extra Search Preferences Frame
      *
-     *
-     *
-     * @param filter
-     *
+     * @param filter a {@link java.lang.String} object.
      */
     public void submitFilter(String filter) {
 

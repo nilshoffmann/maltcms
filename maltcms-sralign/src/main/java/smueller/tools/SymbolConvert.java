@@ -34,25 +34,30 @@ import ucar.ma2.IndexIterator;
 // �berf�hrt die Daten, abh�ngig von der Alphabetgr��e in eine Symbol.
 // Repr�sentation
 /**
+ * <p>SymbolConvert class.</p>
+ *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
+ * @version $Id: $Id
  */
 public class SymbolConvert {
 
     private static String alphabet;
 
     /**
+     * <p>Getter for the field <code>alphabet</code>.</p>
      *
-     * @return
+     * @return a {@link java.lang.String} object.
      */
     public static String getAlphabet() {
         return SymbolConvert.alphabet;
     }
 
     /**
+     * <p>symbolic.</p>
      *
-     * @param reduced1
-     * @param bp
-     * @return
+     * @param reduced1 a {@link ucar.ma2.Array} object.
+     * @param bp an array of double.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array symbolic(final Array reduced1, final double[] bp) {
         final Array reduced = reduced1.copy();

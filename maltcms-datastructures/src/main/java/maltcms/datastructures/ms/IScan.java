@@ -34,7 +34,7 @@ import ucar.ma2.Array;
  * Interface representing a Scan (usually an MS scan).
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IScan extends IFeatureVector {
 
@@ -89,6 +89,7 @@ public interface IScan extends IFeatureVector {
      * precursor charge has been recorded for this scan.
      *
      * @return the precursor charge
+     * @since 1.3.2
      */
     public double getPrecursorCharge();
 
@@ -97,6 +98,7 @@ public interface IScan extends IFeatureVector {
      * been recorded for this scan.
      *
      * @return the precursor m/z
+     * @since 1.3.2
      */
     public double getPrecursorMz();
 
@@ -105,6 +107,7 @@ public interface IScan extends IFeatureVector {
      * intensity has been recorded for this scan.
      *
      * @return the precursor intensity
+     * @since 1.3.2
      */
     public double getPrecursorIntensity();
 }

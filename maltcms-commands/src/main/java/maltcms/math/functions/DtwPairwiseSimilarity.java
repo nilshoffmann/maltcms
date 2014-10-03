@@ -35,8 +35,10 @@ import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 
 /**
+ * <p>DtwPairwiseSimilarity class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = IDtwSimilarityFunction.class)
@@ -47,17 +49,20 @@ public class DtwPairwiseSimilarity implements IDtwSimilarityFunction {
     private double compressionWeight = 1.0;
     private IArraySimilarity denseMassSpectraSimilarity = new ArrayCorr();
 
+    /** {@inheritDoc} */
     @Override
     public double apply(int i1, int i2, double time1, double time2, Array t1,
             Array t2) {
         return denseMassSpectraSimilarity.apply(t1, t2);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean minimize() {
         return false;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
     }

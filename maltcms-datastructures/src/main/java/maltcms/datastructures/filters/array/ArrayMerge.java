@@ -41,13 +41,18 @@ import ucar.ma2.Sparse;
  * scale, and the second with the corresponding intensity values.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class ArrayMerge extends AArrayFilter {
 
+    /**
+     * <p>Constructor for ArrayMerge.</p>
+     */
     public ArrayMerge() {
         super();
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array[] apply(final Array[] a) {
         final Array[] b = super.apply(a);
@@ -69,6 +74,7 @@ public class ArrayMerge extends AArrayFilter {
         return new Array[]{ret};
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayMerge copy() {
         return new ArrayMerge();

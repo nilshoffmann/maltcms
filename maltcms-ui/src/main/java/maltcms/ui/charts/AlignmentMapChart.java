@@ -43,7 +43,7 @@ import ucar.ma2.Index;
  * Creates a Plot displaying the mapping between two aligned time series.
  *
  * @author Nils Hoffmann
- *
+ * @version $Id: $Id
  */
 @Slf4j
 public class AlignmentMapChart extends AChart<XYPlot> {
@@ -55,6 +55,16 @@ public class AlignmentMapChart extends AChart<XYPlot> {
     private final String x_label = "Scan";
     private int stride = 1;
 
+    /**
+     * <p>Constructor for AlignmentMapChart.</p>
+     *
+     * @param map1 a {@link java.util.List} object.
+     * @param domain1 a {@link ucar.ma2.Array} object.
+     * @param domain2 a {@link ucar.ma2.Array} object.
+     * @param x_label a {@link java.lang.String} object.
+     * @param height1 a int.
+     * @param stride1 a int.
+     */
     public AlignmentMapChart(final List<Tuple2DI> map1, final Array domain1,
             final Array domain2, final String x_label, final int height1,
             final int stride1) {
@@ -65,6 +75,7 @@ public class AlignmentMapChart extends AChart<XYPlot> {
         this.domain2 = domain2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public XYPlot create() {
         final VectorSeries vs = new VectorSeries("Map");
@@ -103,11 +114,13 @@ public class AlignmentMapChart extends AChart<XYPlot> {
         return xyp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getTitle() {
         return this.title;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setTitle(final String s) {
         this.title = s;

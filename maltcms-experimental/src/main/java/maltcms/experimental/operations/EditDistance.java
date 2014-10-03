@@ -31,15 +31,16 @@ package maltcms.experimental.operations;
  * Implementation of the Edit-Distance on Strings.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class EditDistance {
 
     /**
      * Calculates the Edit-Distance on Strings a and b.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link java.lang.String} object.
+     * @param b a {@link java.lang.String} object.
+     * @return a double.
      */
     public double getDistance(String a, String b) {
         //check, if a or b are empty
@@ -62,9 +63,9 @@ public class EditDistance {
     /**
      * Calculates the edit distance matrix of strings a and b.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a a {@link java.lang.String} object.
+     * @param b a {@link java.lang.String} object.
+     * @return an array of int.
      */
     public int[][] calculateEditDistanceMatrix(String a, String b) {
         //define shape of array
@@ -96,10 +97,10 @@ public class EditDistance {
     /**
      * Prints the alignment of Strings a and b, given an edit sequence.
      *
-     * @param a
-     * @param b
-     * @param editSequence
-     * @return
+     * @param a a {@link java.lang.String} object.
+     * @param b a {@link java.lang.String} object.
+     * @param editSequence a {@link java.lang.String} object.
+     * @return a {@link java.lang.String} object.
      */
     public String printAlignment(String a, String b, String editSequence) {
         StringBuilder as = new StringBuilder();
@@ -151,8 +152,8 @@ public class EditDistance {
      * Returns a String encoding an optimal edit sequence, recovered from the
      * edit matrix d.
      *
-     * @param d
-     * @return
+     * @param d an array of int.
+     * @return a {@link java.lang.String} object.
      */
     public String traceback(int[][] d) {
         int j = d[0].length - 1;

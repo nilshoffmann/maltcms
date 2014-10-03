@@ -56,6 +56,7 @@ import ucar.ma2.MAMath;
  * Visualization for one mass spectra.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -73,9 +74,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
     @Configurable(value = "0")
     private int[] indices = new int[]{0};
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
@@ -116,9 +115,7 @@ public class MassSpectrumVisualization extends AFragmentCommand {
         return t;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.modulationVar = cfg.getString("var.modulation_time",
@@ -134,17 +131,13 @@ public class MassSpectrumVisualization extends AFragmentCommand {
 //        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Visualize one mass spectrum.";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

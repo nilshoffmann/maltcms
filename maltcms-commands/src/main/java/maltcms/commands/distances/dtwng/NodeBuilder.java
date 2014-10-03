@@ -32,20 +32,50 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * <p>Abstract NodeBuilder class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public abstract class NodeBuilder {
 
     private List<double[]> nodes = Collections.emptyList();
 
+    /**
+     * <p>Setter for the field <code>nodes</code>.</p>
+     *
+     * @param nodes a {@link java.util.List} object.
+     */
     public void setNodes(List<double[]> nodes) {
         this.nodes = nodes;
     }
 
+    /**
+     * <p>Getter for the field <code>nodes</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<double[]> getNodes() {
         return nodes;
     }
 
+    /**
+     * <p>eval.</p>
+     *
+     * @param points a {@link java.util.List} object.
+     * @param polyOrder a int.
+     * @return a {@link java.util.List} object.
+     */
     public abstract List<Point> eval(List<double[]> points, int polyOrder);
 
+    /**
+     * <p>getNodesByDimension.</p>
+     *
+     * @param i a int.
+     * @param dim an array of double.
+     * @return an array of double.
+     */
     public double[] getNodesByDimension(int i, double[] dim) {
         double[] dimt = dim == null ? new double[nodes.size()] : dim;
         for (double[] d : nodes) {
@@ -54,6 +84,12 @@ public abstract class NodeBuilder {
         return dimt;
     }
 
+    /**
+     * <p>getPointList.</p>
+     *
+     * @param points a {@link java.util.List} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Point> getPointList(List<double[]> points) {
         List<Point> l = new ArrayList<>();
         for (double[] d : points) {

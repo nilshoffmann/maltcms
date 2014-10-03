@@ -45,6 +45,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Supports 1D and 2D chromatography.
  *
  * @author Nils Hoffmann
+ * 
  */
 @Slf4j
 @Data
@@ -77,6 +78,7 @@ public class MZMLExporter extends AFragmentCommand {
     private String secondColumnElutionTimeVariable = "second_column_elution_time";
     private String msLevelVariable = "ms_level";
 
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
         log.info("Starting mzML export");

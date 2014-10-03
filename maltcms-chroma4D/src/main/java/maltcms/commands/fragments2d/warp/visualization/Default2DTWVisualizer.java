@@ -62,12 +62,13 @@ import ucar.ma2.IndexIterator;
 
 /**
  * Default visualizer for a 2d time warp. You can use it to create an image or
- * an {@link AChart}. You have the option to conserve the time axis of the
+ * an {@link maltcms.ui.charts.AChart}. You have the option to conserve the time axis of the
  * first, second, both or no chromatogram. Both, the image and the plot,
  * contains a differential color plot of the total intensity from both
  * chromatograms.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Slf4j
 @Data
@@ -94,9 +95,7 @@ public class Default2DTWVisualizer implements IVisualization {
     private int currentrasterline = -1;
     private int binSize = 256;
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public BufferedImage createImage(List<Array> scanlinesi,
             List<Array> scanlinesj, final Array warpPathi, final Array warpPathj) {
@@ -243,6 +242,7 @@ public class Default2DTWVisualizer implements IVisualization {
      *
      * @param outputintensities output intensities
      * @param outputintensitiescounter counter for the output intensities
+     * @param outputintensitiescounter counter for the output intensities
      * @param imageheight image height
      * @param samples samples
      * @param breakpointsi break points for reference
@@ -335,9 +335,7 @@ public class Default2DTWVisualizer implements IVisualization {
         return img;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.peakListVar = cfg.getString("var.peak_index_list",
@@ -376,9 +374,7 @@ public class Default2DTWVisualizer implements IVisualization {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public JFreeChart createChart(final String filename,
             final String samplenamei, final String samplenamej,
@@ -461,9 +457,7 @@ public class Default2DTWVisualizer implements IVisualization {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public JFreeChart addPeakMarker(final JFreeChart chart,
             final Tuple2D<Array, Array> warpPathij, final IFileFragment ref,
@@ -559,27 +553,19 @@ public class Default2DTWVisualizer implements IVisualization {
         plot.addAnnotation(pm);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setBinSize(final int nBinSize) {
         this.binSize = nBinSize;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public int getBinSize() {
         return this.binSize;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setNormalize(final boolean nNormalize) {
         this.normalize = nNormalize;

@@ -36,9 +36,10 @@ import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>PeakRTFeatureVector class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PeakRTFeatureVector implements INamedPeakFeatureVector {
 
@@ -50,10 +51,23 @@ public class PeakRTFeatureVector implements INamedPeakFeatureVector {
     private final String name;
     private final UUID uniqueId;
 
+    /**
+     * <p>Constructor for PeakRTFeatureVector.</p>
+     *
+     * @param rt a double.
+     * @param area a double.
+     */
     public PeakRTFeatureVector(double rt, double area) {
         this(null, rt, area);
     }
 
+    /**
+     * <p>Constructor for PeakRTFeatureVector.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param rt a double.
+     * @param area a double.
+     */
     public PeakRTFeatureVector(String name, double rt, double area) {
         this.name = name;
         this.rt = new ArrayDouble.D0();
@@ -66,6 +80,7 @@ public class PeakRTFeatureVector implements INamedPeakFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         if (name.equals("RT")) {
@@ -85,25 +100,34 @@ public class PeakRTFeatureVector implements INamedPeakFeatureVector {
     /* (non-Javadoc)
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList("RT", "NAME", "AREA");
     }
 
+    /**
+     * <p>getRT.</p>
+     *
+     * @return a double.
+     */
     public double getRT() {
         return this.rt.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return this.name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getArea() {
         return this.area.get();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -114,6 +138,7 @@ public class PeakRTFeatureVector implements INamedPeakFeatureVector {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

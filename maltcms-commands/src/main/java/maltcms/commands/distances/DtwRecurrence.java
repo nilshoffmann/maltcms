@@ -42,7 +42,7 @@ import ucar.ma2.ArrayByte;
  * {@link maltcms.commands.distances.dtw.ADynamicTimeWarp} Implementations.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -67,6 +67,7 @@ public class DtwRecurrence implements IRecurrence {
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        this.comp_weight = cfg.getDouble(
@@ -204,6 +205,7 @@ public class DtwRecurrence implements IRecurrence {
      * @see maltcms.commands.distances.IRecurrence#cumDist(int, int,
      * ucar.ma2.ArrayDouble.D2, double)
      */
+    /** {@inheritDoc} */
     @Override
     public double eval(final int row, final int column,
             final IArrayD2Double cumDistMatrix, final double dij,
@@ -221,6 +223,7 @@ public class DtwRecurrence implements IRecurrence {
      * @see maltcms.commands.distances.IRecurrence#cumDist(int, int,
      * ucar.ma2.ArrayDouble.D1, ucar.ma2.ArrayDouble.D1, double)
      */
+    /** {@inheritDoc} */
     @Override
     public double eval(final int row, final int column,
             final IArrayD2Double previousRow, final IArrayD2Double currentRow,
@@ -231,18 +234,34 @@ public class DtwRecurrence implements IRecurrence {
         return cumDistM(row, column, previousRow, currentRow, dij, false);
     }
 
+    /**
+     * <p>getCompressionWeight.</p>
+     *
+     * @return a double.
+     */
     public double getCompressionWeight() {
         return this.comp_weight;
     }
 
+    /**
+     * <p>getDiagonalWeight.</p>
+     *
+     * @return a double.
+     */
     public double getDiagonalWeight() {
         return this.diag_weight;
     }
 
+    /**
+     * <p>getExpansionWeight.</p>
+     *
+     * @return a double.
+     */
     public double getExpansionWeight() {
         return this.exp_weight;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getGlobalGapPenalty() {
         return this.globalGapPenalty;
@@ -264,6 +283,7 @@ public class DtwRecurrence implements IRecurrence {
      *
      * @see maltcms.commands.distances.IRecurrence#set(double, double)
      */
+    /** {@inheritDoc} */
     @Override
     public void set(final double compression_weight1,
             final double expansion_weight1, final double diagonal_weight1) {
@@ -277,6 +297,7 @@ public class DtwRecurrence implements IRecurrence {
      *
      * @see maltcms.commands.distances.IRecurrence#setMinimizing(boolean)
      */
+    /** {@inheritDoc} */
     @Override
     public void setMinimizing(final boolean b) {
         this.minimize = b;

@@ -33,22 +33,19 @@ import ucar.ma2.DataType;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>ReBuild class.</p>
  *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class ReBuild {
 
     /**
+     * <p>addbaseclean.</p>
      *
-     *
-     *
-     * @param a1
-     *
-     * @param m
-     *
-     * @return
-     *
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @param m a double.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array addbaseclean(final Array a1, final double m) {
 
@@ -70,13 +67,10 @@ public class ReBuild {
     }
 
     /**
+     * <p>strToDoubArray.</p>
      *
-     *
-     *
-     * @param str
-     *
-     * @return
-     *
+     * @param str a {@link java.lang.String} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array strToDoubArray(final String str) {
 
@@ -216,13 +210,10 @@ public class ReBuild {
     }
 
     /**
+     * <p>unlog.</p>
      *
-     *
-     *
-     * @param a1
-     *
-     * @return
-     *
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array unlog(final Array a1) {
 
@@ -243,17 +234,12 @@ public class ReBuild {
     }
 
     /**
+     * <p>unscale.</p>
      *
-     *
-     *
-     * @param a1
-     *
-     * @param min
-     *
-     * @param max
-     *
-     * @return
-     *
+     * @param a1 a {@link ucar.ma2.Array} object.
+     * @param min a double.
+     * @param max a double.
+     * @return a {@link ucar.ma2.Array} object.
      */
     public static Array unscale(final Array a1, final double min,
             final double max) {

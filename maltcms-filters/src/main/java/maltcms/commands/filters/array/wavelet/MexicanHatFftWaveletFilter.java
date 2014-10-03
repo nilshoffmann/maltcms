@@ -37,7 +37,8 @@ import ucar.ma2.Array;
  * Implementation of MexicanHatWavelet CWT Filter on top of AArrayFilter.
  *
  * @author Nils Hoffmann
- *
+ * 
+ * @since 1.3.2
  */
 @Slf4j
 public class MexicanHatFftWaveletFilter extends AArrayFilter {
@@ -50,30 +51,55 @@ public class MexicanHatFftWaveletFilter extends AArrayFilter {
     private final IWavelet w;
     private final ContinuousWaveletTransform cwt;
 
+    /**
+     * <p>Constructor for MexicanHatFftWaveletFilter.</p>
+     */
     public MexicanHatFftWaveletFilter() {
         super();
         w = new MexicanHatWavelet();
         cwt = new ContinuousWaveletTransform(w);
     }
 
+    /**
+     * <p>Constructor for MexicanHatFftWaveletFilter.</p>
+     *
+     * @param scale a double.
+     * @param variance a double.
+     */
     public MexicanHatFftWaveletFilter(double scale, double variance) {
         this();
         this.scale = scale;
         this.variance = variance;
     }
 
+    /**
+     * <p>Setter for the field <code>scale</code>.</p>
+     *
+     * @param scale a double.
+     */
     public void setScale(final double scale) {
         this.scale = scale;
     }
 
+    /**
+     * <p>Getter for the field <code>variance</code>.</p>
+     *
+     * @return a double.
+     */
     public double getVariance() {
         return variance;
     }
 
+    /**
+     * <p>Setter for the field <code>variance</code>.</p>
+     *
+     * @param variance a double.
+     */
     public void setVariance(double variance) {
         this.variance = variance;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         Array arr = super.apply(a);
@@ -87,6 +113,7 @@ public class MexicanHatFftWaveletFilter extends AArrayFilter {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -95,10 +122,16 @@ public class MexicanHatFftWaveletFilter extends AArrayFilter {
                 0.63628);
     }
 
+    /**
+     * <p>getContinuousWaveletTransform.</p>
+     *
+     * @return a {@link maltcms.commands.filters.array.wavelet.ContinuousWaveletTransform} object.
+     */
     public ContinuousWaveletTransform getContinuousWaveletTransform() {
         return this.cwt;
     }
 
+    /** {@inheritDoc} */
     @Override
     public MexicanHatFftWaveletFilter copy() {
         return new MexicanHatFftWaveletFilter(scale, variance);

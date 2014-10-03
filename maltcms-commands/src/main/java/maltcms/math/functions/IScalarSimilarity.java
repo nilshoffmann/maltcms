@@ -39,15 +39,24 @@ import java.io.Serializable;
  * determinable or was not calculated due to an unmet threshold criterion.
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IScalarSimilarity extends Serializable {
 
+    /**
+     * <p>apply.</p>
+     *
+     * @param a a double.
+     * @param b a double.
+     * @return a double.
+     */
     public double apply(double a, double b);
 
     /**
      * Creates and returns a semantic deep copy of this similarity.
      *
-     * @return
+     * @return a {@link maltcms.math.functions.IScalarSimilarity} object.
+     * @since 1.3.2
      */
     public IScalarSimilarity copy();
 }

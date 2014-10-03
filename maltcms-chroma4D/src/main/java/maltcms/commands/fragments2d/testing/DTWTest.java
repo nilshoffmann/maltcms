@@ -45,14 +45,17 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
+ * <p>DTWTest class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class DTWTest {
 
     /**
+     * <p>main.</p>
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
 //		Maltcms m = Maltcms.getInstance();

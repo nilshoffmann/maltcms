@@ -38,6 +38,12 @@ import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.Peak2DClique;
 
 @Slf4j
+/**
+ * <p>PeakNormalization class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @Data
 public class PeakNormalization {
 
@@ -45,6 +51,7 @@ public class PeakNormalization {
     private int expectedY = -1;
     private double threshold = 3.0d;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
@@ -54,6 +61,14 @@ public class PeakNormalization {
         return Math.sqrt(x1 * x2 + y1 * y2);
     }
 
+    /**
+     * <p>findReference.</p>
+     *
+     * @param peakLists a {@link java.util.List} object.
+     * @param bidiBestHits a {@link java.util.List} object.
+     * @param f a {@link java.util.Collection} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak2D> findReference(List<List<Peak2D>> peakLists,
             List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
         final List<Peak2DClique> peakCliqueLists = BBHTools.getPeak2DCliqueList(
@@ -85,12 +100,25 @@ public class PeakNormalization {
         return null;
     }
 
+    /**
+     * <p>normalize.</p>
+     *
+     * @param list a {@link java.util.List} object.
+     * @param ref a {@link maltcms.datastructures.peak.Peak2D} object.
+     */
     public void normalize(List<Peak2D> list, Peak2D ref) {
         for (Peak2D p : list) {
             p.normalizeTo(ref);
         }
     }
 
+    /**
+     * <p>normalize.</p>
+     *
+     * @param peakLists a {@link java.util.List} object.
+     * @param bidiBestHits a {@link java.util.List} object.
+     * @param f a {@link java.util.Collection} object.
+     */
     public void normalize(List<List<Peak2D>> peakLists,
             List<List<Point>> bidiBestHits, Collection<IFileFragment> f) {
         final List<Peak2D> refs = findReference(peakLists, bidiBestHits, f);

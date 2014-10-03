@@ -66,22 +66,40 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
+ * <p>Eval class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Eval {
 
     private final String dbdir;
 
+    /**
+     * <p>Constructor for Eval.</p>
+     *
+     * @param dbdir a {@link java.lang.String} object.
+     */
     public Eval(String dbdir) {
         this.dbdir = dbdir;
     }
 
+    /**
+     * <p>getDBDir.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getDBDir() {
         return this.dbdir;
     }
 
+    /**
+     * <p>createDB.</p>
+     *
+     * @param overwrite a boolean.
+     * @param args an array of {@link java.lang.String} objects.
+     * @return a {@link com.db4o.ObjectContainer} object.
+     */
     public ObjectContainer createDB(boolean overwrite, String[] args) {
 
         ObjectContainer oc = createDatabase(getDBDir(), overwrite);
@@ -126,6 +144,11 @@ public class Eval {
         return oc;
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         Eval e = new Eval(System.getProperty("user.dir"));
         ObjectContainer oc = e.createDB(false, args);
@@ -202,29 +225,72 @@ public class Eval {
         }
     }
 
+    /**
+     * <p>getChromatograms.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Chromatogram> getChromatograms(ObjectContainer oc) {
         return oc.query(new ChromatogramPredicate());
     }
 
+    /**
+     * <p>getCreators.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Creator> getCreators(ObjectContainer oc) {
         return oc.query(new CreatorPredicate());
     }
 
+    /**
+     * <p>getPeaksForChromatogram.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param c a {@link net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Peak> getPeaksForChromatogram(ObjectContainer oc,
             Chromatogram c) {
         return oc.query(new ChromatogramPeakPredicate(c));
     }
 
+    /**
+     * <p>getPeaksByCreator.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param creatorname a {@link java.lang.String} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Peak> getPeaksByCreator(ObjectContainer oc,
             String creatorname) {
         return oc.query(new CreatorPeakPredicate(creatorname));
     }
 
+    /**
+     * <p>getPeaksForChromatogramByCreator.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param c a {@link net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram} object.
+     * @param creatorname a {@link java.lang.String} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Peak> getPeaksForChromatogramByCreator(ObjectContainer oc,
             Chromatogram c, String creatorname) {
         return oc.query(new ChromatogramCreatorPeakPredicate(c, creatorname));
     }
 
+    /**
+     * <p>getPeakForChromatogramByCreatorByName.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param c a {@link net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram} object.
+     * @param creatorname a {@link java.lang.String} object.
+     * @param peakname a {@link java.lang.String} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Peak> getPeakForChromatogramByCreatorByName(
             ObjectContainer oc, Chromatogram c, String creatorname,
             String peakname) {
@@ -232,6 +298,12 @@ public class Eval {
                 creatorname, peakname));
     }
 
+    /**
+     * <p>getPeaks.</p>
+     *
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @return a {@link com.db4o.ObjectSet} object.
+     */
     public ObjectSet<Peak> getPeaks(ObjectContainer oc) {
         return oc.query(new PeakPredicate());
     }
@@ -546,6 +618,12 @@ public class Eval {
         }
     }
 
+    /**
+     * <p>getFilesFromFile.</p>
+     *
+     * @param filesFile a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<String> getFilesFromFile(String filesFile) {
         CSVReader csvr = new CSVReader();
         csvr.setFirstLineHeaders(false);
@@ -568,6 +646,13 @@ public class Eval {
         return Collections.emptyList();
     }
 
+    /**
+     * <p>createDatabase.</p>
+     *
+     * @param dbdir a {@link java.lang.String} object.
+     * @param overwrite a boolean.
+     * @return a {@link com.db4o.ObjectContainer} object.
+     */
     public ObjectContainer createDatabase(String dbdir, boolean overwrite) {
         try {
             File db = new File(dbdir, "hohenheimEvalDB.db4o");
@@ -604,6 +689,14 @@ public class Eval {
         }
     }
 
+    /**
+     * <p>getXcaliburPeaks.</p>
+     *
+     * @param creator a {@link net.sf.maltcms.evaluation.spi.xcalibur.Creator} object.
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param files a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak> getXcaliburPeaks(Creator creator, ObjectContainer oc,
             String... files) {
 
@@ -617,6 +710,14 @@ public class Eval {
         return v;
     }
 
+    /**
+     * <p>getMaltcmsPeaks.</p>
+     *
+     * @param creator a {@link net.sf.maltcms.evaluation.spi.xcalibur.Creator} object.
+     * @param oc a {@link com.db4o.ObjectContainer} object.
+     * @param files a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Peak> getMaltcmsPeaks(Creator creator, ObjectContainer oc,
             String... files) {
         List<Peak> v = new ArrayList<>();
@@ -675,6 +776,12 @@ public class Eval {
         return v;
     }
 
+    /**
+     * <p>parseDouble.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     * @return a double.
+     */
     public double parseDouble(String s) {
         if (s.isEmpty() || s.equals("N/A") || s.equals("N/F") || s.equals(
                 "Peak Not Found")) {

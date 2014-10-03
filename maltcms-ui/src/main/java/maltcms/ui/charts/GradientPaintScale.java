@@ -47,9 +47,10 @@ import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.renderer.PaintScale;
 
 /**
+ * <p>GradientPaintScale class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * @version $Id: $Id
  */
 public class GradientPaintScale implements PaintScale, IConfigurable,
         Serializable {
@@ -93,6 +94,14 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
     // this(sampleTable, breakPoints, new ColorRampReader().getDefaultRamp(),
     // min, max);
     // }
+    /**
+     * <p>Constructor for GradientPaintScale.</p>
+     *
+     * @param sampleTable an array of double.
+     * @param min a double.
+     * @param max a double.
+     * @param colors an array of {@link java.awt.Color} objects.
+     */
     public GradientPaintScale(double[] sampleTable, double min, double max,
             Color[] colors) {
         this.sampleTable = sampleTable;
@@ -112,23 +121,48 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
                 BufferedImage.TRANSLUCENT, colors);
     }
 
+    /**
+     * <p>Setter for the field <code>ramp</code>.</p>
+     *
+     * @param r an array of int.
+     */
     public void setRamp(int[][] r) {
         this.ramp = r;
         this.colors = ImageTools.rampToColorArray(this.ramp);
     }
 
+    /**
+     * <p>Getter for the field <code>ramp</code>.</p>
+     *
+     * @return an array of int.
+     */
     public int[][] getRamp() {
         return this.ramp;
     }
 
+    /**
+     * <p>Getter for the field <code>alpha</code>.</p>
+     *
+     * @return a double.
+     */
     public double getAlpha() {
         return this.alpha;
     }
 
+    /**
+     * <p>Getter for the field <code>beta</code>.</p>
+     *
+     * @return a double.
+     */
     public double getBeta() {
         return this.beta;
     }
 
+    /**
+     * <p>Setter for the field <code>alpha</code>.</p>
+     *
+     * @param alpha a double.
+     */
     public void setAlpha(double alpha) {
         this.alpha = alpha;
         this.lookupImage = ImageTools.createModifiedLookupImage(this.colors,
@@ -136,6 +170,11 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         this.lookupColors = createLookupColors();
     }
 
+    /**
+     * <p>Setter for the field <code>beta</code>.</p>
+     *
+     * @param beta a double.
+     */
     public void setBeta(double beta) {
         this.beta = beta;
         this.lookupImage = ImageTools.createModifiedLookupImage(this.colors,
@@ -143,6 +182,12 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         this.lookupColors = createLookupColors();
     }
 
+    /**
+     * <p>setAlphaBeta.</p>
+     *
+     * @param alpha a double.
+     * @param beta a double.
+     */
     public void setAlphaBeta(double alpha, double beta) {
         this.alpha = alpha;
         this.beta = beta;
@@ -159,19 +204,31 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         return c;
     }
 
+    /**
+     * <p>setUpperBound.</p>
+     *
+     * @param ub a double.
+     */
     public void setUpperBound(double ub) {
         this.max = ub;
     }
 
+    /**
+     * <p>setLowerBound.</p>
+     *
+     * @param lb a double.
+     */
     public void setLowerBound(double lb) {
         this.min = lb;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getUpperBound() {
         return this.max;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Paint getPaint(double arg0) {
         double relativeIndex = ((arg0 - this.min) / (this.max - this.min));
@@ -233,11 +290,17 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
         // return new Color(v1, v2, v3);
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getLowerBound() {
         return this.min;
     }
 
+    /**
+     * <p>Getter for the field <code>lookupImage</code>.</p>
+     *
+     * @return a {@link java.awt.image.BufferedImage} object.
+     */
     public BufferedImage getLookupImage() {
         return this.lookupImage;
     }
@@ -249,11 +312,17 @@ public class GradientPaintScale implements PaintScale, IConfigurable,
      * cross.IConfigurable#configure(org.apache.commons.configuration.Configuration
      * )
      */
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         // TODO Auto-generated method stub
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         double[] st = ImageTools.createSampleTable(256);
         System.out.println(Arrays.toString(st));

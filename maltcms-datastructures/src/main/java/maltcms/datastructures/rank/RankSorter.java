@@ -34,10 +34,21 @@ import java.util.List;
 
 import maltcms.datastructures.ridge.Ridge;
 
+/**
+ * <p>RankSorter class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class RankSorter {
 
     private LinkedHashSet<String> features = new LinkedHashSet<>();
 
+    /**
+     * <p>Constructor for RankSorter.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     */
     public RankSorter(List<Rank<Ridge>> l) {
         LinkedHashSet<String> union = new LinkedHashSet<>();
         for (Rank<Ridge> r : l) {
@@ -50,6 +61,11 @@ public class RankSorter {
         this.features = intersection;
     }
 
+    /**
+     * <p>sort.</p>
+     *
+     * @param l a {@link java.util.List} object.
+     */
     public void sort(List<Rank<Ridge>> l) {
         List<String> ll = new LinkedList<>(this.features);
         //Collections.reverse(ll);
@@ -61,6 +77,12 @@ public class RankSorter {
         System.out.println();
     }
 
+    /**
+     * <p>sortToOrder.</p>
+     *
+     * @param features a {@link java.util.List} object.
+     * @param l a {@link java.util.List} object.
+     */
     public void sortToOrder(List<String> features, List<Rank<Ridge>> l) {
         List<String> ll = new LinkedList<>(features);
         Collections.reverse(ll);

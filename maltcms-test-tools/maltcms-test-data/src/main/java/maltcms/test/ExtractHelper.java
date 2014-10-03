@@ -33,11 +33,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * <p>ExtractHelper class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 public class ExtractHelper {
 
+    /** Constant <code>typeToPaths</code> */
     public static EnumMap<FType, String[]> typeToPaths = new EnumMap<>(FType.class);
 
     public static enum FType {
@@ -45,6 +48,9 @@ public class ExtractHelper {
         CDF_1D, CDF_2D, MZML, MZDATA, MZXML, MZ5
     };
 
+    /**
+     * <p>setDefaults.</p>
+     */
     public static void setDefaults() {
         typeToPaths.clear();
         typeToPaths.put(FType.CDF_1D, new String[]{
@@ -72,10 +78,25 @@ public class ExtractHelper {
             "/mz5/small_raw.mz5.gz"});
     }
 
+    /**
+     * <p>extractForType.</p>
+     *
+     * @param tf a {@link java.io.File} object.
+     * @param t a {@link maltcms.test.ExtractHelper.FType} object.
+     * @param paths a {@link java.lang.String} object.
+     * @return an array of {@link java.io.File} objects.
+     */
     public static File[] extractForType(File tf, FType t, String... paths) {
         return extractFilesToDir(tf, paths);
     }
 
+    /**
+     * <p>extractFilesToDir.</p>
+     *
+     * @param outputFolder a {@link java.io.File} object.
+     * @param paths a {@link java.lang.String} object.
+     * @return an array of {@link java.io.File} objects.
+     */
     public static File[] extractFilesToDir(File outputFolder, String... paths) {
         List<File> files = new LinkedList<>();
         for (String path : paths) {
@@ -85,6 +106,12 @@ public class ExtractHelper {
         return files.toArray(new File[files.size()]);
     }
 
+    /**
+     * <p>getPathsForType.</p>
+     *
+     * @param t a {@link maltcms.test.ExtractHelper.FType} object.
+     * @return an array of {@link java.lang.String} objects.
+     */
     public static String[] getPathsForType(FType t) {
         if (typeToPaths.isEmpty()) {
             setDefaults();
@@ -92,6 +119,13 @@ public class ExtractHelper {
         return typeToPaths.get(t);
     }
 
+    /**
+     * <p>extractAllForType.</p>
+     *
+     * @param tf a {@link java.io.File} object.
+     * @param t a {@link maltcms.test.ExtractHelper.FType} object.
+     * @return an array of {@link java.io.File} objects.
+     */
     public static File[] extractAllForType(File tf, FType t) {
         return extractForType(tf, t, getPathsForType(t));
     }

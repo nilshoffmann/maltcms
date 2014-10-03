@@ -51,8 +51,10 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 /**
+ * <p>Abstract AFragmentCommandTest class.</p>
  *
  * @author Nils Hoffmann
+ * @version $Id: $Id
  */
 @Slf4j
 public abstract class AFragmentCommandTest {
@@ -64,6 +66,12 @@ public abstract class AFragmentCommandTest {
     @Rule
     public LogMethodName lmn = new LogMethodName();
 
+    /**
+     * <p>setLogLevelFor.</p>
+     *
+     * @param prefix a {@link java.lang.String} object.
+     * @param logLevel a {@link org.apache.log4j.Level} object.
+     */
     protected void setLogLevelFor(String prefix, Level logLevel) {
         switch (logLevel.toInt()) {
             case Level.ALL_INT:
@@ -91,14 +99,34 @@ public abstract class AFragmentCommandTest {
         PropertyConfigurator.configure(sl.getConfig());
     }
 
+    /**
+     * <p>setLogLevelFor.</p>
+     *
+     * @param cls a {@link java.lang.Class} object.
+     * @param logLevel a {@link org.apache.log4j.Level} object.
+     */
     public void setLogLevelFor(Class<?> cls, Level logLevel) {
         setLogLevelFor(cls.getName(), logLevel);
     }
 
+    /**
+     * <p>setLogLevelFor.</p>
+     *
+     * @param pkg a {@link java.lang.Package} object.
+     * @param logLevel a {@link org.apache.log4j.Level} object.
+     */
     public void setLogLevelFor(Package pkg, Level logLevel) {
         setLogLevelFor(pkg.getName(), logLevel);
     }
 
+    /**
+     * <p>createWorkflow.</p>
+     *
+     * @param outputDirectory a {@link java.io.File} object.
+     * @param commands a {@link java.util.List} object.
+     * @param inputFiles a {@link java.util.List} object.
+     * @return a {@link cross.datastructures.workflow.IWorkflow} object.
+     */
     public IWorkflow createWorkflow(File outputDirectory, List<IFragmentCommand> commands, List<File> inputFiles) {
         CommandPipeline cp = new CommandPipeline();
         List<IFileFragment> fragments = new ArrayList<>();
@@ -120,6 +148,12 @@ public abstract class AFragmentCommandTest {
         return dw;
     }
 
+    /**
+     * <p>testWorkflow.</p>
+     *
+     * @param w a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @return a {@link cross.datastructures.tuple.TupleND} object.
+     */
     public TupleND<IFileFragment> testWorkflow(IWorkflow w) {
         try {
             w.getConfiguration().setProperty("output.overwrite", true);
@@ -133,6 +167,12 @@ public abstract class AFragmentCommandTest {
         }
     }
 
+    /**
+     * <p>copyToInspectionDir.</p>
+     *
+     * @param w a {@link cross.datastructures.workflow.IWorkflow} object.
+     * @param t a {@link java.lang.Throwable} object.
+     */
     public void copyToInspectionDir(IWorkflow w, Throwable t) {
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
         File outDir = new File(tmpDir, "maltcms-test-failures");

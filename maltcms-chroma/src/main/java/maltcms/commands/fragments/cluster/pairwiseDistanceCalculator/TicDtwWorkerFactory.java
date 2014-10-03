@@ -35,8 +35,10 @@ import maltcms.commands.distances.dtw.TICDynamicTimeWarp;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * <p>TicDtwWorkerFactory class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 @Data
 @ServiceProvider(service = AWorkerFactory.class)
@@ -60,6 +62,7 @@ public class TicDtwWorkerFactory extends AWorkerFactory {
     private boolean savePairwiseSimilarityMatrix;
     private boolean normalizeAlignmentValue;
 
+    /** {@inheritDoc} */
     @Override
     public PairwiseDistanceWorker create() {
         PairwiseDistanceWorker worker = new PairwiseDistanceWorker();

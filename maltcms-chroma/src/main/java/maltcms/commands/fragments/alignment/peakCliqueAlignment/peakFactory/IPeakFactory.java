@@ -32,10 +32,23 @@ import cross.datastructures.tuple.Tuple2D;
 import java.io.Serializable;
 
 /**
+ * <p>IPeakFactory interface.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public interface IPeakFactory extends Serializable {
 
+    /**
+     * <p>createInstance.</p>
+     *
+     * @param sourceFile a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param minMaxMassRange a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @param size a int.
+     * @param massBinResolution a double.
+     * @param useSparseArrays a boolean.
+     * @param associationId a int.
+     * @return a {@link maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.IPeakFactoryImpl} object.
+     */
     IPeakFactoryImpl createInstance(IFileFragment sourceFile, Tuple2D<Double, Double> minMaxMassRange, int size, double massBinResolution, boolean useSparseArrays, int associationId);
 }

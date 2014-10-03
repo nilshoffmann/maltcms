@@ -30,19 +30,55 @@ package net.sf.maltcms.evaluation.api.classification;
 import maltcms.datastructures.array.IFeatureVector;
 
 /**
+ * <p>IFeatureVectorComparator interface.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public interface IFeatureVectorComparator<T extends IFeatureVector> {
 
+    /**
+     * <p>isTP.</p>
+     *
+     * @param gt a T object.
+     * @param test a T object.
+     * @return a boolean.
+     */
     public abstract boolean isTP(T gt, T test);
 
+    /**
+     * <p>isTN.</p>
+     *
+     * @param gt a T object.
+     * @param test a T object.
+     * @return a boolean.
+     */
     public abstract boolean isTN(T gt, T test);
 
+    /**
+     * <p>isFP.</p>
+     *
+     * @param gt a T object.
+     * @param test a T object.
+     * @return a boolean.
+     */
     public abstract boolean isFP(T gt, T test);
 
+    /**
+     * <p>isFN.</p>
+     *
+     * @param gt a T object.
+     * @param test a T object.
+     * @return a boolean.
+     */
     public abstract boolean isFN(T gt, T test);
 
+    /**
+     * <p>getSquaredDiff.</p>
+     *
+     * @param gt a T object.
+     * @param test a T object.
+     * @return a double.
+     */
     public abstract double getSquaredDiff(T gt, T test);
 }

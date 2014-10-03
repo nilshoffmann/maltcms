@@ -34,10 +34,23 @@ import java.util.List;
 /**
  * Created by IntelliJ IDEA. User: nilshoffmann Date: 10.12.11 Time: 11:10 To
  * change this template use File | Settings | File Templates.
+ *
+ * @author hoffmann
+ * 
  */
 public interface ITaskResult extends Serializable {
 
+    /**
+     * <p>getTaskInputs.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     List<File> getTaskInputs();
 
+    /**
+     * <p>getTaskOutputs.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     List<File> getTaskOutputs();
 }

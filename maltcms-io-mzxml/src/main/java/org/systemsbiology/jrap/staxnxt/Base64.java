@@ -31,6 +31,7 @@ import java.io.IOException;
  * @author Robert Harder
  * @author rob@iharder.net
  * @version 1.4
+ * @since 1.3.2
  */
 public final class Base64 {
 
@@ -138,6 +139,8 @@ public final class Base64 {
     /**
      * Testing. Feel free--in fact I encourage you--to throw out this entire
      * "main" method when you actually deploy this code.
+     *
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         try {
@@ -450,6 +453,7 @@ public final class Base64 {
      *
      * @param source The data to convert
      * @since 1.4
+     * @return a {@link java.lang.String} object.
      */
     public static String encodeBytes(byte[] source) {
         return encodeBytes(source, true);
@@ -462,6 +466,7 @@ public final class Base64 {
      * @param source The data to convert
      * @param breakLines Break lines at 80 characters or less.
      * @since 1.4
+     * @return a {@link java.lang.String} object.
      */
     public static String encodeBytes(byte[] source, boolean breakLines) {
         return encodeBytes(source, 0, source.length, breakLines);
@@ -474,6 +479,7 @@ public final class Base64 {
      * @param off Offset in array where conversion should begin
      * @param len Length of data to convert
      * @since 1.4
+     * @return a {@link java.lang.String} object.
      */
     public static String encodeBytes(byte[] source, int off, int len) {
         return encodeBytes(source, off, len, true);
@@ -487,6 +493,7 @@ public final class Base64 {
      * @param len Length of data to convert
      * @param breakLines Break lines at 80 characters or less.
      * @since 1.4
+     * @return a {@link java.lang.String} object.
      */
     public static String encodeBytes(byte[] source, int off, int len, boolean breakLines) {
         int len43 = len * 4 / 3;
@@ -928,6 +935,15 @@ public final class Base64 {
         return out;
     }   // end decode
 
+    /**
+     * <p>decode.</p>
+     *
+     * @param source an array of byte.
+     * @param off a int.
+     * @param len a int.
+     * @param outBuff an array of byte.
+     * @return a int.
+     */
     public static int decode(byte[] source, int off, int len, byte[] outBuff) {
         int outBuffPosn = 0;
 

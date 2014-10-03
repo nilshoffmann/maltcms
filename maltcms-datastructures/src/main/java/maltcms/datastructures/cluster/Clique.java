@@ -37,9 +37,10 @@ import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.array.IMutableFeatureVector;
 
 /**
+ * <p>Clique class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 public class Clique<T extends IFeatureVector> implements IClique<T> {
@@ -53,11 +54,19 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
     private Comparator<T> comp;
     private IMutableFeatureVector statsMap = new ArrayStatsMap();
 
+    /** {@inheritDoc} */
     @Override
     public IMutableFeatureVector getArrayStatsMap() {
         return statsMap;
     }
 
+    /**
+     * <p>Constructor for Clique.</p>
+     *
+     * @param comp a {@link java.util.Comparator} object.
+     * @param icmc a {@link maltcms.datastructures.cluster.ICliqueMemberCriterion} object.
+     * @param icu a {@link maltcms.datastructures.cluster.ICliqueUpdater} object.
+     */
     public Clique(Comparator<T> comp, ICliqueMemberCriterion<T> icmc,
             ICliqueUpdater<T> icu) {
         this.id = ++CLIQUEID;
@@ -66,11 +75,13 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         this.icu = icu;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getID() {
         return this.id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean add(T p) throws IllegalArgumentException {
         if (clique.contains(p)) {
@@ -93,6 +104,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void clear() {
         centroid = null;
@@ -115,6 +127,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
     // }
     // return BoxAndWhiskerCalculator.calculateBoxAndWhiskerStatistics(l);
     // }
+    /** {@inheritDoc} */
     @Override
     public void setCentroid(T ifv) {
         this.centroid = ifv;
@@ -127,11 +140,13 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
     // public double getCliqueRTMean() {
     // return this.cliqueMean;
     // }
+    /** {@inheritDoc} */
     @Override
     public T getCliqueCentroid() {
         return this.centroid;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -151,6 +166,7 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<T> getFeatureVectorList() {
         List<T> peaks = new ArrayList<>(this.clique);
@@ -158,11 +174,13 @@ public class Clique<T extends IFeatureVector> implements IClique<T> {
         return peaks;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int hashCode() {
         return super.hashCode();
     }
 
+    /** {@inheritDoc} */
     @Override
     public int size() {
         return this.clique.size();

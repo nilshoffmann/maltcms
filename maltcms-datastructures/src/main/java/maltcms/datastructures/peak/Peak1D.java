@@ -55,11 +55,13 @@ import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
+ * <p>Peak1D class.</p>
+ *
  * @author Nils Hoffmann
  *
  * Peak1D models a standard 1D chromatographic peak. If you want to model mass
  * spectral peaks over time, use a Peak1DGroup instance.
- *
+ * 
  */
 @Data
 public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
@@ -91,10 +93,20 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     private double baselineStopValue = Double.NaN;
     private final UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>Constructor for Peak1D.</p>
+     */
     public Peak1D() {
 
     }
 
+    /**
+     * <p>Constructor for Peak1D.</p>
+     *
+     * @param startIndex a int.
+     * @param apexIndex a int.
+     * @param stopIndex a int.
+     */
     public Peak1D(int startIndex, int apexIndex, int stopIndex) {
         this();
         this.startIndex = startIndex;
@@ -108,6 +120,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      * @see
      * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         if (name.equals("ExtractedIonCurrent")) {
@@ -170,6 +183,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      *
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<>(
@@ -184,6 +198,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 //		System.out.println(p.getFeature("Area"));
 //		System.out.println(p.getFeature("Intensity"));
 //	}
+    /** {@inheritDoc} */
     @Override
     public Iterator<Peak1D> iterator() {
         final Peak1D thisPeak = this;
@@ -211,6 +226,12 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         };
     }
 
+    /**
+     * <p>fromFragment.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @return a {@link java.util.List} object.
+     */
     public static List<Peak1D> fromFragment(IFileFragment ff) {
         IVariableFragment peaks = null;
         try {
@@ -266,6 +287,15 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         return peaklist;
     }
 
+    /**
+     * <p>appendEICs.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param peakNormalizers a {@link java.util.List} object.
+     * @param peaklist a {@link java.util.List} object.
+     * @param peakVarName a {@link java.lang.String} object.
+     * @since 1.3.2
+     */
     public static void appendEICs(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, String peakVarName) {
         if (!peaklist.isEmpty()) {
             final IVariableFragment peaks = new VariableFragment(ff,
@@ -402,6 +432,16 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         }
     }
 
+    /**
+     * <p>append.</p>
+     *
+     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param peakNormalizers a {@link java.util.List} object.
+     * @param peaklist a {@link java.util.List} object.
+     * @param filteredTrace a {@link ucar.ma2.Array} object.
+     * @param peakVarName a {@link java.lang.String} object.
+     * @param filteredTraceVarName a {@link java.lang.String} object.
+     */
     public static void append(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, Array filteredTrace, String peakVarName, String filteredTraceVarName) {
         if (!peaklist.isEmpty()) {
             final IVariableFragment peaks = new VariableFragment(ff,
@@ -553,6 +593,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

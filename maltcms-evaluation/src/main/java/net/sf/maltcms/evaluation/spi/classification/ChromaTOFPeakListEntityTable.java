@@ -49,13 +49,20 @@ import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
 /**
+ * <p>ChromaTOFPeakListEntityTable class.</p>
  *
  * @author Nils Hoffmann
+ * 
  */
 public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
 
     private final Map<Category, List<Entity<T>>> peakTableMap = new LinkedHashMap<>();
 
+    /**
+     * <p>Constructor for ChromaTOFPeakListEntityTable.</p>
+     *
+     * @param peakLists a {@link java.io.File} object.
+     */
     public ChromaTOFPeakListEntityTable(File... peakLists) {
         for (File f : peakLists) {
             Tuple2D<LinkedHashSet<String>, List<TableRow>> t = ChromaTOFParser.parseReport(f, true);
@@ -65,10 +72,22 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
 //		System.out.println("Holding "+peakTableMap.keySet().size()+" categories: "+peakTableMap.keySet());
     }
 
+    /**
+     * <p>getCategories.</p>
+     *
+     * @return a {@link java.util.Collection} object.
+     */
     public Collection<Category> getCategories() {
         return peakTableMap.keySet();
     }
 
+    /**
+     * <p>buildEntities.</p>
+     *
+     * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     * @return a {@link java.util.List} object.
+     */
     public final List<Entity<T>> buildEntities(Category c, Tuple2D<LinkedHashSet<String>, List<TableRow>> t) {
         List<Entity<T>> l = new ArrayList<>(t.getSecond().size());
         int rowIndex = 0;
@@ -120,6 +139,12 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
         return l;
     }
 
+    /**
+     * <p>getEntities.</p>
+     *
+     * @param category a {@link net.sf.maltcms.evaluation.api.classification.Category} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity<T>> getEntities(Category category) {
 //		System.out.println("Table contains "+peakTableMap.keySet()+" categories!");
 //		for(Category c:peakTableMap.keySet()) {
@@ -132,6 +157,13 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
         return l;
     }
 
+    /**
+     * <p>findMatching.</p>
+     *
+     * @param query a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
+     * @param feature a {@link java.lang.String} object.
+     * @return a {@link java.util.List} object.
+     */
     public List<Entity<T>> findMatching(Entity<T> query, String feature) {
         Category c = query.getCategory();
         List<Entity<T>> l = getEntities(c);

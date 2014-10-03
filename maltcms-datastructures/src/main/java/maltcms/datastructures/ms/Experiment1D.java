@@ -55,7 +55,7 @@ import ucar.nc2.Dimension;
  * chromatogram.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class Experiment1D implements IExperiment1D {
 
@@ -63,64 +63,53 @@ public class Experiment1D implements IExperiment1D {
     private IChromatogram1D chrom = null;
     private HashMap<String, String> metaData = null;
 
+    /**
+     * <p>Constructor for Experiment1D.</p>
+     */
     public Experiment1D() {
         super();
     }
 
+    /**
+     * <p>Constructor for Experiment1D.</p>
+     *
+     * @param ff1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public Experiment1D(final IFileFragment ff1) {
         this.ff = ff1;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment addChild(String name) {
         return this.ff.addChild(name);
     }
 
-    /**
-     * @param fragments
-     * @see
-     * cross.datastructures.fragments.IFileFragment#addChildren(cross.datastructures.fragments.IVariableFragment[])
-     */
+    /** {@inheritDoc} */
     @Override
     public void addChildren(final IVariableFragment... fragments) {
         this.ff.addChildren(fragments);
     }
 
-    /**
-     * @param dims1
-     * @see
-     * cross.datastructures.fragments.IFileFragment#addDimensions(ucar.nc2.Dimension[])
-     */
+    /** {@inheritDoc} */
     @Override
     public void addDimensions(final Dimension... dims1) {
         this.ff.addDimensions(dims1);
     }
 
-    /**
-     * @param c
-     * @see
-     * cross.datastructures.fragments.IFileFragment#addSourceFile(java.util.Collection)
-     */
+    /** {@inheritDoc} */
     @Override
     public void addSourceFile(final Collection<IFileFragment> c) {
         this.ff.addSourceFile(c);
     }
 
-    /**
-     * @param ff
-     * @see
-     * cross.datastructures.fragments.IFileFragment#addSourceFile(cross.datastructures.fragments.IFileFragment[])
-     */
+    /** {@inheritDoc} */
     @Override
     public void addSourceFile(final IFileFragment... ff) {
         this.ff.addSourceFile(ff);
     }
 
-    /**
-     * @param e
-     * @see
-     * cross.datastructures.fragments.IFileFragment#appendXML(org.jdom.Element)
-     */
+    /** {@inheritDoc} */
     @Override
     public void appendXML(final Element e) {
         this.ff.appendXML(e);
@@ -131,6 +120,7 @@ public class Experiment1D implements IExperiment1D {
      *
      * @see cross.datastructures.fragments.IFileFragment#clearArrays()
      */
+    /** {@inheritDoc} */
     @Override
     public void clearArrays() throws IllegalStateException {
         this.ff.clearArrays();
@@ -141,138 +131,103 @@ public class Experiment1D implements IExperiment1D {
      *
      * @see cross.datastructures.fragments.IFileFragment#clearDimensions()
      */
+    /** {@inheritDoc} */
     @Override
     public void clearDimensions() {
         this.ff.clearDimensions();
     }
 
-    /**
-     * @param arg0
-     * @param arg1
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFragment#compare(cross.datastructures.fragments.IFragment,
-     * cross.datastructures.fragments.IFragment)
-     */
+    /** {@inheritDoc} */
     @Override
     public int compare(final IFragment arg0, final IFragment arg1) {
         return this.ff.compare(arg0, arg1);
     }
 
-    /**
-     * @param arg0
-     * @return
-     * @see cross.datastructures.fragments.IFragment#compareTo(java.lang.Object)
-     */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(final Object arg0) {
         return this.ff.compareTo(arg0);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
     }
 
-    /**
-     * @param obj
-     * @return
-     * @see java.util.Comparator#equals(java.lang.Object)
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(final Object obj) {
         return this.ff.equals(obj);
     }
 
-    /**
-     * @return @see
-     * cross.datastructures.fragments.IFileFragment#getAbsolutePath()
-     */
+    /** {@inheritDoc} */
     @Override
     public String getAbsolutePath() {
         return this.ff.getAbsolutePath();
     }
 
-    /**
-     * @param a
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFragment#getAttribute(ucar.nc2.Attribute)
-     */
+    /** {@inheritDoc} */
     @Override
     public Attribute getAttribute(final Attribute a) {
         return this.ff.getAttribute(a);
     }
 
-    /**
-     * @param name
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFragment#getAttribute(java.lang.String)
-     */
+    /** {@inheritDoc} */
     @Override
     public Attribute getAttribute(final String name) {
         return this.ff.getAttribute(name);
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFragment#getAttributes()
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Attribute> getAttributes() {
         return this.ff.getAttributes();
     }
 
+    /** {@inheritDoc} */
     @Override
     public ICacheDelegate<IVariableFragment, List<Array>> getCache() {
         return this.ff.getCache();
     }
 
-    /**
-     * @param varname
-     * @return
-     * @see
-     * cross.datastructures.fragments.IGroupFragment#getChild(java.lang.String)
-     */
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment getChild(final String varname) {
         return this.ff.getChild(varname);
     }
 
-    /**
-     * @param varname
-     * @param loadStructureOnly
-     * @return
-     * @see cross.datastructures.fragments.IGroupFragment#getChild(String)
-     */
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment getChild(final String varname,
             final boolean loadStructureOnly) {
         return this.ff.getChild(varname, loadStructureOnly);
     }
 
+    /** {@inheritDoc} */
     @Override
     public IChromatogram1D getChromatogram() {
         return this.chrom;
     }
 
+    /** {@inheritDoc} */
     @Override
     public IFileFragment getFileFragment() {
         return this.ff;
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#getID()
-     */
+    /** {@inheritDoc} */
     @Override
     public long getID() {
         return this.ff.getID();
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<IVariableFragment> getImmediateChildren() {
         return this.ff.getImmediateChildren();
     }
 
+    /** {@inheritDoc} */
     @Override
     public HashMap<String, String> getMetadata() {
         if (this.metaData == null) {
@@ -281,108 +236,67 @@ public class Experiment1D implements IExperiment1D {
         return this.metaData;
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#getName()
-     */
+    /** {@inheritDoc} */
     @Override
     public String getName() {
         return this.ff.getName();
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#getParent()
-     */
+    /** {@inheritDoc} */
     @Override
     public IGroupFragment getParent() {
         return this.ff.getParent();
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#getSize()
-     */
+    /** {@inheritDoc} */
     @Override
     public int getSize() {
         return this.ff.getSize();
     }
 
-    /**
-     * @return @see
-     * cross.datastructures.fragments.IFileFragment#getSourceFiles()
-     */
+    /** {@inheritDoc} */
     @Override
     public Collection<IFileFragment> getSourceFiles() {
         return this.ff.getSourceFiles();
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFragment#getStats()
-     */
+    /** {@inheritDoc} */
     @Override
     public StatsMap getStats() {
         return this.ff.getStats();
     }
 
-    /**
-     * @param a
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFragment#hasAttribute(ucar.nc2.Attribute)
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean hasAttribute(final Attribute a) {
         return this.ff.hasAttribute(a);
     }
 
-    /**
-     * @param name
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFragment#hasAttribute(java.lang.String)
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean hasAttribute(final String name) {
         return this.ff.hasAttribute(name);
     }
 
-    /**
-     * @param vf
-     * @return
-     * @see
-     * cross.datastructures.fragments.IGroupFragment#hasChild(cross.datastructures.fragments.IVariableFragment)
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean hasChild(final IVariableFragment vf) {
         return this.ff.hasChild(vf);
     }
 
-    /**
-     * @param varname
-     * @return
-     * @see
-     * cross.datastructures.fragments.IGroupFragment#hasChild(java.lang.String)
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean hasChild(final String varname) {
         return this.ff.hasChild(varname);
     }
 
-    /**
-     * @param vf
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFileFragment#hasChildren(cross.datastructures.fragments.IVariableFragment[])
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean hasChildren(final IVariableFragment... vf) {
         return this.ff.hasChildren(vf);
     }
 
-    /**
-     * @param s
-     * @return
-     * @see
-     * cross.datastructures.fragments.IFileFragment#hasChildren(java.lang.String[])
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean hasChildren(final String... s) {
         return this.ff.hasChildren(s);
@@ -393,22 +307,19 @@ public class Experiment1D implements IExperiment1D {
      *
      * @see cross.datastructures.fragments.IFileFragment#isModified()
      */
+    /** {@inheritDoc} */
     @Override
     public boolean isModified() {
         return this.ff.isModified();
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#iterator()
-     */
+    /** {@inheritDoc} */
     @Override
     public Iterator<IVariableFragment> iterator() {
         return this.ff.iterator();
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IGroupFragment#nextGID()
-     */
+    /** {@inheritDoc} */
     @Override
     public long nextGID() {
         return this.ff.nextGID();
@@ -419,115 +330,86 @@ public class Experiment1D implements IExperiment1D {
      *
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
+    /** {@inheritDoc} */
     @Override
     public void readExternal(final ObjectInput in) throws IOException,
             ClassNotFoundException {
         this.ff.readExternal(in);
     }
 
-    /**
-     * @param variableFragment
-     * @see
-     * cross.datastructures.fragments.IFileFragment#removeChild(cross.datastructures.fragments.IVariableFragment)
-     */
+    /** {@inheritDoc} */
     @Override
     public void removeChild(final IVariableFragment variableFragment) {
         this.ff.removeChild(variableFragment);
     }
 
-    /**
-     * @param ff
-     * @see
-     * cross.datastructures.fragments.IFileFragment#removeSourceFile(cross.datastructures.fragments.IFileFragment)
-     */
+    /** {@inheritDoc} */
     @Override
     public void removeSourceFile(final IFileFragment ff) {
         this.ff.removeSourceFile(ff);
     }
 
-    /**
-     *
-     * @see cross.datastructures.fragments.IFileFragment#removeSourceFiles()
-     */
+    /** {@inheritDoc} */
     @Override
     public void removeSourceFiles() {
         this.ff.removeSourceFiles();
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#save()
-     */
+    /** {@inheritDoc} */
     @Override
     public boolean save() {
         return this.ff.save();
     }
 
-    /**
-     * @param a
-     * @see
-     * cross.datastructures.fragments.IFragment#setAttributes(ucar.nc2.Attribute[])
-     */
+    /** {@inheritDoc} */
     @Override
     public void setAttributes(final Attribute... a) {
         this.ff.setAttributes(a);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setChromatogram(final IChromatogram1D c) {
         this.chrom = c;
     }
 
-    /**
-     * @param f1
-     * @see cross.datastructures.fragments.IFileFragment#setFile(java.io.File)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setFile(final File f1) {
         this.ff.setFile(f1);
     }
 
-    /**
-     * @param file
-     * @see
-     * cross.datastructures.fragments.IFileFragment#setFile(java.lang.String)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setFile(final String file) {
         this.ff.setFile(file);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setFileFragment(final IFileFragment ff1) {
         this.ff = ff1;
     }
 
-    /**
-     * @param id
-     * @see cross.datastructures.fragments.IGroupFragment#setID(long)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setID(final long id) {
         this.ff.setID(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setMetadata(final String key, final String value) {
         this.metaData.put(key, value);
     }
 
-    /**
-     * @param stats1
-     * @see
-     * cross.datastructures.fragments.IFragment#setStats(cross.datastructures.StatsMap)
-     */
+    /** {@inheritDoc} */
     @Override
     public void setStats(final StatsMap stats1) {
         this.ff.setStats(stats1);
     }
 
-    /**
-     * @return @see cross.datastructures.fragments.IFileFragment#toString()
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return this.ff.toString();
@@ -538,6 +420,7 @@ public class Experiment1D implements IExperiment1D {
      *
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
+    /** {@inheritDoc} */
     @Override
     public void writeExternal(final ObjectOutput out) throws IOException {
         this.ff.writeExternal(out);
@@ -548,6 +431,7 @@ public class Experiment1D implements IExperiment1D {
      *
      * @see maltcms.datastructures.ms.IExperiment#getMetadata(java.lang.String)
      */
+    /** {@inheritDoc} */
     @Override
     public String getMetadata(String key) throws ResourceNotAvailableException {
         if (this.metaData.containsKey(key)) {
@@ -557,26 +441,31 @@ public class Experiment1D implements IExperiment1D {
                 + " is unknown!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public void addAttribute(Attribute atrbt) {
         this.ff.addAttribute(atrbt);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Set<Dimension> getDimensions() {
         return this.ff.getDimensions();
     }
 
+    /** {@inheritDoc} */
     @Override
     public URI getUri() {
         return this.ff.getUri();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCache(ICacheDelegate<IVariableFragment, List<Array>> cache) {
         this.ff.setCache(cache);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void readStructure() {
         this.ff.readStructure();

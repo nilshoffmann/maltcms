@@ -42,8 +42,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Prints available variables for provided file fragments.
  *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @Slf4j
 @Data
@@ -58,6 +57,7 @@ public class DataFileVariablePrinter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         for (IFileFragment f : t) {

@@ -31,34 +31,95 @@ package maltcms.datastructures.cluster;
  * Interface for general, n-ary clusters.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface ICluster {
 
+    /**
+     * <p>getDistanceToParent.</p>
+     *
+     * @return a double.
+     */
     public double getDistanceToParent();
 
+    /**
+     * <p>getID.</p>
+     *
+     * @return a int.
+     */
     public int getID();
 
+    /**
+     * <p>getLabelString.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getLabelString();
 
+    /**
+     * <p>getName.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName();
 
+    /**
+     * <p>getSize.</p>
+     *
+     * @return a int.
+     */
     public int getSize();
 
+    /**
+     * <p>setDistances.</p>
+     *
+     * @param d an array of double.
+     */
     public void setDistances(double[] d);
 
+    /**
+     * <p>setDistanceToParent.</p>
+     *
+     * @param d a double.
+     */
     public void setDistanceToParent(double d);
 
+    /**
+     * <p>setID.</p>
+     *
+     * @param id a int.
+     */
     public void setID(int id);
 
+    /**
+     * <p>setLabelString.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public void setLabelString(String s);
 
+    /**
+     * <p>setName.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public void setName(String name);
 
+    /**
+     * <p>setSize.</p>
+     *
+     * @param size a int.
+     */
     public void setSize(int size);
 
+    /**
+     * <p>toNewick.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String toNewick();
 
+    /** {@inheritDoc} */
     @Override
     public String toString();
 }

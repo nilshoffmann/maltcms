@@ -30,9 +30,10 @@ package smueller.datastructure;
 import java.util.Arrays;
 
 /**
+ * <p>DistanceMatrix class.</p>
  *
  * @author Soeren Mueller, smueller@cebitec.uni-bielefeld.de
- *
+ * @version $Id: $Id
  */
 public class DistanceMatrix {
 
@@ -46,11 +47,9 @@ public class DistanceMatrix {
     // Berechnung der Distanzmatrix basierend auf den Breakpoints,
     // Differenz der Mittelwerte der jeweiligen Bins bildet Distanz
     /**
+     * <p>Constructor for DistanceMatrix.</p>
      *
-     *
-     *
-     * @param bp
-     *
+     * @param bp an array of double.
      */
     public DistanceMatrix(final double[] bp) {
 
@@ -108,11 +107,9 @@ public class DistanceMatrix {
     }
 
     /**
+     * <p>Getter for the field <code>distmat</code>.</p>
      *
-     *
-     *
-     * @return
-     *
+     * @return an array of double.
      */
     public double[][] getDistmat() {
 

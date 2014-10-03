@@ -35,25 +35,50 @@ import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MetabolitePredicate;
 
+/**
+ * <p>MetaboliteQueryDB class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
 
+    /**
+     * <p>Constructor for MetaboliteQueryDB.</p>
+     *
+     * @param dblocation a {@link java.lang.String} object.
+     */
     public MetaboliteQueryDB(String dblocation) {
         super(dblocation);
     }
 
     /**
-     * @param dblocation
-     * @param p
+     * <p>Constructor for MetaboliteQueryDB.</p>
+     *
+     * @param dblocation a {@link java.lang.String} object.
+     * @param p a {@link com.db4o.query.Predicate} object.
      */
     public MetaboliteQueryDB(String dblocation, Predicate<IMetabolite> p) {
         super(dblocation, p);
     }
 
+    /**
+     * <p>Constructor for MetaboliteQueryDB.</p>
+     *
+     * @param dblocation a {@link java.lang.String} object.
+     * @param args an array of {@link java.lang.String} objects.
+     * @param mapf a {@link maltcms.db.predicates.metabolite.MAggregatePredicateFactory} object.
+     */
     public MetaboliteQueryDB(String dblocation, String[] args,
             MAggregatePredicateFactory mapf) {
         super(dblocation, args, mapf);
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
 
         if (args.length >= 1) {//at least the db has to be given
@@ -101,6 +126,7 @@ public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Predicate<IMetabolite> getDefaultPredicate() {
         return new Predicate<IMetabolite>() {

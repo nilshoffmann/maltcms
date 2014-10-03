@@ -34,30 +34,56 @@ import java.util.LinkedList;
  * capacity and automatic remove oldest entry semantics.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public class RingBuffer<T> {
 
     private final LinkedList<T> buffer;
     private int capacity = 0;
 
+    /**
+     * <p>Constructor for RingBuffer.</p>
+     *
+     * @param capacity a int.
+     */
     public RingBuffer(int capacity) {
         this.buffer = new LinkedList<>();
         this.capacity = capacity;
     }
 
+    /**
+     * <p>oldest.</p>
+     *
+     * @return a T object.
+     */
     public T oldest() {
         return buffer.peekLast();
     }
 
+    /**
+     * <p>current.</p>
+     *
+     * @return a T object.
+     */
     public T current() {
         return buffer.peekFirst();
     }
 
+    /**
+     * <p>previous.</p>
+     *
+     * @return a T object.
+     */
     public T previous() {
         return buffer.get(1);
     }
 
+    /**
+     * <p>push.</p>
+     *
+     * @param d a T object.
+     * @return a T object.
+     */
     public T push(T d) {
         buffer.addFirst(d);
         if (buffer.size() == this.capacity + 1) {
@@ -66,10 +92,17 @@ public class RingBuffer<T> {
         return buffer.peekLast();
     }
 
+    /**
+     * <p>Getter for the field <code>buffer</code>.</p>
+     *
+     * @param t an array of T objects.
+     * @return an array of T objects.
+     */
     public T[] getBuffer(T[] t) {
         return this.buffer.toArray(t);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(buffer.size());
@@ -79,6 +112,11 @@ public class RingBuffer<T> {
         return sb.toString();
     }
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects.
+     */
     public static void main(String[] args) {
         RingBuffer<Double> rb = new RingBuffer<>(3);
         for (int i = 0; i < 10; i++) {

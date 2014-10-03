@@ -31,6 +31,8 @@ package org.systemsbiology.jrap.staxnxt;
  * data.
  *
  * @author Mathijs Vogelzang
+ * 
+ * @since 1.3.2
  */
 public class MSOperator {
 
@@ -38,6 +40,7 @@ public class MSOperator {
     public String phoneNumber,
             email, URI;
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return ("firstName " + firstName + " lastName " + lastName

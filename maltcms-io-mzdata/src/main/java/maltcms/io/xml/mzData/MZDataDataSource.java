@@ -72,6 +72,12 @@ import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 
 @Slf4j
+/**
+ * <p>MZDataDataSource class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 @ServiceProvider(service = IDataSource.class)
 public class MZDataDataSource implements IDataSource {
 
@@ -93,6 +99,7 @@ public class MZDataDataSource implements IDataSource {
         return MZDataDataSource.variableToArrayCache;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int canRead(final IFileFragment ff) {
         final int dotindex = ff.getName().lastIndexOf(".");
@@ -117,11 +124,13 @@ public class MZDataDataSource implements IDataSource {
      * configurationChanged
      * (org.apache.commons.configuration.event.ConfigurationEvent)
      */
+    /** {@inheritDoc} */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
         // TODO Auto-generated method stub
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration configuration) {
         this.mass_values = configuration.getString("var.mass_values",
@@ -231,8 +240,8 @@ public class MZDataDataSource implements IDataSource {
     /**
      * Read min and max_mass_range to determine bin sizes.
      *
-     * @param var
-     * @param mp
+     * @param var a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @param mp a {@link maltcms.io.xml.mzData.MzData} object.
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
      * mass_range_max as second array
      */
@@ -301,6 +310,7 @@ public class MZDataDataSource implements IDataSource {
         return a;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -313,6 +323,7 @@ public class MZDataDataSource implements IDataSource {
         return ral;
     }
 
+    /** {@inheritDoc} */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -468,6 +479,7 @@ public class MZDataDataSource implements IDataSource {
         return scan_index;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array readSingle(final IVariableFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -490,6 +502,7 @@ public class MZDataDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IFileFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException {
@@ -515,6 +528,7 @@ public class MZDataDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IVariableFragment)
      */
+    /** {@inheritDoc} */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -577,6 +591,7 @@ public class MZDataDataSource implements IDataSource {
         return Array.factory(d);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
@@ -626,6 +641,7 @@ public class MZDataDataSource implements IDataSource {
         throw new ResourceNotAvailableException("File fragment " + iff.getUri() + " does not exist!");
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean write(final IFileFragment f
     ) {

@@ -69,6 +69,7 @@ import ucar.nc2.Dimension;
  * TODO find threshold index and save it?
  *
  * @author Mathias Wilhelm
+ * 
  */
 @ProvidesVariables(names = {"var.total_intensity", "var.modulation_time",
     "var.scan_rate", "var.scan_duration", "var.second_column_time",
@@ -126,18 +127,13 @@ public class Default2DVarLoader extends AFragmentCommand {
     @Configurable(description = "Maximum allowed difference in scan acquisition times for scan rate estimation.")
     private double maxScanAcquisitionTimeDelta = 0.0001d;
 
-    /**
-     *
-     * @return
-     */
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<>();
@@ -206,9 +202,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         return al;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString("var.total_intensity",
@@ -637,17 +631,13 @@ public class Default2DVarLoader extends AFragmentCommand {
         return tic2dvar;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public String getDescription() {
         return "Default var loader for 2d data. Will create different variables.";
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

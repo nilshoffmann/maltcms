@@ -37,6 +37,7 @@ import ucar.ma2.IndexIterator;
  * Will take the square root of all elements.
  *
  * @author Mathias Wilhelm
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -57,9 +58,7 @@ public class SqrtFilter extends AArrayFilter {
         };
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
@@ -70,6 +69,7 @@ public class SqrtFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public SqrtFilter copy() {
         return new SqrtFilter();

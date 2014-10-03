@@ -30,9 +30,10 @@ package net.sf.maltcms.evaluation.spi.classification;
 import net.sf.maltcms.evaluation.api.classification.IPerformanceMetrics;
 
 /**
+ * <p>PairwisePerformanceMetrics class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class PairwisePerformanceMetrics implements IPerformanceMetrics {
 
@@ -44,6 +45,16 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
     private double precision, recall, f1;
     private String toolName, instanceName;
 
+    /**
+     * <p>Constructor for PairwisePerformanceMetrics.</p>
+     *
+     * @param toolName a {@link java.lang.String} object.
+     * @param instanceName a {@link java.lang.String} object.
+     * @param tp a int.
+     * @param fp a int.
+     * @param tn a int.
+     * @param fn a int.
+     */
     public PairwisePerformanceMetrics(String toolName, String instanceName, int tp, int fp, int tn, int fn) {
         this.toolName = toolName;
         this.instanceName = instanceName;
@@ -61,39 +72,55 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
 //		System.out.println("F1: "+f1);
     }
 
+    /**
+     * <p>Getter for the field <code>toolName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getToolName() {
         return this.toolName;
     }
 
+    /**
+     * <p>Getter for the field <code>instanceName</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getInstanceName() {
         return this.instanceName;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getTp() {
         return this.tp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getFp() {
         return this.fp;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getTn() {
         return this.tn;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int getFn() {
         return this.fn;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSensitivity() {
         return this.recall;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getSpecificity() {
         double tnv = tn;
@@ -102,16 +129,19 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return spec;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFPR() {
         return 1 - getSpecificity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getFNR() {
         return 1 - getSensitivity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getAccuracy() {
         double tpv = tp;
@@ -122,6 +152,7 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return acc;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getGain() {
         //System.out.println("tp+fn=" + (tp + fn));
@@ -133,16 +164,19 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return gain;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getPrecision() {
         return precision;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRecall() {
         return getSensitivity();
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -161,6 +195,7 @@ public class PairwisePerformanceMetrics implements IPerformanceMetrics {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getF1() {
         return f1;

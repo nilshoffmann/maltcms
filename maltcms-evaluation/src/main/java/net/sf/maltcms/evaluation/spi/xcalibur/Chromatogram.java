@@ -28,22 +28,34 @@
 package net.sf.maltcms.evaluation.spi.xcalibur;
 
 /**
+ * <p>Chromatogram class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public class Chromatogram {
 
     private final String name;
 
+    /**
+     * <p>Constructor for Chromatogram.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     */
     public Chromatogram(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getName() {
         return name;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         return getName();

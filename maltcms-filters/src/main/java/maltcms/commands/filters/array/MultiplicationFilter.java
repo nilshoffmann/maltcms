@@ -38,7 +38,7 @@ import ucar.ma2.IndexIterator;
  * Multiply a value with all values of an array.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Data
 @ServiceProvider(service = AArrayFilter.class)
@@ -47,10 +47,18 @@ public class MultiplicationFilter extends AArrayFilter {
     @Configurable
     private double factor = 1.0d;
 
+    /**
+     * <p>Constructor for MultiplicationFilter.</p>
+     */
     public MultiplicationFilter() {
         super();
     }
 
+    /**
+     * <p>Constructor for MultiplicationFilter.</p>
+     *
+     * @param multiplyFactor a double.
+     */
     public MultiplicationFilter(final double multiplyFactor) {
         this();
         this.factor = multiplyFactor;
@@ -61,6 +69,7 @@ public class MultiplicationFilter extends AArrayFilter {
      *
      * @see maltcms.ucar.ma2.ArrayFilter#filter(maltcms.ucar.ma2.Array)
      */
+    /** {@inheritDoc} */
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
@@ -74,11 +83,13 @@ public class MultiplicationFilter extends AArrayFilter {
         return arr;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.factor = cfg.getDouble(this.getClass().getName() + ".factor", 1.0d);
     }
 
+    /** {@inheritDoc} */
     @Override
     public MultiplicationFilter copy() {
         return new MultiplicationFilter(factor);

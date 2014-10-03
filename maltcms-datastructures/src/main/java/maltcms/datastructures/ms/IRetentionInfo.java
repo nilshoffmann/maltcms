@@ -31,19 +31,49 @@ package maltcms.datastructures.ms;
  * Interface extending a simple anchor, adding retention index and time info.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 public interface IRetentionInfo extends IAnchor {
 
+    /**
+     * <p>getRetentionIndex.</p>
+     *
+     * @return a double.
+     */
     public abstract double getRetentionIndex();
 
+    /**
+     * <p>getRetentionTime.</p>
+     *
+     * @return a double.
+     */
     public abstract double getRetentionTime();
 
+    /**
+     * <p>getRetentionTimeUnit.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public abstract String getRetentionTimeUnit();
 
+    /**
+     * <p>setRetentionIndex.</p>
+     *
+     * @param d a double.
+     */
     public abstract void setRetentionIndex(double d);
 
+    /**
+     * <p>setRetentionTime.</p>
+     *
+     * @param d a double.
+     */
     public abstract void setRetentionTime(double d);
 
+    /**
+     * <p>setRetentionTimeUnit.</p>
+     *
+     * @param s a {@link java.lang.String} object.
+     */
     public abstract void setRetentionTimeUnit(String s);
 }

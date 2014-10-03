@@ -57,7 +57,8 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
+ * @author hoffmann
+ * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "personType", propOrder = {"name", "institution",
@@ -73,8 +74,7 @@ public class PersonType implements Serializable {
     /**
      * Gets the value of the contactInfo property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getContactInfo() {
         return this.contactInfo;
@@ -83,8 +83,7 @@ public class PersonType implements Serializable {
     /**
      * Gets the value of the institution property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getInstitution() {
         return this.institution;
@@ -93,8 +92,7 @@ public class PersonType implements Serializable {
     /**
      * Gets the value of the name property.
      *
-     * @return possible object is {@link String }
-     *
+     * @return possible object is {@link java.lang.String}
      */
     public String getName() {
         return this.name;
@@ -103,8 +101,7 @@ public class PersonType implements Serializable {
     /**
      * Sets the value of the contactInfo property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setContactInfo(final String value) {
         this.contactInfo = value;
@@ -113,8 +110,7 @@ public class PersonType implements Serializable {
     /**
      * Sets the value of the institution property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setInstitution(final String value) {
         this.institution = value;
@@ -123,8 +119,7 @@ public class PersonType implements Serializable {
     /**
      * Sets the value of the name property.
      *
-     * @param value allowed object is {@link String }
-     *
+     * @param value allowed object is {@link java.lang.String}
      */
     public void setName(final String value) {
         this.name = value;

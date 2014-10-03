@@ -42,6 +42,7 @@ import ucar.ma2.ArrayDouble;
  * directly referenced (possibly cached) lists.
  *
  * @author Nils Hoffmann
+ * 
  */
 public class DefaultBinnedMSFeatureVector implements IFeatureVector {
 
@@ -57,6 +58,13 @@ public class DefaultBinnedMSFeatureVector implements IFeatureVector {
     private final IFileFragment iff;
     private UUID uniqueId = UUID.randomUUID();
 
+    /**
+     * <p>Constructor for DefaultBinnedMSFeatureVector.</p>
+     *
+     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param i a int.
+     * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
+     */
     public DefaultBinnedMSFeatureVector(IFileFragment iff, int i,
             Tuple2D<List<Array>, List<Array>> t) {
         this.iff = iff;
@@ -67,6 +75,7 @@ public class DefaultBinnedMSFeatureVector implements IFeatureVector {
         this.i = i;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String string) {
         switch (string) {
@@ -91,12 +100,14 @@ public class DefaultBinnedMSFeatureVector implements IFeatureVector {
         throw new IllegalArgumentException("Unknown feature name: " + string);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         return Arrays.asList("binned_mass_values", "binned_intensity_values",
                 "total_intensity", "scan_acquisition_time");
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

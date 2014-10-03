@@ -79,9 +79,10 @@ import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 
 /**
+ * <p>TICHeatmapCoplot class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
 @RequiresOptionalVariables(names = {"var.anchors.retention_index_names",
@@ -101,6 +102,7 @@ public class TICHeatmapCoplot extends AFragmentCommand {
     @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
 
+    /** {@inheritDoc} */
     @Override
     public void configure(Configuration cfg) {
         this.totalIntensityVar = cfg.getString("var.total_intensity");
@@ -112,6 +114,7 @@ public class TICHeatmapCoplot extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final File jfplot = drawTICSJFreeChart(getWorkflow().getOutputDirectory(
@@ -129,14 +132,16 @@ public class TICHeatmapCoplot extends AFragmentCommand {
     }
 
     /**
+     * <p>drawTICSJFreeChart.</p>
      *
-     * @param outputDir
+     * @param outputDir a {@link java.io.File} object.
      * @param t
      * @param ticvar
-     * @param satVar
-     * @param ref
-     * @param filename
-     * @return
+     * @param ticvar a {@link java.lang.String} object.
+     * @param satVar a {@link java.lang.String} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
      */
     protected File drawTICSJFreeChart(final File outputDir,
             final TupleND<IFileFragment> t, final String ticvar,
@@ -409,14 +414,16 @@ public class TICHeatmapCoplot extends AFragmentCommand {
     }
 
     /**
+     * <p>drawTICS.</p>
      *
-     * @param outputDir
+     * @param outputDir a {@link java.io.File} object.
      * @param t
      * @param ticvar
-     * @param satVar
-     * @param ref
-     * @param filename
-     * @return
+     * @param ticvar a {@link java.lang.String} object.
+     * @param satVar a {@link java.lang.String} object.
+     * @param ref a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param filename a {@link java.lang.String} object.
+     * @return a {@link java.io.File} object.
      */
     protected File drawTICS(final File outputDir,
             final TupleND<IFileFragment> t, final String ticvar,

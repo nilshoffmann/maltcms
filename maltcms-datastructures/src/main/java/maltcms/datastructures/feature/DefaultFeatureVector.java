@@ -43,6 +43,12 @@ import maltcms.datastructures.array.IFeatureVector;
 import ucar.ma2.Array;
 
 
+/**
+ * <p>DefaultFeatureVector class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class DefaultFeatureVector implements IFeatureVector {
 
     /**
@@ -53,10 +59,18 @@ public class DefaultFeatureVector implements IFeatureVector {
     private transient List<Array> datalist = null;
     private UUID uniqueId;
 
+    /**
+     * <p>Constructor for DefaultFeatureVector.</p>
+     */
     public DefaultFeatureVector() {
         this(UUID.randomUUID());
     }
 
+    /**
+     * <p>Constructor for DefaultFeatureVector.</p>
+     *
+     * @param uniqueId a {@link java.util.UUID} object.
+     */
     public DefaultFeatureVector(UUID uniqueId) {
         if (uniqueId == null) {
             throw new NullPointerException();
@@ -78,6 +92,7 @@ public class DefaultFeatureVector implements IFeatureVector {
         return this.featureToIndex;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Array getFeature(String name) {
         final int idx = getFeatureIndex(name);
@@ -94,6 +109,12 @@ public class DefaultFeatureVector implements IFeatureVector {
         return -1;
     }
 
+    /**
+     * <p>addFeature.</p>
+     *
+     * @param name a {@link java.lang.String} object.
+     * @param a a {@link ucar.ma2.Array} object.
+     */
     public void addFeature(String name, Array a) {
         final int idx = getFeatureIndex(name);
         if (idx >= 0) {
@@ -104,6 +125,7 @@ public class DefaultFeatureVector implements IFeatureVector {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<String> getFeatureNames() {
         final List<String> l = new ArrayList<>();
@@ -112,6 +134,7 @@ public class DefaultFeatureVector implements IFeatureVector {
         return l;
     }
 
+    /** {@inheritDoc} */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

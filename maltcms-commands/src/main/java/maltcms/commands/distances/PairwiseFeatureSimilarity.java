@@ -59,7 +59,7 @@ import ucar.ma2.ArrayDouble;
  * distance/similiarity between scans, as configured.
  *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 @Data
@@ -105,9 +105,11 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
      * distances/similarites. Values are set within the paramter ArrayDouble.D2
      * d and can be retrieved from it.
      *
-     * @param d
-     * @param ref
-     * @param query
+     * @param d a {@link maltcms.datastructures.array.IArrayD2Double} object.
+     * @param ref a {@link java.util.List} object.
+     * @param query a {@link java.util.List} object.
+     * @param satRef1 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param satQuery1 a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     public void calculatePairwiseDistances(final IArrayD2Double d,
             final ArrayDouble.D1 satRef1, final ArrayDouble.D1 satQuery1,
@@ -161,10 +163,7 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
         }
     }
 
-    /**
-     *
-     * @param cfg
-     */
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
 //        final String aldist = "maltcms.commands.distances.ArrayLp";
@@ -179,7 +178,13 @@ public class PairwiseFeatureSimilarity implements IConfigurable {
      * Returns the IDtwSimilarityFunction Object used to calculate pairwise
      * distances/similarities.
      *
-     * @return
+     * @param i a int.
+     * @param j a int.
+     * @param time_i a double.
+     * @param time_j a double.
+     * @param a a {@link ucar.ma2.Array} object.
+     * @param b a {@link ucar.ma2.Array} object.
+     * @return a double.
      */
 //    public IDtwSimilarityFunction getDistance() {
 //        return this.similarityFunction;

@@ -37,14 +37,21 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.ArrayInt.D1;
 
 /**
+ * <p>SparseArray class.</p>
+ *
  * @author Nils Hoffmann
- *
- *
+ * 
  */
 public final class SparseArray implements IArrayD2Double {
 
     private final SparseDoubleMatrix2D sdm;
 
+    /**
+     * <p>Constructor for SparseArray.</p>
+     *
+     * @param rows a int.
+     * @param columns a int.
+     */
     public SparseArray(int rows, int columns) {
         sdm = new SparseDoubleMatrix2D(rows, columns);
     }
@@ -54,6 +61,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#columns()
      */
+    /** {@inheritDoc} */
     @Override
     public int columns() {
         return this.sdm.columns();
@@ -64,6 +72,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#flatten()
      */
+    /** {@inheritDoc} */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         ArrayInt.D1 nelems = new ArrayInt.D1(rows());
@@ -86,6 +95,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#get(int, int)
      */
+    /** {@inheritDoc} */
     @Override
     public double get(int row, int col) {
         return this.sdm.get(row, col);
@@ -96,6 +106,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getArray()
      */
+    /** {@inheritDoc} */
     @Override
     public D2 getArray() {
         ArrayDouble.D2 arr = new ArrayDouble.D2(rows(), columns());
@@ -112,6 +123,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getColumnBounds(int)
      */
+    /** {@inheritDoc} */
     @Override
     public int[] getColumnBounds(final int row) {
         return new int[]{0, columns()};
@@ -122,6 +134,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.alignment.IArrayD2Double#getDefaultValue()
      */
+    /** {@inheritDoc} */
     @Override
     public double getDefaultValue() {
         return 0;
@@ -134,6 +147,7 @@ public final class SparseArray implements IArrayD2Double {
      * maltcms.datastructures.alignment.IArrayD2Double#getNumberOfStoredElements
      * ()
      */
+    /** {@inheritDoc} */
     @Override
     public int getNumberOfStoredElements() {
         return sdm.cardinality();
@@ -144,11 +158,13 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#getShape()
      */
+    /** {@inheritDoc} */
     @Override
     public Area getShape() {
         return new Area(new Rectangle(0, 0, columns(), rows()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean inRange(final int i, final int j) {
         if ((i > 0) && (j > 0) && (i < rows()) && (j < columns())) {
@@ -162,6 +178,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#rows()
      */
+    /** {@inheritDoc} */
     @Override
     public int rows() {
         return this.sdm.rows();
@@ -172,6 +189,7 @@ public final class SparseArray implements IArrayD2Double {
      *
      * @see maltcms.datastructures.array.IArrayD2Double#set(int, int, double)
      */
+    /** {@inheritDoc} */
     @Override
     public void set(int row, int col, double d)
             throws ArrayIndexOutOfBoundsException {

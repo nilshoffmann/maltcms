@@ -31,12 +31,40 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
 
+/**
+ * <p>Metabolite2D class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class Metabolite2D extends Metabolite implements IRetentionInfo2D {
 
     private double rt2 = 0;
     private double ri2 = 0;
     private String rt2unit = "sec";
 
+    /**
+     * <p>Constructor for Metabolite2D.</p>
+     *
+     * @param name1 a {@link java.lang.String} object.
+     * @param id1 a {@link java.lang.String} object.
+     * @param id_type1 a {@link java.lang.String} object.
+     * @param dbno1 a int.
+     * @param comments1 a {@link java.lang.String} object.
+     * @param formula1 a {@link java.lang.String} object.
+     * @param date1 a {@link java.lang.String} object.
+     * @param ri1 a double.
+     * @param retentionTime1 a double.
+     * @param retentionTimeUnit1 a {@link java.lang.String} object.
+     * @param mw1 a int.
+     * @param sp1 a {@link java.lang.String} object.
+     * @param shortName a {@link java.lang.String} object.
+     * @param masses1 a {@link ucar.ma2.ArrayDouble.D1} object.
+     * @param intensities1 a {@link ucar.ma2.ArrayInt.D1} object.
+     * @param ri2 a double.
+     * @param retentionTime2 a double.
+     * @param retentionTimeUnit2 a {@link java.lang.String} object.
+     */
     public Metabolite2D(final String name1, final String id1,
             final String id_type1, final int dbno1, final String comments1,
             final String formula1, final String date1, final double ri1,
@@ -49,36 +77,43 @@ public class Metabolite2D extends Metabolite implements IRetentionInfo2D {
         this.ri2 = ri2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetentionIndex2D() {
         return this.ri2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public double getRetentionTime2D() {
         return this.rt2;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String getRetentionTimeUnit2D() {
         return this.rt2unit;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionIndex2D(double d) {
         this.ri2 = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionTime2D(double d) {
         this.rt2 = d;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setRetentionTimeUnit2D(String s) {
         this.rt2unit = s;
     }
 
+    /** {@inheritDoc} */
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
@@ -139,6 +174,7 @@ public class Metabolite2D extends Metabolite implements IRetentionInfo2D {
         return sb.toString();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void update(final IMetabolite m) {
         try {

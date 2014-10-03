@@ -32,6 +32,12 @@ import java.util.List;
 import maltcms.datastructures.ms.IMetabolite;
 import cross.datastructures.tuple.Tuple2D;
 
+/**
+ * <p>MSimilarityPredicate class.</p>
+ *
+ * @author hoffmann
+ * 
+ */
 public class MSimilarityPredicate extends MetabolitePredicate {
 
     /**
@@ -40,18 +46,32 @@ public class MSimilarityPredicate extends MetabolitePredicate {
     private static final long serialVersionUID = -3684834963267981958L;
     private final MetaboliteSimilarity s;
 
+    /**
+     * <p>Constructor for MSimilarityPredicate.</p>
+     *
+     * @param s a {@link maltcms.db.predicates.metabolite.MetaboliteSimilarity} object.
+     */
     public MSimilarityPredicate(MetaboliteSimilarity s) {
         this.s = s;
     }
 
+    /**
+     * <p>getSimilaritiesAboveThreshold.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<Tuple2D<Double, IMetabolite>> getSimilaritiesAboveThreshold() {
         return this.s.getMatches();
     }
 
+    /**
+     * <p>resetResultList.</p>
+     */
     public void resetResultList() {
         this.s.getMatches().clear();
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean match(IMetabolite arg0) {
         return this.s.match(arg0);

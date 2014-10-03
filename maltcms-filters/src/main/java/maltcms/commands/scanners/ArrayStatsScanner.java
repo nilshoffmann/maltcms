@@ -45,9 +45,8 @@ import ucar.ma2.IndexIterator;
  * results for each array in a HashMap indexed by Elements of
  *
  * @link{cross.Vars} .
- *
  * @author Nils Hoffmann
- *
+ * 
  */
 @Slf4j
 public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
@@ -65,6 +64,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
      *
      * @see maltcms.ucar.ma2.Scanner#scan(java.lang.Object)
      */
+    /** {@inheritDoc} */
     @Override
     public StatsMap[] apply(final Array[] t) {
         log.debug("Running ArrayStatsScanner on {} arrays", t.length);
@@ -194,6 +194,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
         return hashes;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void configure(final Configuration cfg) {
         this.ignorePositiveInfinity = cfg.getBoolean(this.getClass().getName()
@@ -202,11 +203,18 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
                 + ".ignoreNegativeInfinity", true);
     }
 
+    /**
+     * <p>getGlobalStatsMap.</p>
+     *
+     * @return a {@link cross.datastructures.StatsMap} object.
+     */
     public StatsMap getGlobalStatsMap() {
         return this.gsm;
     }
 
     /**
+     * <p>isIgnoreNegativeInfinity.</p>
+     *
      * @return the ignoreNegativeInfinity
      */
     public boolean isIgnoreNegativeInfinity() {
@@ -214,17 +222,26 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
     }
 
     /**
+     * <p>isIgnorePositiveInfinity.</p>
+     *
      * @return the ignorePositiveInfinity
      */
     public boolean isIgnorePositiveInfinity() {
         return this.ignorePositiveInfinity;
     }
 
+    /**
+     * <p>setFileFragment.</p>
+     *
+     * @param ff1 a {@link cross.datastructures.fragments.IFileFragment} object.
+     */
     public void setFileFragment(final IFileFragment ff1) {
         this.ff = ff1;
     }
 
     /**
+     * <p>Setter for the field <code>ignoreNegativeInfinity</code>.</p>
+     *
      * @param ignoreNegativeInfinity the ignoreNegativeInfinity to set
      */
     public void setIgnoreNegativeInfinity(final boolean ignoreNegativeInfinity) {
@@ -232,12 +249,19 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
     }
 
     /**
+     * <p>Setter for the field <code>ignorePositiveInfinity</code>.</p>
+     *
      * @param ignorePositiveInfinity the ignorePositiveInfinity to set
      */
     public void setIgnorePositiveInfinity(final boolean ignorePositiveInfinity) {
         this.ignorePositiveInfinity = ignorePositiveInfinity;
     }
 
+    /**
+     * <p>setVariableFragments.</p>
+     *
+     * @param vfs1 a {@link cross.datastructures.fragments.IVariableFragment} object.
+     */
     public void setVariableFragments(final IVariableFragment... vfs1) {
         this.vfs = vfs1;
     }
