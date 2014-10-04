@@ -27,6 +27,7 @@
  */
 package maltcms.mpaxs;
 
+import java.util.HashSet;
 import java.util.List;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
@@ -49,13 +50,13 @@ public class ImpaxsExecutionTest {
     
     @Test
     public void testRemoteRmiExecution() throws Exception {
-        Impaxs impxs = null;
+//        Impaxs impxs = null;
         try {
-            PropertiesConfiguration pc = new PropertiesConfiguration();
-            pc.setProperty(ConfigurationKeys.KEY_EXECUTION_MODE, ExecutionType.DISTRIBUTED);
-            pc.setProperty(ConfigurationKeys.KEY_MASTER_SERVER_EXIT_ON_SHUTDOWN, "false");
-            impxs = ComputeServerFactory.getComputeServer();
-            impxs.startMasterServer(pc);
+//            PropertiesConfiguration pc = new PropertiesConfiguration();
+//            pc.setProperty(ConfigurationKeys.KEY_EXECUTION_MODE, ExecutionType.DRMAA);
+//            pc.setProperty(ConfigurationKeys.KEY_MASTER_SERVER_EXIT_ON_SHUTDOWN, "false");
+//            impxs = ComputeServerFactory.getComputeServer();
+//            impxs.startMasterServer(pc);
             //rmi service
 //            final ICompletionService<String> mcs = new CompletionServiceFactory<String>().
 //                    newDistributedCompletionService();
@@ -86,9 +87,9 @@ public class ImpaxsExecutionTest {
         }catch(Exception e) {
             log.warn("Caught exception: "+e.getMessage());
         } finally {
-            if (impxs != null) {
-                impxs.stopMasterServer();
-            }
+//            if (impxs != null) {
+//                impxs.stopMasterServer();
+//            }
         }
     }
 }
