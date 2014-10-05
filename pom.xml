@@ -239,8 +239,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                <!-- deactivated due to problems with javadoc / site generation -->
-                <plugin>
+<!--                <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
                     <version>${version.lombok.maven}</version>
@@ -256,7 +255,7 @@
                         <addOutputDirectory>false</addOutputDirectory>
                         <sourceDirectory>src/main/java</sourceDirectory>
                     </configuration>
-                </plugin>
+                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -285,18 +284,6 @@
                         <sourcepath>${basedir}/src/main/java</sourcepath>
                         <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>javadoc-jar</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                            <configuration>
-                                <show>public</show>
-                            </configuration>
-                        </execution>
-                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -816,13 +803,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>${version.javadoc.plugin}</version>
-                <reportSets>
-				  <reportSet><!-- by default, id = "default" -->
-					<reports><!-- select non-aggregate reports -->
-					  <report>javadoc</report>
-					  <report>test-javadoc</report>
-					</reports>
-				  </reportSet>
+				<reportSets>
 				  <reportSet><!-- aggregate reportSet, to define in poms having modules -->
 				    <id>aggregate</id>
 				    <inherited>false</inherited><!-- don't run aggregate in child modules -->

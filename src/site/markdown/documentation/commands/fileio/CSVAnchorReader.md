@@ -1,49 +1,49 @@
-# CSVAnchorReader
-Class: maltcms.commands.fragments.io.CSVAnchorReader  
-Description: Reads anchors stored in csv/tsv compatible format.  
-Workflow Slot: FILEIO  
+<h1>CSVAnchorReader</h1>
+Class: maltcms.commands.fragments.io.CSVAnchorReader
+Description: Reads anchors stored in csv/tsv compatible format.
+Workflow Slot: FILEIO
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
-var.scan_acquisition_time  
+<h3>Required (optional)</h3>
+var.scan_acquisition_time
 
-###Provided
-var.anchors.retention_index_names  
-var.anchors.retention_scans  
+<h3>Provided</h3>
+var.anchors.retention_index_names
+var.anchors.retention_scans
 
 
 ---
 
-## Configurable Properties
-Name: time  
-Default Value: false  
-Description:   
-  
-Name: index  
-Default Value: true  
-Description:   
-  
-Name: scan  
-Default Value: true  
-Description:   
-  
-Name: location  
-Default Value: []  
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: time
+Default Value: false
+Description: 
 
-Description:   
-  
-Name: basedir  
-Default Value:   
-Description:   
-  
-Name: max_names_length  
-Default Value: -2147483648  
-Description:   
-  
+Name: index
+Default Value: true
+Description: 
+
+Name: scan
+Default Value: true
+Description: 
+
+Name: location
+Default Value: []
+Description: 
+
+
+Description: 
+
+Name: basedir
+Default Value: 
+Description: 
+
+Name: max_names_length
+Default Value: -2147483648
+Description: 
+
 

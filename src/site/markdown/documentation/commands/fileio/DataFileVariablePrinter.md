@@ -1,19 +1,19 @@
-# DataFileVariablePrinter
-Class: maltcms.commands.fragments.io.DataFileVariablePrinter  
-Description: Prints available variables for provided file fragments  
-Workflow Slot: FILEIO  
+<h1>DataFileVariablePrinter</h1>
+Class: maltcms.commands.fragments.io.DataFileVariablePrinter
+Description: Prints available variables for provided file fragments
+Workflow Slot: FILEIO
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
+<h2>Configurable Properties</h2>
 

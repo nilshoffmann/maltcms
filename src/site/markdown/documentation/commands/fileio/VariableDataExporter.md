@@ -1,23 +1,23 @@
-# VariableDataExporter
-Class: maltcms.commands.fragments.io.VariableDataExporter  
-Description: Exports one-dimensional variables to csv format   
-Workflow Slot: FILEIO  
+<h1>VariableDataExporter</h1>
+Class: maltcms.commands.fragments.io.VariableDataExporter
+Description: Exports one-dimensional variables to csv format 
+Workflow Slot: FILEIO
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
-Name: varNames  
-Default Value: []  
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: varNames
+Default Value: []
+Description: 
+
 

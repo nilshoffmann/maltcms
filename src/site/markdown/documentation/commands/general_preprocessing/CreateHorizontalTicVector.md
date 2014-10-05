@@ -1,23 +1,23 @@
-# CreateHorizontalTicVector
-Class: maltcms.commands.fragments2d.warp.CreateHorizontalTicVector  
-Description: Creates the horizontal TIC-vector after warping the first time axis.  
-Workflow Slot: GENERAL_PREPROCESSING  
+<h1>CreateHorizontalTicVector</h1>
+Class: maltcms.commands.fragments2d.warp.CreateHorizontalTicVector
+Description: Creates the horizontal TIC-vector after warping the first time axis.
+Workflow Slot: GENERAL_PREPROCESSING
 
 ---
 
-## Variables
-###Required
-var.total_intensity  
-var.modulation_time  
-var.scan_rate  
-var.second_column_scan_index  
+<h2>Variables</h2>
+<h3>Required</h3>
+var.total_intensity
+var.modulation_time
+var.scan_rate
+var.second_column_scan_index
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
+<h2>Configurable Properties</h2>
 

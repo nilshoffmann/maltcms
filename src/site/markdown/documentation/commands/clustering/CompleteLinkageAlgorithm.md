@@ -1,37 +1,37 @@
-# CompleteLinkageAlgorithm
-Class: maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm  
-Description: Calculates clustering based on pairwise similarities/distances.  
-Workflow Slot: CLUSTERING  
+<h1>CompleteLinkageAlgorithm</h1>
+Class: maltcms.commands.fragments.cluster.CompleteLinkageAlgorithm
+Description: Calculates clustering based on pairwise similarities/distances.
+Workflow Slot: CLUSTERING
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
-Name: normalize_scans  
-Default Value: false  
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: normalize_scans
+Default Value: false
+Description: 
 
-Description:   
-  
 
-Description:   
-  
-Name: drawTICs  
-Default Value: false  
-Description:   
-  
-Name: drawEICs  
-Default Value: false  
-Description:   
-  
+Description: 
+
+
+Description: 
+
+Name: drawTICs
+Default Value: false
+Description: 
+
+Name: drawEICs
+Default Value: false
+Description: 
+
 

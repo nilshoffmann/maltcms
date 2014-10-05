@@ -1,45 +1,45 @@
-# Array1DVisualizer
-Class: maltcms.commands.fragments.visualization.Array1DVisualizer  
-Description: Creates plots of 1-dimensional variables.  
-Workflow Slot: VISUALIZATION  
+<h1>Array1DVisualizer</h1>
+Class: maltcms.commands.fragments.visualization.Array1DVisualizer
+Description: Creates plots of 1-dimensional variables.
+Workflow Slot: VISUALIZATION
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
+<h2>Configurable Properties</h2>
 
-Description:   
-  
+Description: 
 
-Description:   
-  
-Name: pairwise  
-Default Value: false  
-Description:   
-  
-Name: pairwiseWithFirst  
-Default Value: true  
-Description:   
-  
-Name: substractStartTime  
-Default Value: true  
-Description:   
-  
-Name: allInOneChart  
-Default Value: false  
-Description:   
-  
-Name: timeUnit  
-Default Value: s  
-Description:   
-  
+
+Description: 
+
+Name: pairwise
+Default Value: false
+Description: 
+
+Name: pairwiseWithFirst
+Default Value: true
+Description: 
+
+Name: substractStartTime
+Default Value: true
+Description: 
+
+Name: allInOneChart
+Default Value: false
+Description: 
+
+Name: timeUnit
+Default Value: s
+Description: 
+
 

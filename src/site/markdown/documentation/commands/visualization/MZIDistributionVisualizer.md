@@ -1,19 +1,19 @@
-# MZIDistributionVisualizer
-Class: maltcms.commands.fragments.visualization.MZIDistributionVisualizer  
-Description: Creates plot of distribution of mass values versus intensity values in a chromatogram.  
-Workflow Slot: VISUALIZATION  
+<h1>MZIDistributionVisualizer</h1>
+Class: maltcms.commands.fragments.visualization.MZIDistributionVisualizer
+Description: Creates plot of distribution of mass values versus intensity values in a chromatogram.
+Workflow Slot: VISUALIZATION
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
+<h2>Configurable Properties</h2>
 

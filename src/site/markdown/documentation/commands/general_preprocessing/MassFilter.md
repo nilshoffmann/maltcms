@@ -1,38 +1,38 @@
-# MassFilter
-Class: maltcms.commands.fragments.preprocessing.MassFilter  
-Description: Removes defined masses and associated intensities from chromatogram.  
-Workflow Slot: GENERAL_PREPROCESSING  
+<h1>MassFilter</h1>
+Class: maltcms.commands.fragments.preprocessing.MassFilter
+Description: Removes defined masses and associated intensities from chromatogram.
+Workflow Slot: GENERAL_PREPROCESSING
 
 ---
 
-## Variables
-###Required
-var.mass_values  
-var.intensity_values  
-var.scan_index  
-var.total_intensity  
+<h2>Variables</h2>
+<h3>Required</h3>
+var.mass_values
+var.intensity_values
+var.scan_index
+var.total_intensity
 
-###Required (optional)
-var.excluded_masses  
+<h3>Required (optional)</h3>
+var.excluded_masses
 
-###Provided
-var.mass_values  
-var.intensity_values  
-var.total_intensity  
+<h3>Provided</h3>
+var.mass_values
+var.intensity_values
+var.total_intensity
 
 
 ---
 
-## Configurable Properties
-Name: excludeMasses  
-Default Value: []  
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: excludeMasses
+Default Value: []
+Description: 
 
-Description:   
-  
-Name: invert  
-Default Value: false  
-Description:   
-  
+
+Description: 
+
+Name: invert
+Default Value: false
+Description: 
+
 

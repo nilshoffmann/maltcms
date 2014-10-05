@@ -1,27 +1,27 @@
-# PathWarp
-Class: maltcms.commands.fragments.warp.PathWarp  
-Description: Warps binned mass spectra according to a given alignment map. Merges aligned mass spectra to mean mass spectra.  
-Workflow Slot: WARPING  
+<h1>PathWarp</h1>
+Class: maltcms.commands.fragments.warp.PathWarp
+Description: Warps binned mass spectra according to a given alignment map. Merges aligned mass spectra to mean mass spectra.
+Workflow Slot: WARPING
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
-Name: average  
-Default Value: false  
-Description:   
-  
-Name: minScansBetweenAnchors  
-Default Value: 5  
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: average
+Default Value: false
+Description: 
+
+Name: minScansBetweenAnchors
+Default Value: 5
+Description: 
+
 

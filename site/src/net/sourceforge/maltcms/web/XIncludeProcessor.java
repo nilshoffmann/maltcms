@@ -50,21 +50,21 @@ public class XIncludeProcessor {
             XPath xpath = XPathFactory.newInstance().newXPath();
             NodeList nodes = (NodeList) xpath.evaluate(
                     "//@lastchanged", doc, XPathConstants.NODESET);
-            log.info("Found " + nodes.getLength() + " matching nodes for query!");
+            System.out.println("Found " + nodes.getLength() + " matching nodes for query!");
             // Rename these nodes
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             for (int idx = 0; idx < nodes.getLength(); idx++) {
                 String id = nodes.item(idx).getTextContent();
                 try {
-                    log.info("Replacing " + id);
+                    System.out.println("Replacing " + id);
                     String name = authorMap.get(System.getProperty("user.name"));
                     id = id.replaceAll("\\$Author\\$", name == null ? "N.N." : name);
                     id = id.replaceAll("\\$Date\\$", sdf.format(date));
 //                    id = id.replaceAll("\\$", "");
 //                    String[] split = id.split(" ");
-//                    log.info("with " + split[1] + " " + split[2] + " " + split[3] + " by " + split[11]);
-                    log.info(" with " + id);
+//                    System.out.println("with " + split[1] + " " + split[2] + " " + split[3] + " by " + split[11]);
+                    System.out.println(" with " + id);
 //                    nodes.item(idx).setTextContent(split[1] + " " + split[2] + " " + split[3] + " (GMT) by " + split[11]);
                     nodes.item(idx).setTextContent(id);
                 } catch (ArrayIndexOutOfBoundsException ae) {
@@ -84,26 +84,25 @@ public class XIncludeProcessor {
                 serializer.transform(new DOMSource(doc), new StreamResult(out));
             } catch (TransformerException e) {
                 // this is fatal, just dump the stack and throw a runtime exception
-                log.warn(e.getLocalizedMessage());
+                System.err.println(e.getLocalizedMessage());
 
             }
         } catch (ParserConfigurationException pce) {
-            pclog.warn(e.getLocalizedMessage());
+            System.err.println(pce.getLocalizedMessage());
         } catch (SAXException sae) {
-            salog.warn(e.getLocalizedMessage());
+            System.err.println(sae.getLocalizedMessage());
         } catch (IOException ioe) {
-            iolog.warn(e.getLocalizedMessage());
+            System.err.println(ioe.getLocalizedMessage());
         } catch (XPathExpressionException e) {
-            
-            log.warn(e.getLocalizedMessage());
+            System.err.println(e.getLocalizedMessage());
         }
     }
 
     public static void main(String[] args) {
-        log.info("Processing file: " + args[0]);
-        log.info("Writing result file: " + args[1]);
+        System.out.println("Processing file: " + args[0]);
+        System.out.println("Writing result file: " + args[1]);
         XIncludeProcessor xip = new XIncludeProcessor(args[0], args[1]);
         xip.process();
-        log.info("Done!");
+        System.out.println("Done!");
     }
 }

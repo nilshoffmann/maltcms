@@ -1,35 +1,35 @@
-# TICPeakListImporter
-Class: maltcms.commands.fragments.io.TICPeakListImporter  
-Description: Imports tic peak data from csv files  
-Workflow Slot: FILEIO  
+<h1>TICPeakListImporter</h1>
+Class: maltcms.commands.fragments.io.TICPeakListImporter
+Description: Imports tic peak data from csv files
+Workflow Slot: FILEIO
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
+<h3>Provided</h3>
 
 
 ---
 
-## Configurable Properties
-Name: filesToRead  
-Default Value: []  
-Description:   
-  
-Name: scanIndexOffset  
-Default Value: 0  
-Description:   
-  
-Name: scanIndexColumnName  
-Default Value: SCAN  
-Description:   
-  
-Name: ticPeakVarName  
-Default Value: var.tic_peaks  
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: filesToRead
+Default Value: []
+Description: 
+
+Name: scanIndexOffset
+Default Value: 0
+Description: 
+
+Name: scanIndexColumnName
+Default Value: SCAN
+Description: 
+
+Name: ticPeakVarName
+Default Value: var.tic_peaks
+Description: 
+
 

@@ -1,38 +1,38 @@
-# PairwiseDistanceCalculator
-Class: maltcms.commands.fragments.cluster.PairwiseDistanceCalculator  
-Description: Calculates pairwise distances/similarities between time series.  
-Workflow Slot: STATISTICS  
+<h1>PairwiseDistanceCalculator</h1>
+Class: maltcms.commands.fragments.cluster.PairwiseDistanceCalculator
+Description: Calculates pairwise distances/similarities between time series.
+Workflow Slot: STATISTICS
 
 ---
 
-## Variables
-###Required
+<h2>Variables</h2>
+<h3>Required</h3>
 
-###Required (optional)
+<h3>Required (optional)</h3>
 
-###Provided
-var.minimizing_array_comp  
-var.pairwise_distance_matrix  
-var.pairwise_distance_names  
+<h3>Provided</h3>
+var.minimizing_array_comp
+var.pairwise_distance_matrix
+var.pairwise_distance_names
 
 
 ---
 
-## Configurable Properties
-Name: minimizingLocalDistance  
-Default Value: false  
-Description:   
-  
-Name: pairsWithFirstElement  
-Default Value: false  
-Description:   
-  
-Name: minArrayComp  
-Default Value: minimizing_array_comp  
-Description:   
-  
-Name: pwdExtension  
-Default Value:   
-Description:   
-  
+<h2>Configurable Properties</h2>
+Name: minimizingLocalDistance
+Default Value: false
+Description: 
+
+Name: pairsWithFirstElement
+Default Value: false
+Description: 
+
+Name: minArrayComp
+Default Value: minimizing_array_comp
+Description: 
+
+Name: pwdExtension
+Default Value: 
+Description: 
+
 
