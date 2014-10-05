@@ -37,19 +37,14 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.tools.StringTools;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.net.URI;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
@@ -58,18 +53,16 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.IBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderUtils;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import maltcms.datastructures.caches.RingBuffer;
-import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.PeakType;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
-import maltcms.io.csv.CSVWriter;
-import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
@@ -102,10 +95,17 @@ public class EICPeakFinder extends AFragmentCommand {
     @Configurable
     private int peakSeparationWindow = 20;
     @Configurable
-    private boolean integrateRawTic = false;
+    private boolean integrateRawEic = false;
     @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
+    @Configurable(value = "0.01d")
+    private double peakThreshold = 20.0d;
+    @Configurable(value = "20")
+    private int filterWindow = 10;
+    @Configurable
+    private double massResolution = 1.0d;
 
+    private final Peak1DUtilities peakUtilities = new Peak1DUtilities();
     /**
      * <p>calcEstimatedCrossCorrelation.</p>
      *
@@ -138,12 +138,6 @@ public class EICPeakFinder extends AFragmentCommand {
         // log.debug("R'({})= {}", lag, v);
         // return v;
     }
-    @Configurable(value = "0.01d")
-    private double peakThreshold = 20.0d;
-    @Configurable(value = "20")
-    private int filterWindow = 10;
-    @Configurable
-    private double massResolution = 1.0d;
 
     /** {@inheritDoc} */
     @Override
@@ -221,7 +215,7 @@ public class EICPeakFinder extends AFragmentCommand {
                 }
             });
             IFileFragment target = createWorkFragment(f);
-            Peak1D.appendEICs(target, peakNormalizers, peaks, "eic_peaks");
+            peakUtilities.addEicResults(target, peaks, peakNormalizers);
             target.save();
             getWorkflow().append(new DefaultWorkflowResult(target.getUri(), this, workflowSlot, f));
 //			Color[] cRamp = new Color[]{Color.BLACK, Color.orange, Color.yellow,
@@ -238,79 +232,28 @@ public class EICPeakFinder extends AFragmentCommand {
             savePeakTable(peaks, target);
             results.add(target);
         }
-
-//		EvalTools.notNull(t,
-//			this);
         return new TupleND<>(results);
     }
 
     /**
-     * @param columnMap
-     * @param ll
+     * <p>savePeakTable.</p>
+     * @param l the peak list
+     * @param iff the input file fragment used for peak finding
      */
     private Collection<WorkflowResult> savePeakTable(final List<Peak1D> l, final IFileFragment iff) {
         final List<List<String>> rows = new ArrayList<>(l.size());
-        List<String> headers = null;
-        final String[] headerLine = new String[]{"APEX", "START", "STOP",
-            "RT_APEX", "RT_START", "RT_STOP", "AREA", "AREA_NORMALIZED", "AREA_NORMALIZED_PERCENT", "NORMALIZATION_METHODS", "MW", "INTENSITY", "SNR"};
-        headers = Arrays.asList(headerLine);
-        log.debug("Adding row {}", headers);
-        rows.add(headers);
-        for (final Peak1D pb : l) {
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                    Locale.US);
-            df.applyPattern("0.0000");
-            log.debug("Adding {} peaks", l.size());
-            final String[] line = new String[]{pb.getApexIndex() + "",
-                pb.getStartIndex() + "", pb.getStopIndex() + "",
-                df.format(pb.getApexTime()), df.format(pb.getStartTime()),
-                df.format(pb.getStopTime()), pb.getArea() + "", pb.getNormalizedArea() + "",
-                (pb.getNormalizationMethods().length == 0) ? "" : pb.getNormalizedArea() * 100.0 + "",
-                Arrays.toString(pb.getNormalizationMethods()),
-                "" + pb.getMw(), "" + pb.getApexIntensity(), "" + pb.getSnr()};
-            final List<String> v = Arrays.asList(line);
-            rows.add(v);
-            log.debug("Adding row {}", v);
-        }
-
-        final CSVWriter csvw = new CSVWriter();
-        File peakAreasFile = csvw.writeTableByRows(getWorkflow().getOutputDirectory(this).
-                getAbsolutePath(), StringTools.removeFileExt(iff.getName())
-                + "_peakAreas.csv", rows, WorkflowSlot.ALIGNMENT);
-        WorkflowResult peakAreas = new WorkflowResult(peakAreasFile.toURI(), TICPeakFinder.class.getCanonicalName(), WorkflowSlot.PEAKFINDING, new URI[]{iff.getUri()});
-        WorkflowResult annotations = savePeakAnnotations(l, iff);
-        return Arrays.asList(peakAreas, annotations);
+        File outputDirectory = getWorkflow().getOutputDirectory(this);
+        WorkflowResult peakAreaCSV = peakUtilities.saveCSVPeakAnnotations(outputDirectory, l, iff);
+        WorkflowResult peakAreaXML = peakUtilities.saveXMLPeakAnnotations(outputDirectory, l, iff);
+        return Arrays.asList(peakAreaCSV, peakAreaXML);
     }
 
-    /**
-     * <p>savePeakAnnotations.</p>
-     *
-     * @param l a {@link java.util.List} object.
-     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
-     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult} object.
-     * @since 1.3.2
-     */
-    public WorkflowResult savePeakAnnotations(final List<Peak1D> l,
-            final IFileFragment iff) {
-        MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
-        File matFile = new File(getWorkflow().getOutputDirectory(this),
-                StringTools.removeFileExt(iff.getName())
-                + ".maltcmsAnnotation.xml");
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(iff.getUri());
-        for (Peak1D p : l) {
-            maf.addPeakAnnotation(ma, this.getClass().getName(), p);
-        }
-        maf.save(ma, matFile);
-        WorkflowResult result = new WorkflowResult(matFile.toURI(), TICPeakFinder.class.getCanonicalName(), WorkflowSlot.PEAKFINDING, new URI[]{iff.getUri()});
-        return result;
-    }
+    private Peak1D getPeakBoundsByEIC(final IFileFragment chromatogram,
+            final int scanIndex, final Array rawEIC,
+            final Array baselineCorrectedEIC,
+            final Array fdEIC, final Array sdEIC, final Array tdEIC) {
 
-    private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram,
-            final int scanIndex, final Array rawTIC,
-            final Array baselineCorrectedTIC,
-            final Array fdTIC, final Array sdTIC, final Array tdTIC) {
-
-        Array fdfTIC = baselineCorrectedTIC;
+        Array fdfTIC = baselineCorrectedEIC;
         // return getPeakBoundsByTIC2(scanIndex, f, baselineCorrectedTIC);
         final Index idx = fdfTIC.getIndex();
         final int size = fdfTIC.getShape()[0];
@@ -334,8 +277,8 @@ public class EICPeakFinder extends AFragmentCommand {
                 stopIndex = r - 2;
                 break;
             }
-            if (tdTIC.getDouble(r) >= 0 && sdTIC.getDouble(r) <= 0
-                    && fdTIC.getDouble(r) >= 0) {
+            if (tdEIC.getDouble(r) >= 0 && sdEIC.getDouble(r) <= 0
+                    && fdEIC.getDouble(r) >= 0) {
                 // log.info("Found inflection point on right side");
                 stopIndex = r - 1;
                 break;
@@ -361,8 +304,8 @@ public class EICPeakFinder extends AFragmentCommand {
                 startIndex = l + 2;
                 break;
             }
-            if (tdTIC.getDouble(l) < 0 && sdTIC.getDouble(l) > 0
-                    && fdTIC.getDouble(l) < 0) {
+            if (tdEIC.getDouble(l) < 0 && sdEIC.getDouble(l) > 0
+                    && fdEIC.getDouble(l) < 0) {
                 // log.info("Found inflection point on left side");
                 startIndex = l + 1;
                 break;
@@ -375,10 +318,10 @@ public class EICPeakFinder extends AFragmentCommand {
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
         final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
         pb.setFile(chromatogram.getUri().toString());
-        if (integrateRawTic) {
-            integratePeak(pb, null, rawTIC);
+        if (integrateRawEic) {
+            integratePeak(pb, null, rawEIC);
         } else {
-            integratePeak(pb, null, baselineCorrectedTIC);
+            integratePeak(pb, null, baselineCorrectedEIC);
         }
         return pb;
     }
@@ -396,7 +339,7 @@ public class EICPeakFinder extends AFragmentCommand {
     private double integratePeak(final Peak1D pb,
             final List<int[]> mwIndices, final Array tic) {
         double s = -1;
-        log.debug("Using TIC based integration!");
+        log.debug("Using EIC based integration!");
 //            final Array tic = iff.getChild(this.ticVarName).getArray();
         final Index ticIndex = tic.getIndex();
         for (int i = pb.getStartIndex(); i <= pb.getStopIndex(); i++) {
@@ -419,21 +362,21 @@ public class EICPeakFinder extends AFragmentCommand {
      * @return a {@link java.util.List} object.
      */
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
-            final List<Integer> ts, final Array rawTIC,
-            final Array baselineCorrectedTIC, final double[] snr) {
+            final List<Integer> ts, final Array rawEIC,
+            final Array baselineCorrectedEIC, final double[] snr) {
         final ArrayList<Peak1D> pbs = new ArrayList<>();
         Array scanAcquisitionTime = chromatogram.getChild("scan_acquisition_time").getArray();
-        log.info("Using TIC based peak integration");
+        log.info("Using EIC based peak integration");
         FirstDerivativeFilter fdf = new FirstDerivativeFilter();
-        Array fdTIC = fdf.apply(baselineCorrectedTIC);
+        Array fdTIC = fdf.apply(baselineCorrectedEIC);
         Array sdTIC = fdf.apply(fdTIC);
         Array tdTIC = fdf.apply(sdTIC);
         // fall back to TIC
         for (final Integer scanApex : ts) {
             log.debug("Adding peak at scan index {}", scanApex);
-            final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex,
-                    rawTIC,
-                    baselineCorrectedTIC, fdTIC, sdTIC, tdTIC);
+            final Peak1D pb = getPeakBoundsByEIC(chromatogram, scanApex,
+                    rawEIC,
+                    baselineCorrectedEIC, fdTIC, sdTIC, tdTIC);
             if (pb != null && pb.getArea() > 0) {
                 pb.setSnr(snr[pb.getApexIndex()]);
                 pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
@@ -543,28 +486,6 @@ public class EICPeakFinder extends AFragmentCommand {
         return extr;
     }
 
-//	private void calcCrossCorr(
-//		final Executor e,
-//		final Collection<Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>> solvers,
-//		final ArrayDouble.D2 a2d) throws InterruptedException,
-//		ExecutionException {
-//		final CompletionService<Tuple2D<Tuple2D<Integer, Integer>, Double>> ecs = new ExecutorCompletionService<Tuple2D<Tuple2D<Integer, Integer>, Double>>(
-//			e);
-//		for (final Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>> s : solvers) {
-//			ecs.submit(s);
-//		}
-//		final int n = solvers.size();
-//		for (int i = 0; i < n; i++) {
-//			final Tuple2D<Tuple2D<Integer, Integer>, Double> r = ecs.take().get();
-//			if (r != null) {
-//				final Integer i1 = r.getFirst().getFirst();
-//				final Integer i2 = r.getFirst().getSecond();
-//				a2d.set(i1, i2, r.getSecond());
-//				a2d.set(i2, i1, r.getSecond());
-//			}
-//		}
-//
-//	}
     /**
      * <p>calcEstimatedAutoCorrelation.</p>
      *
@@ -598,24 +519,6 @@ public class EICPeakFinder extends AFragmentCommand {
         // return v;
     }
 
-//	private Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>> createCallable(
-//		final int i, final int j, final ArrayDouble.D1 ad1,
-//		final ArrayDouble.D1 ad2, final double meana, final double meanb,
-//		final double vara, final double varb) {
-//		final Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>> c = new Callable<Tuple2D<Tuple2D<Integer, Integer>, Double>>() {
-//			@Override
-//			public Tuple2D<Tuple2D<Integer, Integer>, Double> call()
-//				throws Exception {
-//
-//				return new Tuple2D<Tuple2D<Integer, Integer>, Double>(
-//					new Tuple2D<Integer, Integer>(i, j), EICPeakFinder.
-//					calcEstimatedCrossCorrelation(ad1, ad2, meana,
-//						meanb, vara, varb));
-//
-//			}
-//		};
-//		return c;
-//	}
     /**
      * <p>getMaxAutocorrelation.</p>
      *
@@ -625,8 +528,8 @@ public class EICPeakFinder extends AFragmentCommand {
      */
     protected Tuple2D<Integer, Double> getMaxAutocorrelation(final Array a,
             final Array b) {
-        final Index ia = a.getIndex();
-        final Index ib = b.getIndex();
+//        final Index ia = a.getIndex();
+//        final Index ib = b.getIndex();
         final ArrayDouble.D1 autoCorr = new ArrayDouble.D1(a.getShape()[0]);
         for (int lag = 0; lag < a.getShape()[0]; lag++) {
             calcEstimatedAutoCorrelation(a, b, 0, 1, lag, autoCorr);
@@ -641,4 +544,5 @@ public class EICPeakFinder extends AFragmentCommand {
         }
         return new Tuple2D<>(maxindex, max);
     }
+    
 }

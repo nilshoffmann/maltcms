@@ -282,7 +282,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         File outf = new File(outputDir, StringTools.removeFileExt(f.getName())
                 + ".mann.xml");
         maf.save(ma, outf);
-        Peak2D.append(f, new LinkedList<IPeakNormalizer>(), p2, null, "tic_peaks", null);
+        Peak2D.append(f, new LinkedList<IPeakNormalizer>(), p2, "tic_peaks");
 //		return f;
     }
 

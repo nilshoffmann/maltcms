@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -56,13 +57,14 @@ import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
- * <p>Peak1D class.</p>
+ * <p>
+ * Peak1D class.</p>
  *
  * @author Nils Hoffmann
  *
  * Peak1D models a standard 1D chromatographic peak. If you want to model mass
  * spectral peaks over time, use a Peak1DGroup instance.
- * 
+ *
  */
 @Data
 @Slf4j
@@ -96,14 +98,16 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     private final UUID uniqueId = UUID.randomUUID();
 
     /**
-     * <p>Constructor for Peak1D.</p>
+     * <p>
+     * Constructor for Peak1D.</p>
      */
     public Peak1D() {
 
     }
 
     /**
-     * <p>Constructor for Peak1D.</p>
+     * <p>
+     * Constructor for Peak1D.</p>
      *
      * @param startIndex a int.
      * @param apexIndex a int.
@@ -122,7 +126,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      * @see
      * maltcms.datastructures.array.IFeatureVector#getFeature(java.lang.String)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Array getFeature(String name) {
         if (name.equals("ExtractedIonCurrent")) {
@@ -184,7 +190,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
      *
      * @see maltcms.datastructures.array.IFeatureVector#getFeatureNames()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getFeatureNames() {
         PublicMemberGetters<Peak1D> pmg = new PublicMemberGetters<>(
@@ -192,14 +200,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         return Arrays.asList(pmg.getGetterNames());
     }
 
-//	public static void main(String[] args) {
-//		Peak1D p = new Peak1D(30, 35, 40, 123124.932, 12354);
-//		log.info(p.getFeature("StartIndex"));
-//		log.info(p.getFeature("StopIndex"));
-//		log.info(p.getFeature("Area"));
-//		log.info(p.getFeature("Intensity"));
-//	}
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterator<Peak1D> iterator() {
         final Peak1D thisPeak = this;
@@ -228,19 +231,18 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     }
 
     /**
-     * <p>fromFragment.</p>
+     * <p>
+     * fromFragment.</p>
      *
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
-     * @return a {@link java.util.List} object.
+     * @param peakVariable the peak variable to read, e.g. 'tic_peaks' or
+     * 'eic_peaks'.
+     * @return a {@link java.util.List} object containing the loaded peaks.
+     * @throws ResourceNotAvailableException if a variable can not be retrieved
+     * from the file fragment
      */
-    public static List<Peak1D> fromFragment(IFileFragment ff) {
-        IVariableFragment peaks = null;
-        try {
-            peaks = ff.getChild(
-                    "tic_peaks");
-        } catch (ResourceNotAvailableException rnae) {
-            peaks = ff.getChild("eic_peaks");
-        }
+    public static List<Peak1D> fromFragment(IFileFragment ff, String peakVariable) throws ResourceNotAvailableException {
+        IVariableFragment peaks = ff.getChild(peakVariable);
         ArrayChar.D2 sourceFileName = (ArrayChar.D2) ff.getChild("peak_source_file").getArray();
         ArrayChar.D2 peakNames = (ArrayChar.D2) ff.getChild("peak_name").getArray();
         Array apexRt = ff.getChild(
@@ -289,161 +291,37 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     }
 
     /**
-     * <p>appendEICs.</p>
+     * <p>
+     * fromFragment. Tries to retrieve 'tic_peaks' variable first, falling back
+     * to 'eic_peaks' if that the other is not available. If 'eic_peaks' is also
+     * not available, returns an empty list.</p>
      *
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
-     * @param peakNormalizers a {@link java.util.List} object.
-     * @param peaklist a {@link java.util.List} object.
-     * @param peakVarName a {@link java.lang.String} object.
-     * @since 1.3.2
+     * @return a {@link java.util.List} object.
      */
-    public static void appendEICs(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, String peakVarName) {
-        if (!peaklist.isEmpty()) {
-            final IVariableFragment peaks = new VariableFragment(ff,
-                    peakVarName);
-            final Dimension peak_number = new Dimension("peak_number",
-                    peaklist.size(), true, false, false);
-            final Dimension peak_source_file_number = new Dimension("peak_source_file_number", 1, true, false, false);
-            final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
-            final Dimension _64_byte_string = new Dimension("_64_byte_string", 64, true, false, false);
-            final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty() ? 1 : peakNormalizers.size(), true, false, false);
-            peaks.setDimensions(new Dimension[]{peak_number});
-//			Array tic = ff.getChild("total_intensity").getArray();
-            IVariableFragment peakSourceFile = new VariableFragment(ff, "peak_source_file");
-            peakSourceFile.setDimensions(new Dimension[]{peak_source_file_number, _1024_byte_string});
-            IVariableFragment peakNames = new VariableFragment(ff, "peak_name");
-            peakNames.setDimensions(new Dimension[]{peak_number, _1024_byte_string});
-            IVariableFragment peakStartIndex = new VariableFragment(ff, "peak_start_index");
-            peakStartIndex.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakEndIndex = new VariableFragment(ff, "peak_end_index");
-            peakEndIndex.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakRT = new VariableFragment(ff,
-                    "peak_retention_time");
-            peakRT.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakStartRT = new VariableFragment(ff,
-                    "peak_start_time");
-            peakStartRT.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakStopRT = new VariableFragment(ff,
-                    "peak_end_time");
-            peakStopRT.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment snr = new VariableFragment(ff, "peak_signal_to_noise");
-            snr.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakType = new VariableFragment(ff, "peak_type");
-            peakType.setDimensions(new Dimension[]{peak_number, _64_byte_string});
-            IVariableFragment peakDetectionChannel = new VariableFragment(ff, "peak_detection_channel");
-            peakDetectionChannel.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakArea = new VariableFragment(ff, "peak_area");
-            peakArea.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakNormalizedArea = new VariableFragment(ff, "peak_area_normalized");
-            peakNormalizedArea.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment peakNormalizationMethod = new VariableFragment(ff, "peak_area_normalization_methods");
-            peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers, _1024_byte_string});
-            IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
-            baseLineStartRT.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
-            baseLineStopRT.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment baseLineStartValue = new VariableFragment(ff, "baseline_start_value");
-            baseLineStartValue.setDimensions(new Dimension[]{peak_number});
-            IVariableFragment baseLineStopValue = new VariableFragment(ff, "baseline_stop_value");
-            baseLineStopValue.setDimensions(new Dimension[]{peak_number});
-            Array peakPositions = new ArrayInt.D1(peaklist.size());
-            ArrayInt.D1 peakStartIndexArray = new ArrayInt.D1(peaklist.size());
-            ArrayInt.D1 peakEndIndexArray = new ArrayInt.D1(peaklist.size());
-            ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(
-                    peaklist.size(), 1024);
-            ArrayChar.D2 peakTypeArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                    peaklist.size(), 64);
-            ArrayChar.D2 peakSourceFileArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                    1, 1024);
-            ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
-                    Math.max(1, peakNormalizers.size()), 1024);
-            String[] normalizationMethodsString = new String[peakNormalizers.size()];
-            ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 snrArray = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 peakDetectionChannelArray = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 stopRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstartRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstopRT = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstartV = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 bstopV = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 area = new ArrayDouble.D1(peaklist.size());
-            ArrayDouble.D1 areaNormalized = new ArrayDouble.D1(peaklist.size());
-            peakSourceFileArray.setString(0, ff.getName());
-            if (peakNormalizers.isEmpty()) {
-                normalizationMethodArray.setString(0, "None");
-            } else {
-                for (int i = 0; i < peakNormalizers.size(); i++) {
-                    normalizationMethodArray.setString(i, peakNormalizers.get(i).getNormalizationName());
-                    normalizationMethodsString[i] = peakNormalizers.get(i).getNormalizationName();
-                }
+    public static List<Peak1D> fromFragment(IFileFragment ff) {
+        try {
+            return fromFragment(ff, "tic_peaks");
+        } catch (ResourceNotAvailableException rnae) {
+            log.warn("Could not retrieve 'tic_peaks' from " + ff.getName() + "! Trying 'eic_peaks'!");
+            try {
+                return fromFragment(ff, "eic_peaks");
+            } catch (ResourceNotAvailableException rnae2) {
+                return Collections.emptyList();
             }
-            int i = 0;
-            for (Peak1D p : peaklist) {
-                String name = p.getName();
-                if (name == null || name.isEmpty()) {
-                    names.setString(i, "" + i);
-                } else {
-                    names.setString(i, name);
-                }
-                peakTypeArray.setString(i, p.getPeakType().name());
-                snrArray.set(i, p.getSnr());
-                peakDetectionChannelArray.set(i, p.getMw());
-                apexRT.setDouble(i, p.getApexTime());
-                startRT.setDouble(i, p.getStartTime());
-                stopRT.setDouble(i, p.getStopTime());
-                area.setDouble(i, p.getArea());
-                bstartRT.setDouble(i, p.getBaselineStartTime());
-                bstopRT.setDouble(i, p.getBaselineStopTime());
-                bstartV.setDouble(i, p.getBaselineStartValue());
-                bstopV.setDouble(i, p.getBaselineStopValue());
-                peakPositions.setInt(i, p.getApexIndex());
-                peakStartIndexArray.setInt(i, p.getStartIndex());
-                peakEndIndexArray.setInt(i, p.getStopIndex());
-                i++;
-            }
-            peakSourceFile.setArray(peakSourceFileArray);
-            peaks.setArray(peakPositions);
-            peakStartIndex.setArray(peakStartIndexArray);
-            peakEndIndex.setArray(peakEndIndexArray);
-            peakNames.setArray(names);
-            peakType.setArray(peakTypeArray);
-            snr.setArray(snrArray);
-            peakDetectionChannel.setArray(peakDetectionChannelArray);
-            peakRT.setArray(apexRT);
-            peakStartRT.setArray(startRT);
-            peakStopRT.setArray(stopRT);
-            peakArea.setArray(area);
-            baseLineStartRT.setArray(bstartRT);
-            baseLineStopRT.setArray(bstopRT);
-            baseLineStartValue.setArray(bstartV);
-            baseLineStopValue.setArray(bstopV);
-            peakNormalizationMethod.setArray(normalizationMethodArray);
-            i = 0;
-            for (Peak1D p : peaklist) {
-                p.setNormalizationMethods(normalizationMethodsString);
-                double normalizedArea = p.getArea();
-                for (IPeakNormalizer normalizer : peakNormalizers) {
-                    normalizedArea *= normalizer.getNormalizationFactor(ff, i);
-                }
-                areaNormalized.setDouble(i++, normalizedArea);
-                p.setNormalizedArea(normalizedArea);
-            }
-            peakNormalizedArea.setArray(areaNormalized);
         }
     }
 
     /**
-     * <p>append.</p>
+     * <p>
+     * append.</p>
      *
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param peakNormalizers a {@link java.util.List} object.
      * @param peaklist a {@link java.util.List} object.
-     * @param filteredTrace a {@link ucar.ma2.Array} object.
      * @param peakVarName a {@link java.lang.String} object.
-     * @param filteredTraceVarName a {@link java.lang.String} object.
      */
-    public static void append(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, Array filteredTrace, String peakVarName, String filteredTraceVarName) {
+    public static void append(IFileFragment ff, List<IPeakNormalizer> peakNormalizers, List<Peak1D> peaklist, String peakVarName) {
         if (!peaklist.isEmpty()) {
             final IVariableFragment peaks = new VariableFragment(ff,
                     peakVarName);
@@ -454,14 +332,6 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             final Dimension _64_byte_string = new Dimension("_64_byte_string", 64, true, false, false);
             final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty() ? 1 : peakNormalizers.size(), true, false, false);
             peaks.setDimensions(new Dimension[]{peak_number});
-            Array tic = ff.getChild("total_intensity").getArray();
-            final Dimension scan_number = new Dimension("scan_number", tic.getShape()[0]);
-            if (filteredTrace != null && filteredTraceVarName != null) {
-                final IVariableFragment mai = new VariableFragment(ff,
-                        filteredTraceVarName);
-                mai.setDimensions(new Dimension[]{scan_number});
-                mai.setArray(filteredTrace);
-            }
             IVariableFragment peakSourceFile = new VariableFragment(ff, "peak_source_file");
             peakSourceFile.setDimensions(new Dimension[]{peak_source_file_number, _1024_byte_string});
             IVariableFragment peakNames = new VariableFragment(ff, "peak_name");
@@ -547,17 +417,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                 stopRT.setDouble(i, p.getStopTime());
                 area.setDouble(i, p.getArea());
                 bstartRT.setDouble(i, p.getStartTime());
-                if (p.getStartIndex() >= 0 && filteredTrace != null) {
-                    bstartV.setDouble(i, tic.getDouble(p.getStartIndex()) - filteredTrace.getDouble(p.getStartIndex()));
-                } else {
-                    bstartV.setDouble(i, Double.NaN);
-                }
+                bstartV.setDouble(i, p.getBaselineStartValue());
                 bstopRT.setDouble(i, p.getStopTime());
-                if (p.getStopIndex() >= 0 && filteredTrace != null) {
-                    bstopV.setDouble(i, tic.getDouble(p.getStopIndex()) - filteredTrace.getDouble(p.getStopIndex()));
-                } else {
-                    bstopV.setDouble(i, Double.NaN);
-                }
+                bstopV.setDouble(i, p.getBaselineStopValue());
                 peakPositions.setInt(i, p.getApexIndex());
                 peakStartIndexArray.setInt(i, p.getStartIndex());
                 peakEndIndexArray.setInt(i, p.getStopIndex());
@@ -594,7 +456,9 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUID getUniqueId() {
         return uniqueId;

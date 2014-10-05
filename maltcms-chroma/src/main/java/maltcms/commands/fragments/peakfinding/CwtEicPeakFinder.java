@@ -31,24 +31,26 @@ import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
+import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.peakfinding.cwtEicPeakFinder.CwtEicPeakFinderCallable;
-import maltcms.tools.ArrayTools;
+import maltcms.commands.fragments.peakfinding.cwtPeakFinder.CwtEicPeakFinderCallable;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
-import ucar.ma2.Array;
 
 /**
- * <p>CwtEicPeakFinder class.</p>
+ * <p>
+ * CwtEicPeakFinder class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 @Data
@@ -58,43 +60,57 @@ public class CwtEicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds EIC peaks using  Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    @Configurable(name = "var.binned_mass_values")
-    private String binnedMassValues = "binned_mass_values";
-    @Configurable(name = "var.binned_intensity_values")
-    private String binnedIntensityValues = "binned_intensity_values";
-    @Configurable(name = "var.binned_scan_index")
-    private String binnedScanIndex = "binned_scan_index";
+    @Configurable
+    private int minScale = 10;
+    @Configurable
+    private int maxScale = 100;
+    @Configurable
+    private double minPercentile = 5.0d;
+    @Configurable
+    private boolean integratePeaks = true;
+    @Configurable
+    private boolean saveGraphics = false;
+    @Configurable
+    private double massResolution = 1.0d;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         log.info("Warning: this class is still experimental and not meant for productive use!");
-        int cnt = 0;
+        initProgress(2*t.size());
+        ICompletionService<PeakFinderWorkerResult> ics = createCompletionService(PeakFinderWorkerResult.class);
         for (IFileFragment f : t) {
-            IVariableFragment biv = f.getChild(binnedIntensityValues);
-            IVariableFragment bmv = f.getChild(binnedMassValues);
-            IVariableFragment scanIndex = f.getChild(binnedScanIndex);
-            biv.setIndex(scanIndex);
-            List<Array> eics = ArrayTools.tilt(biv.getIndexedArray());
-            Array mzs = bmv.getIndexedArray().get(0);
-            ICompletionService<URI> ics = createCompletionService(URI.class);
-            for (int i = 0; i < eics.size(); i++) {
-                Array eic = eics.get(i);
-                CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
-                cwt.setInput(f.getUri());
-                cwt.setEic((double[]) eic.get1DJavaArray(double.class));
-                cwt.setMz(mzs.getDouble(i));
-                cwt.setMinScale(5);
-                ics.submit(cwt);
-            }
-            try {
-                ics.call();
-            } catch (Exception ex) {
-                log.error("Caught exception while executing workers: ", ex);
-                throw new RuntimeException(ex);
-            }
-            cnt++;
+            CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
+            cwt.setInput(f.getUri());
+            cwt.setInput(f.getUri());
+            cwt.setOutput(createWorkFragment(f).getUri());
+            cwt.setMinScale(minScale);
+            cwt.setMaxScale(maxScale);
+            cwt.setMinPercentile(minPercentile);
+            cwt.setIntegratePeaks(integratePeaks);
+            cwt.setStoreScaleogram(saveGraphics);
+            cwt.setMassResolution(massResolution);
+            ics.submit(cwt);
+            getWorkflow().append(getProgress().nextStep());
         }
-        return t;
+        try {
+            List<URI> resultsUris = new ArrayList<>();
+            List<PeakFinderWorkerResult> results = ics.call();
+            for (PeakFinderWorkerResult res : results) {
+                resultsUris.add(res.getResultUri());
+                for (WorkflowResult wf : res.getWorkflowResults()) {
+                    getWorkflow().append(new DefaultWorkflowResult(wf.getResource(), this, wf.getWorkflowSlot(), wf.getResources()));
+                }
+                getWorkflow().append(getProgress().nextStep());
+            }
+            TupleND<IFileFragment> resultFragments = mapToInputUri(resultsUris, t);
+            addWorkflowResults(resultFragments);
+            return resultFragments;
+        } catch (Exception e) {
+            log.warn("Caught exception while waiting for results: ", e);
+        }
+        return new TupleND<>();
     }
 }

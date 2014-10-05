@@ -29,10 +29,7 @@ package maltcms.commands.fragments2d.peakfinding.output;
 
 import cross.IConfigurable;
 import cross.datastructures.workflow.IWorkflowElement;
-import java.awt.Point;
 import java.util.List;
-import maltcms.commands.fragments2d.peakfinding.bbh.Reliability;
-import maltcms.commands.fragments2d.peakfinding.bbh.IBidirectionalBestHit;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.peak.Peak2D;
 
@@ -43,49 +40,6 @@ import maltcms.datastructures.peak.Peak2D;
  * 
  */
 public interface IPeakExporter extends IConfigurable, IWorkflowElement {
-
-    /**
-     * Will export the information about the bidirectional best hits.
-     *
-     * @param bidiBestHitList bidirational best hits table
-     * @param bbh bidirection best hits intance
-     * @param names names of the chromtatograms
-     * @param peaklist a {@link java.util.List} object.
-     * @param reliabilities a {@link java.util.List} object.
-     */
-    void exportBBHInformation(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
-            final IBidirectionalBestHit bbh, final List<String> names,
-            final List<Reliability> reliabilities);
-
-    /**
-     * Will export the alignment of retention times about the bidirectional best
-     * hits.
-     *
-     * @param bidiBestHitList bidirational best hits table
-     * @param bbh bidirection best hits intance
-     * @param names names of the chromtatograms
-     * @param peaklist a {@link java.util.List} object.
-     * @param reliabilities a {@link java.util.List} object.
-     */
-    void exportBBHMultipleAlignmentRT(final List<List<Point>> bidiBestHitList, List<List<Peak2D>> peaklist,
-            final IBidirectionalBestHit bbh, final List<String> names,
-            final List<Reliability> reliabilities);
-
-    /**
-     * Will export a detailed list about the bidirectional best hits.
-     *
-     * @param bidiBestHitList bidirectional best hit list
-     * @param peaklists peaklist
-     * @param bbh bbh class - needed to run the sim() method
-     * @param chromatogramNames names of the chromatograms
-     * @param reliabilities reliabilities of peak groups
-     * @param oFilename output filename
-     */
-    void exportDetailedBBHInformation(final List<List<Point>> bidiBestHitList,
-            final List<List<Peak2D>> peaklists,
-            final IBidirectionalBestHit bbh,
-            final List<String> chromatogramNames,
-            final List<Reliability> reliabilities, final String oFilename);
 
     /**
      * Will export some detailed peak information like unique mass integration,
@@ -114,22 +68,6 @@ public interface IPeakExporter extends IConfigurable, IWorkflowElement {
      * @param ps peaklist
      */
     void exportPeakInformation(final String filename, final List<Peak2D> ps);
-
-    /**
-     * Will export an peak occurrence map which will allow an easy plotting by
-     * R. All Peaks will be exported in one list, but which additional
-     * information about the occurrence, group id and some other.
-     *
-     * @param bidiBestHitList bidi best hit list from bbh
-     * @param peaklists peaklist
-     * @param bbh bbh instance
-     * @param chromatogramNames chromatogram names
-     * @param oFilename filename
-     */
-    void exportPeakOccurrenceMap(final List<List<Point>> bidiBestHitList,
-            final List<List<Peak2D>> peaklists,
-            final IBidirectionalBestHit bbh,
-            final List<String> chromatogramNames, final String oFilename);
 
     /**
      * Exports all identifications available for a peak.

@@ -43,7 +43,7 @@ import org.openide.util.lookup.ServiceProvider;
  * have fewer than <code>maxNeighbors</code> in <code>radius</code>.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 @Data
@@ -60,7 +60,8 @@ public class CwtPeakFinder extends AFragmentCommand {
     @Configurable(name = "var.scan_rate.default", type = double.class,
             value = "100.0d", description = "The scan rate. Default value is var.scan_rate.default.")
     private double scanRate = 100.0d;
-    @Configurable(description = "The maximum radius around a peak to search for neighboring peaks.")
+    @Configurable(description = "The maximum radius around a peak to search for neighboring peaks.",
+            value = "10.0d")
     private double radius = 10.0d;
     @Configurable(description = "The maxmimum number of neighbors expected in the given radius.")
     private int maxNeighbors = 15;
@@ -75,13 +76,17 @@ public class CwtPeakFinder extends AFragmentCommand {
     @Configurable(description = "Percentile of the intensity value distribution to use as minimum intensity for peaks.")
     private int minPercentile = 95;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Finds peak locations in intensity profiles using the continuous wavelet transform.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         ICompletionService<File> ics = createCompletionService(File.class);
@@ -106,7 +111,9 @@ public class CwtPeakFinder extends AFragmentCommand {
         return postProcess(ics, t);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;

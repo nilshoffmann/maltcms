@@ -39,8 +39,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.alignment.CenterStarAlignment;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.TicDtwWorkerFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;

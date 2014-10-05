@@ -29,28 +29,29 @@ package maltcms.commands.fragments.peakfinding;
 
 import cross.annotations.Configurable;
 import cross.commands.fragments.AFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.peakfinding.cwtEicPeakFinder.CwtTicPeakFinderCallable;
-import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
-import maltcms.tools.ImageTools;
+import maltcms.commands.fragments.peakfinding.cwtPeakFinder.CwtTicPeakFinderCallable;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
+import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
-import ucar.ma2.ArrayDouble;
 
 /**
- * <p>CwtTicPeakFinder class.</p>
+ * <p>
+ * CwtTicPeakFinder class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 @Data
@@ -68,15 +69,18 @@ public class CwtTicPeakFinder extends AFragmentCommand {
     @Configurable
     private boolean integratePeaks = true;
     @Configurable
-    private boolean integrateRawTic = true;
-    @Configurable
     private boolean saveGraphics = false;
+    @Configurable
+    private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
-        ICompletionService<URI> ics = createCompletionService(URI.class);
-        initProgress(t.size() * 2);
+        ICompletionService<PeakFinderWorkerResult> completionService
+                = createCompletionService(PeakFinderWorkerResult.class);
+        initProgress(2*t.size());
         for (IFileFragment f : t) {
             CwtTicPeakFinderCallable cwt = new CwtTicPeakFinderCallable();
             cwt.setInput(f.getUri());
@@ -85,27 +89,34 @@ public class CwtTicPeakFinder extends AFragmentCommand {
             cwt.setMaxScale(maxScale);
             cwt.setMinPercentile(minPercentile);
             cwt.setIntegratePeaks(integratePeaks);
-            cwt.setIntegrateRawTic(integrateRawTic);
             cwt.setStoreScaleogram(saveGraphics);
-            ics.submit(cwt);
-            getProgress().nextStep();
+            cwt.setPeakNormalizers(peakNormalizers);
+            completionService.submit(cwt);
+            getWorkflow().append(getProgress().nextStep());
         }
         try {
-            List<URI> results = ics.call();
-            TupleND<IFileFragment> resultFragments = new TupleND<>();
-            for (URI file : results) {
-                FileFragment f = new FileFragment(file);
-                if (saveGraphics) {
-                    BufferedImage bi = CwtChartFactory.createColorHeatmap((ArrayDouble.D2) f.getChild("cwt_scaleogram").getArray());
-                    ImageTools.saveImage(bi, "scaleogram-" + f.getName(), "png", getWorkflow().getOutputDirectory(), this, f);
+            List<URI> resultsUris = new ArrayList<>();
+            List<PeakFinderWorkerResult> results = completionService.call();
+            for (PeakFinderWorkerResult res : results) {
+                resultsUris.add(res.getResultUri());
+                for (WorkflowResult wf : res.getWorkflowResults()) {
+                    getWorkflow().append(
+                        new DefaultWorkflowResult(
+                            wf.getResource(), 
+                            this,
+                            wf.getWorkflowSlot(),
+                            wf.getResources()
+                        )
+                    );
                 }
-                resultFragments.add(f);
-                getProgress().nextStep();
+                getWorkflow().append(getProgress().nextStep());
             }
+            TupleND<IFileFragment> resultFragments = mapToInputUri(resultsUris, t);
+            addWorkflowResults(resultFragments);
             return resultFragments;
-        } catch (Exception ex) {
-            log.error("Caught exception while executing workers: ", ex);
-            throw new RuntimeException(ex);
+        } catch (Exception e) {
+            log.warn("Caught exception while waiting for results: ", e);
         }
+        return new TupleND<>();
     }
 }

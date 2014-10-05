@@ -68,7 +68,6 @@ import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;
-import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
@@ -79,6 +78,7 @@ import maltcms.ui.charts.XYBPlot;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.plot.XYPlot;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -101,6 +101,7 @@ import ucar.ma2.InvalidRangeException;
 @ProvidesVariables(names = {"var.peak_index_list", "var.region_index_list",
     "var.region_peak_index", "var.boundary_index_list",
     "var.boundary_peak_index", "var.peak_mass_intensity"})
+@ServiceProvider(service=AFragmentCommand.class)
 public class SeededRegionGrowing extends AFragmentCommand {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity",

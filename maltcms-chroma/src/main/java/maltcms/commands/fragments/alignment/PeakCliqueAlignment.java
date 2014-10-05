@@ -720,7 +720,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     /** {@inheritDoc} */
     @Override
     public WorkflowSlot getWorkflowSlot() {
-        return WorkflowSlot.PEAKMATCHING;
+        return WorkflowSlot.ALIGNMENT;
     }
 
     private TupleND<IFileFragment> matchPeaks(

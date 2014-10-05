@@ -41,7 +41,6 @@ import java.util.Collection;
 import java.util.List;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
@@ -50,7 +49,6 @@ import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import ucar.ma2.Array;
 
 /**
  *

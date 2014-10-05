@@ -27,6 +27,7 @@
  */
 package net.sf.maltcms.tutorials;
 
+import cross.Factory;
 import cross.applicationContext.DefaultApplicationContextFactory;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.tools.FragmentTools;
@@ -89,6 +90,7 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
         DefaultApplicationContextFactory dacf = new DefaultApplicationContextFactory(Arrays.asList("/cfg/pipelines/xml/workflowDefaults.xml", "/cfg/pipelines/xml/myFragmentCommand.xml"), new PropertiesConfiguration());
         ApplicationContext ac = dacf.createClassPathApplicationContext();
         IWorkflow w = ac.getBean(IWorkflow.class);
+        w.setFactory(Factory.getInstance());
         w.getCommandSequence().setInput(FragmentTools.immutable(ecpf.getFiles()));
         w.setOutputDirectory(outputBase);
         testWorkflow(w);

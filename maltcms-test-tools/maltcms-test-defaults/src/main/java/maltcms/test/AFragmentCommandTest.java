@@ -27,6 +27,7 @@
  */
 package maltcms.test;
 
+import cross.Factory;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
@@ -140,6 +141,7 @@ public abstract class AFragmentCommandTest {
         log.info("Workflow using commands {}", commands);
         log.info("Workflow using inputFiles {}", inputFiles);
         DefaultWorkflow dw = new DefaultWorkflow();
+        dw.setFactory(Factory.getInstance());
         dw.setStartupDate(new Date());
         dw.setName("testWorkflow");
         dw.setCommandSequence(cp);

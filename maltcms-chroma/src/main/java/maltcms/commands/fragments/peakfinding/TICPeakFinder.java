@@ -36,10 +36,8 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
-import cross.datastructures.workflow.DefaultWorkflowProgressResult;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
-import cross.exception.ConstraintViolationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +52,7 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.IBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorker;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorker.TICPeakFinderWorkerBuilder;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorkerResult;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import net.sf.mpaxs.api.ICompletionService;
@@ -125,10 +123,8 @@ public class TICPeakFinder extends AFragmentCommand {
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         EvalTools.notNull(t, this);
         log.info("Searching for peaks");
-        // create new ProgressResult
-        final DefaultWorkflowProgressResult dwpr = new DefaultWorkflowProgressResult(
-                t.getSize(), this, getWorkflowSlot());
-        ICompletionService<TICPeakFinderWorkerResult> completionService = createCompletionService(TICPeakFinderWorkerResult.class);
+        initProgress(2*t.size());
+        ICompletionService<PeakFinderWorkerResult> completionService = createCompletionService(PeakFinderWorkerResult.class);
         for (final IFileFragment f : t) {
             List<IPeakNormalizer> peakNormalizerCopy = new ArrayList<>();
             for (IPeakNormalizer normalizer : peakNormalizers) {
@@ -157,17 +153,17 @@ public class TICPeakFinder extends AFragmentCommand {
                .properties(ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration()))
                .build();
             completionService.submit(tpf);
-            // notify workflow
+            getWorkflow().append(getProgress().nextStep());
         }
         try {
             List<URI> resultsUris = new ArrayList<>();
-            List<TICPeakFinderWorkerResult> results = completionService.call();
-            for (TICPeakFinderWorkerResult res : results) {
+            List<PeakFinderWorkerResult> results = completionService.call();
+            for (PeakFinderWorkerResult res : results) {
                 resultsUris.add(res.getResultUri());
                 for (WorkflowResult wf : res.getWorkflowResults()) {
                     getWorkflow().append(new DefaultWorkflowResult(wf.getResource(), this, wf.getWorkflowSlot(), wf.getResources()));
                 }
-                getWorkflow().append(dwpr.nextStep());
+                getWorkflow().append(getProgress().nextStep());
             }
             TupleND<IFileFragment> resultFragments = mapToInputUri(resultsUris, t);
             addWorkflowResults(resultFragments);

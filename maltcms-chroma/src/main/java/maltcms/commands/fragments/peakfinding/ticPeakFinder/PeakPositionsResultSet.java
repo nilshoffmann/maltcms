@@ -43,7 +43,7 @@ public class PeakPositionsResultSet {
     private final double[] snrValues;
     private final List<Integer> ts;
     private final ArrayInt.D1 peakPositions;
-    private final Array correctedTIC;
+    private final Array correctedValues;
     private final PolynomialSplineFunction baselineEstimator;
 
     /**
@@ -60,7 +60,7 @@ public class PeakPositionsResultSet {
         this.snrValues = snrValues;
         this.ts = ts;
         this.peakPositions = peakPositions;
-        this.correctedTIC = correctedTIC;
+        this.correctedValues = correctedTIC;
         this.baselineEstimator = baselineEstimator;
     }
 
@@ -97,7 +97,7 @@ public class PeakPositionsResultSet {
      * @return a {@link ucar.ma2.Array} object.
      */
     public Array getCorrectedTIC() {
-        return correctedTIC;
+        return correctedValues;
     }
 
     /**

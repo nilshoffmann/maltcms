@@ -41,7 +41,6 @@ import java.util.Collection;
 import java.util.List;
 import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;

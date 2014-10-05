@@ -30,7 +30,6 @@ package maltcms.commands.fragments.peakfinding.ticPeakFinder;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.EvalTools;
-import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
@@ -39,17 +38,13 @@ import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,14 +55,11 @@ import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
+import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.datastructures.caches.RingBuffer;
-import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
-import maltcms.io.csv.CSVWriter;
-import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import maltcms.tools.ArrayTools;
-import maltcms.tools.MaltcmsTools;
 import maltcms.ui.charts.AChart;
 import maltcms.ui.charts.CombinedDomainXYChart;
 import maltcms.ui.charts.PlotRunner;
@@ -86,16 +78,17 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 
 /**
- * <p>TICPeakFinderWorker class.</p>
+ * <p>
+ * TICPeakFinderWorker class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  * @since 1.3.2
  */
 @Builder
 @Data
 @Slf4j
-public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>, Serializable {
+public class TICPeakFinderWorker implements Callable<PeakFinderWorkerResult>, Serializable {
 
     private final File outputDirectory;
     private final URI inputUri;
@@ -122,9 +115,13 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
 
     private final Properties properties;
 
-    /** {@inheritDoc} */
+    private final Peak1DUtilities peak1DUtilities = new Peak1DUtilities();
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public TICPeakFinderWorkerResult call() {
+    public PeakFinderWorkerResult call() {
         return findPeaks(new FileFragment(inputUri));
     }
 
@@ -139,52 +136,37 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         return extr;
     }
 
-    private void addResults(final IFileFragment ff, final PeakPositionsResultSet pprs,
-            final List<Peak1D> peaklist) {
-
-        List<Peak1D> peaks;
-        if (peaklist.isEmpty()) {
-            peaks = new ArrayList<>(pprs.getTs().size());
-            for (Integer idx : pprs.getTs()) {
-                Peak1D pk = new Peak1D();
-                pk.setSnr(pprs.getSnrValues()[idx]);
-                pk.setApexIndex(idx);
-                pk.setFile(ff.getName());
-                peaks.add(pk);
-            }
-        } else {
-            peaks = peaklist;
-        }
-        Peak1D.append(ff, peakNormalizers, peaks, pprs.getCorrectedTIC(), ticPeakVarName, ticFilteredVarName);
-    }
-
     /**
-     * <p>findPeakAreas.</p>
+     * <p>
+     * findPeakAreas.</p>
      *
-     * @param chromatogram a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param chromatogram a
+     * {@link cross.datastructures.fragments.IFileFragment} object.
      * @param ts a {@link java.util.List} object.
      * @param filename a {@link java.lang.String} object.
      * @param sat a {@link ucar.ma2.Array} object.
      * @param rawTIC a {@link ucar.ma2.Array} object.
-     * @param filteredTIC a {@link ucar.ma2.Array} object.
-     * @param snr an array of double.
-     * @param baseline a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
+     * @param pprs a {@link PeakPositionsResultSet} object.
+     * @param integratePeaks whether to integrate peaks.
+     * @param removeOverlappingPeaks whether to remove overlapping peaks.
+     * @param subtractBaseline whether the estimated baseline should be
+     * subtracted from the filtered signal.
      * @return a {@link java.util.List} object.
      */
     public List<Peak1D> findPeakAreas(final IFileFragment chromatogram,
             final List<Integer> ts, String filename, final Array sat, final Array rawTIC,
-            final Array filteredTIC, final double[] snr, final PolynomialSplineFunction baseline) {
+            PeakPositionsResultSet pprs, boolean integratePeaks, boolean removeOverlappingPeaks, boolean subtractBaseline) {
         final ArrayList<Peak1D> pbs = new ArrayList<>();
-        Array scanAcquisitionTime = chromatogram.getChild(satVarName).getArray();
-        if (integrateTICPeaks) {
+        Array scanAcquisitionTime = sat;
+        if (integratePeaks) {
             log.info("Using TIC based peak integration");
             FirstDerivativeFilter fdf = new FirstDerivativeFilter();
-            Array fdTIC = fdf.apply(filteredTIC);
+            Array fdTIC = fdf.apply(pprs.getCorrectedTIC());
             Array sdTIC = fdf.apply(fdTIC);
             Array tdTIC = fdf.apply(sdTIC);
             XYChart xyc = new XYChart(filename + "-TIC", new String[]{
                 "TIC", "FIRST DERIVATIVE", "SECOND DERIVATIVE",
-                "THIRD DERIVATIVE"}, new Array[]{filteredTIC,
+                "THIRD DERIVATIVE"}, new Array[]{pprs.getCorrectedTIC(),
                 fdTIC, sdTIC, tdTIC}, "scan", "value");
             xyc.configure(ConfigurationConverter.getConfiguration(properties));
             final PlotRunner pr = new PlotRunner(xyc.create(),
@@ -202,17 +184,43 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
                 log.error("Caught exception while executing workers: ", ex);
                 throw new RuntimeException(ex);
             }
+            Array ticToIntegrate = rawTIC;
+            if (subtractBaseline) {
+                ticToIntegrate = subtractBaseline(pprs.getCorrectedTIC(), sat, pprs.getBaselineEstimator());
+            }
             // fall back to TIC
             for (final Integer scanApex : ts) {
                 log.debug("Adding peak at scan index {}", scanApex);
-                final Peak1D pb = getPeakBoundsByTIC(chromatogram, scanApex, sat,
-                        rawTIC,
-                        filteredTIC, fdTIC, sdTIC, tdTIC, baseline);
+                final Peak1D pb = getPeakBounds(chromatogram, scanApex,
+                        ticToIntegrate,
+                        pprs.getCorrectedTIC(), fdTIC, sdTIC, tdTIC);
                 if (pb != null && pb.getArea() > 0) {
-                    pb.setSnr(snr[pb.getApexIndex()]);
+                    pb.setSnr(pprs.getSnrValues()[pb.getApexIndex()]);
                     pb.setApexTime(scanAcquisitionTime.getDouble(pb.getApexIndex()));
                     pb.setStartTime(scanAcquisitionTime.getDouble(pb.getStartIndex()));
                     pb.setStopTime(scanAcquisitionTime.getDouble(pb.getStopIndex()));
+                    pb.setBaselineStartTime(pb.getStartTime());
+                    pb.setBaselineStopTime(pb.getStopTime());
+                    if (pb.getStartIndex() >= 0) {
+                        try {
+                            pb.setBaselineStartValue(pprs.getBaselineEstimator().value(pb.getBaselineStartTime()));
+                        } catch (ArgumentOutsideDomainException ex) {
+                            log.warn("Argument {} out of bounds, setting baselineStartValue to NaN", pb.getStartTime());
+                            pb.setBaselineStartValue(0);
+                        }
+                    } else {
+                        pb.setBaselineStartValue(0);
+                    }
+                    if (pb.getStopIndex() >= 0) {
+                        try{
+                            pb.setBaselineStopValue(pprs.getBaselineEstimator().value(pb.getBaselineStopTime()));
+                        } catch (ArgumentOutsideDomainException ex) {
+                            log.warn("Argument {} out of bounds, setting baselineStopValue to NaN", pb.getStartTime());
+                            pb.setBaselineStopValue(0);
+                        }
+                    } else {
+                        pb.setBaselineStopValue(0);
+                    }
                     pbs.add(pb);
                 }
             }
@@ -243,21 +251,26 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
             }
             if (removeOverlappingPeaks && overlaps.size() > 0) {
                 log.warn("Removal of overlapping peaks currently disabled!");
-//                log.info("Removing overlapping peaks");
-//                pbs.removeAll(overlaps);
             }
         }
         return pbs;
     }
 
     /**
-     * <p>findPeakPositions.</p>
+     * <p>
+     * findPeakPositions.</p>
      *
      * @param tic a {@link ucar.ma2.Array} object.
      * @param sat a {@link ucar.ma2.Array} object.
-     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet} object.
+     * @param baselineEstimator the baseline estimator to use.
+     * @param threshold the threshold for peak detection
+     * @param peakSeparationWindow the minimum required number of scans between
+     * two detected peaks.
+     * @return a
+     * {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakPositionsResultSet}
+     * object.
      */
-    public PeakPositionsResultSet findPeakPositions(Array tic, Array sat) {
+    public PeakPositionsResultSet findPeakPositions(Array tic, Array sat, IBaselineEstimator baselineEstimator, double threshold, int peakSeparationWindow) {
         EvalTools.notNull(tic, this);
         Array filteredTic = null;
         final ArrayList<Integer> ts = new ArrayList<>();
@@ -281,11 +294,10 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
             snrValues[i] = Double.isInfinite(snr) ? 0 : snr;
         }
         log.debug("SNR: {}", Arrays.toString(snrValues));
-        final double threshold = this.peakThreshold;// * maxCorrectedIntensity;
         for (int i = 0; i < ticValues.length; i++) {
             log.debug("i=" + i);
             PeakFinderUtils.checkExtremum(cticValues, snrValues, ts, threshold, i,
-                    this.peakSeparationWindow);
+                    peakSeparationWindow);
         }
         log.debug("Corrected tic value: {}", filteredTic);
         PeakPositionsResultSet pprs = new PeakPositionsResultSet(filteredTic,
@@ -293,211 +305,48 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         return pprs;
     }
 
-    private TICPeakFinderWorkerResult findPeaks(final IFileFragment f) {
+    private PeakFinderWorkerResult findPeaks(final IFileFragment f) {
         final Array tic = f.getChild(this.ticVarName).getArray();
         final Array sat = f.getChild(this.satVarName).getArray();
-        final PeakPositionsResultSet pprs = findPeakPositions(tic, sat);
-        final ArrayInt.D1 extr = pprs.getPeakPositions();
-        final double[] snrValues = pprs.getSnrValues();
+        final PeakPositionsResultSet pprs = findPeakPositions(tic, sat, baselineEstimator, peakThreshold, peakSeparationWindow);
         log.info("Found {} peaks for file {}", pprs.getTs().size(), f.getName());
         List<Peak1D> peaks = Collections.emptyList();
-        if (this.integratePeaks) {
-            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), sat, tic, pprs.getCorrectedTIC(), snrValues, pprs.getBaselineEstimator());
-        }
-        List<WorkflowResult> workflowResults = new ArrayList<>();
-        if (this.saveGraphics) {
-            workflowResults.addAll(visualize(f, sat, tic, pprs.getCorrectedTIC(), snrValues, extr,
-                    this.peakThreshold, pprs.getBaselineEstimator()));
-//            workflowResults.addAll(visualize(f, sat, tic, pprs.getCorrectedTIC(), snrValues, extr,
-//                    this.peakThreshold, pprs.getBaselineEstimator()));
-        }
-        final String filename = f.getName();
-        final IFileFragment ff = new FileFragment(
+        IFileFragment outputFragment = new FileFragment(
                 new File(outputDirectory,
-                        filename));
-
-        ff.addSourceFile(f);
+                        f.getName()));
+        outputFragment.addSourceFile(f);
         if (this.integratePeaks) {
-            log.info("Using peak normalizers: {}", peakNormalizers);
+            peaks = findPeakAreas(f, pprs.getTs(), f.getName(), sat, tic, pprs, integrateTICPeaks, removeOverlappingPeaks, subtractBaseline);
+        } else {
+            peaks = new ArrayList<>(pprs.getTs().size());
+            for (Integer idx : pprs.getTs()) {
+                Peak1D pk = new Peak1D();
+                pk.setSnr(pprs.getSnrValues()[idx]);
+                pk.setApexIndex(idx);
+                pk.setFile(outputFragment.getName());
+                peaks.add(pk);
+            }
         }
-        addResults(ff, pprs, peaks);
-        if (this.integratePeaks) {
-            workflowResults.addAll(savePeakTable(peaks, f));
-        }
-        ff.save();
-        f.clearArrays();
-        return new TICPeakFinderWorkerResult(ff.getUri(), workflowResults);
+        return saveResults(f, outputFragment, pprs, peaks);
     }
 
-    /**
-     * // * @param f //
-     */
-    private void findEICPeaks(final IFileFragment f) {
-        // double minMass, maxMass, stepSize;
-        // Tuple2D<Double, Double> t = MaltcmsTools.getMinMaxMassRange(f);
-        // minMass = t.getFirst();
-        // maxMass = t.getSecond();
-        // stepSize = 1.0;
-        // double range = maxMass - minMass;
-        // int steps = (int) Math.floor(range / stepSize) + 1;
-        // double start = Math.floor(minMass);
-        // TreeMap<Double, TreeSet<Peak1D>> rtToPeakMap = new TreeMap<Double,
-        // TreeSet<Peak1D>>();
-        // for (int i = 0; i < steps; i++) {
-        // Array eic = MaltcmsTools.getEIC(f, start, start + stepSize, true,
-        // false);
-        //
-        // EvalTools.notNull(eic, this);
-        // Array correctedeic = null;
-        // final ArrayList<Integer> ts = new ArrayList<Integer>();
-        // // log.debug("Value\tLow\tMedian\tHigh\tDev\tGTMedian\tSNR");
-        // double[] eicValues = (double[]) eic.get1DJavaArray(double.class);
-        // correctedeic = applyFilters(eic);
-        // eicValues = getMinimumBaselineEstimate((double[]) correctedeic
-        // .get1DJavaArray(double.class));
-        // correctedeic = Array.factory(eicValues);
-        // final double maxCorrectedIntensity = MAMath
-        // .getMaximum(correctedeic);
-        // final double snrEstimate = this.peakThreshold
-        // * maxCorrectedIntensity;
-        // for (int j = 0; j < eicValues.length; j++) {
-        // // log.debug("j=" + j);
-        // checkExtremum(eicValues, ts, snrEstimate, j, this.filterWindow);
-        // }
-        // if (ts.size() > 0) {
-        // log.debug("Found {} peaks for file {} at mass {} to {}",
-        // new Object[] { ts.size(), f.getName(), start,
-        // start + stepSize });
-        // }
-        // final ArrayInt.D1 extr = createPeakCandidatesArray(eic, ts);
-        // for (int k = 0; k < extr.getShape()[0]; k++) {
-        // int peak = extr.get(k);
-        // Tuple2D<Array, Array> tple = MaltcmsTools.getMS(f, peak);
-        // double area = getIntensityForMassRange(tple.getFirst(), tple
-        // .getSecond(), start, start + stepSize);
-        // Peak1D p = new Peak1D(peak, peak, peak, area, area);
-        // p.setMw(getMaxMassForMassRange(tple.getFirst(), tple
-        // .getSecond(), start, start + stepSize));
-        // p.setApexTime(MaltcmsTools.getScanAcquisitionTime(f, peak));
-        // p.setStartTime(p.getApexTime());
-        // p.setStopTime(p.getApexTime());
-        // p.setFile(f.getName());
-        // // log.info("{}", p);
-        // if (rtToPeakMap.containsKey(p.getApexTime())) {
-        // TreeSet<Peak1D> s = rtToPeakMap.get(p.getApexTime());
-        // s.add(p);
-        // } else {
-        // TreeSet<Peak1D> s = new TreeSet<Peak1D>(
-        // new Comparator<Peak1D>() {
-        //
-        // @Override
-        // public int compare(Peak1D p1, Peak1D p2) {
-        // double m1 = p1.getMw();
-        // double m2 = p2.getMw();
-        // double i1 = p1.getIntensity();
-        // double i2 = p2.getIntensity();
-        // if (m1 < m2) {
-        // return -1;
-        // } else if (m1 > m2) {
-        // return 1;
-        // } else {
-        // if (i1 < i2) {
-        // return -1;
-        // } else if (i1 > i2) {
-        // return 1;
-        // } else {
-        // return 0;
-        // }
-        // }
-        // }
-        // });
-        // s.add(p);
-        // rtToPeakMap.put(p.getApexTime(), s);
-        // }
-        //
-        // }
-        // start += stepSize;
-        //
-        // }
-        // TreeMap<Integer, Integer> hm = new TreeMap<Integer, Integer>();
-        // int totalPeakSignals = 0;
-        // for (Double d : rtToPeakMap.keySet()) {
-        // TreeSet<Peak1D> ts = rtToPeakMap.get(d);
-        // totalPeakSignals += ts.size();
-        // if (hm.containsKey(ts.size())) {
-        // Integer itg = hm.get(ts.size());
-        // itg += 1;
-        // hm.put(ts.size(), itg);
-        // } else {
-        // hm.put(ts.size(), 1);
-        // }
-        // }
-        // List<List<String>> v = new ArrayList<List<String>>();
-        // List<String> header = new ArrayList<String>(Arrays.asList(new String[] {
-        // "ScanIndex", "RT", "MW", "Intensity", "File" }));
-        // v.add(header);
-        // String label = StringTools.removeFileExt(f.getName());
-        // int points = 0;
-        // for (Double d : rtToPeakMap.keySet()) {
-        // TreeSet<Peak1D> ts = rtToPeakMap.get(d);
-        // for (Peak1D p : ts) {
-        // ArrayList<String> peak = new ArrayList<String>(Arrays
-        // .asList(new String[] { p.getApexIndex() + "",
-        // p.getApexTime() + "", p.getMw() + "",
-        // p.getIntensity() + "", label }));
-        // v.add(peak);
-        // points++;
-        // }
-        // }
-        // CSVWriter csvw = new CSVWriter();
-        // csvw.setWorkflow(getWorkflow());
-        // csvw.writeTableByRows(getWorkflow().getOutputDirectory(this)
-        // .getAbsolutePath(), StringTools.removeFileExt(f.getName())
-        // + "_eicPeaks.csv", v, WorkflowSlot.PEAKFINDING);
-        // log.info("Number of peak signal groups of sizes: {}", hm);
-        // log.info("Total number of peak signals: {}", totalPeakSignals);
-        // FileFragment ff = new FileFragment(getWorkflow().getOutputDirectory(
-        // this), StringTools.removeFileExt(f.getName())
-        // + "_apexPeaks.cdf");
-        // IVariableFragment mv = new VariableFragment(ff, "mass_values");
-        // IVariableFragment iv = new VariableFragment(ff, "intensity_values");
-        // IVariableFragment satv = new VariableFragment(ff,
-        // "scan_acquisition_time");
-        // IVariableFragment ticv = new VariableFragment(ff, "total_intensity");
-        // IVariableFragment sidxv = new VariableFragment(ff, "scan_index");
-        // int scans = rtToPeakMap.size();
-        // ArrayDouble.D1 masses = new ArrayDouble.D1(points);
-        // ArrayDouble.D1 intensities = new ArrayDouble.D1(points);
-        // ArrayDouble.D1 sats = new ArrayDouble.D1(scans);
-        // ArrayInt.D1 tics = new ArrayInt.D1(scans);
-        // ArrayInt.D1 sidx = new ArrayInt.D1(scans);
-        // int scanIndex = 0;
-        // points = 0;
-        // for (Double d : rtToPeakMap.keySet()) {
-        // sidx.set(scanIndex, points);
-        // TreeSet<Peak1D> ts = rtToPeakMap.get(d);
-        // int ticval = 0;
-        // double rt = 0;
-        // for (Peak1D p : ts) {
-        // masses.set(points, p.getMw());
-        // intensities.set(points, p.getIntensity());
-        // ticval += p.getIntensity();
-        // rt = p.getApexTime();
-        // points++;
-        // }
-        // sats.set(scanIndex, rt);
-        // tics.set(scanIndex, ticval);
-        // scanIndex++;
-        // }
-        // mv.setArray(masses);
-        // iv.setArray(intensities);
-        // satv.setArray(sats);
-        // ticv.setArray(tics);
-        // sidxv.setArray(sidx);
-        // ff.save();
-        // DefaultWorkflowResult dwr = new DefaultWorkflowResult(new File(ff
-        // .getAbsolutePath()), this, WorkflowSlot.PEAKFINDING, ff);
-        // getWorkflow().append(dwr);
+    private PeakFinderWorkerResult saveResults(final IFileFragment f, final IFileFragment outputFragment, final PeakPositionsResultSet pprs, List<Peak1D> peaks) {
+        List<WorkflowResult> workflowResults = new LinkedList<>();
+        if (this.saveGraphics) {
+            final Array tic = f.getChild(this.ticVarName).getArray();
+            final Array sat = f.getChild(this.satVarName).getArray();
+            final double[] snrValues = pprs.getSnrValues();
+            workflowResults.addAll(visualize(f, sat, tic, pprs.getCorrectedTIC(), snrValues, pprs.getPeakPositions(),
+                    this.peakThreshold, pprs.getBaselineEstimator()));
+        }
+        getPeak1DUtilities().addTicResults(outputFragment, peaks, getPeakNormalizers(), pprs.getCorrectedTIC(), this.ticFilteredVarName);
+        if (this.integratePeaks) {
+            log.info("Using peak normalizers: {}", peakNormalizers);
+            workflowResults.addAll(savePeakTable(peaks, f));
+        }
+        outputFragment.save();
+        f.clearArrays();
+        return new PeakFinderWorkerResult(outputFragment.getUri(), workflowResults);
     }
 
     /**
@@ -510,13 +359,12 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         return filteredtic;
     }
 
-    private Peak1D getPeakBoundsByTIC(final IFileFragment chromatogram,
-            final int scanIndex, final Array sat, final Array rawTIC,
-            final Array baselineCorrectedTIC,
-            final Array fdTIC, final Array sdTIC, final Array tdTIC, final PolynomialSplineFunction baseline) {
+    private Peak1D getPeakBounds(final IFileFragment chromatogram,
+            final int scanIndex, final Array ticToIntegrate,
+            final Array filteredTIC,
+            final Array fdTIC, final Array sdTIC, final Array tdTIC) {
 
-        Array fdfTIC = baselineCorrectedTIC;
-        // return getPeakBoundsByTIC2(scanIndex, f, baselineCorrectedTIC);
+        Array fdfTIC = filteredTIC;
         final Index idx = fdfTIC.getIndex();
         final int size = fdfTIC.getShape()[0];
         int startIndex = -1;
@@ -580,150 +428,26 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
         final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
         pb.setFile(chromatogram.getUri().toString());
-        if (integrateRawTic) {
-            integratePeak(pb, null, rawTIC);
-        } else {
-            Array baselineSubtractedTic = baselineCorrectedTIC.copy();
-            if (subtractBaseline) {
-                Index satIndex = sat.getIndex();
-                Index baselineSubtractedTicIndex = baselineSubtractedTic.getIndex();
-                for (int i = 0; i < baselineSubtractedTic.getShape()[0]; i++, baselineSubtractedTicIndex.incr(), satIndex.incr()) {
-                    double baselineValue;
-                    try {
-                        baselineValue = baseline.value(sat.getDouble(satIndex));
-                        baselineSubtractedTic.setDouble(baselineSubtractedTicIndex, Math.max(0, baselineCorrectedTIC.getDouble(i) - baselineValue));
-                    } catch (ArgumentOutsideDomainException ex) {
-                        Logger.getLogger(TICPeakFinderWorker.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-
-            integratePeak(pb, null, baselineSubtractedTic);
-        }
+        integratePeak(pb, ticToIntegrate);
         return pb;
     }
 
-    /**
-     * Will explore the area around scanIndex, in order to find those scans,
-     * which still belong to this peak, by tracking the unique mass and
-     * (maximum) intensity.
-     *
-     * TODO implement method for fragment mass correlation
-     *
-     * @param scanIndex
-     * @param f
-     * @param epsilon
-     */
-    private Peak1D getPeakBoundsByCharacteristicMasses(final int scanIndex,
-            final IFileFragment f, final double epsilon) {
-        log.debug("Checking peak {}", scanIndex);
-        final Tuple2D<List<Array>, List<Array>> t = MaltcmsTools.getMZIs(f);
-        Array intens = t.getSecond().get(scanIndex);
-        Array masses = t.getFirst().get(scanIndex);
-        final double maxMass = MaltcmsTools.getMaxMass(masses, intens);
-        log.debug("Max mass: {}", maxMass);
-        if (Double.isNaN(maxMass)) {
-            log.warn(
-                    "Could not determine max mass for peak {}, skipping!",
-                    scanIndex);
-            return null;
-        }
-        final List<Integer> peakMaxMasses = MaltcmsTools.isMaxMass(masses,
-                intens, maxMass, epsilon);
-        final double mwIntensity = MaltcmsTools.getMaxMassIntensity(intens);
-        final int startIndex = -1;
-        int stopIndex = -1;
-        final int apexIndex = scanIndex;
-        int r = scanIndex + 1;
-        List<Integer> midx = java.util.Collections.emptyList();
-        // increase scan index
-        final SortedMap<Integer, List<Integer>> al = new TreeMap<>();
-        al.put(scanIndex, peakMaxMasses);
-        log.debug("Extending peak to the right");
-        while ((r < t.getFirst().size())) {
-            // log.info("Checking scan {}", r);
-            masses = t.getFirst().get(r);
-            intens = t.getSecond().get(r);
-            midx = MaltcmsTools.isMaxMass(masses, intens, maxMass, epsilon);
-            if (midx.size() == 0) {
-                break;
-            } else {
-                final int[] ranks = MaltcmsTools.ranksByIntensity(intens);
-                for (int k = 0; k < ranks.length; k++) {
-                    // final int mIdx = ranks[k];
-                    // final double max = MAMath.getMaximum(intensa);
-                    // if (max ==
-                    // intensa.getDouble(intensa.getIndex().set(mIdx))) {
-                    // log.info("Adding scan {}", r);
-                    al.put(r, midx);
-
-                    // } else {
-                    // log
-                    // .warn("Mass in window, but intensity was not maximal!");
-                    // break;
-                    // }
+    private Array subtractBaseline(final Array filteredTIC, final Array sat, final PolynomialSplineFunction baseline) {
+        Array baselineSubtractedTic = filteredTIC.copy();
+        if (subtractBaseline) {
+            Index satIndex = sat.getIndex();
+            Index baselineSubtractedTicIndex = baselineSubtractedTic.getIndex();
+            for (int i = 0; i < baselineSubtractedTic.getShape()[0]; i++, baselineSubtractedTicIndex.incr(), satIndex.incr()) {
+                double baselineValue;
+                try {
+                    baselineValue = baseline.value(sat.getDouble(satIndex));
+                    baselineSubtractedTic.setDouble(baselineSubtractedTicIndex, Math.max(0, filteredTIC.getDouble(i) - baselineValue));
+                } catch (ArgumentOutsideDomainException ex) {
+                    Logger.getLogger(TICPeakFinderWorker.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                r++;
-                // old
-                // final int mIdx = ranks[0];
-                // final double max = MAMath.getMaximum(intensa);
-                // if (max == intensa.getDouble(intensa.getIndex().set(mIdx))) {
-                // // log.info("Adding scan {}", r);
-                // al.put(r, midx);
-                // r++;
-                // } else {
-                // log
-                // .warn("Mass in window, but intensity was not maximal!");
-                // break;
-                // }
             }
         }
-        // capture post increment with -1
-        // startIndex = r;
-        int l = scanIndex - 1;
-        // decrease scan index
-        log.debug("Extending peak to the left");
-        while ((l >= 0)) {
-            masses = t.getFirst().get(l);
-            intens = t.getSecond().get(l);
-            // log.info("Checking scan {}", l);
-            midx = MaltcmsTools.isMaxMass(masses, intens, maxMass, epsilon);
-            if (midx.size() == 0) {
-                break;
-            } else {
-                final int[] ranks = MaltcmsTools.ranksByIntensity(intens);
-                // final int mIdx = ranks[0];
-                // final double max = MAMath.getMaximum(intensa);
-                for (int k = 0; k < ranks.length; k++) {
-                    // if (max ==
-                    // intensa.getDouble(intensa.getIndex().set(mIdx))) {
-                    // log.info("Adding scan {}", l);
-                    al.put(l, midx);
-
-                    // } else {
-                    // log
-                    // .info("Mass in window, but intensity was not maximal!");
-                    // break;
-                    // }
-                }
-                l--;
-            }
-        }
-        log.debug("Found {} signals for peak: {}", al.size(), al);
-        final List<int[]> mwIndices = new ArrayList<>();// int[al.size()][];
-        for (final Integer key : al.keySet()) {
-            final int[] arr = new int[al.get(key).size()];
-            int i = 0;
-            for (final Integer itg : al.get(key)) {
-                arr[i++] = itg;
-            }
-            mwIndices.add(arr);
-        }
-        log.debug("start: {}, stop: {}", (l + 1), r - 1);
-        final Peak1D pb = new Peak1D(l + 1, apexIndex, r - 1);//PeakFactory.createPeak1DTic();
-        pb.setFile(f.getUri().toString());
-        integratePeak(pb, mwIndices, f.getChild(this.ticVarName).getArray());
-        return pb;
+        return baselineSubtractedTic;
     }
 
     /**
@@ -732,102 +456,48 @@ public class TICPeakFinderWorker implements Callable<TICPeakFinderWorkerResult>,
      * maximum error of epsilon.
      *
      * @param pb
-     * @param mwIndices
      * @param tic
      * @return
      */
-    private double integratePeak(final Peak1D pb,
-            final List<int[]> mwIndices, final Array tic) {
+    private double integratePeak(final Peak1D pb, final Array tic) {
         double s = -1;
         if (integrateTICPeaks) {
             log.debug("Using TIC based integration!");
-//            final Array tic = iff.getChild(this.ticVarName).getArray();
             final Index ticIndex = tic.getIndex();
             for (int i = pb.getStartIndex(); i <= pb.getStopIndex(); i++) {
                 s += (tic.getDouble(ticIndex.set(i)));
             }
             pb.setArea(s);
             pb.setApexIntensity(tic.getDouble(ticIndex.set(pb.getApexIndex())));
-        } else {
-            log.warn("EIC based integration not implemented yet!");
         }
-        log.debug("Raw peak area: {}", s);
+        log.debug("Peak area: {}", s);
         return s;
     }
 
     /**
-     * @param columnMap
-     * @param ll
+     * @param l peak list
+     * @param iff the source file fragment
      */
     private Collection<WorkflowResult> savePeakTable(final List<Peak1D> l, final IFileFragment iff) {
-        final List<List<String>> rows = new ArrayList<>(l.size());
-        List<String> headers = null;
-        final String[] headerLine = new String[]{"APEX", "START", "STOP",
-            "RT_APEX", "RT_START", "RT_STOP", "AREA", "AREA_NORMALIZED", "AREA_NORMALIZED_PERCENT", "NORMALIZATION_METHODS", "MW", "INTENSITY", "SNR"};
-        headers = Arrays.asList(headerLine);
-        log.debug("Adding row {}", headers);
-        rows.add(headers);
-        for (final Peak1D pb : l) {
-            final DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(
-                    Locale.US);
-            df.applyPattern("0.0000");
-            log.debug("Adding {} peaks", l.size());
-            final String[] line = new String[]{pb.getApexIndex() + "",
-                pb.getStartIndex() + "", pb.getStopIndex() + "",
-                df.format(pb.getApexTime()), df.format(pb.getStartTime()),
-                df.format(pb.getStopTime()), pb.getArea() + "", pb.getNormalizedArea() + "",
-                (pb.getNormalizationMethods().length == 0) ? "" : pb.getNormalizedArea() * 100.0 + "",
-                Arrays.toString(pb.getNormalizationMethods()),
-                "" + pb.getMw(), "" + pb.getApexIntensity(), "" + pb.getSnr()};
-            final List<String> v = Arrays.asList(line);
-            rows.add(v);
-            log.debug("Adding row {}", v);
-        }
-
-        final CSVWriter csvw = new CSVWriter();
-        File peakAreasFile = csvw.writeTableByRows(outputDirectory.
-                getAbsolutePath(), StringTools.removeFileExt(iff.getName())
-                + "_peakAreas.csv", rows, WorkflowSlot.ALIGNMENT);
-        WorkflowResult peakAreas = new WorkflowResult(peakAreasFile.toURI(), TICPeakFinder.class.getCanonicalName(), WorkflowSlot.PEAKFINDING, new URI[]{iff.getUri()});
-        WorkflowResult annotations = savePeakAnnotations(l, iff);
-        return Arrays.asList(peakAreas, annotations);
+        WorkflowResult peakAreaCSV = peak1DUtilities.saveCSVPeakAnnotations(outputDirectory, l, iff);
+        WorkflowResult peakAreaXML = peak1DUtilities.saveXMLPeakAnnotations(outputDirectory, l, iff);
+        return Arrays.asList(peakAreaCSV, peakAreaXML);
     }
 
     /**
-     * <p>savePeakAnnotations.</p>
+     * <p>
+     * visualize.</p>
      *
-     * @param l a {@link java.util.List} object.
-     * @param iff a {@link cross.datastructures.fragments.IFileFragment} object.
-     * @return a {@link maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult} object.
-     */
-    public WorkflowResult savePeakAnnotations(final List<Peak1D> l,
-            final IFileFragment iff) {
-        MaltcmsAnnotationFactory maf = new MaltcmsAnnotationFactory();
-        File matFile = new File(outputDirectory,
-                StringTools.removeFileExt(iff.getName())
-                + ".maltcmsAnnotation.xml");
-        MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(iff.getUri());
-        for (Peak1D p : l) {
-            maf.addPeakAnnotation(ma, this.getClass().getName(), p);
-        }
-        maf.save(ma, matFile);
-        WorkflowResult result = new WorkflowResult(matFile.toURI(), TICPeakFinder.class.getCanonicalName(), WorkflowSlot.PEAKFINDING, new URI[]{iff.getUri()});
-        return result;
-    }
-
-    /**
-     * <p>visualize.</p>
-     *
-     * @param f
-     * @param filteredIntensities
+     * @param f the input file fragment.
      * @param sat a {@link ucar.ma2.Array} object.
      * @param intensities a {@link ucar.ma2.Array} object.
      * @param filteredIntensities a {@link ucar.ma2.Array} object.
      * @param snr an array of double.
      * @param peaks a {@link ucar.ma2.ArrayInt.D1} object.
      * @param peakThreshold a double.
-     * @param baselineEstimator a {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction} object.
-     * @return a {@link java.util.Collection} object.
+     * @param baselineEstimator a
+     * {@link org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction}
+     * object.
      */
     public Collection<WorkflowResult> visualize(final IFileFragment f, final Array sat, final Array intensities,
             final Array filteredIntensities,

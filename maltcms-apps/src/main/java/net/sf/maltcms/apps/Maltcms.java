@@ -30,26 +30,39 @@ package net.sf.maltcms.apps;
 import cross.Factory;
 import cross.annotations.AnnotationInspector;
 import cross.applicationContext.ReflectionApplicationContextGenerator;
+import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
+import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
+import java.beans.PropertyDescriptor;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
-import java.lang.management.ThreadMXBean;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +82,9 @@ import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.log4j.PropertyConfigurator;
+import org.openide.util.Lookup;
 import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -79,7 +94,7 @@ import org.slf4j.Logger;
  * overriding default options.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 public class Maltcms implements Thread.UncaughtExceptionHandler {
@@ -88,7 +103,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     private boolean runGui = false;
 
     /**
-     * <p>isRunGui.</p>
+     * <p>
+     * isRunGui.</p>
      *
      * @return a boolean.
      */
@@ -97,7 +113,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * <p>Setter for the field <code>runGui</code>.</p>
+     * <p>
+     * Setter for the field <code>runGui</code>.</p>
      *
      * @param runGui a boolean.
      */
@@ -138,7 +155,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         ics.getWorkflow().getFactory().
                 dumpConfig("runtime.properties",
                         ics.getWorkflow().
-                getStartupDate());
+                        getStartupDate());
         System.exit(ecode);
     }
 
@@ -283,10 +300,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * <p>printBugTrackMessage.</p>
+     * <p>
+     * printBugTrackMessage.</p>
      *
      * @param log a {@link org.slf4j.Logger} object.
-     * @param cs a {@link cross.datastructures.pipeline.ICommandSequence} object.
+     * @param cs a {@link cross.datastructures.pipeline.ICommandSequence}
+     * object.
      */
     public static void printBugTrackMessage(final Logger log, final ICommandSequence cs) {
         StringBuilder sb = new StringBuilder();
@@ -393,10 +412,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "Creates an xml file in spring format for all given of cross.commands.fragments.AFragmentCommand. '*' as an argument will create one xml file for every available AFragmentCommand implementation.",
                 true, ',', true, true, 0, false, false, 0,
                 "class1,class2, ...", false));
+        this.o.addOption(addBooleanOption("m", null,
+                "Creates a markdown file for all cross.commands.fragments.AFragmentCommand.", false));
     }
 
     /**
-     * <p>addBooleanOption.</p>
+     * <p>
+     * addBooleanOption.</p>
      *
      * @param s a {@link java.lang.String} object.
      * @param l a {@link java.lang.String} object.
@@ -463,7 +485,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * <p>initClassLoader.</p>
+     * <p>
+     * initClassLoader.</p>
      *
      * @param urls an array of {@link java.lang.String} objects.
      */
@@ -632,6 +655,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (cl.hasOption("e")) {
                 initClassLoader(cl.getOptionValues("e"));
             }
+            if (cl.hasOption("m")) {
+                handleCreateMarkdownDocs(cfg);
+            }
             if (cl.hasOption("s")) {
                 String[] showPropertiesOptions = cl.getOptionValues("s");
                 if (showPropertiesOptions != null) {
@@ -683,6 +709,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             if (printHelp) {
                 printHelp(defaultCfg);
             }
+
             // add system configuration, -D options override default options
             cfg.addConfiguration(new SystemConfiguration());
             if (cl.hasOption("c")) {
@@ -713,6 +740,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             cfg.addConfiguration(cmdLineCfg);
             // add defaults as fallback
             cfg.addConfiguration(defaultCfg);
+            //create markdown documentation last
         } catch (final ParseException e) {
             this.log.error("Error reading commandline!");
             this.log.error(e.getLocalizedMessage());
@@ -834,7 +862,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     /**
      * Simply print out all config options currently known
      *
-     * @param cfg a {@link org.apache.commons.configuration.Configuration} object.
+     * @param cfg a {@link org.apache.commons.configuration.Configuration}
+     * object.
      */
     protected void printOptions(final Configuration cfg) {
         EvalTools.notNull(cfg, this);
@@ -848,7 +877,8 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * Evaluates the appropriate option.
      *
      * @param s an array of {@link java.lang.String} objects.
-     * @param cfg a {@link org.apache.commons.configuration.Configuration} object.
+     * @param cfg a {@link org.apache.commons.configuration.Configuration}
+     * object.
      */
     public void processVariables(final String[] s, final Configuration cfg) {
         EvalTools.notNull(s, this);
@@ -875,10 +905,177 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang
      * .Thread, java.lang.Throwable)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
         Maltcms.handleRuntimeException(log, e, null);
+    }
+
+    private String getTargetFile(AFragmentCommand command) {
+        return "" + command.getClass().getSimpleName() + ".md";
+    }
+
+    private File getTargetDir(AFragmentCommand command, String... packagePrefix) {
+        for (String str : packagePrefix) {
+            if (command.getClass().getPackage().getName().startsWith(str)) {
+                return new File(command.getClass().getPackage().getName().substring(str.length()).replaceAll("\\.", "/"));
+            }
+        }
+        return new File(command.getClass().getPackage().getName().replaceAll("\\.", "/"));
+    }
+
+    private void handleCreateMarkdownDocs(Configuration cfg) {
+        File outputDir = new File(cfg.getString("output.basedir", "."), "documentation/commands/");
+        outputDir.mkdirs();
+        log.info("Creating markdown documents below {}", outputDir);
+        Collection<? extends AFragmentCommand> commands = Lookup.getDefault().lookupAll(AFragmentCommand.class);
+        Map<WorkflowSlot, Set<AFragmentCommand>> slotToCommandMap = new LinkedHashMap<WorkflowSlot, Set<AFragmentCommand>>();
+        for (AFragmentCommand command : commands) {
+            Set<AFragmentCommand> commandsInSlot = slotToCommandMap.get(command.getWorkflowSlot());
+            if (commandsInSlot == null) {
+                commandsInSlot = new LinkedHashSet<>();
+                slotToCommandMap.put(command.getWorkflowSlot(), commandsInSlot);
+            }
+            commandsInSlot.add(command);
+        }
+        File globalIndexMdFile = new File(outputDir, "index.md");
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(globalIndexMdFile))) {
+            bw.write("# Maltcms Commands");
+            bw.newLine();
+            List<WorkflowSlot> slots = new ArrayList<WorkflowSlot>(slotToCommandMap.keySet());
+            Collections.sort(slots, new Comparator<WorkflowSlot>() {
+
+                @Override
+                public int compare(WorkflowSlot o1, WorkflowSlot o2) {
+                    return o1.toString().compareTo(o2.toString());
+                }
+            });
+            for (WorkflowSlot slot : slots) {
+                bw.write("## " + slot.toString() + " commands");
+                bw.newLine();
+                File slotDir = new File(outputDir, slot.toString().toLowerCase());
+                slotDir.mkdirs();
+                for (AFragmentCommand command : slotToCommandMap.get(slot)) {
+                    File mdFile = new File(slotDir, getTargetFile(command));
+                    bw.write("* [" + command.getClass().getSimpleName() + "](./" + slot.toString().toLowerCase() + "/" + mdFile.getName().replace(".md", ".html") + ")");
+                    bw.newLine();
+                }
+                bw.newLine();
+            }
+            bw.newLine();
+            bw.flush();
+        } catch (IOException ex) {
+            log.error("Caught exception while creating file " + globalIndexMdFile + ":", ex);
+        }
+        for (WorkflowSlot slot : slotToCommandMap.keySet()) {
+            File slotDir = new File(outputDir, slot.toString().toLowerCase());
+            slotDir.mkdirs();
+            File indexMdFile = new File(slotDir, "index.md");
+            log.info("Creating index file {}", indexMdFile);
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(indexMdFile))) {
+                bw.write("# " + slot.toString() + " commands");
+                bw.newLine();
+                for (AFragmentCommand command : slotToCommandMap.get(slot)) {
+                    File mdFile = new File(slotDir, getTargetFile(command));
+                    bw.write("* [" + command.getClass().getSimpleName() + "](./" + mdFile.getName().replace(".md", ".html") + ")");
+                    bw.newLine();
+                }
+                bw.newLine();
+                bw.flush();
+            } catch (IOException ex) {
+                log.error("Caught exception while creating file " + indexMdFile + ":", ex);
+            }
+            for (AFragmentCommand command : slotToCommandMap.get(slot)) {
+                File commandDir = new File(outputDir, slot.toString().toLowerCase());
+                commandDir.mkdirs();
+                File mdFile = new File(commandDir, getTargetFile(command));
+                log.info("Creating file {}", mdFile);
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(mdFile))) {
+                    bw.write("# " + command.getClass().getSimpleName());
+                    bw.newLine();
+                    bw.write("Class: " + command.getClass().getCanonicalName()+"  ");
+                    bw.newLine();
+                    bw.write("Description: " + command.getDescription()+"  ");
+                    bw.newLine();
+                    bw.write("Workflow Slot: " + command.getWorkflowSlot()+"  ");
+                    bw.newLine();
+                    bw.newLine();
+                    bw.write("---");
+                    bw.newLine();
+                    bw.newLine();
+                    bw.write("## Variables");
+                    bw.newLine();
+                    bw.write("###Required");
+                    bw.newLine();
+                    for (String var : AnnotationInspector.getRequiredVariables(command)) {
+                        bw.write("" + var+"  ");
+                        bw.newLine();
+                    }
+                    bw.newLine();
+                    bw.write("###Required (optional)");
+                    bw.newLine();
+                    for (String var : AnnotationInspector.getOptionalRequiredVariables(command)) {
+                        bw.write("" + var+"  ");
+                        bw.newLine();
+                    }
+                    bw.newLine();
+                    bw.write("###Provided");
+                    bw.newLine();
+                    for (String var : AnnotationInspector.getProvidedVariables(command)) {
+                        bw.write("" + var+"  ");
+                        bw.newLine();
+                    }
+                    bw.newLine();
+                    bw.newLine();
+                    bw.write("---");
+                    bw.newLine();
+                    bw.newLine();
+                    bw.write("## Configurable Properties");
+                    bw.newLine();
+                    for (String configKey : AnnotationInspector.getRequiredConfigKeys(command)) {
+                        if (!configKey.startsWith("var.")) {
+                            String description = AnnotationInspector.getDescriptionFor(command.getClass(), configKey);
+                            String defaultValue = AnnotationInspector.getDefaultValueFor(command.getClass(), configKey);
+                            String propertyName = configKey.substring(configKey.lastIndexOf(".")+1);
+                            if(defaultValue.isEmpty()) {
+                                try {
+                                    PropertyDescriptor propDescr = BeanUtils.getPropertyDescriptor(command.getClass(),propertyName);
+                                    if(propDescr!=null) {
+                                        bw.write("Name: " + propertyName+"  ");
+                                        bw.newLine();
+                                        bw.write("Default Value: " + propDescr.getReadMethod().invoke(command)+"  ");
+                                    }
+                                } catch (SecurityException ex) {
+                                    log.warn("Security exception while trying to access method '"+configKey+"'", ex);
+                                } catch (IllegalArgumentException ex) {
+                                    log.warn("Illegal argument exception while trying to access method '"+configKey+"'", ex);
+                                } catch (IllegalAccessException ex) {
+                                    log.warn("Illegal access exception while trying to access method '"+configKey+"'", ex);
+                                } catch (InvocationTargetException ex) {
+                                    log.warn("Invocation target exception while trying to invoke method '"+configKey+"'", ex);
+                                } 
+                            }else{
+                                bw.write("Name: " + propertyName+"  ");
+                                bw.newLine();
+                                bw.write("Default Value: " + defaultValue+"  ");
+                            }
+                            bw.newLine();
+                            bw.write("Description: "+"  ");
+                            bw.newLine();
+                            bw.write("" + description+"  ");
+                            bw.newLine();
+                        }
+                    }
+                    bw.newLine();
+                    bw.flush();
+                } catch (IOException ex) {
+                    log.error("Caught exception while creating file " + mdFile + ":", ex);
+                }
+            }
+        }
+        System.exit(0);
     }
 
     private void handleCreateBeanXML(Configuration cfg, String... beans) {

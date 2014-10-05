@@ -38,7 +38,6 @@ import java.util.LinkedList;
 import java.util.List;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;

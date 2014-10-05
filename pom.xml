@@ -260,36 +260,32 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.1</version>
+                    <version>${version.javadoc.plugin}</version>
                     <configuration>
                         <!-- Default configuration for all reports -->
                         <show>public</show>
                         <links>
-                            <link>http://docs.oracle.com/javase/7/docs/api/</link>
+							<link>http://docs.oracle.com/javase/7/docs/api/</link>
+                            <!-- version 4.1 api not available -->
                             <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-main/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-annotations/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-exception/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-cache/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-event/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-math/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-tools/apidocs/</link>
+                            <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-test/apidocs/</link>
                         </links>
                         <archive>
                             <manifestEntries>
                                 <Built-By>${user.name}</Built-By>
                             </manifestEntries>
                         </archive>
-<!--                        <excludes>
-                            <exclude>**/site.xml</exclude>
-                        </excludes>-->
                         <sourcepath>${basedir}/src/main/java</sourcepath>
                         <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
                     </configuration>
                     <executions>
-                        <execution>
-                            <id>aggregate</id>
-                            <goals>
-                                <goal>aggregate</goal>
-                            </goals>
-                            <phase>jar</phase>
-                            <configuration>
-                                <show>public</show>
-                            </configuration>
-                        </execution>
                         <execution>
                             <id>javadoc-jar</id>
                             <phase>package</phase>
@@ -402,6 +398,23 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.3</version>
+					<dependencies>
+		                <dependency>
+		                    <groupId>org.apache.maven.wagon</groupId>
+		                    <artifactId>wagon-ssh</artifactId>
+		                    <version>2.2</version>
+		                </dependency>
+		                <dependency>
+		                    <groupId>org.apache.maven.doxia</groupId>
+		                    <artifactId>doxia-module-markdown</artifactId>
+		                    <version>1.3</version>
+		                </dependency>
+		                <dependency>
+		                    <groupId>org.apache.maven.doxia</groupId>
+		                    <artifactId>doxia-module-xhtml</artifactId>
+		                    <version>1.3</version>
+		                </dependency>
+                	</dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -409,113 +422,9 @@
                     <extensions>true</extensions>
                     <version>3.9</version>
                 </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>clirr-maven-plugin</artifactId>
-                    <version>2.6.1</version>
-                    <configuration>
-                        <!-- Compare the current code against version 1.2 -->
-                        <comparisonVersion>${version.maltcms.base}</comparisonVersion>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <moduleExcludes>
-                    </moduleExcludes>
-                    <reportPlugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-project-info-reports-plugin</artifactId>
-                            <version>2.4</version>
-                            <configuration>
-                                <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-                                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-                            </configuration>
-                            <!-- simpler configuration without reportSets available for usual 
-                            cases -->
-                            <reports>
-                                <report>dependencies</report>
-                                <report>dependency-convergence</report>
-                                <report>project-team</report>
-                                <report>mailing-list</report>
-                                <report>issue-tracking</report>
-                                <report>license</report>
-                                <report>scm</report>
-                            </reports>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>clirr-maven-plugin</artifactId>
-                        </plugin>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-javadoc-plugin</artifactId>
-                            <configuration>
-                                <show>public</show>
-                                <links>
-                                    <link>http://docs.oracle.com/javase/7/docs/api/</link>
-                                    <!-- version 4.1 api not available -->
-                                    <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-main/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-annotations/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-exception/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-cache/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-event/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-math/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-tools/apidocs/</link>
-                                    <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-test/apidocs/</link>
-                                </links>
-                                <sourcepath>${basedir}/src/main/java</sourcepath>
-                                <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
-                            </configuration>
-                        </plugin>
-                        <!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>jxr-maven-plugin</artifactId> 
-                        <version>2.3</version> <configuration> <aggregate>true</aggregate> </configuration> 
-                        </plugin> -->
-                        <!--                        <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-changelog-plugin</artifactId>
-                                <version>2.2</version>
-                                <configuration>
-                                        <type>date</type>
-                                        <dates>
-                                                <date implementation="java.lang.String">2012-04-21</date>
-                                                <date implementation="java.lang.String">2012-12-19</date>
-                                        </dates>
-                                        <dateFormat>yyyy-MM-dd</dateFormat>
-                                </configuration>
-                                <reports>
-                                        <report>changelog</report>
-                                </reports>
-                        </plugin>-->
-                        <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-checkstyle-plugin</artifactId> 
-                        <version>2.7</version> <configuration> <configLocation>config/sun_checks.xml</configLocation> 
-                        </configuration> </plugin> -->
-                    </reportPlugins>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.wagon</groupId>
-                        <artifactId>wagon-ssh</artifactId>
-                        <version>2.2</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-markdown</artifactId>
-                        <version>1.3</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.doxia</groupId>
-                        <artifactId>doxia-module-xhtml</artifactId>
-                        <version>1.3</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <plugin>
                 <groupId>de.akquinet.jbosscc.latex</groupId>
                 <artifactId>maven-latex-plugin</artifactId>
@@ -867,6 +776,64 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>${version.projectinfo.plugin}</version>
+				<configuration>
+		            <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+		            <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                </configuration>
+<!-- simpler configuration without reportSets available for usual 
+                    cases -->
+				<reportSets>
+					<reportSet>
+			            <reports>
+			                <report>dependencies</report>
+			                <report>dependency-convergence</report>
+			                <report>project-team</report>
+			                <report>mailing-list</report>
+			                <report>issue-tracking</report>
+			                <report>license</report>
+			                <report>scm</report>
+			            </reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>clirr-maven-plugin</artifactId>
+				<version>${version.clirr.plugin}</version>
+                <configuration>
+                    <!-- Compare the current code against version 1.2 -->
+                    <comparisonVersion>${version.maltcms.base}</comparisonVersion>
+                </configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${version.javadoc.plugin}</version>
+                <reportSets>
+				  <reportSet><!-- by default, id = "default" -->
+					<reports><!-- select non-aggregate reports -->
+					  <report>javadoc</report>
+					  <report>test-javadoc</report>
+					</reports>
+				  </reportSet>
+				  <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+				    <id>aggregate</id>
+				    <inherited>false</inherited><!-- don't run aggregate in child modules -->
+				    <reports>
+				      <report>aggregate</report>
+				    </reports>
+				  </reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -882,5 +849,8 @@
         <version.lombok>1.14.2</version.lombok>
         <version.lombok.maven>1.14.2.0</version.lombok.maven>
         <version.maltcms.base>1.3.0</version.maltcms.base>
+		<version.javadoc.plugin>2.10.1</version.javadoc.plugin>
+		<version.clirr.plugin>2.6.1</version.clirr.plugin>
+		<version.projectinfo.plugin>2.6</version.projectinfo.plugin>
     </properties>
 </project>

@@ -27,6 +27,7 @@
  */
 package net.sf.maltcms.tutorials;
 
+import cross.Factory;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tools.FragmentTools;
@@ -63,6 +64,7 @@ public class MyWorkflow {
         cp.setCommands(commands);
         cp.setInput(FragmentTools.immutable(inputFiles));
         DefaultWorkflow dw = new DefaultWorkflow();
+        dw.setFactory(Factory.getInstance());
         dw.setCommandSequence(cp);
         log.info("Workflow using commands " + dw.getCommandSequence().getCommands());
         log.info("Workflow using inputFiles " + dw.getCommandSequence().getInput());
