@@ -7,21 +7,21 @@ Workflow Slot: VISUALIZATION
 
 <h2>Variables</h2>
 <h3>Required</h3>
-var.mean_ms_intensity
-var.var_ms_intensity
-var.sd_ms_intensity
-var.v_total_intensity_1d
-var.meanms_1d_horizontal_index
-var.meanms_1d_horizontal
-var.meanms_1d_vertical_index
-var.meanms_1d_vertical
-var.maxms_1d_horizontal_index
-var.maxms_1d_horizontal
-var.used_mass_values
-var.maxms_1d_vertical_index
-var.maxms_1d_vertical
-var.total_intensity_1d
-var.scan_acquisition_time_1d
+	var.mean_ms_intensity
+	var.var_ms_intensity
+	var.sd_ms_intensity
+	var.v_total_intensity_1d
+	var.meanms_1d_horizontal_index
+	var.meanms_1d_horizontal
+	var.meanms_1d_vertical_index
+	var.meanms_1d_vertical
+	var.maxms_1d_horizontal_index
+	var.maxms_1d_horizontal
+	var.used_mass_values
+	var.maxms_1d_vertical_index
+	var.maxms_1d_vertical
+	var.total_intensity_1d
+	var.scan_acquisition_time_1d
 
 <h3>Required (optional)</h3>
 

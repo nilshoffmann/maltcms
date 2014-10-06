@@ -7,22 +7,22 @@ Workflow Slot: VISUALIZATION
 
 <h2>Variables</h2>
 <h3>Required</h3>
-var.scan_acquisition_time_1d
-var.modulation_time
-var.scan_rate
-var.second_column_time
-var.region_index_list
-var.boundary_index_list
-var.scan_acquisition_time_1d
-var.modulation_time
-var.scan_rate
-var.second_column_time
-var.second_column_scan_index
-var.total_intensity
+	var.scan_acquisition_time_1d
+	var.modulation_time
+	var.scan_rate
+	var.second_column_time
+	var.region_index_list
+	var.boundary_index_list
+	var.scan_acquisition_time_1d
+	var.modulation_time
+	var.scan_rate
+	var.second_column_time
+	var.second_column_scan_index
+	var.total_intensity
 
 <h3>Required (optional)</h3>
-var.v_total_intensity
-var.v_total_intensity
+	var.v_total_intensity
+	var.v_total_intensity
 
 <h3>Provided</h3>
 

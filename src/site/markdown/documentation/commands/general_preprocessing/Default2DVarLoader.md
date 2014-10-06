@@ -11,19 +11,18 @@ Workflow Slot: GENERAL_PREPROCESSING
 <h3>Required (optional)</h3>
 
 <h3>Provided</h3>
-var.total_intensity
-var.modulation_time
-var.scan_rate
-var.scan_duration
-var.second_column_time
-var.second_column_scan_index
-var.total_intensity_1d
-var.scan_acquisition_time
-var.scan_acquisition_time_1d
-var.total_intensity_2d
-var.first_column_elution_time
-var.second_column_elution_time
-
+	var.total_intensity
+	var.modulation_time
+	var.scan_rate
+	var.scan_duration
+	var.second_column_time
+	var.second_column_scan_index
+	var.total_intensity_1d
+	var.scan_acquisition_time
+	var.scan_acquisition_time_1d
+	var.total_intensity_2d
+	var.first_column_elution_time
+	var.second_column_elution_time
 
 ---
 

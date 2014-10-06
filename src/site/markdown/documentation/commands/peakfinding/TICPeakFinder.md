@@ -7,24 +7,24 @@ Workflow Slot: PEAKFINDING
 
 <h2>Variables</h2>
 <h3>Required</h3>
-var.total_intensity
+	var.total_intensity
 
 <h3>Required (optional)</h3>
-var.scan_acquisition_time
+	var.scan_acquisition_time
 
 <h3>Provided</h3>
-var.tic_peaks
-var.tic_filtered
-andichrom.var.peak_name
-andichrom.dimension.peak_number
-andichrom.var.peak_retention_time
-andichrom.var.peak_start_time
-andichrom.var.peak_end_time
-andichrom.var.peak_area
-andichrom.var.baseline_start_time
-andichrom.var.baseline_stop_time
-andichrom.var.baseline_start_value
-andichrom.var.baseline_stop_value
+	var.tic_peaks
+	var.tic_filtered
+	andichrom.var.peak_name
+	andichrom.dimension.peak_number
+	andichrom.var.peak_retention_time
+	andichrom.var.peak_start_time
+	andichrom.var.peak_end_time
+	andichrom.var.peak_area
+	andichrom.var.baseline_start_time
+	andichrom.var.baseline_stop_time
+	andichrom.var.baseline_start_value
+	andichrom.var.baseline_stop_value
 
 
 ---
