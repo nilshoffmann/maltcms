@@ -7,7 +7,7 @@ Getting Started
     
     {{{http://www.oracle.com/technetwork/java/javase/downloads/index.html}here}}.
 
-    [[2]] Then Download Maltcms and follow the installation instructions.
+    [[2]] Then {{{https://sourceforge.net/projects/maltcms/files/maltcms/maltcms-${project.version}/}Download Maltcms}} and follow the installation instructions.
 
 Installation Instructions
 
