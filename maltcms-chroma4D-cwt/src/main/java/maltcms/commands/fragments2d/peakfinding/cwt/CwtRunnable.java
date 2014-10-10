@@ -75,11 +75,10 @@ import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.fragments2d.peakfinding.CwtChartFactory;
 import maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking;
 import maltcms.commands.scanners.ArrayStatsScanner;
-import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
-import maltcms.datastructures.ms.IMetabolite;
+import maltcms.datastructures.ms.Chromatogram2D;
+import maltcms.datastructures.ms.IScan2D;
 import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
-import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
@@ -90,7 +89,6 @@ import maltcms.datastructures.rank.RankSorter;
 import maltcms.datastructures.ridge.Ridge;
 import maltcms.io.xml.bindings.annotation.MaltcmsAnnotation;
 import maltcms.tools.ImageTools;
-import maltcms.tools.MaltcmsTools;
 import maltcms.ui.charts.GradientPaintScale;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.math.stat.descriptive.rank.Percentile;
@@ -108,15 +106,18 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
+import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
+import ucar.ma2.IndexIterator;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
 
 /**
- * <p>CwtRunnable class.</p>
+ * <p>
+ * CwtRunnable class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @ServiceProvider(service = IPeakPicking.class)
 @Data
@@ -157,10 +158,14 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     private int maxRidges = 5000;
     @Configurable(description = "Percentile of the intensity value distribution to use as minimum intensity for peaks.")
     private int minPercentile = 95;
+    @Configurable(name = "var.peak_index_list", value = "peak_index_list")
+    private String peakListVar = "peak_index_list";
 
     private QuadTree<Ridge> ridgeTree = null;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public File call() {
 
@@ -211,7 +216,6 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         // r = findRidgeMaxima(r,tic);
         List<Peak2D> l = createPeaksForRidges(f, tic, sat, r, spm);
         saveToAnnotationsFile(f, l);
-        f.save();
         return new File(f.getUri());
     }
 
@@ -223,44 +227,58 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         // List<Scan2D> scans = new ArrayList<Scan2D>();
 //		log.info("Building scans");
         List<Peak2D> p2 = new LinkedList<>();
-        Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(f);
+        Chromatogram2D chrom = new Chromatogram2D(f);
+        Tuple2D<Double, Double> massRange = chrom.getMassRange();
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
-        IScanLine isl = ScanLineCacheFactory.getScanLineCache(f);
+//        IScanLine isl = ScanLineCacheFactory.getScanLineCache(f);
         for (Ridge ridge : r) {
 //			log.info("Processing Ridge " + (index + 1) + "/"
 //				+ r.size());
+            IScan2D scan = chrom.getScan(ridge.getGlobalScanIndex());
             Peak2D p = new Peak2D();
             // Point pt = ic2d.getPointFor(ridge.getGlobalScanIndex());
             p.setIndex(index++);
-            // Scan2D s2d = ic2d.getScan(ridge.getGlobalScanIndex());
+            // Scan2D s2d = ic2d.getScaartn(ridge.getGlobalScanIndex());
             // scans.add(s2d);
+            p.setFirstRetTime(scan.getFirstColumnScanAcquisitionTime());
+            p.setSecondRetTime(scan.getSecondColumnScanAcquisitionTime());
             p.setApexIndex(ridge.getGlobalScanIndex());
             p.setFile(f.getName());
             p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
             p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
+            p.setStartTime(p.getApexTime());
+            p.setStopTime(p.getApexTime());
             p2.add(p);
             Point2D.Double ps = getPointForRidge(ridge, spm);
             Point seed = new Point((int) ps.getX(), (int) ps.getY());
-            Array ms = isl.getMassSpectrum(seed);
-            if (ms == null) {
-                ms = isl.getMassSpectrum(seed);
-            }
+            Array ms = scan.getIntensities();
             if (ms != null) {
                 PeakArea2D pa2 = new PeakArea2D(seed, ms,
                         p.getApexIntensity(), p.getApexIndex(), spm);
                 p.setPeakArea(pa2);
                 //pi.setName(p);
-                List<Tuple2D<Double, IMetabolite>> t = p.getNames();
-                for (Tuple2D<Double, IMetabolite> tple : t) {
-//				log.info("Score: " + tple.getFirst() + " Name: "
-//					+ tple.getSecond().getName());
-                }
+//                List<Tuple2D<Double, IMetabolite>> t = p.getNames();
+//                for (Tuple2D<Double, IMetabolite> tple : t) {
+////				log.info("Score: " + tple.getFirst() + " Name: "
+////					+ tple.getSecond().getName());
+//                }
             } else {
                 log.warn("Could not retrieve mass spectrum for point " + seed);
             }
         }
         return p2;
+    }
+
+    /**
+     * Index map.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return index
+     */
+    private int idx(final int x, final int y) {
+        return x * (int) (modulationTime * scanRate) + y;
     }
 
     /**
@@ -274,16 +292,20 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(f.getUri());
         // List<Scan2D> scans = new ArrayList<Scan2D>();
         log.info("Building scans");
-        List<Peak1D> p2 = new LinkedList<>();
+        final ArrayInt.D1 peakindex = new ArrayInt.D1(l.size());
+        final IndexIterator iter = peakindex.getIndexIterator();
         for (Peak2D p : l) {
             maf.addPeakAnnotation(ma, CwtPeakFinder.class.getName(), p);
-            p2.add(p);
+            iter.setIntNext(idx(p.getPeakArea().getSeedPoint().x, p.getPeakArea().getSeedPoint().y));
         }
         File outf = new File(outputDir, StringTools.removeFileExt(f.getName())
                 + ".mann.xml");
         maf.save(ma, outf);
-        Peak2D.append(f, new LinkedList<IPeakNormalizer>(), p2, "tic_peaks");
-//		return f;
+        final IVariableFragment var = new VariableFragment(f,
+                this.peakListVar);
+        var.setArray(peakindex);
+        Peak2D.append2D(f, new LinkedList<IPeakNormalizer>(), l, "tic_peaks");
+        f.save();
     }
 
     private QuadTree<Ridge> getRidgeTree() {
@@ -614,7 +636,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                                 prefix + "-" + (i + 1) + "_of_" + parts
                                 + ".png"));
                     } catch (IOException e1) {
-           
+
                         e1.printStackTrace();
                     }
                 }
@@ -653,7 +675,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                                 prefix + "-" + (i + 1) + "_of_" + parts
                                 + ".png"));
                     } catch (IOException e1) {
-           
+
                         e1.printStackTrace();
                     }
                 }
@@ -665,7 +687,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                 dir.mkdirs();
                 ImageIO.write(ImageTools.flipVertical(bi), "PNG", new File(dir, "ridges.png"));
             } catch (IOException e1) {
-   
+
                 e1.printStackTrace();
             }
         }
@@ -821,7 +843,9 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return qt;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Point> findPeaks(IFileFragment ffO) {
         this.inputFile = ffO.getUri();
@@ -836,7 +860,9 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return l;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
         if (this.ridgeTree == null) {
@@ -852,7 +878,9 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         return list;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration pc) {
 

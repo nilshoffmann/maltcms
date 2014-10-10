@@ -47,6 +47,7 @@ import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
+import ucar.ma2.Index;
 import ucar.ma2.MAMath;
 
 /**
@@ -64,6 +65,8 @@ public class Chromatogram2D implements IChromatogram2D {
     private final String secondColumnScanAcquisitionTimeUnit = "seconds";
     @Configurable(name = "var.scan_acquisition_time")
     private String scan_acquisition_time_var = "scan_acquisition_time";
+    @Configurable(name="var.modulation_time")
+    private String modulationTimeVar = "modulation_time";
     private final IVariableFragment scanAcquisitionTimeVar;
     private double md = -1;
     private final int spm;
@@ -88,10 +91,10 @@ public class Chromatogram2D implements IChromatogram2D {
         this.isl = ScanLineCacheFactory.getScanLineCache(e);
         this.spm = this.isl.getScansPerModulation();
         this.slc = this.isl.getScanLineCount();
-        this.satOffset = e.getChild("scan_acquisition_time").getArray().
-                getDouble(0);
-        this.md = getModulationDuration();
         this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
+        this.satOffset = e.getChild(scan_acquisition_time_var).getArray().
+                getDouble(0);
+        this.md = e.getChild(this.modulationTimeVar).getArray().getDouble(Index.scalarIndexImmutable);
         try {
             IVariableFragment msLevelVar = this.parent.getChild("ms_level");
             msLevel = msLevelVar.getArray();
@@ -385,11 +388,11 @@ public class Chromatogram2D implements IChromatogram2D {
     /** {@inheritDoc} */
     @Override
     public double getModulationDuration() {
-        if (this.md == -1) {
-            Array sat = this.parent.getChild("scan_acquisition_time").getArray();
-            double t1 = sat.getDouble(getNumberOfScansPerModulation());
-            this.md = t1 - this.satOffset;
-        }
+//        if (this.md == -1) {
+//            Array sat = this.parent.getChild("scan_acquisition_time").getArray();
+//            double t1 = sat.getDouble(getNumberOfScansPerModulation());
+//            this.md = t1 - this.satOffset;
+//        }
         return this.md;
     }
 

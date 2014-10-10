@@ -46,25 +46,6 @@ import org.slf4j.LoggerFactory;
 public class PeakFactoryTest {
     
     private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
-    
-    public PeakFactoryTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getFeatureList method, of class PeakFactory.

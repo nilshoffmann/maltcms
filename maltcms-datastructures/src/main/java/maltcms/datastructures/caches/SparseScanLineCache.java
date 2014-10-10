@@ -32,8 +32,10 @@ import cross.cache.CacheFactory;
 import cross.cache.ICacheDelegate;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.NotImplementedException;
+import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.awt.Point;
 import java.lang.ref.SoftReference;
@@ -45,10 +47,12 @@ import maltcms.tools.ArrayTools2;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
+import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
+import ucar.nc2.Dimension;
 
 /**
  * This class is a dataholder for mass spectra. This class will cache all mass
@@ -57,7 +61,7 @@ import ucar.ma2.Range;
  * TODO: Change to {@link maltcms.datastructures.caches.AScanLineCache}
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
@@ -72,6 +76,7 @@ public class SparseScanLineCache implements IScanLine {
 //    private String maxRangeVar = "mass_range_max";
     private String modulationVar = "modulation_time";
     private String scanRateVar = "scan_rate";
+    private String totalIntensityVar = "total_intensity";
     private String secondColumnIndexVar = "second_column_scan_index";
     private List<List<Integer>> xyToScanIndexMap;
     private IVariableFragment scanIndex = null;
@@ -104,7 +109,7 @@ public class SparseScanLineCache implements IScanLine {
         estimateLastIndex();
         setUpxyIndexMap();
         int scanLinesToCache = 50;
-        int normalizedArraysToCache = scanLinesToCache*scansPerModulation;
+        int normalizedArraysToCache = scanLinesToCache * scansPerModulation;
         String cacheName = StringTools.removeFileExt(iff1.getName()) + "-scanLineCache";
         cache = CacheFactory.createVolatileCache(cacheName, 30, 60, scanLinesToCache);
         String arrayCacheName = StringTools.removeFileExt(iff1.getName()) + "-normalizedArrayCache";
@@ -139,9 +144,30 @@ public class SparseScanLineCache implements IScanLine {
         this.massResolution = massResolution;
     }
 
+    private Array createUpxyIndexMap(IFileFragment iff) {
+        final Integer scanspermodulation = getScansPerModulation();
+        int nscans = iff.getChild(totalIntensityVar, true).getDimensions()[0].getLength();
+        Integer modulationCnt = nscans/scanspermodulation + nscans%scanspermodulation==0?0:1;
+        final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt);
+        for (int i = 0; i < modulationCnt; i++) {
+            secondColumnIndex.set(i, scanspermodulation * i);
+        }
+        final IVariableFragment index2dvar = new VariableFragment(iff,
+                this.secondColumnIndexVar);
+        index2dvar.setArray(secondColumnIndex);
+        index2dvar.setDimensions(new Dimension[]{new Dimension(
+            "modulation_index_0", modulationCnt, true)});
+        return secondColumnIndex;
+    }
+
     private void setUpxyIndexMap() {
         this.xyToScanIndexMap = new ArrayList<>();
-        final Array secondScanIndex = this.iff.getChild(this.secondColumnIndexVar).getArray();
+        Array secondScanIndex = null;
+        try {
+            secondScanIndex = this.iff.getChild(this.secondColumnIndexVar).getArray();
+        } catch (ResourceNotAvailableException rnae) {
+            secondScanIndex = createUpxyIndexMap(this.iff);
+        }
         final IndexIterator iter = secondScanIndex.getIndexIterator();
         int lastScanIndex = iter.getIntNext();
         while (iter.hasNext()) {
@@ -154,7 +180,9 @@ public class SparseScanLineCache implements IScanLine {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
@@ -183,7 +211,9 @@ public class SparseScanLineCache implements IScanLine {
         return MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massResolution);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean getCacheModulation() {
         return this.cacheModulations;
@@ -199,7 +229,9 @@ public class SparseScanLineCache implements IScanLine {
         return this.lastIndex;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Array getMassSpectrum(final int x, final int y) {
         try {
@@ -216,7 +248,9 @@ public class SparseScanLineCache implements IScanLine {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Array getMassSpectrum(final Point p) {
         return getMassSpectrum(p.x, p.y);
@@ -268,7 +302,9 @@ public class SparseScanLineCache implements IScanLine {
         return getNormalizedArray(getScanlineSparseMS(x), x);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getScansPerModulation() {
         return this.scansPerModulation;
@@ -327,7 +363,9 @@ public class SparseScanLineCache implements IScanLine {
         throw new NotImplementedException("This method is deprecated!");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
@@ -357,7 +395,9 @@ public class SparseScanLineCache implements IScanLine {
 //		this.log.info("	Cachemiss: {}", this.cachemiss);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Tuple2D<Array, Array>> getScanlineSparseMS(int x) {
         if (this.scanIndex == null) {
@@ -379,7 +419,9 @@ public class SparseScanLineCache implements IScanLine {
         return loadScanline(x);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(int x, int y) {
         try {
@@ -394,13 +436,17 @@ public class SparseScanLineCache implements IScanLine {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(Point p) {
         return getSparseMassSpectrum(p.x, p.y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Point mapIndex(int scanIndex) {
         int x = scanIndex / getScansPerModulation();
@@ -408,19 +454,25 @@ public class SparseScanLineCache implements IScanLine {
         return new Point(x, y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int mapPoint(int x, int y) {
         return (x * getScansPerModulation()) + y;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int mapPoint(Point p) {
         return mapPoint(p.x, p.y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
     }

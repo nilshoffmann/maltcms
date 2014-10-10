@@ -55,7 +55,7 @@ import org.openide.util.lookup.ServiceProvider;
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
-@RequiresVariables(names = {"var.binned_mass_values", "var.binned_intensity_values", "var.binned_scan_index"})
+@RequiresVariables(names = {"var.mass_values", "var.intensity_values", "var.scan_index"})
 public class CwtEicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds EIC peaks using  Continuous Wavelet Transform.";

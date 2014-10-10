@@ -73,6 +73,8 @@ public class CwtTicPeakFinderCallable extends AbstractCwtPeakFinderCallable {
 
     @Configurable
     private boolean integrateRawTic = true;
+    @Configurable
+    private String totalIntensityVar = "total_intensity";
 
     private final Peak1DUtilities peakUtilities = new Peak1DUtilities();
 
@@ -90,7 +92,7 @@ public class CwtTicPeakFinderCallable extends AbstractCwtPeakFinderCallable {
     @Override
     public PeakFinderWorkerResult call() {
         FileFragment ff = new FileFragment(getInput());
-        Array values = ff.getChild("total_intensity").getArray();
+        Array values = ff.getChild(totalIntensityVar).getArray();
         ArrayStatsScanner ass = new ArrayStatsScanner();
         StatsMap sm = ass.apply(new Array[]{values})[0];
         //normalize to 0..1

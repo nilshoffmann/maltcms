@@ -63,13 +63,11 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Dimension;
 
 /**
- * This command should be the first in all 2d pipelines. It creates different
- * variables like scan_rate, modulation_time etc.
- *
- * TODO find threshold index and save it?
+ * This command should be the first in all 2d pipelines handling dense 2d chromatograms.
+ * It creates different variables like scan_rate, modulation_time etc.
  *
  * @author Mathias Wilhelm
- * 
+ * @author Nils Hoffmann
  */
 @ProvidesVariables(names = {"var.total_intensity", "var.modulation_time",
     "var.scan_rate", "var.scan_duration", "var.second_column_time",
@@ -116,6 +114,7 @@ public class Default2DVarLoader extends AFragmentCommand {
     @Configurable(name = "var.modulation_time.default", value = "5.0d")
     private double modulationTime = 5.0d;
     private double scanDuration = 0.0d;
+    @Configurable(name = "var.scan_rate.default", value="-1.0d")
     private double scanRate = -1.0d;
 //	private double scanAcquisitionTimeOffset = 0.0d;
     private String modulationIndex0Dimension = "modulation_index_0";

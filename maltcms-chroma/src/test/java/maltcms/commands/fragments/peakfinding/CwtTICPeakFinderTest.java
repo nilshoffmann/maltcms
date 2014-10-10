@@ -27,7 +27,6 @@
  */
 package maltcms.commands.fragments.peakfinding;
 
-import maltcms.commands.fragments.alignment.*;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
@@ -35,14 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
-import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ZipResourceExtractor;
 import org.junit.Test;
@@ -59,12 +51,10 @@ public class CwtTICPeakFinderTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testChromA() throws IOException {
+    public void testCwtTicPeakFinder() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
         File inputFile1 = ZipResourceExtractor.extract(
                 "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder(CwtTICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         CwtTicPeakFinder tpf = new CwtTicPeakFinder();
@@ -74,7 +64,7 @@ public class CwtTICPeakFinderTest extends AFragmentCommandTest {
         tpf.setSaveGraphics(true);
         commands.add(tpf);
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2));
+                inputFile1));
         testWorkflow(w);
     }
 

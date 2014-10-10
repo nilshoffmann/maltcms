@@ -1,5 +1,5 @@
 <h1>TICPeakFinder</h1>
-Class: maltcms.commands.fragments.peakfinding.TICPeakFinder
+Class: `maltcms.commands.fragments.peakfinding.TICPeakFinder`
 Description: Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.
 Workflow Slot: PEAKFINDING
 
@@ -9,7 +9,7 @@ Workflow Slot: PEAKFINDING
 <h3>Required</h3>
 	var.total_intensity
 
-<h3>Required (optional)</h3>
+<h3>Optional</h3>
 	var.scan_acquisition_time
 
 <h3>Provided</h3>
@@ -30,60 +30,60 @@ Workflow Slot: PEAKFINDING
 ---
 
 <h2>Configurable Properties</h2>
-Name: peakThreshold
-Default Value: 0.01
+Name: `peakThreshold`
+Default Value: `0.01`
 Description: 
 
-Name: saveGraphics
-Default Value: false
+Name: `saveGraphics`
+Default Value: `false`
 Description: 
 
-Name: integratePeaks
-Default Value: false
+Name: `integratePeaks`
+Default Value: `false`
 Description: 
 
-Name: integrateTICPeaks
-Default Value: true
+Name: `integrateTICPeaks`
+Default Value: `true`
 Description: 
 
-Name: snrWindow
-Default Value: 50
+Name: `snrWindow`
+Default Value: `50`
 Description: 
 
-Name: ticPeakVarName
-Default Value: tic_peaks
+Name: `ticPeakVarName`
+Default Value: `tic_peaks`
 Description: 
 
-Name: ticFilteredVarName
-Default Value: tic_filtered
+Name: `ticFilteredVarName`
+Default Value: `tic_filtered`
 Description: 
 
-Name: integrateRawTic
-Default Value: true
+Name: `integrateRawTic`
+Default Value: `true`
 Description: 
 
-Name: peakSeparationWindow
-Default Value: 10
+Name: `peakSeparationWindow`
+Default Value: `10`
 Description: 
 
-Name: removeOverlappingPeaks
-Default Value: true
+Name: `removeOverlappingPeaks`
+Default Value: `true`
 Description: 
 
-Name: subtractBaseline
-Default Value: false
+Name: `subtractBaseline`
+Default Value: `false`
 Description: 
 
-Name: baselineEstimator
-Default Value: LoessMinimaBaselineEstimator(bandwidth=0.3, accuracy=1.0E-12, robustnessIterations=2, minimaWindow=100)
+Name: `baselineEstimator`
+Default Value: `LoessMinimaBaselineEstimator(bandwidth=0.3, accuracy=1.0E-12, robustnessIterations=2, minimaWindow=100)`
 Description: 
 
-Name: filter
-Default Value: [MultiplicationFilter(factor=1.0)]
+Name: `filter`
+Default Value: `[MultiplicationFilter(factor=1.0)]`
 Description: 
 
-Name: peakNormalizers
-Default Value: []
+Name: `peakNormalizers`
+Default Value: `[]`
 Description: 
 
 

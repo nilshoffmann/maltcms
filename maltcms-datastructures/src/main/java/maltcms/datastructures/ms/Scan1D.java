@@ -51,11 +51,8 @@ public class Scan1D implements IScan1D {
      *
      */
     private static final long serialVersionUID = 2937381605461829269L;
-//    private ArrayInt.D0 scanNumber = new ArrayInt.D0();
     private int scanNumber = 0;
-//    private ArrayDouble.D0 scanAcquisitionTime = new ArrayDouble.D0();
     private double scanAcquisitionTime = Double.NaN;
-//    private ArrayDouble.D0 total_intensity = new ArrayDouble.D0();
     private double total_intensity = Double.NaN;
     private transient Array masses = null;
     private transient Array intensities = null;
@@ -64,10 +61,6 @@ public class Scan1D implements IScan1D {
     private double precursorCharge = Double.NaN;
     private double precursorMz = Double.NaN;
     private double precursorIntensity = Double.NaN;
-//    private ArrayShort.D0 msLevel = new ArrayShort.D0();
-//    private ArrayDouble.D0 precursorCharge = null;
-//    private ArrayDouble.D0 precursorMz = null;
-//    private ArrayDouble.D0 precursorIntensity = null;
 
     /**
      * <p>Constructor for Scan1D.</p>

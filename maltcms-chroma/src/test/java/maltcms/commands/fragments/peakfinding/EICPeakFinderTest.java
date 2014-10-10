@@ -57,12 +57,10 @@ public class EICPeakFinderTest extends AFragmentCommandTest {
      *
      */
     @Test
-    public void testChromA() throws IOException {
+    public void testEicPeakFinder() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
         File inputFile1 = ZipResourceExtractor.extract(
                 "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
         File outputBase = tf.newFolder(EICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
@@ -84,7 +82,7 @@ public class EICPeakFinderTest extends AFragmentCommandTest {
         tpf.setPeakThreshold(3.0d);
         commands.add(tpf);
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2));
+                inputFile1));
         testWorkflow(w);
     }
 

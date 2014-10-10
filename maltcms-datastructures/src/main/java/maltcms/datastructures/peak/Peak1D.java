@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.peak.annotations.PeakAnnotation;
@@ -64,16 +65,17 @@ import ucar.nc2.Dimension;
  *
  * Peak1D models a standard 1D chromatographic peak. If you want to model mass
  * spectral peaks over time, use a Peak1DGroup instance.
+ * 
+ * Peak1D objects can be compared using <code>equals</code>. Each peak additionally 
+ * has a random unique id, that can be retrieved using <code>getUniqueId()</code>.
+ * 
  *
  */
 @Data
+@EqualsAndHashCode(exclude = "uniqueId")
 @Slf4j
 public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -8878754902179218064L;
     private int startIndex = -1;
     private int apexIndex = -1;
     private int stopIndex = -1;
@@ -90,11 +92,12 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
     private PeakType peakType = PeakType.UNDEFINED;
     private String[] normalizationMethods = {"None"};
     private String name = "";
-    private List<PeakAnnotation> peakAnnotations;
+    private List<PeakAnnotation> peakAnnotations = Collections.emptyList();
     private double baselineStartTime = Double.NaN;
     private double baselineStopTime = Double.NaN;
     private double baselineStartValue = Double.NaN;
     private double baselineStopValue = Double.NaN;
+    private int index = -1;
     private final UUID uniqueId = UUID.randomUUID();
 
     /**
@@ -267,7 +270,11 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         ArrayList<Peak1D> peaklist = new ArrayList<>(peakPositions.getShape()[0]);
         for (int i = 0; i < peakPositions.getShape()[0]; i++) {
             Peak1D p = new Peak1D();
-            p.setNormalizationMethods(normalizationMethods.toArray(new String[normalizationMethods.size()]));
+            if (normalizationMethods.isEmpty()) {
+                p.setNormalizationMethods(new String[]{"None"});
+            } else {
+                p.setNormalizationMethods(normalizationMethods.toArray(new String[normalizationMethods.size()]));
+            }
             p.setFile(sourceFileName.getString(0));
             p.setName(peakNames.getString(i));
             p.setApexTime(apexRt.getDouble(i));
@@ -380,7 +387,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                     1, 1024);
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
                     Math.max(1, peakNormalizers.size()), 1024);
-            String[] normalizationMethodsString = new String[peakNormalizers.size()];
+            String[] normalizationMethodsString = new String[Math.max(1,peakNormalizers.size())];
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 snrArray = new ArrayDouble.D1(peaklist.size());
@@ -395,6 +402,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             peakSourceFileArray.setString(0, ff.getName());
             if (peakNormalizers.isEmpty()) {
                 normalizationMethodArray.setString(0, "None");
+                normalizationMethodsString[0] = "None";
             } else {
                 for (int i = 0; i < peakNormalizers.size(); i++) {
                     normalizationMethodArray.setString(i, peakNormalizers.get(i).getNormalizationName());
@@ -405,7 +413,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             for (Peak1D p : peaklist) {
                 String name = p.getName();
                 if (name == null || name.isEmpty()) {
-                    names.setString(i, "" + i);
+                    names.setString(i, "");
                 } else {
                     names.setString(i, name);
                 }
@@ -456,11 +464,4 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public UUID getUniqueId() {
-        return uniqueId;
-    }
 }

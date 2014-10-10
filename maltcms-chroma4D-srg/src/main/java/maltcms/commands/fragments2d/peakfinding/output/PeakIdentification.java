@@ -38,9 +38,9 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.peak.Peak2D;
+import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.db.MetaboliteQueryDB;
 import maltcms.db.QueryCallable;
-import maltcms.db.predicates.metabolite.DBMatch;
 import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
@@ -54,70 +54,52 @@ import ucar.ma2.IndexIterator;
  * Will do the identification.
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
 public class PeakIdentification implements IPeakIdentification {
 
     private MetaboliteQueryDB mqdb;
-//    private ObjectContainer oc;
-//    private List<ObjectContainer> ocl = new ArrayList<ObjectContainer>();
-    @Configurable(value = "false", type = boolean.class)
+    @Configurable(value = "false")
     private boolean doSearch = false;
-    @Configurable(type = String.class)
+    @Configurable
     private String dbFile = null;
     private List<String> dbFiles = new ArrayList<>();
-    @Configurable(name = "dbThreshold", value = "0.9d", type = double.class)
+    @Configurable(name = "dbThreshold", value = "0.9d")
     private double threshold = 0.08d;
-    @Configurable(name = "kBest", value = "1", type = int.class)
+    @Configurable(name = "kBest", value = "1")
     private int k = 1;
     private boolean dbAvailable = true;
     private IArraySimilarity similarity = new ArrayCos();
     private List<Integer> masqMasses = new ArrayList<>();
-//    private ObjectSet<IMetabolite> dbMetabolites = null;
     private List<ObjectSet<IMetabolite>> dbMetabolitesList = new ArrayList<>();
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
-        // this.doDBSearch = cfg.getBoolean(this.getClass().getName()
-        // + ".doDBSearch", false);
-//        this.dbFile = cfg.getString(this.getClass().getName() + ".dbFile", null);
-//        for (String single : cfg.getStringArray(
-//                this.getClass().getName() + ".dbFile")) {
-//            this.dbFiles.add(single);
-//        }
-//        this.threshold = cfg.getDouble(this.getClass().getName()
-//                + ".dbThreshold", 0.8d);
-//        this.doSearch = cfg.getBoolean(this.getClass().getName() + ".doSearch",
-//                false);
-//        this.k = cfg.getInteger(this.getClass().getName() + ".kBest", 1);
-//        for (String single : cfg.getStringArray(this.getClass().getName()
-//                + ".masq")) {
-//            try {
-//                masqMasses.add(Integer.parseInt(single));
-//            } catch (NumberFormatException e) {
-//                log.info("Can not parse " + single + " to an integer");
-//            }
-//        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setName(final Peak2D peak) {
         if (this.dbFiles.isEmpty()) {
             this.dbAvailable = false;
         }
         if (this.dbAvailable && this.doSearch) {
-//            if (this.ocl.isEmpty()) {
-            List<DBMatch> hits = new ArrayList<>();
+            List<PeakAnnotation> hits = new ArrayList<>();
             for (String dbf : this.dbFiles) {
                 final ArrayDouble.D1 massValues = new ArrayDouble.D1(peak.
                         getPeakArea().getSeedMS().getShape()[0]);
@@ -139,7 +121,13 @@ public class PeakIdentification implements IPeakIdentification {
                     log.info("Received {} hits from ObjectSet!",
                             osRes.size());
                     for (Tuple2D<Double, IMetabolite> t : ms.getMatches()) {
-                        hits.add(new DBMatch(dbf, t.getFirst(), t.getSecond()));
+                        PeakAnnotation pa = PeakAnnotation.builder().
+                            score(t.getFirst()).
+                            metabolite(t.getSecond()).
+                            database(dbf).
+                            similarityFunction(similarity.toString()).
+                        build();
+                        hits.add(pa);
                     }
                     qc.terminate();
                 } catch (InterruptedException e) {
@@ -149,15 +137,9 @@ public class PeakIdentification implements IPeakIdentification {
                 } catch (Exception e) {
                     log.warn(e.getLocalizedMessage());
                 }
-
             }
-
             Collections.sort(hits);
-//            }
-
-            if (hits != null) {
-                peak.setNames(DBMatch.asMatchList(hits));
-            }
+            peak.setPeakAnnotations(hits);
         }
     }
 

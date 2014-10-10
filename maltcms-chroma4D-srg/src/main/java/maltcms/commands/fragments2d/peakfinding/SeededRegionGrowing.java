@@ -387,7 +387,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
             peak.setPeakArea(s);
             peak.setFirstRetTime(x);
             peak.setSecondRetTime(y);
-            peak.setScanIndex(s.getIndex());
+            peak.setApexIndex(s.getIndex());
 
             peaklist.add(peak);
         }

@@ -27,12 +27,17 @@
  */
 package maltcms.datastructures.peak;
 
-import maltcms.datastructures.ms.*;
+import cross.datastructures.fragments.FileFragment;
 import cross.exception.ResourceNotAvailableException;
+import cross.test.LogMethodName;
+import cross.test.SetupLogging;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,6 +52,10 @@ public class Peak1DTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @Rule
+    public SetupLogging sl = new SetupLogging();
+    @Rule
+    public LogMethodName lmn = new LogMethodName();
 
     public List<Peak1D> createPeaks() {
         Peak1D[] scans = {
@@ -97,6 +106,7 @@ public class Peak1DTest {
             "ApexTime",
             "Area",
             "NormalizedArea",
+            "Index",
             "Mw",
             "ExtractedIonCurrent",
             "Snr",
@@ -115,6 +125,25 @@ public class Peak1DTest {
         Collections.sort(c);
         for (int i = 0; i < members.length; i++) {
             Assert.assertEquals(c.get(i), members[i]);
+        }
+    }
+
+    @Test
+    public void testSave() throws IOException {
+        File outputDir = temporaryFolder.newFolder("Peak1DExportTest");
+        FileFragment f = new FileFragment(outputDir, "peak1Dtest.cdf");
+        List<Peak1D> peaks = createPeaks();
+        for (Peak1D peak : peaks) {
+            peak.setFile(f.getName());
+        }
+        Peak1D.append(f, new LinkedList<IPeakNormalizer>(), peaks, "tic_peaks");
+        f.save();
+        List<Peak1D> peaksRestored = Peak1D.fromFragment(f, "tic_peaks");
+        Assert.assertEquals(peaks.size(), peaksRestored.size());
+        for (int i = 0; i < peaks.size(); i++) {
+            Peak1D original = peaks.get(i);
+            Peak1D restored = peaksRestored.get(i);
+            Assert.assertEquals(original, restored);
         }
     }
 }

@@ -317,7 +317,7 @@ public class MaltcmsAnnotationFactory {
                     p.setName(at.getValue());
                     break;
                 case "scan_index":
-                    p.setScanIndex(Integer.parseInt(at.getValue()));
+                    p.setApexIndex(Integer.parseInt(at.getValue()));
                     break;
                 case "apex_index":
                     p.setApexIndex(Integer.parseInt(at.getValue()));
@@ -385,7 +385,7 @@ public class MaltcmsAnnotationFactory {
 
         si = new AttributeType();
         si.setName("scan_index");
-        si.setValue(p.getScanIndex() + "");
+        si.setValue(p.getApexIndex() + "");
         addIfNew(si, at);
 
         si = new AttributeType();
@@ -459,26 +459,6 @@ public class MaltcmsAnnotationFactory {
         si.setUnit("seconds");
         addIfNew(si, at);
 
-        // si = new AttributeType();
-        // si.setName("similarity");
-        // si.setValue(p.getSim() + "");
-        // addIfNew(si, at);
-        //
-        // si = new AttributeType();
-        // si.setName("names");
-        // if (p.getNames().isEmpty()) {
-        // si.setValue("");
-        // } else {
-        // List<Tuple2D<Double, IMetabolite>> names = p.getNames();
-        // StringBuilder sb = new StringBuilder();
-        // for (Tuple2D<Double, IMetabolite> t : names) {
-        // sb.append("[" + t.getFirst() + ":" + t.getSecond().getID()
-        // + "],");
-        // }
-        // sb.replace(sb.length() - 1, sb.length(), "\n");
-        // si.setValue(sb.toString());
-        // }
-        // addIfNew(si, at);
         PeakArea2D pa = p.getPeakArea();
         if (pa != null) {
             StringBuilder sb = new StringBuilder();

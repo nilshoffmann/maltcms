@@ -27,6 +27,7 @@
  */
 package maltcms.datastructures.ms;
 
+import lombok.experimental.Builder;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;

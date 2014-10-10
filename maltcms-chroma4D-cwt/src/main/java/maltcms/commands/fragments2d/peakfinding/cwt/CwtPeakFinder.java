@@ -28,6 +28,8 @@
 package maltcms.commands.fragments2d.peakfinding.cwt;
 
 import cross.annotations.Configurable;
+import cross.annotations.ProvidesVariables;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -36,6 +38,7 @@ import java.io.File;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.mpaxs.api.ICompletionService;
+import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -45,6 +48,8 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  *
  */
+@RequiresVariables(names = {"var.modulation_time", "var.scan_rate"})
+@ProvidesVariables(names = {"var.peak_index_list"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
@@ -75,7 +80,17 @@ public class CwtPeakFinder extends AFragmentCommand {
     private int maxRidges = 5000;
     @Configurable(description = "Percentile of the intensity value distribution to use as minimum intensity for peaks.")
     private int minPercentile = 95;
+    @Configurable(name = "var.peak_index_list", value = "peak_index_list")
+    private String peakListVar = "peak_index_list";
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void configure(Configuration config) {
+        this.peakListVar = config.getString("var.peak_index_list", "peak_index_list");
+    }
+    
     /**
      * {@inheritDoc}
      */

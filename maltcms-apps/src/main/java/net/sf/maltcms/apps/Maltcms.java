@@ -30,42 +30,29 @@ package net.sf.maltcms.apps;
 import cross.Factory;
 import cross.annotations.AnnotationInspector;
 import cross.applicationContext.ReflectionApplicationContextGenerator;
-import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.pipeline.ICommandSequence;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.workflow.IWorkflow;
-import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
-import java.beans.PropertyDescriptor;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.maltcms.apps.util.FragmentCommandDocGenerator;
 import net.sf.maltcms.apps.util.ThreadTimer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -82,9 +69,7 @@ import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.log4j.PropertyConfigurator;
-import org.openide.util.Lookup;
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -913,192 +898,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         Maltcms.handleRuntimeException(log, e, null);
     }
 
-    private String getTargetFile(AFragmentCommand command) {
-        return "" + command.getClass().getSimpleName() + ".md";
-    }
-
-    private File getTargetDir(AFragmentCommand command, String... packagePrefix) {
-        for (String str : packagePrefix) {
-            if (command.getClass().getPackage().getName().startsWith(str)) {
-                return new File(command.getClass().getPackage().getName().substring(str.length()).replaceAll("\\.", "/"));
-            }
-        }
-        return new File(command.getClass().getPackage().getName().replaceAll("\\.", "/"));
-    }
-
     private void handleCreateMarkdownDocs(Configuration cfg) {
-        File outputDir = new File(cfg.getString("output.basedir", "."), "documentation/commands/");
-        outputDir.mkdirs();
-        log.info("Creating markdown documents below {}", outputDir);
-        Collection<? extends AFragmentCommand> commands = Lookup.getDefault().lookupAll(AFragmentCommand.class);
-        Map<WorkflowSlot, Set<AFragmentCommand>> slotToCommandMap = new LinkedHashMap<WorkflowSlot, Set<AFragmentCommand>>();
-        for (AFragmentCommand command : commands) {
-            Set<AFragmentCommand> commandsInSlot = slotToCommandMap.get(command.getWorkflowSlot());
-            if (commandsInSlot == null) {
-                commandsInSlot = new LinkedHashSet<>();
-                slotToCommandMap.put(command.getWorkflowSlot(), commandsInSlot);
-            }
-            commandsInSlot.add(command);
-        }
-        File globalIndexMdFile = new File(outputDir, "index.md");
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(globalIndexMdFile))) {
-            bw.write("<h1>Maltcms Commands</h1>");
-            bw.newLine();
-            List<WorkflowSlot> slots = new ArrayList<WorkflowSlot>(slotToCommandMap.keySet());
-            Collections.sort(slots, new Comparator<WorkflowSlot>() {
-
-                @Override
-                public int compare(WorkflowSlot o1, WorkflowSlot o2) {
-                    return o1.toString().compareTo(o2.toString());
-                }
-            });
-            for (WorkflowSlot slot : slots) {
-                bw.write("<h2>" + slot.toString() + " commands</h2>");
-                bw.newLine();
-                File slotDir = new File(outputDir, slot.toString().toLowerCase());
-                slotDir.mkdirs();
-                List<AFragmentCommand> commandsList = new ArrayList<>(slotToCommandMap.get(slot));
-                Collections.sort(commandsList, new Comparator<AFragmentCommand>() {
-
-                    @Override
-                    public int compare(AFragmentCommand o1, AFragmentCommand o2) {
-                        return o1.getClass().getSimpleName().compareTo(o2.getClass().getSimpleName());
-                    }
-                });
-                for (AFragmentCommand command : commandsList) {
-                    File mdFile = new File(slotDir, getTargetFile(command));
-                    bw.write("* [" + command.getClass().getSimpleName() + "](./" + slot.toString().toLowerCase() + "/" + mdFile.getName().replace(".md", ".html") + ")");
-                    bw.newLine();
-                }
-                bw.newLine();
-            }
-            bw.newLine();
-            bw.flush();
-        } catch (IOException ex) {
-            log.error("Caught exception while creating file " + globalIndexMdFile + ":", ex);
-        }
-        for (WorkflowSlot slot : slotToCommandMap.keySet()) {
-            File slotDir = new File(outputDir, slot.toString().toLowerCase());
-            slotDir.mkdirs();
-            File indexMdFile = new File(slotDir, "index.md");
-            log.info("Creating index file {}", indexMdFile);
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(indexMdFile))) {
-                bw.write("<h1>" + slot.toString() + " commands</h1>");
-                bw.newLine();
-                List<AFragmentCommand> commandsList = new ArrayList<>(slotToCommandMap.get(slot));
-                Collections.sort(commandsList, new Comparator<AFragmentCommand>() {
-
-                    @Override
-                    public int compare(AFragmentCommand o1, AFragmentCommand o2) {
-                        return o1.getClass().getSimpleName().compareTo(o2.getClass().getSimpleName());
-                    }
-                });
-                for (AFragmentCommand command : commandsList) {
-                    File mdFile = new File(slotDir, getTargetFile(command));
-                    bw.write("* [" + command.getClass().getSimpleName() + "](./" + mdFile.getName().replace(".md", ".html") + ")");
-                    bw.newLine();
-                }
-                bw.newLine();
-                bw.flush();
-            } catch (IOException ex) {
-                log.error("Caught exception while creating file " + indexMdFile + ":", ex);
-            }
-            List<AFragmentCommand> commandsList = new ArrayList<>(slotToCommandMap.get(slot));
-            Collections.sort(commandsList, new Comparator<AFragmentCommand>() {
-
-                @Override
-                public int compare(AFragmentCommand o1, AFragmentCommand o2) {
-                    return o1.getClass().getSimpleName().compareTo(o2.getClass().getSimpleName());
-                }
-            });
-            for (AFragmentCommand command : commandsList) {
-                File commandDir = new File(outputDir, slot.toString().toLowerCase());
-                commandDir.mkdirs();
-                File mdFile = new File(commandDir, getTargetFile(command));
-                log.info("Creating file {}", mdFile);
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(mdFile))) {
-                    bw.write("<h1>" + command.getClass().getSimpleName() + "</h1>");
-                    bw.newLine();
-                    bw.write("Class: " + command.getClass().getCanonicalName());
-                    bw.newLine();
-                    bw.write("Description: " + command.getDescription());
-                    bw.newLine();
-                    bw.write("Workflow Slot: " + command.getWorkflowSlot());
-                    bw.newLine();
-                    bw.newLine();
-                    bw.write("---");
-                    bw.newLine();
-                    bw.newLine();
-                    bw.write("<h2>Variables</h2>");
-                    bw.newLine();
-                    bw.write("<h3>Required</h3>");
-                    bw.newLine();
-                    for (String var : AnnotationInspector.getRequiredVariables(command)) {
-                        bw.write("" + var);
-                        bw.newLine();
-                    }
-                    bw.newLine();
-                    bw.write("<h3>Required (optional)</h3>");
-                    bw.newLine();
-                    for (String var : AnnotationInspector.getOptionalRequiredVariables(command)) {
-                        bw.write("" + var);
-                        bw.newLine();
-                    }
-                    bw.newLine();
-                    bw.write("<h3>Provided</h3>");
-                    bw.newLine();
-                    for (String var : AnnotationInspector.getProvidedVariables(command)) {
-                        bw.write("" + var);
-                        bw.newLine();
-                    }
-                    bw.newLine();
-                    bw.newLine();
-                    bw.write("---");
-                    bw.newLine();
-                    bw.newLine();
-                    bw.write("<h2>Configurable Properties</h2>");
-                    bw.newLine();
-                    for (String configKey : AnnotationInspector.getRequiredConfigKeys(command)) {
-                        if (!configKey.startsWith("var.")) {
-                            String description = AnnotationInspector.getDescriptionFor(command.getClass(), configKey);
-                            String defaultValue = AnnotationInspector.getDefaultValueFor(command.getClass(), configKey);
-                            String propertyName = configKey.substring(configKey.lastIndexOf(".") + 1);
-                            if (defaultValue.isEmpty()) {
-                                try {
-                                    PropertyDescriptor propDescr = BeanUtils.getPropertyDescriptor(command.getClass(), propertyName);
-                                    if (propDescr != null) {
-                                        bw.write("Name: " + propertyName);
-                                        bw.newLine();
-                                        bw.write("Default Value: " + propDescr.getReadMethod().invoke(command));
-                                    }
-                                } catch (SecurityException ex) {
-                                    log.warn("Security exception while trying to access method '" + configKey + "'", ex);
-                                } catch (IllegalArgumentException ex) {
-                                    log.warn("Illegal argument exception while trying to access method '" + configKey + "'", ex);
-                                } catch (IllegalAccessException ex) {
-                                    log.warn("Illegal access exception while trying to access method '" + configKey + "'", ex);
-                                } catch (InvocationTargetException ex) {
-                                    log.warn("Invocation target exception while trying to invoke method '" + configKey + "'", ex);
-                                }
-                            } else {
-                                bw.write("Name: " + propertyName);
-                                bw.newLine();
-                                bw.write("Default Value: " + defaultValue);
-                            }
-                            bw.newLine();
-                            bw.write("Description: ");
-                            bw.newLine();
-                            bw.write("" + description);
-                            bw.newLine();
-                        }
-                    }
-                    bw.newLine();
-                    bw.flush();
-                } catch (IOException ex) {
-                    log.error("Caught exception while creating file " + mdFile + ":", ex);
-                }
-            }
-        }
+        FragmentCommandDocGenerator generator = new FragmentCommandDocGenerator();
+        generator.generateDocuments(cfg);
         System.exit(0);
     }
 

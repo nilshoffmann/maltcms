@@ -1,5 +1,5 @@
 <h1>Default2DVarLoader</h1>
-Class: maltcms.commands.fragments2d.preprocessing.Default2DVarLoader
+Class: `maltcms.commands.fragments2d.preprocessing.Default2DVarLoader`
 Description: Default var loader for 2d data. Will create different variables.
 Workflow Slot: GENERAL_PREPROCESSING
 
@@ -8,7 +8,7 @@ Workflow Slot: GENERAL_PREPROCESSING
 <h2>Variables</h2>
 <h3>Required</h3>
 
-<h3>Required (optional)</h3>
+<h3>Optional</h3>
 
 <h3>Provided</h3>
 	var.total_intensity
@@ -24,11 +24,12 @@ Workflow Slot: GENERAL_PREPROCESSING
 	var.first_column_elution_time
 	var.second_column_elution_time
 
+
 ---
 
 <h2>Configurable Properties</h2>
-Name: maxScanAcquisitionTimeDelta
-Default Value: 1.0E-4
+Name: `maxScanAcquisitionTimeDelta`
+Default Value: `1.0E-4`
 Description: 
 Maximum allowed difference in scan acquisition times for scan rate estimation.
 

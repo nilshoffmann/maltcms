@@ -404,7 +404,7 @@ public class Chromatogram1D implements IChromatogram1D {
             return idx;
         } else {// imprecise hit, find closest element
             int insertionPosition = (-idx) - 1;
-            if (insertionPosition < 0) {
+            if (insertionPosition <= 0) {
                 throw new ArrayIndexOutOfBoundsException("Insertion index is out of bounds! " + insertionPosition + "<" + 0);
             }
             if (insertionPosition >= d.length) {

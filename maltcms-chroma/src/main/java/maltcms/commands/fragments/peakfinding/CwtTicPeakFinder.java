@@ -72,6 +72,8 @@ public class CwtTicPeakFinder extends AFragmentCommand {
     private boolean saveGraphics = false;
     @Configurable
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
+    @Configurable(name = "var.total_intensity")
+    private String totalIntensityVar = "total_intensity";
 
     /**
      * {@inheritDoc}
@@ -91,6 +93,7 @@ public class CwtTicPeakFinder extends AFragmentCommand {
             cwt.setIntegratePeaks(integratePeaks);
             cwt.setStoreScaleogram(saveGraphics);
             cwt.setPeakNormalizers(peakNormalizers);
+            cwt.setTotalIntensityVar(totalIntensityVar);
             completionService.submit(cwt);
             getWorkflow().append(getProgress().nextStep());
         }

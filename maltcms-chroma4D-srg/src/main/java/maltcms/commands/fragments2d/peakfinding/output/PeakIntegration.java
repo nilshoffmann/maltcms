@@ -71,9 +71,9 @@ import ucar.ma2.ArrayDouble;
 @Data
 public class PeakIntegration implements IPeakIntegration {
 
-    @Configurable(value = "1", type = int.class)
+    @Configurable(value = "1")
     private int k = 1;
-    @Configurable(name = "plot", value = "false", type = boolean.class)
+    @Configurable(name = "plot", value = "false")
     private boolean plotIntegration = false;
 
     /** {@inheritDoc} */
@@ -236,7 +236,7 @@ public class PeakIntegration implements IPeakIntegration {
             peak.getPeakArea().addAreaIntensity(
                     sortedMS.get(sortedSize - i - 1).getFirst(), peaksum2[i]);
         }
-
+        peak.setArea(peak.getPeakArea().getAreaIntensity());
         slc.clear();
     }
 }

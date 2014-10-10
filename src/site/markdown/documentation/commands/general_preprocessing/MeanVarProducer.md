@@ -1,5 +1,5 @@
 <h1>MeanVarProducer</h1>
-Class: maltcms.commands.fragments2d.preprocessing.MeanVarProducer
+Class: `maltcms.commands.fragments2d.preprocessing.MeanVarProducer`
 Description: Produces mean and variance of a chromatogram
 Workflow Slot: GENERAL_PREPROCESSING
 
@@ -10,7 +10,7 @@ Workflow Slot: GENERAL_PREPROCESSING
 	var.modulation_time
 	var.scan_rate
 
-<h3>Required (optional)</h3>
+<h3>Optional</h3>
 
 <h3>Provided</h3>
 	var.mean_ms_intensity
@@ -29,14 +29,16 @@ Workflow Slot: GENERAL_PREPROCESSING
 	var.maxms_1d_vertical_index
 	var.maxms_1d_vertical
 
+
 ---
 
 <h2>Configurable Properties</h2>
-Name: minStandardDeviationQuantil
-Default Value: 0.01d
+Name: `minStandardDeviationQuantil`
+Default Value: `0.01d`
 Description: 
 
-Name: minStandardDeviation
-Default Value: -1.0d
+Name: `minStandardDeviation`
+Default Value: `-1.0d`
 Description: 
+
 

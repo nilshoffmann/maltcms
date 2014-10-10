@@ -28,6 +28,8 @@
 package maltcms.datastructures.peak.annotations;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>RetentionIndexPeakAnnotation class.</p>
@@ -35,8 +37,15 @@ import lombok.Data;
  * @author Nils Hoffmann
  * 
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class RetentionIndexPeakAnnotation extends PeakAnnotation {
 
-    private double retentionIndex = Double.NaN;
+    private final double retentionIndex;
+
+    public RetentionIndexPeakAnnotation(double retentionIndex, double score, String database, String similarityFunction, IMetabolite metabolite) {
+        super(score, database, similarityFunction, metabolite);
+        this.retentionIndex = retentionIndex;
+    }
+    
 }

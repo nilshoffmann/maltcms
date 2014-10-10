@@ -1,5 +1,5 @@
 <h1>ANDIChromImporter</h1>
-Class: maltcms.commands.fragments.io.ANDIChromImporter
+Class: `maltcms.commands.fragments.io.ANDIChromImporter`
 Description: Maps data in ANDIChrom format to Maltcms/ANDIMS compatible naming scheme.
 Workflow Slot: FILECONVERSION
 
@@ -7,17 +7,17 @@ Workflow Slot: FILECONVERSION
 
 <h2>Variables</h2>
 <h3>Required</h3>
-var.ordinate_values
-var.actual_sampling_interval
-var.actual_delay_time
+	var.ordinate_values
+	var.actual_sampling_interval
+	var.actual_delay_time
 
-<h3>Required (optional)</h3>
+<h3>Optional</h3>
 
 <h3>Provided</h3>
-var.scan_acquisition_time
-var.total_intensity
-var.mass_values
-var.intensity_values
+	var.scan_acquisition_time
+	var.total_intensity
+	var.mass_values
+	var.intensity_values
 
 
 ---

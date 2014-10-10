@@ -40,7 +40,7 @@ public class SameInSameOutFragmentCommand extends AFragmentCommand {
 
     @Override
     public String getDescription() {
-        return "Returns the same inputs as outputs.";
+        return "Returns the inputs as outputs.";
     }
 
     @Override

@@ -1613,6 +1613,7 @@ public class MaltcmsTools {
      * @param mass_range_max_name a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
+    @Deprecated
     public static List<Array> prepareArraysMZIasList(final IFileFragment ff,
             final String index_name, final String mz_name,
             final String intens_name, final String mass_range_min_name,

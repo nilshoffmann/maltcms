@@ -44,7 +44,7 @@ public class TransparentFragmentCommand extends AFragmentCommand {
 
     @Override
     public String getDescription() {
-        return "Retrieves a custom variable from given file fragments.";
+        return "Retrieves a custom variable from the given file fragments.";
     }
 
     @Override

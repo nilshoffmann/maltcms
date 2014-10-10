@@ -1,5 +1,5 @@
 <h1>SymbolicRepresentationAlignment</h1>
-Class: smueller.SymbolicRepresentationAlignment
+Class: `smueller.SymbolicRepresentationAlignment`
 Description: Calculates alignment on symbolic representation of time series, using affine gap costs.
 Workflow Slot: ALIGNMENT
 
@@ -7,9 +7,9 @@ Workflow Slot: ALIGNMENT
 
 <h2>Variables</h2>
 <h3>Required</h3>
-var.total_intensity
+	var.total_intensity
 
-<h3>Required (optional)</h3>
+<h3>Optional</h3>
 
 <h3>Provided</h3>
 

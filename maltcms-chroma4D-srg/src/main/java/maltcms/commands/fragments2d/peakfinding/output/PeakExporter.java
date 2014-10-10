@@ -55,6 +55,7 @@ import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
+import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.io.csv.CSVWriter;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
@@ -68,7 +69,7 @@ import ucar.ma2.MAMath;
  * Implementation of an peak exporter.
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
@@ -84,18 +85,24 @@ public class PeakExporter implements IPeakExporter {
     private NumberFormat formatter = new DecimalFormat(this.formatString,
             DecimalFormatSymbols.getInstance(Locale.US));
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exportDetailedPeakInformation(final String name,
             final List<Peak2D> ps) {
@@ -153,7 +160,9 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exportPeakInformation(final String name, final List<Peak2D> ps) {
 //		final List<Peak2D> peaklist = new ArrayList<Peak2D>();
@@ -170,6 +179,8 @@ public class PeakExporter implements IPeakExporter {
         row.add("Area[no.]");
         row.add("Name");
         row.add("Sim");
+        row.add("Database");
+        row.add("MS Similarity");
         table.add(row);
         PeakArea2D s;
         Peak2D peak;
@@ -178,7 +189,7 @@ public class PeakExporter implements IPeakExporter {
             s = peak.getPeakArea();
             row = new ArrayList<>();
             row.add(ps.indexOf(peak) + "");
-            row.add(peak.getScanIndex() + "");
+            row.add(peak.getApexIndex() + "");
             row.add(String.format(Locale.US, "%10.4f", peak.getFirstRetTime())
                     + "");
             row.add(String.format(Locale.US, "%10.4f", peak.getSecondRetTime())
@@ -191,9 +202,20 @@ public class PeakExporter implements IPeakExporter {
 //			if (peak.getName().length() > maxLength) {
 //				maxLength = peak.getName().length();
 //			}
-            row.add(peak.getName());
+            List<PeakAnnotation> peakAnnotations = peak.getPeakAnnotations();
+            if (peakAnnotations.isEmpty()) {
+                row.add("Unknown");
 //			peakNames.add(peak.getName());
-            row.add(peak.getSim() + "");
+                row.add(Double.NaN+"");
+                row.add("NA");
+                row.add("NA");
+            } else {
+                row.add(peak.getPeakAnnotations().get(0).getMetabolite().getName());
+//			peakNames.add(peak.getName());
+                row.add(String.format(Locale.US, "%10.4f", peak.getPeakAnnotations().get(0).getScore()+""));
+                row.add(peak.getPeakAnnotations().get(0).getDatabase());
+                row.add(peak.getPeakAnnotations().get(0).getSimilarityFunction());
+            }
 //			peaklist.add(peak);
             table.add(row);
         }
@@ -205,7 +227,9 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exportPeaksToMSP(final String name, final List<Peak2D> ps,
             final IScanLine isl) {
@@ -219,7 +243,7 @@ public class PeakExporter implements IPeakExporter {
             BufferedWriter dos = new BufferedWriter(new FileWriter(fname));
             for (Peak2D p : ps) {
                 String pname = "CHROMA4D_" + StringTools.removeFileExt(name)
-                        + "_" + p.getIndex();
+                        + "_" + cnt;
                 // Tuple2D<Array, Array> t = isl.getSparseMassSpectra(p
                 // .getPeakArea().getSeedPoint());
                 Array denseIntensities = p.getPeakArea().getSeedMS();
@@ -256,7 +280,7 @@ public class PeakExporter implements IPeakExporter {
                         dos.newLine();
                         dos.flush();
                     } catch (IOException e) {
-           
+
                         log.warn(e.getLocalizedMessage());
                     }
                     cnt++;
@@ -268,19 +292,21 @@ public class PeakExporter implements IPeakExporter {
             try {
                 dos.close();
             } catch (IOException e) {
-   
+
                 log.warn(e.getLocalizedMessage());
             }
         } catch (FileNotFoundException e) {
-            
+
             log.warn(e.getLocalizedMessage());
         } catch (IOException e) {
-            
+
             log.warn(e.getLocalizedMessage());
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exportPeakNames(final List<Peak2D> peaklist,
             final String chomatogramName) {
@@ -297,8 +323,8 @@ public class PeakExporter implements IPeakExporter {
             entry = new ArrayList<>();
             entry.add(i + "");
             value = "";
-            for (Tuple2D<Double, IMetabolite> r : p.getNames()) {
-                value += r.getSecond().getName() + "(" + r.getFirst() + "), ";
+            for (PeakAnnotation r : p.getPeakAnnotations()) {
+                value += r.getMetabolite().getName() + "(" + r.getScore()+ "), ";
             }
             entry.add(value);
             metaTable.add(entry);
@@ -313,7 +339,9 @@ public class PeakExporter implements IPeakExporter {
                 WorkflowSlot.PEAKFINDING);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void setCaller(final Class nCaller) {
@@ -322,13 +350,17 @@ public class PeakExporter implements IPeakExporter {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.FILEIO;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void appendXML(Element e) {
     }

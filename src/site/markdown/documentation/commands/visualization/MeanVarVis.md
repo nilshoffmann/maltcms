@@ -1,5 +1,5 @@
 <h1>MeanVarVis</h1>
-Class: maltcms.commands.fragments2d.preprocessing.MeanVarVis
+Class: `maltcms.commands.fragments2d.preprocessing.MeanVarVis`
 Description: Visualization of mean, variance, standard deviation and more.
 Workflow Slot: VISUALIZATION
 
@@ -23,7 +23,7 @@ Workflow Slot: VISUALIZATION
 	var.total_intensity_1d
 	var.scan_acquisition_time_1d
 
-<h3>Required (optional)</h3>
+<h3>Optional</h3>
 
 <h3>Provided</h3>
 
@@ -31,24 +31,24 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: filetype
-Default Value: png
+Name: `filetype`
+Default Value: `png`
 Description: 
 
-Name: colorramp
-Default Value: res/colorRamps/bcgyr.csv
+Name: `colorramp`
+Default Value: `res/colorRamps/bcgyr.csv`
 Description: 
 
-Name: thresholdLow
-Default Value: 0
+Name: `thresholdLow`
+Default Value: `0`
 Description: 
 
-Name: differentVisualizations
-Default Value: false
+Name: `differentVisualizations`
+Default Value: `false`
 Description: 
 
-Name: useLogScale
-Default Value: false
+Name: `useLogScale`
+Default Value: `false`
 Description: 
 
 
