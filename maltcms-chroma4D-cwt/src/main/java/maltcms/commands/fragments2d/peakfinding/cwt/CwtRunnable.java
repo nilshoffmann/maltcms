@@ -77,6 +77,7 @@ import maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.datastructures.ms.Chromatogram2D;
+import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.ms.IScan2D;
 import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
 import maltcms.datastructures.peak.Peak2D;
@@ -847,8 +848,8 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
      * {@inheritDoc}
      */
     @Override
-    public List<Point> findPeaks(IFileFragment ffO) {
-        this.inputFile = ffO.getUri();
+    public List<Point> findPeaks(IChromatogram2D chrom) {
+        this.inputFile = chrom.getParent().getUri();
         call();
         List<Point> l = new ArrayList<>(ridgeTree.size());
         Iterator<Tuple2D<Point2D, Ridge>> iter = ridgeTree.iterator();
@@ -864,9 +865,9 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
      * {@inheritDoc}
      */
     @Override
-    public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
+    public List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx, int dy) {
         if (this.ridgeTree == null) {
-            findPeaks(ff);
+            findPeaks(chrom);
         }
         List<Tuple2D<Point2D, Ridge>> l = ridgeTree.getNeighborsInRadius(p,
                 Math.max(dx, dy));
