@@ -161,7 +161,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 
         InstrumentConfigurationList icl = new InstrumentConfigurationList();
         InstrumentConfiguration instrumentConfiguration = new InstrumentConfiguration();
-        instrumentConfiguration.setId("instrument-configuration");
+        instrumentConfiguration.setId("instrument_configuration");
         instrumentConfiguration.setSoftwareRef("maltcms");
         icl.getInstrumentConfiguration().add(instrumentConfiguration);
         icl.setCount(0);
@@ -170,7 +170,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         SourceFile sourceFile = new SourceFile();
         sourceFile.setLocation(inputFileFragment.getUri().toString());
         sourceFile.setName(inputFileName);
-        sourceFile.setId(inputFileFragment.getName());
+        sourceFile.setId("source_file_1");
         String hash = sha1Hash(inputFile);
         if (!hash.isEmpty()) {
             CVParam fileHash = new CVParam();
@@ -205,7 +205,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
 //			//mzML.setSampleList(null);
 //			//mzML.setScanSettingsList(null);
         RunBuilder runBuilder = new RunBuilder();
-        runBuilder.id("maltcms-" + inputFileName + "-run").defaultInstrumentConfiguration(instrumentConfiguration).defaultSourceFiles(sourceFile).spectrumList(csl).chromatogramList(cl);
+        runBuilder.id("run_1").defaultInstrumentConfiguration(instrumentConfiguration).defaultSourceFiles(sourceFile).spectrumList(csl).chromatogramList(cl);
         mzML.setRun(runBuilder.build());
         MzMLMarshaller mzmlMarshaller = new MzMLMarshaller();
         String basename = StringTools.removeFileExt(outputFileFragment.getName());
@@ -219,6 +219,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
             MZMLValidator validator = new MZMLValidator();
             ValidationResult result = validator.validateMzML(f);
             if (!result.isValid()) {
+                log.warn("Validation of mzML file {} failed:", f, result.getException());
                 throw new ConstraintViolationException("MzML file " + f.getAbsolutePath() + " is invalid!");
             }
         }
