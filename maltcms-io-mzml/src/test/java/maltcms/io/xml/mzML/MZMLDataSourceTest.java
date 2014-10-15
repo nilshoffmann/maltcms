@@ -511,7 +511,7 @@ public class MZMLDataSourceTest {
         log.info("Restored shape: {}", Arrays.toString(b.
                 getShape()));
         while (ii1.hasNext() && rii1.hasNext()) {
-            Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
+            Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext(),0.0001);
         }
     }
 
