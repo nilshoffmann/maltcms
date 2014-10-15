@@ -217,6 +217,7 @@ public class ChromatogramVisualizer extends AFragmentCommand {
             } else {
                 log.warn("Could not load required variables");
             }
+            ff.clearArrays();
         }
         return t;
     }

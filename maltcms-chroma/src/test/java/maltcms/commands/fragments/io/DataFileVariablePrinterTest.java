@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry.
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code
- * under. Certain files or entire directories may not be covered by this
+ * As a user/recipient of Maltcms, you may choose which license to receive the code 
+ * under. Certain files or entire directories may not be covered by this 
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a
+ * License exceptions are explicitly declared in all relevant files or in a 
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -25,57 +25,37 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.preprocessing;
+package maltcms.commands.fragments.io;
 
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
-import lombok.extern.slf4j.Slf4j;
-import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.tools.MaltcmsTools;
-import org.apache.log4j.Level;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import ucar.ma2.Array;
+import org.junit.Rule;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
-@Category(IntegrationTest.class)
-public class DefaultVarLoaderTest extends AFragmentCommandTest {
+public class DataFileVariablePrinterTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz");
 
-    public DefaultVarLoaderTest() {
-        setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
-        setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
-    }
-
     /**
-     * Test of apply method, of class DenseArrayProducer.
+     * Test of DataFileVariablePrinter.
      */
     @Test
-    public void testDirectApply() throws IOException {
+    public void testDataFileVariablePrinter() throws IOException {
         File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
-        DefaultVarLoader dvl = new DefaultVarLoader();
+        DataFileVariablePrinter dvl = new DataFileVariablePrinter();
         commands.add(dvl);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);

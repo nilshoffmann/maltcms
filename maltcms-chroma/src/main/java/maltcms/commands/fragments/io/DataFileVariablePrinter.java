@@ -69,6 +69,10 @@ public class DataFileVariablePrinter extends AFragmentCommand {
             }
             log.info("{}", FileFragment.printFragment(f));
         }
+        for(IFileFragment f:t) {
+            //clean up
+            f.clearArrays();
+        }
         return t;
     }
 }

@@ -35,6 +35,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.csv.CSVWriter;
@@ -55,7 +56,7 @@ public class VariableDataExporter extends AFragmentCommand {
     private final String description = "Exports one-dimensional variables to csv format ";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
     @Configurable
-    private ArrayList<String> varNames = new ArrayList<>(0);
+    private List<String> varNames = new ArrayList<>(0);
 
     /** {@inheritDoc} */
     @Override
@@ -70,6 +71,7 @@ public class VariableDataExporter extends AFragmentCommand {
                         removeFileExt(iff.getName())
                         + "_" + s, a);
             }
+            iff.clearArrays();
         }
         return t;
     }

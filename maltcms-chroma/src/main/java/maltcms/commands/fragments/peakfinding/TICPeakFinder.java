@@ -38,6 +38,7 @@ import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.ConstraintViolationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,10 +70,10 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @RequiresVariables(names = {"var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
-@ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered", "andichrom.var.peak_name",
-    "andichrom.dimension.peak_number", "andichrom.var.peak_retention_time", "andichrom.var.peak_start_time",
-    "andichrom.var.peak_end_time", "andichrom.var.peak_area", "andichrom.var.baseline_start_time",
-    "andichrom.var.baseline_stop_time", "andichrom.var.baseline_start_value", "andichrom.var.baseline_stop_value"})
+@ProvidesVariables(names = {"var.tic_peaks", "var.tic_filtered", "var.peak_name",
+    "var.peak_retention_time", "var.peak_start_time",
+    "var.peak_end_time", "var.peak_area", "var.baseline_start_time",
+    "var.baseline_stop_time", "var.baseline_start_value", "var.baseline_stop_value"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
@@ -171,7 +172,7 @@ public class TICPeakFinder extends AFragmentCommand {
         } catch (Exception e) {
             log.warn("Caught exception while waiting for results: ", e);
         }
-        return new TupleND<>();
+        throw new ConstraintViolationException("Could not process any files!");
     }
 
     /** {@inheritDoc} */

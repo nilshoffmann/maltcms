@@ -117,7 +117,6 @@ public class CSVAnchorReader extends AFragmentCommand {
      */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        // EvalTools.notNull(this.location);
         if (!this.location.isEmpty()) {
             log.info("Using anchors!");
             return applyCSVReader(this.location);

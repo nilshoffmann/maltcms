@@ -107,6 +107,8 @@ public class ScoreDistributionVisualizer extends AFragmentCommand {
             } catch (final ResourceNotAvailableException rnae) {
                 log.warn("Could not load variable {} from file {}",
                         "pairwise_distance", iff);
+            } finally {
+                iff.clearArrays();
             }
         }
         return t;

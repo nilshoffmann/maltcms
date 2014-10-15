@@ -28,11 +28,13 @@
 package maltcms.commands.fragments.peakfinding;
 
 import cross.annotations.Configurable;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.ConstraintViolationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +58,7 @@ import org.openide.util.lookup.ServiceProvider;
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
+@RequiresVariables(names = {"var.total_intensity"})
 public class CwtTicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds TIC peaks using Continuous Wavelet Transform.";
@@ -120,6 +123,6 @@ public class CwtTicPeakFinder extends AFragmentCommand {
         } catch (Exception e) {
             log.warn("Caught exception while waiting for results: ", e);
         }
-        return new TupleND<>();
+        throw new ConstraintViolationException("Could not process any files!");
     }
 }

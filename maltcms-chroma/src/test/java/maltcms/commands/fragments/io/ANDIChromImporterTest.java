@@ -1,5 +1,5 @@
 /*
- * Maltcms, modular application toolkit for chromatography-mass spectrometry.
+ * Maltcms, modular application toolkit for chromatography-mass spectrometry. 
  * Copyright (C) 2008-2014, The authors of Maltcms. All rights reserved.
  *
  * Project website: http://maltcms.sf.net
@@ -14,10 +14,10 @@
  * Eclipse Public License (EPL)
  * http://www.eclipse.org/org/documents/epl-v10.php
  *
- * As a user/recipient of Maltcms, you may choose which license to receive the code
- * under. Certain files or entire directories may not be covered by this
+ * As a user/recipient of Maltcms, you may choose which license to receive the code 
+ * under. Certain files or entire directories may not be covered by this 
  * dual license, but are subject to licenses compatible to both LGPL and EPL.
- * License exceptions are explicitly declared in all relevant files or in a
+ * License exceptions are explicitly declared in all relevant files or in a 
  * LICENSE file in the relevant directories.
  *
  * Maltcms is distributed in the hope that it will be useful, but WITHOUT
@@ -25,48 +25,48 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.peakfinding;
+package maltcms.commands.fragments.io;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import maltcms.commands.filters.array.AArrayFilter;
+import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.peakfinding.TICPeakFinder;
+import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
+import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
+import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ZipResourceExtractor;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Category(IntegrationTest.class)
-public class CwtEICPeakFinderTest extends AFragmentCommandTest {
+public class ANDIChromImporterTest extends AFragmentCommandTest {
 
     /**
      *
      */
     @Test
-    public void testCwtEicPeakFinder() throws IOException {
-        File dataFolder = tf.newFolder("chromaTest Data ö");
+    public void testANDIChromImporter() throws IOException {
+        File dataFolder = tf.newFolder("chromaTestData");
         File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(CwtEICPeakFinderTest.class.getName());
+                "/cdf/1D/ap/Ap 601.CDF.gz", dataFolder);
+        File outputBase = tf.newFolder(ANDIChromImporter.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
-        CwtEicPeakFinder tpf = new CwtEicPeakFinder();
-        tpf.setIntegratePeaks(true);
-        tpf.setMaxScale(200);
-        tpf.setMinScale(5);
-        tpf.setSaveGraphics(true);
-        tpf.setMassResolution(1.0d);
-        commands.add(tpf);
+        ANDIChromImporter importer = new ANDIChromImporter();
+        commands.add(importer);
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1));
         testWorkflow(w);
     }
-
 }

@@ -125,6 +125,7 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(file,
                     this, WorkflowSlot.VISUALIZATION, f);
             getWorkflow().append(dwr);
+            f.clearArrays();
         }
         return t;
     }

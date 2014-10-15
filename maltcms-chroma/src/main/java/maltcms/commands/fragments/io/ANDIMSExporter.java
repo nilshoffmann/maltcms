@@ -92,6 +92,7 @@ public class ANDIMSExporter extends AFragmentCommand {
     /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
+        TupleND<IFileFragment> returnFragments = new TupleND<>();
         for (IFileFragment f : t) {
             log.info("Processing {}", f.getName());
             IFileFragment outf = new FileFragment(new File(getWorkflow().getOutputDirectory(this), f.
@@ -204,6 +205,7 @@ public class ANDIMSExporter extends AFragmentCommand {
             outf.save();
             DefaultWorkflowResult dwr = new DefaultWorkflowResult(outf.getUri(), this, getWorkflowSlot(), outf);
             getWorkflow().append(dwr);
+            f.clearArrays();
         }
         return t;
     }

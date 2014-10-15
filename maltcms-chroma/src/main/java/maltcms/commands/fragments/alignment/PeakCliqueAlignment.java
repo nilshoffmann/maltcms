@@ -44,6 +44,7 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.ConstraintViolationException;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.io.File;
@@ -482,11 +483,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
-        for (final IFileFragment iff : t) {
-            log.debug("{}", iff);
-        }
         if (t.size() < 2) {
-            log.warn("At least two files are required for peak clique alignment!");
+            throw new ConstraintViolationException("At least two files are required for peak clique alignment!");
         } else {
             List<IFileFragment> l = new ArrayList<>(t);
             Collections.sort(l, new Comparator<IFileFragment>() {
@@ -496,12 +494,8 @@ public class PeakCliqueAlignment extends AFragmentCommand {
                 }
             });
             final TupleND<IFileFragment> tret = matchPeaks(new TupleND<>(l));
-            for (final IFileFragment iff : tret) {
-                log.debug("{}", iff);
-            }
             return tret;
         }
-        return t;
     }
 
     /**

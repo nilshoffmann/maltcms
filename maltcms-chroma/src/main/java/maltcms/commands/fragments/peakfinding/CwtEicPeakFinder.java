@@ -34,6 +34,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
+import cross.exception.ConstraintViolationException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +112,6 @@ public class CwtEicPeakFinder extends AFragmentCommand {
         } catch (Exception e) {
             log.warn("Caught exception while waiting for results: ", e);
         }
-        return new TupleND<>();
+        throw new ConstraintViolationException("Could not process any files!");
     }
 }

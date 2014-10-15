@@ -128,6 +128,7 @@ public class ObiWarplmataExporter extends AFragmentCommand {
                     removeFileExt(iff.getName())
                     + ".lmata", lines, WorkflowSlot.FILEIO);
             lines.clear();
+            iff.clearArrays();
         }
         return t;
     }

@@ -28,18 +28,12 @@
 package maltcms.commands.fragments.preprocessing;
 
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.io.andims.NetcdfDataSource;
@@ -50,7 +44,6 @@ import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import ucar.ma2.Array;
 
 /**
  *
@@ -86,32 +79,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
         commands.add(dap);
         commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
-        TupleND<IFileFragment> results;
-        //execute workflow
-        results = testWorkflow(w);
-        //retrieve variables that DenseArrayProducer provides
-        Collection<String> variablesToCheck = Arrays.asList(new String[]{"binned_mass_values", "binned_intensity_values", "binned_scan_index"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
-        for (IFileFragment f : results) {
-            for (String variable : variablesToCheck) {
-                log.info("Checking variable: {}", variable);
-                try {
-                    //get structure, no data
-                    IVariableFragment v = f.getChild(variable, true);
-                    //load array explicitly
-                    Array a = v.getArray();
-                    Assert.assertNotNull(a);
-                    //remove
-                    f.removeChild(v);
-                    //get structure and data
-//                        v = f.getChild(variable);
-//                        a = v.getArray();
-//                        Assert.assertNotNull(a);
-                } catch (Exception e) {
-                    log.warn(e.getLocalizedMessage());
-                    Assert.fail(e.getLocalizedMessage());
-                }
-            }
-        }
+        testWorkflow(w);
     }
 
     /**
@@ -130,31 +98,6 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
         log.info("DenseArrayProducer: {}", dap);
         commands.add(dap);
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
-        TupleND<IFileFragment> results;
-        //execute workflow
-        results = testWorkflow(w);
-        //retrieve variables that DenseArrayProducer provides
-        Collection<String> variablesToCheck = Arrays.asList(new String[]{"binned_mass_values", "binned_intensity_values", "binned_scan_index"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
-        for (IFileFragment f : results) {
-            for (String variable : variablesToCheck) {
-                log.info("Checking variable: {}", variable);
-                try {
-                    //get structure, no data
-                    IVariableFragment v = f.getChild(variable, true);
-                    //load array explicitly
-                    Array a = v.getArray();
-                    Assert.assertNotNull(a);
-                    //remove
-                    f.removeChild(v);
-                    //get structure and data
-//                        v = f.getChild(variable);
-//                        a = v.getArray();
-//                        Assert.assertNotNull(a);
-                } catch (Exception e) {
-                    log.warn(e.getLocalizedMessage());
-                    Assert.fail(e.getLocalizedMessage());
-                }
-            }
-        }
+        testWorkflow(w);
     }
 }

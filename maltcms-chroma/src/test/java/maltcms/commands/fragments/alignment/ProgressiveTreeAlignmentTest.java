@@ -102,7 +102,6 @@ public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
         lmbe.setBandwidth(0.3);
         lmbe.setAccuracy(1.0E-12);
         lmbe.setRobustnessIterations(2);
-//        lmbe.setMinimaWindow(50);
         tpf.setBaselineEstimator(lmbe);
         tpf.setSnrWindow(50);
         tpf.setPeakSeparationWindow(10);
