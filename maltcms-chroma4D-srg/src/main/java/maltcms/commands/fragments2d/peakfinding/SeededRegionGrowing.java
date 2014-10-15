@@ -49,6 +49,7 @@ import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -63,8 +64,10 @@ import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakIntegration;
 import maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking;
 import maltcms.commands.fragments2d.peakfinding.srg.IRegionGrowing;
-import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
+import maltcms.datastructures.ms.Chromatogram2D;
+import maltcms.datastructures.ms.IChromatogram2D;
+import maltcms.datastructures.ms.IScan2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;
@@ -80,28 +83,26 @@ import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
-import ucar.ma2.InvalidRangeException;
 
 /**
  * Peakpicking + integration + identification + normalization + evaluation...
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
 @RequiresVariables(names = {"var.total_intensity", "var.scan_rate",
     "var.modulation_time", "var.second_column_scan_index",
-    "var.scan_acquisition_time_1d"})
+    "var.first_column_elution_time", "var.second_column_elution_time"})
 @RequiresOptionalVariables(names = {"var.v_total_intensity", "var.tic_peaks"})
 @ProvidesVariables(names = {"var.peak_index_list", "var.region_index_list",
     "var.region_peak_index", "var.boundary_index_list",
     "var.boundary_peak_index", "var.peak_mass_intensity"})
-@ServiceProvider(service=AFragmentCommand.class)
+@ServiceProvider(service = AFragmentCommand.class)
 public class SeededRegionGrowing extends AFragmentCommand {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity",
@@ -119,12 +120,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
     @Configurable(name = "var.peak_index_list", value = "peak_index_list",
             type = String.class)
     private String peakListVar = "peak_index_list";
-    @Configurable(name = "var.scan_acquisition_time_1d",
-            value = "scan_acquisition_time_1d", type = String.class)
-    private String scanAcquTime1DVar = "scan_acquisition_time_1d";
-    @Configurable(name = "var.second_column_time", value = "second_column_time",
-            type = String.class)
-    private final String secondColumnTimeVar = "second_column_time";
+    @Configurable(name = "var.first_column_elution_time")
+    private String first_column_elution_time = "first_column_elution_time";
+    @Configurable(name = "var.second_column_elution_time")
+    private String second_column_elution_time = "second_column_elution_time";
     @Configurable(name = "var.region_index_list", value = "region_index_list",
             type = String.class)
     private String regionIndexListVar = "region_index_list";
@@ -167,7 +166,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
     private PeakSeparator peakSeparator = new PeakSeparator();
     private List<List<Peak2D>> peakLists = new ArrayList<>();
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
@@ -183,33 +184,31 @@ public class SeededRegionGrowing extends AFragmentCommand {
         // running SRG the first time
         List<Peak2D> peaklist = null;
         for (final IFileFragment ff : t) {
-            peaklist = runSRG(ff, null);
+            final IChromatogram2D chrom = new Chromatogram2D(ff);
+            peaklist = runSRG(chrom, null);
             Collections.sort(peaklist, new PeakComparator());
             for (int j = 0; j < peaklist.size(); j++) {
-                peaklist.get(j).setIndex(j);
+                Peak2D peak = peaklist.get(j);
+                peak.setIndex(j);
+                Point p = chrom.getPointFor(peak.getApexIndex());
+                IScan2D scan = chrom.getScan2D(p.x, p.y);
+                peak.setFirstRetTime(scan.getFirstColumnScanAcquisitionTime());
+                peak.setSecondRetTime(scan.getSecondColumnScanAcquisitionTime());
             }
-            this.peakLists.add(peaklist);
-        }
-        for (int i = 0; i < t.size(); i++) {
-            addAdditionalInformation(this.peakLists.get(i), t.get(i));
-        }
-        log.info("Saving all Peaks");
-        // exporting peak lists
-        for (int i = 0; i < t.size(); i++) {
+            addAdditionalInformation(peaklist, ff);
+            log.info("Saving peaks for {}", ff.getName());
             final IFileFragment fret = new FileFragment(
-                    new File(getWorkflow().getOutputDirectory(this), t.get(i).
+                    new File(getWorkflow().getOutputDirectory(this), ff.
                             getName()));
-            fret.addSourceFile(t.get(i));
-            savePeaks(t.get(i), fret, this.peakLists.get(i), colorRamp);
-
+            fret.addSourceFile(ff);
+            savePeaks(chrom, fret, peaklist, colorRamp);
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(
                     fret.getUri(), this, getWorkflowSlot(),
-                    t.get(i));
+                    ff);
             getWorkflow().append(dwr);
             fret.save();
             ret.add(fret);
         }
-
         return new TupleND<>(ret);
     }
 
@@ -233,21 +232,23 @@ public class SeededRegionGrowing extends AFragmentCommand {
      * region towards its maximum, the {@link PeakSeparator} will try to merge
      * or separate the resulting {@link PeakArea2D}s.
      *
-     * @param ff file fragement to generate the {@link IScanLine}
+     * @param chrom the chromatogram
      * @param seeds initial seeds. If this parameter is <code>null</code> then
      * the {@link IPeakPicking} class will be used to determine seeds.
      * @return List of resulting peaks
      */
-    private List<Peak2D> runSRG(IFileFragment ff, List<Point> seeds) {
+    private List<Peak2D> runSRG(IChromatogram2D chrom, List<Point> seeds) {
+        final IFileFragment ff = chrom.getParent();
         final double scanRate = ff.getChild(this.scanRateVar).getArray().getDouble(
                 Index.scalarIndexImmutable);
         final double modulationTime = ff.getChild(this.modulationTimeVar).getArray().
                 getDouble(Index.scalarIndexImmutable);
         this.scansPerModulation = (int) (scanRate * modulationTime);
+        log.info("Starting seeded region growing for " + ff.getName());
 
         if (seeds == null) {
-            log.info("== starting peak finding for " + ff.getName());
-            seeds = this.peakPicking.findPeaks(ff);
+            log.info("Starting peak import for " + ff.getName());
+            seeds = this.peakPicking.findPeaks(chrom);
             Collections.sort(seeds, new Comparator<Point>() {
 
                 @Override
@@ -266,33 +267,30 @@ public class SeededRegionGrowing extends AFragmentCommand {
                     return 0;
                 }
             });
+            log.info("Imported {} peaks for {}", seeds.size(), ff.getName());
         } else {
-            log.info("== restarting peak finding for " + ff.getName());
+            log.info("Restarting seeded region growing for " + ff.getName());
         }
-        log.info("	Found {} potential peaks in {}", seeds.size(), ff.getName());
 
-        final IScanLine slc = ScanLineCacheFactory.getSparseScanLineCache(ff);
-        log.info("Computing areas with {}", slc.getClass().getSimpleName());
-//		this.scanLineCount = slc.getScanLineCount();
         long start = System.currentTimeMillis();
         final List<PeakArea2D> peakAreaList = this.regionGrowing.getAreasFor(
-                seeds, ff, slc);
+                seeds, ff, chrom);
 
-        log.info("Integration: {} ms", System.currentTimeMillis()
+        log.info("Region growing took {} ms", System.currentTimeMillis()
                 - start);
 
         if (this.separate) {
-            this.peakSeparator.startSeparationFor(peakAreaList, slc, getRetentionTime(ff));
+            this.peakSeparator.startSeparationFor(peakAreaList, chrom, getRetentionTimes(ff));
         }
 
-        slc.clear();
-
         final List<Peak2D> peaklist = createPeaklist(peakAreaList,
-                getRetentionTime(ff));
+                getRetentionTimes(ff));
         return peaklist;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
@@ -300,10 +298,10 @@ public class SeededRegionGrowing extends AFragmentCommand {
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
         this.modulationTimeVar = cfg.getString("var.modulation_time",
                 "modulation_time");
-        this.secondScanIndexVar = cfg.getString("var.second_column_scan_index",
-                "second_column_scan_index");
-        this.scanAcquTime1DVar = cfg.getString("var.scan_acquisition_time_1d",
-                "scan_acquisition_time_1d");
+        this.first_column_elution_time = cfg.getString("var.first_column_elution_time",
+                "first_column_elution_time");
+        this.second_column_elution_time = cfg.getString("var.second_column_elution_time",
+                "second_column_elution_time");
         this.peakListVar = cfg.getString("var.peak_index_list",
                 "peak_index_list");
         this.boundaryIndexListVar = cfg.getString("var.boundary_index_list",
@@ -332,17 +330,13 @@ public class SeededRegionGrowing extends AFragmentCommand {
      */
     private void createAndSaveImage(final BufferedImage image,
             final String name, final String title, final List<Peak2D> peakList,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times) {
-        ImageTools.saveImage(image, name, this.format, getWorkflow().
+            final Tuple2D<Array, Array> times) {
+        File savedImage = ImageTools.saveImage(image, name, this.format, getWorkflow().
                 getOutputDirectory(this), this);
-        // ImageTools.saveImage(image, name + "_emtpy", this.format,
-        // getIWorkflow().getOutputDirectory(this), this);
+        log.info("Using file {} for AChart", savedImage.getAbsolutePath());
 
-        final File d = getWorkflow().getOutputDirectory(this);
-        final File out = new File(d, name + "." + this.format);
-        log.info("Using file {} for AChart", out.getAbsolutePath());
-        final AChart<XYBPlot> chart = new BHeatMapChart(out.getAbsolutePath(),
-                "first retention time[min]", "second retention time[s]", times,
+        final AChart<XYBPlot> chart = new BHeatMapChart(savedImage.getAbsolutePath(),
+                "first retention time[s]", "second retention time[s]", times,
                 name);
         final XYPlot plot = chart.create();
         for (final Peak2D p : peakList) {
@@ -357,9 +351,14 @@ public class SeededRegionGrowing extends AFragmentCommand {
             pointer.setPaint(Color.WHITE);
             plot.addAnnotation(pointer);
         }
+        final File d = getWorkflow().getOutputDirectory(this);
         final PlotRunner pl = new PlotRunner(plot, title, name + "_plot", d);
         pl.configure(Factory.getInstance().getConfiguration());
-        Factory.getInstance().submitJob(pl);
+        try {
+            pl.call();
+        } catch (Exception ex) {
+            log.warn("Caught exception while plotting: ", ex);
+        }
     }
 
     /**
@@ -371,24 +370,26 @@ public class SeededRegionGrowing extends AFragmentCommand {
      * @return peakList
      */
     private List<Peak2D> createPeaklist(final List<PeakArea2D> pas,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times) {
+            final Tuple2D<Array, Array> times) {
         final List<Peak2D> peaklist = new ArrayList<>();
         PeakArea2D s;
         Peak2D peak;
         double x, y;
+        int stepSize = pas.size() / 10;
         for (int i = 0; i < pas.size(); i++) {
-            if (i % 10 == 0) {
-                log.info("	Did " + i);
+            if (i % stepSize == 0 || i == pas.size() - 1) {
+                if (log.isDebugEnabled()) {
+                    log.debug("{}%", (int) (100.0f * ((float) (i + 1) / (float) pas.size())));
+                }
             }
             s = pas.get(i);
             peak = new Peak2D();
-            x = times.getFirst().get(s.getSeedPoint().x);
-            y = times.getSecond().get(s.getSeedPoint().y);
+            x = times.getFirst().getDouble(s.getIndex());
+            y = times.getSecond().getDouble(s.getIndex());
             peak.setPeakArea(s);
             peak.setFirstRetTime(x);
             peak.setSecondRetTime(y);
             peak.setApexIndex(s.getIndex());
-
             peaklist.add(peak);
         }
 
@@ -405,20 +406,19 @@ public class SeededRegionGrowing extends AFragmentCommand {
      */
     private List<Peak2D> addAdditionalInformation(final List<Peak2D> ps,
             final IFileFragment ff) {
-
         final List<Array> tic = getIntensities(ff);
         Peak2D peak;
         log.info("Adding additional Information");
+        int stepSize = ps.size() / 10;
         for (int i = 0; i < ps.size(); i++) {
-            if (i % 10 == 0) {
-                log.info("	Did " + i);
+            if (log.isDebugEnabled()) {
+                log.debug("{}%", (int) (100.0f * ((float) (i + 1) / (float) ps.size())));
             }
             peak = ps.get(i);
             if (this.doIntegration) {
                 this.integration.integrate(peak, ff, tic, getWorkflow());
             }
         }
-
         return ps;
     }
 
@@ -433,7 +433,9 @@ public class SeededRegionGrowing extends AFragmentCommand {
         return x * this.scansPerModulation + y;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Will do an initial peak finding and computes the 'snakes'";
@@ -446,23 +448,44 @@ public class SeededRegionGrowing extends AFragmentCommand {
      * @return first and second retentiontime
      * @throws ResourceNotAvailableException
      */
-    private Tuple2D<ArrayDouble.D1, ArrayDouble.D1> getRetentionTime(
+    private Tuple2D<Array, Array> getRetentionTimes(
             final IFileFragment ff) {
-        final ArrayDouble.D1 firstRetTime = (ArrayDouble.D1) ff.getChild(
-                this.scanAcquTime1DVar).getArray();
-        IVariableFragment sctv = ff.getChild(this.secondColumnTimeVar);
-        final ArrayDouble.D1 secondRetTime;
-        try {
-            secondRetTime = (ArrayDouble.D1) sctv.getArray().section(new int[]{0}, new int[]{this.scansPerModulation});
-        } catch (InvalidRangeException ex) {
-            throw new ResourceNotAvailableException("Invalid range while subsetting variable " + this.secondColumnTimeVar + " on file " + ff.getName(), ex);
-        }
-        final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times = new Tuple2D<>(
+        final Array firstRetTime = ff.getChild(
+                this.first_column_elution_time).getArray();
+        final Array secondRetTime = ff.getChild(this.second_column_elution_time).getArray();
+        final Tuple2D<Array, Array> times = new Tuple2D<>(
                 firstRetTime, secondRetTime);
         return times;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * Getter.
+     *
+     * @param chrom chromatogram
+     * @return first and second retentiontime
+     * @throws ResourceNotAvailableException
+     */
+    private Tuple2D<Array, Array> getImageAxisRetentionTimes(
+            final IChromatogram2D chrom) {
+        Rectangle2D bounds2D = chrom.getTimeRange2D();
+        float[] firstRetTime = new float[chrom.getNumberOfModulations()];
+        float[] secondRetTime = new float[chrom.getNumberOfScansPerModulation()];
+        firstRetTime[0] = (float)bounds2D.getMinX();
+        secondRetTime[0] =(float) bounds2D.getMinY();
+        for (int i = 1; i < firstRetTime.length; i++) {
+            firstRetTime[i] = firstRetTime[i - 1] + (float)chrom.getModulationDuration();
+        }
+        for (int i = 1; i < secondRetTime.length; i++) {
+            secondRetTime[i] = secondRetTime[i - 1] + (float)(chrom.getModulationDuration() / (float) chrom.getNumberOfScansPerModulation());
+        }
+        final Tuple2D<Array, Array> times = new Tuple2D<>(
+                Array.factory(firstRetTime), Array.factory(secondRetTime));
+        return times;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.PEAKFINDING;
@@ -515,13 +538,13 @@ public class SeededRegionGrowing extends AFragmentCommand {
     /**
      * Saves all information about peaks and the peakarea.
      *
-     * @param ff file fragment
+     * @param chrom 2D chromatogramg
      * @param fret returning file fragment
      * @param peakAreaList peak area list
      * @param colorRamp color ramp
      * @return peak list
      */
-    private List<Peak2D> savePeaks(final IFileFragment ff,
+    private List<Peak2D> savePeaks(final IChromatogram2D chrom,
             final IFileFragment fret, final List<Peak2D> peaklist,
             final int[][] colorRamp) {
         log.info("Saving areas");
@@ -530,24 +553,20 @@ public class SeededRegionGrowing extends AFragmentCommand {
         for (final Peak2D pa : peaklist) {
             iter.setIntNext(idx(pa.getPeakArea().getSeedPoint().x, pa.getPeakArea().getSeedPoint().y));
         }
-
+        final IFileFragment ff = chrom.getParent();
         final IVariableFragment var = new VariableFragment(fret,
                 this.peakListVar);
         var.setArray(peakindex);
 
         log.info("Saving peaks");
         this.peakExporter.exportPeakInformation(StringTools.removeFileExt(ff.getName()), peaklist);
-        this.peakExporter.exportPeakNames(peaklist,
-                StringTools.removeFileExt(ff.getName()));
         if (this.doIntegration) {
             this.peakExporter.exportDetailedPeakInformation(StringTools.removeFileExt(ff.getName()), peaklist);
         }
-        IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
         this.peakExporter.exportPeaksToMSP(StringTools.removeFileExt(
                 ff.getName())
-                + "-peaks.msp", peaklist, isl);
-        isl.clear();
-        createImage(ff, peaklist, colorRamp, getRetentionTime(ff));
+                + "-peaks.msp", peaklist);
+        createImage(ff, peaklist, colorRamp, getImageAxisRetentionTimes(chrom));
         return peaklist;
     }
 
@@ -560,16 +579,16 @@ public class SeededRegionGrowing extends AFragmentCommand {
 
     private void createImage(final IFileFragment ff,
             final List<Peak2D> peakList, final int[][] colorRamp,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> times) {
+            final Tuple2D<Array, Array> times) {
 
         List<Array> intensities = getIntensities(ff);
         // FIXME: should not be static!
         if (!intensities.isEmpty()) {
-            intensities = intensities.subList(0, intensities.size() - 2);
+//            intensities = intensities.subList(0, intensities.size() - 2);
             final BufferedImage biBoundary = ImageTools.create2DImage(ff.getName(),
                     intensities, this.scansPerModulation, this.doubleFillValue,
                     this.threshold, colorRamp, this.getClass());
-            // log.info("PEAK AREA SIZE: {}", peakAreaList.size());
+            log.info("Peak boundary image: {}x{}", biBoundary.getWidth(), biBoundary.getHeight());
             createAndSaveImage(ImageTools.addPeakToImage(biBoundary,
                     peakList, new int[]{0, 0, 0, 255}, null, null,
                     this.scansPerModulation), StringTools.removeFileExt(ff.getName())

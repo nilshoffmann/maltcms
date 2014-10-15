@@ -30,7 +30,7 @@ package maltcms.commands.fragments2d.peakfinding.output;
 import cross.IConfigurable;
 import cross.datastructures.workflow.IWorkflowElement;
 import java.util.List;
-import maltcms.datastructures.caches.IScanLine;
+import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
 
 /**
@@ -54,12 +54,10 @@ public interface IPeakExporter extends IConfigurable, IWorkflowElement {
     /**
      * Exports all given peaks as msp compatible format
      *
-     * @param name peak name
+     * @param name peak file name
      * @param ps peak list
-     * @param isl instance of an scan line cache
      */
-    void exportPeaksToMSP(final String name, final List<Peak2D> ps,
-            final IScanLine isl);
+    void exportPeaksToMSP(final String name, final List<Peak2D> ps);
 
     /**
      * Will export some peakinformation like retentiontime, name, ...

@@ -50,8 +50,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.caches.IScanLine;
-import maltcms.datastructures.ms.IMetabolite;
+import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.ms.Metabolite2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
@@ -231,8 +230,7 @@ public class PeakExporter implements IPeakExporter {
      * {@inheritDoc}
      */
     @Override
-    public void exportPeaksToMSP(final String name, final List<Peak2D> ps,
-            final IScanLine isl) {
+    public void exportPeaksToMSP(final String name, final List<Peak2D> ps) {
         File outputDir = this.workflow.getOutputDirectory(this);
         File fname = new File(outputDir, name);
         if (!outputDir.exists()) {
@@ -272,7 +270,7 @@ public class PeakExporter implements IPeakExporter {
                     MAMath.copyInt(intensities, t.getSecond());
                     Metabolite2D m = new Metabolite2D(pname, pname,
                             "CHROMA4D-ID", cnt, "", "", this.workflow.
-                            getStartupDate().toString(), 0, p.getFirstRetTime(),
+                            getStartupDate().toString(), 0, p.getFirstRetTime()/60.0d,
                             "min", mw, "", p.getName(),
                             masses, intensities, 0, p.getSecondRetTime(), "sec");
                     try {
@@ -315,7 +313,7 @@ public class PeakExporter implements IPeakExporter {
         final List<String> header = new ArrayList<>();
         header.add("PeakID");
         header.add("Identifications");
-
+        metaTable.add(header);
         List<String> entry;
         String value;
         int i = 0;

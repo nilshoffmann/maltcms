@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.ms.IChromatogram2D;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -85,25 +86,24 @@ public class SimplePeakPicking implements IPeakPicking {
 
     /** {@inheritDoc} */
     @Override
-    public List<Point> findPeaks(IFileFragment ff) {
+    public List<Point> findPeaks(IChromatogram2D chrom) {
         this.log.info("Running {} with:", this.getClass().getName());
         this.log.info("maxDx: {}, maxDy: {}", this.maxDx, this.maxDy);
         this.log.info("stdPerc: {}", this.stdPerc);
 
-        return getPeaks(getIntensities(ff), 0, Integer.MAX_VALUE,
+        return getPeaks(getIntensities(chrom.getParent()), 0, Integer.MAX_VALUE,
                 this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
                 this.maxDy, this.stdPerc);
     }
 
     /** {@inheritDoc} */
     @Override
-    public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
+    public List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx, int dy) {
         // FIXME nicht statisch 7
         dx = Math.max(dx, 7);
         dy = Math.max(dy, 7);
         int minX = p.x - dx, maxX = p.x + dx, minY = p.y - dy, maxY = p.y + dy;
-        // FIXME nicht statisch 1
-        return getPeaks(getIntensities(ff), minX, maxX, minY, maxY, 2, 2,
+        return getPeaks(getIntensities(chrom.getParent()), minX, maxX, minY, maxY, 2, 2,
                 Double.MIN_VALUE);
     }
 

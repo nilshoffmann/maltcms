@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.ms.IChromatogram2D;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -112,13 +113,13 @@ public class MaxSortPeakPicking implements IPeakPicking {
 
     /** {@inheritDoc} */
     @Override
-    public List<Point> findPeaks(IFileFragment ff) {
+    public List<Point> findPeaks(IChromatogram2D chrom) {
         log.info("Running {} with:", this.getClass().getName());
         log.info("	total_intensity: {}", this.totalIntensityVar);
         log.info("	maxDx: {}, maxDy: {}", this.maxDx, this.maxDy);
         log.info("	k: {}", this.k);
 
-        final List<ArrayDouble.D1> intensities = getIntensities(ff,
+        final List<ArrayDouble.D1> intensities = getIntensities(chrom.getParent(),
                 this.totalIntensityVar);
         List<Point> peaks = getPeaks(intensities, 0, Integer.MAX_VALUE,
                 this.minVerticalScanIndex, Integer.MAX_VALUE, this.maxDx,
@@ -140,11 +141,11 @@ public class MaxSortPeakPicking implements IPeakPicking {
 
     /** {@inheritDoc} */
     @Override
-    public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
+    public List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx, int dy) {
         dx = Math.max(dx, 3);
         dy = Math.max(dy, 8);
         int minX = p.x - dx, maxX = p.x + dx, minY = p.y - dy, maxY = p.y + dy;
-        final List<ArrayDouble.D1> intensities = getIntensities(ff,
+        final List<ArrayDouble.D1> intensities = getIntensities(chrom.getParent(),
                 this.totalIntensityRedoVar);
         List<Point> peaks = getPeaks(intensities, minX, maxX, minY, maxY, 1, 1);
         return getKMax(intensities, peaks, dx * dy);

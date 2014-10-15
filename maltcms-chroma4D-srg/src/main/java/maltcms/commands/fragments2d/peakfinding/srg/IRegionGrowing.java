@@ -31,7 +31,7 @@ import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
 import java.util.List;
-import maltcms.datastructures.caches.IScanLine;
+import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.PeakArea2D;
 
 /**
@@ -47,9 +47,9 @@ public interface IRegionGrowing extends IConfigurable {
      *
      * @param seeds a {@link java.util.List} object.
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
-     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      * @return a {@link java.util.List} object.
      */
-    List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IScanLine slc);
+    List<PeakArea2D> getAreasFor(List<Point> seeds, IFileFragment ff, IChromatogram2D chrom);
 
 }

@@ -27,7 +27,6 @@
  */
 package maltcms.commands.fragments2d.peakfinding.picking;
 
-import cross.annotations.Configurable;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.Point;
@@ -38,58 +37,61 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.caches.IScanLine;
-import maltcms.datastructures.caches.ScanLineCacheFactory;
-import maltcms.datastructures.peak.Peak1D;
+import maltcms.datastructures.ms.Chromatogram2D;
+import maltcms.datastructures.ms.IChromatogram2D;
+import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.quadTree.QuadTree;
 import org.apache.commons.configuration.Configuration;
 
 /**
- * Uses peaks from variable tic_peaks, as provided by CWTPeakFinder or
- * TICPeakFinder.
+ * Uses 2d peaks from variable tic_peaks, as provided by CWTPeakFinder.
  *
  * @author Nils Hoffmann
- * 
+ *
  * @since 1.3.2
  */
 @Slf4j
 @Data
 public class TicPeakPicking implements IPeakPicking {
 
-    private QuadTree<Peak1D> quadTree;
+    private QuadTree<Peak2D> quadTree;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    private QuadTree<Peak1D> getQuadTree(IFileFragment ff) {
+    private QuadTree<Peak2D> getQuadTree(IChromatogram2D chrom) {
         if (this.quadTree == null) {
-            IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
-            quadTree = new QuadTree<>(0, 0, isl.getScanLineCount(), isl.getScansPerModulation(), 6);
-            for (Peak1D p : Peak1D.fromFragment(ff)) {
-                Point pt = isl.mapIndex(p.getApexIndex());
+            quadTree = new QuadTree<>(0, 0, chrom.getNumberOfModulations(), chrom.getNumberOfScansPerModulation(), 6);
+            for (Peak2D p : Peak2D.fromFragment2D(chrom.getParent(), "tic_peaks")) {
+                Point pt = chrom.getPointFor(p.getApexIndex());
                 quadTree.put(new Point2D.Double(pt.x, pt.y), p);
             }
         }
         return quadTree;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Point> findPeaks(IFileFragment ff) {
+    public List<Point> findPeaks(IChromatogram2D chrom) {
         log.info("Running {} with:", this.getClass().getName());
-        List<Peak1D> peaks = Peak1D.fromFragment(ff);
-        IScanLine isl = ScanLineCacheFactory.getSparseScanLineCache(ff);
+        List<Peak2D> peaks = Peak2D.fromFragment2D(chrom.getParent(), "tic_peaks");
         List<Point> pointList = new ArrayList<>();
-        for (Peak1D peak : peaks) {
-            pointList.add(isl.mapIndex(peak.getApexIndex()));
+        for (Peak2D peak : peaks) {
+            pointList.add(chrom.getPointFor(peak.getApexIndex()));
         }
         return pointList;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration cfg) {
 
@@ -107,14 +109,16 @@ public class TicPeakPicking implements IPeakPicking {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Point> findPeaksNear(IFileFragment ff, Point p, int dx, int dy) {
-        QuadTree<Peak1D> tree = getQuadTree(ff);
-        List<Tuple2D<Point2D, Peak1D>> l = tree.getChildrenInRange(new Rectangle2D.Double(p.x - dx, p.y - dy, 2 * dx, 2 * dy));
+    public List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx, int dy) {
+        QuadTree<Peak2D> tree = getQuadTree(chrom);
+        List<Tuple2D<Point2D, Peak2D>> l = tree.getChildrenInRange(new Rectangle2D.Double(p.x - dx, p.y - dy, 2 * dx, 2 * dy));
         ArrayList<Point> al = new ArrayList<>();
-        for (Tuple2D<Point2D, Peak1D> t : l) {
-            al.add(new Point((int) t.getFirst().getX(), (int) t.getFirst().getY()));
+        for (Tuple2D<Point2D, Peak2D> t : l) {
+            al.add(new Point((int) t.getSecond().getFirstScanIndex(), (int) t.getSecond().getSecondScanIndex()));
         }
         return al;
     }

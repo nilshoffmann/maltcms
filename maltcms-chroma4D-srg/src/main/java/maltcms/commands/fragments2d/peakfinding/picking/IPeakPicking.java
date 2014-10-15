@@ -31,6 +31,7 @@ import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
 import java.util.List;
+import maltcms.datastructures.ms.IChromatogram2D;
 
 /**
  * <p>IPeakPicking interface.</p>
@@ -43,20 +44,20 @@ public interface IPeakPicking extends IConfigurable {
     /**
      * <p>findPeaks.</p>
      *
-     * @param ffO a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      * @return a {@link java.util.List} object.
      */
-    List<Point> findPeaks(IFileFragment ffO);
+    List<Point> findPeaks(IChromatogram2D chrom);
 
     /**
      * <p>findPeaksNear.</p>
      *
-     * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      * @param p a {@link java.awt.Point} object.
      * @param dx a int.
      * @param dy a int.
      * @return a {@link java.util.List} object.
      */
-    List<Point> findPeaksNear(IFileFragment ff, Point p, int dx,
+    List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx,
             int dy);
 }

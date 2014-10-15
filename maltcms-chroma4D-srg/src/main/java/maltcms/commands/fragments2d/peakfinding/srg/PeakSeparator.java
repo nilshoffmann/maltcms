@@ -36,16 +36,19 @@ import java.util.Map;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.caches.IScanLine;
+import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.tools.ArrayTools;
+import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
- * <p>PeakSeparator class.</p>
+ * <p>
+ * PeakSeparator class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  * @since 1.3.2
  */
 @Slf4j
@@ -56,18 +59,19 @@ public class PeakSeparator {
     private IScalarArraySimilarity separationSimilarity;
     private IScalarArraySimilarity similarity;
     private boolean useMeanMsForSeparation;
-    private ArrayDouble.D1 rt1, rt2;
+    private Array rt1, rt2;
 
     /**
-     * <p>startSeparationFor.</p>
+     * <p>
+     * startSeparationFor.</p>
      *
      * @param peakAreaList a {@link java.util.List} object.
-     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      * @param rts a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
-            IScanLine slc,
-            Tuple2D<ArrayDouble.D1, ArrayDouble.D1> rts) {
+            IChromatogram2D chrom,
+            Tuple2D<Array, Array> rts) {
 
         this.rt1 = rts.getFirst();
         this.rt2 = rts.getSecond();
@@ -75,13 +79,10 @@ public class PeakSeparator {
         log.info("Separator min dist: {}", this.minDist);
 
         long start = System.currentTimeMillis();
-        log.info("Checking integrity:");
+        log.info("Starting to check integrity");
         PeakArea2D pa1, pa2;
         Map<PeakArea2D, List<PeakArea2D>> overlapping = new HashMap<>();
         for (int i = 0; i < peakAreaList.size(); i++) {
-            if (i % 10 == 0) {
-                log.info("	{} checked", i);
-            }
             pa1 = peakAreaList.get(i);
             for (int j = i + 1; j < peakAreaList.size(); j++) {
                 pa2 = peakAreaList.get(j);
@@ -129,6 +130,7 @@ public class PeakSeparator {
         // log.info("	{}", paa.getSeedPoint());
         // }
         // }
+        log.info("Checked {} peak areas for overlaps", peakAreaList.size());
         log.info("Found {} overlapping classes", overlapping.size());
         int c = 0;
         // for (PeakArea2D pa : overlapping.keySet()) {
@@ -138,24 +140,26 @@ public class PeakSeparator {
         // log.info("	class " + c++ + ": " + overlapping.get(pa).size()
         // + " peaks");
         // }
-        log.info("Checking integrity take {} ms",
+        log.info("Checking integrity took {} ms",
                 System.currentTimeMillis()
                 - start);
-
+        log.info("Starting to separate and merge peaks");
         start = System.currentTimeMillis();
         int separated = 0, merged = 0;
         for (PeakArea2D pa : overlapping.keySet()) {
             if (!overlapping.get(pa).contains(pa)) {
                 overlapping.get(pa).add(pa);
             }
-            log.info("	class " + c++ + ": " + overlapping.get(pa).size()
-                    + " peaks");
-            if (shouldBeSeparated(overlapping.get(pa), separationSimilarity, slc,
+            if (log.isDebugEnabled()) {
+                log.debug("class " + c++ + ": " + overlapping.get(pa).size()
+                        + " peaks");
+            }
+            if (shouldBeSeparated(overlapping.get(pa), separationSimilarity,
                     useMeanMsForSeparation)) {
-                separatePeaks(overlapping.get(pa), similarity, slc);
+                separatePeaks(overlapping.get(pa), similarity, chrom);
                 separated++;
             } else {
-                mergePeaks(overlapping.get(pa), slc);
+                mergePeaks(overlapping.get(pa), chrom);
                 merged++;
             }
             // for (PeakArea2D paa : overlapping.get(pa)) {
@@ -197,36 +201,35 @@ public class PeakSeparator {
             peakAreaList.remove(pa);
         }
 
-        log.info("	separated {} peak classes", separated);
-        log.info("	merged {} peak classes", merged);
-
-        log.info("Separation take {} ms", System.currentTimeMillis()
+        log.info("Separated {} peak classes", separated);
+        log.info("Merged {} peak classes", merged);
+        log.info("Separation and merging took {} ms", System.currentTimeMillis()
                 - start);
     }
 
-    private double[] getRT1RT2ForSeed(Point p) {
-        return new double[]{getRT1ForModulation(p.x), getRT2ForScanInModulation(p.y)};
-    }
-
-    private double getRT1ForModulation(int x) {
-        return rt1.get(x);
-    }
-
-    private double getRT2ForScanInModulation(int y) {
-        return rt2.get(y);
-    }
-
+//    private double[] getRT1RT2ForSeed(Point p) {
+//        return new double[]{getRT1ForModulation(p.x), getRT2ForScanInModulation(p.y)};
+//    }
+//
+//    private double getRT1ForModulation(int x) {
+//        return rt1.getDouble(x);
+//    }
+//
+//    private double getRT2ForScanInModulation(int y) {
+//        return rt2.getDouble(y);
+//    }
     /**
-     * <p>shouldBeSeparated.</p>
+     * <p>
+     * shouldBeSeparated.</p>
      *
      * @param list a {@link java.util.List} object.
-     * @param similarity a {@link maltcms.math.functions.IScalarArraySimilarity} object.
-     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param similarity a {@link maltcms.math.functions.IScalarArraySimilarity}
+     * object.
      * @param useMeanMs a boolean.
      * @return a boolean.
      */
     public boolean shouldBeSeparated(List<PeakArea2D> list,
-            IScalarArraySimilarity similarity, IScanLine slc, boolean useMeanMs) {
+            IScalarArraySimilarity similarity, boolean useMeanMs) {
 
         double min = Double.POSITIVE_INFINITY, c;
         double minG = Double.POSITIVE_INFINITY, g;
@@ -236,12 +239,14 @@ public class PeakSeparator {
             for (int j = i + 1; j < list.size(); j++) {
                 pa2 = list.get(j);
                 if (useMeanMs) {
-                    c = similarity.apply(new double[]{}, new double[]{}, pa1.
+                    c = similarity.apply(new double[]{0, 0}, new double[]{0, 0}, pa1.
                             getMeanMS(), pa2.getMeanMS());
                 } else {
-                    //TODO should at least gibt scan index difference to distance class
-                    c = similarity.apply(getRT1RT2ForSeed(pa1.getSeedPoint()),
-                            getRT1RT2ForSeed(pa2.getSeedPoint()),
+//                    int idx1 = slc.mapPoint(pa1.getSeedPoint());
+//                    int idx2 = slc.mapPoint(pa2.getSeedPoint());
+//                    rt(pa1.getSeedPoint()),
+//                            getRT1RT2ForSeed(pa2.getSeedPoint())
+                    c = similarity.apply(new double[]{0, 0}, new double[]{0, 0},
                             pa1.getSeedMS(), pa2.getSeedMS());
                     // log.info("		Score(" + pa1.getSeedPoint().x + ", "
                     // + pa1.getSeedPoint().y + " - " + pa2.getSeedPoint().x
@@ -258,22 +263,26 @@ public class PeakSeparator {
                 }
             }
         }
-        log.info("		Min: " + min + " < {} = {}", this.minDist,
-                min < this.minDist);
+        if (log.isDebugEnabled()) {
+            log.debug("Min: " + min + " < {} => are peaks separate: {}", this.minDist,
+                    min < this.minDist);
+        }
 
         // return (min < this.minDist) || (minG < 0.4d);
         return (min < this.minDist);
     }
 
     /**
-     * <p>separatePeaks.</p>
+     * <p>
+     * separatePeaks.</p>
      *
      * @param list a {@link java.util.List} object.
-     * @param similarity a {@link maltcms.math.functions.IScalarArraySimilarity} object.
-     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param similarity a {@link maltcms.math.functions.IScalarArraySimilarity}
+     * object.
+     * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      */
     public void separatePeaks(List<PeakArea2D> list,
-            IScalarArraySimilarity similarity, IScanLine slc) {
+            IScalarArraySimilarity similarity, IChromatogram2D chrom) {
 
 //        distance = new Array2DTimePenalized();
         // ((Array2DTimePenalized) distance).setSEcondTolerance(2.0d);
@@ -302,9 +311,10 @@ public class PeakSeparator {
 //                rt1diff = Math.abs(p.x - pa.getSeedPoint().x)
 //                        * (double) slc.getScansPerModulation();
 //                rt2diff = Math.abs(p.y - pa.getSeedPoint().y);
-                aD = similarity.apply(getRT1RT2ForSeed(p),
-                        getRT1RT2ForSeed(pa.getSeedPoint()),
-                        pa.getSeedMS(), slc.getMassSpectrum(p));
+                //getRT1RT2ForSeed(p),
+//                        getRT1RT2ForSeed(pa.getSeedPoint()),
+                aD = similarity.apply(new double[]{0, 0}, new double[]{0, 0},
+                        pa.getSeedMS(), chrom.getScanLineImpl().getMassSpectrum(p));
                 if (aD > maxD) {
                     maxD = aD;
                     maxArg = c;
@@ -312,8 +322,8 @@ public class PeakSeparator {
                 c++;
             }
             if (maxArg >= 0 && !list.isEmpty()) {
-                list.get(maxArg).addRegionPoint(p, slc.getMassSpectrum(p),
-                        ArrayTools.integrate(slc.getMassSpectrum(p)));
+                list.get(maxArg).addRegionPoint(p, chrom.getScanLineImpl().getMassSpectrum(p),
+                        ArrayTools.integrate(chrom.getScanLineImpl().getMassSpectrum(p)));
             }
         }
 
@@ -323,13 +333,14 @@ public class PeakSeparator {
     }
 
     /**
-     * <p>mergePeaks.</p>
+     * <p>
+     * mergePeaks.</p>
      *
      * @param list a {@link java.util.List} object.
-     * @param slc a {@link maltcms.datastructures.caches.IScanLine} object.
+     * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      */
     public void mergePeaks(List<PeakArea2D> list,
-            IScanLine slc) {
+            IChromatogram2D chrom) {
 
         double max = Double.NEGATIVE_INFINITY;
         int maxArg = -1;
@@ -345,8 +356,8 @@ public class PeakSeparator {
         for (int i = 0; i < list.size(); i++) {
             if (i != maxArg) {
                 for (Point p : list.get(i).getRegionPoints()) {
-                    pa.addRegionPoint(p, slc.getMassSpectrum(p),
-                            ArrayTools.integrate(slc.getMassSpectrum(p)));
+                    pa.addRegionPoint(p, chrom.getScanLineImpl().getMassSpectrum(p),
+                            ArrayTools.integrate(chrom.getScanLineImpl().getMassSpectrum(p)));
                 }
                 list.get(i).setMerged(true);
             }
@@ -357,7 +368,8 @@ public class PeakSeparator {
     }
 
     /**
-     * <p>Setter for the field <code>minDist</code>.</p>
+     * <p>
+     * Setter for the field <code>minDist</code>.</p>
      *
      * @param minDist a double.
      */
