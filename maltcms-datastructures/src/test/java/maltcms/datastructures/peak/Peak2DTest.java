@@ -63,6 +63,7 @@ public class Peak2DTest {
 
     public List<Peak2D> createPeaks() {
         Peak2D p1 = new Peak2D();
+        p1.setIndex(0);
         p1.setStartIndex(35);
         p1.setApexIndex(40);
         p1.setStopIndex(45);
@@ -72,6 +73,7 @@ public class Peak2DTest {
         p1.setPeakArea(peakArea1);
         p1.setArea(peakArea1.getAreaIntensity());
         Peak2D p2 = new Peak2D();
+        p2.setIndex(1);
         p2.setStartIndex(57);
         p2.setApexIndex(60);
         p2.setStopIndex(64);
@@ -81,6 +83,7 @@ public class Peak2DTest {
         p2.setPeakArea(peakArea2);
         p2.setArea(peakArea2.getAreaIntensity());
         Peak2D p3 = new Peak2D();
+        p3.setIndex(2);
         p3.setStartIndex(87);
         p3.setApexIndex(92);
         p3.setStopIndex(110);
@@ -191,6 +194,7 @@ public class Peak2DTest {
             Peak2D original = peaks.get(i);
             Peak2D restored = peaksRestored.get(i);
             Assert.assertEquals(original, restored);
+            Assert.assertEquals(original.getIndex(), restored.getIndex());
         }
     }
 }

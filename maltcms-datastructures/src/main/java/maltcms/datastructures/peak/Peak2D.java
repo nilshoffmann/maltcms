@@ -47,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
+import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -68,9 +69,9 @@ public class Peak2D extends Peak1D implements Serializable {
     private PeakArea2D peakArea = null;
     private double firstRetTime = -1.0d;
     private double secondRetTime = -1.0d;
-    
+
     public Peak2D() {
-        
+
     }
 
     /**
@@ -172,6 +173,13 @@ public class Peak2D extends Peak1D implements Serializable {
         Array area = ff.getChild("peak_area").getArray();
         Array normalizedArea = ff.getChild("peak_area_normalized").getArray();
         Collection<String> normalizationMethods = FragmentTools.getStringArray(ff, "peak_area_normalization_methods");
+        Array peakHeight = null;
+        try {
+            peakHeight = ff.getChild("peak_height").getArray();
+        } catch (ResourceNotAvailableException rnae) {
+            peakHeight = Array.factory(area.getElementType(), area.getShape());
+            ArrayTools.fill(peakHeight, Double.NaN);
+        }
         Array baseLineStartRT = ff.getChild("baseline_start_time").getArray();
         Array baseLineStopRT = ff.getChild("baseline_stop_time").getArray();
         Array baseLineStartValue = ff.getChild("baseline_start_value").getArray();
@@ -185,6 +193,7 @@ public class Peak2D extends Peak1D implements Serializable {
         ArrayList<Peak2D> peaklist = new ArrayList<>(peakPositions.getShape()[0]);
         for (int i = 0; i < peakPositions.getShape()[0]; i++) {
             Peak2D p = new Peak2D();
+            p.setIndex(i);
             if (normalizationMethods.isEmpty()) {
                 p.setNormalizationMethods(new String[]{"None"});
             } else {
@@ -199,6 +208,7 @@ public class Peak2D extends Peak1D implements Serializable {
             p.setStopTime(stopRT.getDouble(i));
             p.setArea(area.getDouble(i));
             p.setNormalizedArea(normalizedArea.getDouble(i));
+            p.setApexIntensity(peakHeight.getDouble(i));
             p.setBaselineStartTime(baseLineStartRT.getDouble(i));
             p.setBaselineStopTime(baseLineStopRT.getDouble(i));
             p.setBaselineStartValue(baseLineStartValue.getDouble(i));
@@ -269,6 +279,8 @@ public class Peak2D extends Peak1D implements Serializable {
             peakNormalizedArea.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakNormalizationMethod = new VariableFragment(ff, "peak_area_normalization_methods");
             peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers, _1024_byte_string});
+            IVariableFragment peakHeight = new VariableFragment(ff, "peak_height");
+            peakHeight.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
             baseLineStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
@@ -302,6 +314,7 @@ public class Peak2D extends Peak1D implements Serializable {
             ArrayDouble.D1 bstopV = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 area = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 areaNormalized = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 peakHeightArray = new ArrayDouble.D1(peaklist.size());
             peakSourceFileArray.setString(0, ff.getName());
             if (peakNormalizers.isEmpty()) {
                 normalizationMethodArray.setString(0, "None");
@@ -329,6 +342,7 @@ public class Peak2D extends Peak1D implements Serializable {
                 startRT.setDouble(i, p.getStartTime());
                 stopRT.setDouble(i, p.getStopTime());
                 area.setDouble(i, p.getArea());
+                peakHeightArray.setDouble(i, p.getApexIntensity());
                 bstartRT.setDouble(i, p.getStartTime());
                 bstartV.setDouble(i, p.getBaselineStartValue());
                 bstopRT.setDouble(i, p.getStopTime());
@@ -352,13 +366,14 @@ public class Peak2D extends Peak1D implements Serializable {
             peakStartRT.setArray(startRT);
             peakStopRT.setArray(stopRT);
             peakArea.setArray(area);
+            peakHeight.setArray(peakHeightArray);
             baseLineStartRT.setArray(bstartRT);
             baseLineStopRT.setArray(bstopRT);
             baseLineStartValue.setArray(bstartV);
             baseLineStopValue.setArray(bstopV);
             peakNormalizationMethod.setArray(normalizationMethodArray);
             i = 0;
-            for (Peak1D p : peaklist) {
+            for (Peak2D p : peaklist) {
                 p.setNormalizationMethods(normalizationMethodsString);
                 double normalizedArea = p.getArea();
                 for (IPeakNormalizer normalizer : peakNormalizers) {

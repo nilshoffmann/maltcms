@@ -33,6 +33,7 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,7 +55,7 @@ import ucar.ma2.MAMath;
  * Concrete Implementation of a 1-dimensional chromatogram.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 public class Chromatogram2D implements IChromatogram2D {
@@ -65,12 +66,10 @@ public class Chromatogram2D implements IChromatogram2D {
     private final String secondColumnScanAcquisitionTimeUnit = "seconds";
     @Configurable(name = "var.scan_acquisition_time")
     private String scan_acquisition_time_var = "scan_acquisition_time";
-    @Configurable(name="var.modulation_time")
+    @Configurable(name = "var.modulation_time")
     private String modulationTimeVar = "modulation_time";
     private final IVariableFragment scanAcquisitionTimeVar;
     private double md = -1;
-    private final int spm;
-    private final int slc;
     private double satOffset = 0;
     private Tuple2D<Double, Double> massRange;
     private Tuple2D<Double, Double> timeRange;
@@ -79,7 +78,8 @@ public class Chromatogram2D implements IChromatogram2D {
     private Map<Short, List<Integer>> msScanMap;
 
     /**
-     * <p>Constructor for Chromatogram2D.</p>
+     * <p>
+     * Constructor for Chromatogram2D.</p>
      *
      * @param e a {@link cross.datastructures.fragments.IFileFragment} object.
      */
@@ -89,8 +89,6 @@ public class Chromatogram2D implements IChromatogram2D {
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
         this.isl = ScanLineCacheFactory.getScanLineCache(e);
-        this.spm = this.isl.getScansPerModulation();
-        this.slc = this.isl.getScanLineCount();
         this.scanAcquisitionTimeVar = e.getChild(scan_acquisition_time_var);
         this.satOffset = e.getChild(scan_acquisition_time_var).getArray().
                 getDouble(0);
@@ -115,19 +113,25 @@ public class Chromatogram2D implements IChromatogram2D {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IFileFragment getParent() {
         return this.parent;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOf2DScans() {
         return this.isl.getScanLineCount() * this.isl.getScansPerModulation();
     }
 
-     /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IScan2D getScan2D(final int firstColumnScanIndex,
             final int secondColumnScanIndex) {
@@ -136,41 +140,56 @@ public class Chromatogram2D implements IChromatogram2D {
     }
 
     /**
-     * Call for explicit access to the underlying IScanLine implementation.
-     *
-     * @return a {@link maltcms.datastructures.caches.IScanLine} object.
+     * {@inheritDoc}
      */
+    @Override
     public IScanLine getScanLineImpl() {
         return this.isl;
     }
 
     /**
-     * <p>buildScan.</p>
+     * <p>
+     * buildScan.</p>
      *
      * @param i a int.
      * @return a {@link maltcms.datastructures.ms.IScan2D} object.
+     * @throws ArrayIndexOutOfBoundsException if the requested index is out of bounds
      */
     protected IScan2D buildScan(int i) {
-        Point p = this.isl.mapIndex(i);
-        final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectrum(p.x, p.y);
-        double sat1 = satOffset + (p.x * getModulationDuration());
-        double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
-        double sat2 = sat - sat1;
-        short scanMsLevel = 1;
-        if (msLevel != null) {
-            scanMsLevel = msLevel.getByte(i);
+        if(i>getNumberOfScans()) {
+            throw new ArrayIndexOutOfBoundsException("Requested index "+i+" was out of bounds [0,"+(getNumberOfScans()-1)+"]");
         }
-        final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
-                p.y, sat1, sat2, scanMsLevel);
-        return s;
+        Point p = this.isl.mapIndex(i);
+        if (p.x > 0 && p.y > 0 && p.x < getNumberOfModulations() && p.y < getNumberOfScansPerModulation()) {
+            final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectrum(p.x, p.y);
+            double sat1 = satOffset + (p.x * getModulationDuration());
+            double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
+            double sat2 = sat - sat1;
+            short scanMsLevel = 1;
+            if (msLevel != null) {
+                scanMsLevel = msLevel.getByte(i);
+            }
+            final Scan2D s = new Scan2D(t.getFirst(), t.getSecond(), i, sat, p.x,
+                    p.y, sat1, sat2, scanMsLevel);
+            return s;
+        } else {
+            throw new ArrayIndexOutOfBoundsException(
+                "Requested index "+i+", mapped to point "+p.x+";"+p.y+
+                " was out of bounds x => [0;"+(getNumberOfModulations()-1)+"]"+
+                " y => [0;"+(getNumberOfScansPerModulation()-1)+"]");
+        }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Tuple2D<Double, Double> getTimeRange() {
         if (timeRange == null) {
@@ -180,7 +199,9 @@ public class Chromatogram2D implements IChromatogram2D {
         return timeRange;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Tuple2D<Double, Double> getMassRange() {
         if (massRange == null) {
@@ -189,32 +210,41 @@ public class Chromatogram2D implements IChromatogram2D {
         return massRange;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Array> getIntensities() {
         return MaltcmsTools.getMZIs(this.parent).getSecond();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Array> getMasses() {
         return MaltcmsTools.getMZIs(this.parent).getFirst();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IScan2D getScan(final int scan) {
         return buildScan(scan);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getScanAcquisitionTimeUnit() {
         return this.scanAcquisitionTimeUnit;
     }
 
     /**
-     * <p>getScans.</p>
+     * <p>
+     * getScans.</p>
      *
      * @return a {@link java.util.List} object.
      */
@@ -261,7 +291,8 @@ public class Chromatogram2D implements IChromatogram2D {
     }
 
     /**
-     * <p>setExperiment.</p>
+     * <p>
+     * setExperiment.</p>
      *
      * @param e a {@link maltcms.datastructures.ms.IExperiment} object.
      */
@@ -278,7 +309,9 @@ public class Chromatogram2D implements IChromatogram2D {
      *
      * @see maltcms.datastructures.ms.IChromatogram#getScanAcquisitionTime()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Array getScanAcquisitionTime() {
         return this.parent.getChild("scan_acquisition_time").getArray();
@@ -289,7 +322,9 @@ public class Chromatogram2D implements IChromatogram2D {
      *
      * @see maltcms.datastructures.ms.IChromatogram#getNumberOfScans()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfScans() {
         if (numberOfScans == -1) {
@@ -299,7 +334,8 @@ public class Chromatogram2D implements IChromatogram2D {
     }
 
     /**
-     * <p>getIntensities.</p>
+     * <p>
+     * getIntensities.</p>
      *
      * @param globalScan a int.
      * @param localScan a int.
@@ -310,7 +346,8 @@ public class Chromatogram2D implements IChromatogram2D {
     }
 
     /**
-     * <p>getMasses.</p>
+     * <p>
+     * getMasses.</p>
      *
      * @param globalScan a int.
      * @param localScan a int.
@@ -320,19 +357,25 @@ public class Chromatogram2D implements IChromatogram2D {
         return getMasses().get(this.isl.mapPoint(globalScan, localScan));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Point getPointFor(int scan) {
         return this.isl.mapIndex(scan);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Point getPointFor(double scan_acquisition_time) {
         return getPointFor(getIndexFor(scan_acquisition_time));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getIndexFor(double scan_acquisition_time) {
         double[] d = (double[]) getScanAcquisitionTime().get1DJavaArray(
@@ -367,25 +410,33 @@ public class Chromatogram2D implements IChromatogram2D {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getSecondColumnScanAcquisitionTimeUnit() {
         return this.secondColumnScanAcquisitionTimeUnit;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfModulations() {
         return this.isl.getScanLineCount();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfScansPerModulation() {
         return this.isl.getScansPerModulation();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public double getModulationDuration() {
 //        if (this.md == -1) {
@@ -396,7 +447,9 @@ public class Chromatogram2D implements IChromatogram2D {
         return this.md;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getNumberOfScansForMsLevel(short msLevelValue) {
         if (msLevelValue == (short) 1 && msScanMap == null) {
@@ -405,7 +458,9 @@ public class Chromatogram2D implements IChromatogram2D {
         return msScanMap.get(msLevelValue).size();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterable<IScan2D> subsetByMsLevel(final short msLevel) {
         Iterable<IScan2D> iterable = new Iterable<IScan2D>() {
@@ -418,7 +473,9 @@ public class Chromatogram2D implements IChromatogram2D {
         return iterable;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<Short> getMsLevels() {
         if (msScanMap == null) {
@@ -429,7 +486,9 @@ public class Chromatogram2D implements IChromatogram2D {
         return l;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IScan2D getScanForMsLevel(int i, short level) {
         if (level == (short) 1 && msScanMap == null) {
@@ -441,7 +500,9 @@ public class Chromatogram2D implements IChromatogram2D {
         return getScan(msScanMap.get(level).get(i));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Integer> getIndicesOfScansForMsLevel(short level) {
         if (level == (short) 1 && msScanMap == null) {
@@ -456,6 +517,18 @@ public class Chromatogram2D implements IChromatogram2D {
             throw new ResourceNotAvailableException("No ms fragmentation level available for chromatogram " + getParent().getName());
         }
         return Collections.unmodifiableList(msScanMap.get(level));
+    }
+
+    @Override
+    public Rectangle2D getTimeRange2D() {
+        IScan2D scan00 = getScan2D(0, 0);
+        IScan2D scan11 = getScan2D(getNumberOfModulations() - 1, getNumberOfScansPerModulation() - 1);
+        return new Rectangle2D.Double(
+                scan00.getFirstColumnScanAcquisitionTime(),
+                scan00.getSecondColumnScanAcquisitionTime(),
+                scan11.getFirstColumnScanAcquisitionTime() - scan00.getFirstColumnScanAcquisitionTime(),
+                scan11.getSecondColumnScanAcquisitionTime() - scan00.getSecondColumnScanAcquisitionTime()
+        );
     }
 
     private class Scan2DIterator implements Iterator<IScan2D> {

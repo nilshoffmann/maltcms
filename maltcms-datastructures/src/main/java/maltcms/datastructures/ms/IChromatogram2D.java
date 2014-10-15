@@ -28,6 +28,8 @@
 package maltcms.datastructures.ms;
 
 import java.awt.Point;
+import java.awt.geom.Rectangle2D;
+import maltcms.datastructures.caches.IScanLine;
 
 /**
  * Interface representing a 2-dimensional chromatogram.
@@ -104,4 +106,17 @@ public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
      * @return a {@link java.lang.Iterable} object.
      */
     public Iterable<IScan2D> subsetByMsLevel(short msLevel);
+    
+    /**
+     * <p>Returns the rectangular time range of this 2D chromatogram</p>.
+     * @return the bounding box of retention times.
+     */
+    public Rectangle2D getTimeRange2D();
+    
+    /**
+     * Call for explicit access to the underlying IScanLine implementation.
+     *
+     * @return a {@link maltcms.datastructures.caches.IScanLine} object.
+     */
+    public IScanLine getScanLineImpl();
 }

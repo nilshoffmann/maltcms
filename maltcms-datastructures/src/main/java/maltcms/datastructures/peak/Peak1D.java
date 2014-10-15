@@ -65,10 +65,11 @@ import ucar.nc2.Dimension;
  *
  * Peak1D models a standard 1D chromatographic peak. If you want to model mass
  * spectral peaks over time, use a Peak1DGroup instance.
- * 
- * Peak1D objects can be compared using <code>equals</code>. Each peak additionally 
- * has a random unique id, that can be retrieved using <code>getUniqueId()</code>.
- * 
+ *
+ * Peak1D objects can be compared using <code>equals</code>. Each peak
+ * additionally has a random unique id, that can be retrieved using
+ * <code>getUniqueId()</code>.
+ *
  *
  */
 @Data
@@ -264,12 +265,20 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
         Array peakStartIndex = ff.getChild("peak_start_index").getArray();
         Array peakEndIndex = ff.getChild("peak_end_index").getArray();
         Array snr = ff.getChild("peak_signal_to_noise").getArray();
+        Array peakHeight = null;
+        try {
+            peakHeight = ff.getChild("peak_height").getArray();
+        } catch (ResourceNotAvailableException rnae) {
+            peakHeight = Array.factory(area.getElementType(), area.getShape());
+            ArrayTools.fill(peakHeight, Double.NaN);
+        }
         ArrayChar.D2 peakType = (ArrayChar.D2) ff.getChild("peak_type").getArray();
         Array peakDetectionChannel = ff.getChild("peak_detection_channel").getArray();
         ArrayInt.D1 peakPositions = (ArrayInt.D1) peaks.getArray();
         ArrayList<Peak1D> peaklist = new ArrayList<>(peakPositions.getShape()[0]);
         for (int i = 0; i < peakPositions.getShape()[0]; i++) {
             Peak1D p = new Peak1D();
+            p.setIndex(i);
             if (normalizationMethods.isEmpty()) {
                 p.setNormalizationMethods(new String[]{"None"});
             } else {
@@ -281,6 +290,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             p.setStartTime(startRT.getDouble(i));
             p.setStopTime(stopRT.getDouble(i));
             p.setArea(area.getDouble(i));
+            p.setApexIntensity(peakHeight.getDouble(i));
             p.setNormalizedArea(normalizedArea.getDouble(i));
             p.setBaselineStartTime(baseLineStartRT.getDouble(i));
             p.setBaselineStopTime(baseLineStopRT.getDouble(i));
@@ -368,6 +378,8 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             peakNormalizedArea.setDimensions(new Dimension[]{peak_number});
             IVariableFragment peakNormalizationMethod = new VariableFragment(ff, "peak_area_normalization_methods");
             peakNormalizationMethod.setDimensions(new Dimension[]{peak_normalizers, _1024_byte_string});
+            IVariableFragment peakHeight = new VariableFragment(ff, "peak_height");
+            peakHeight.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStartRT = new VariableFragment(ff, "baseline_start_time");
             baseLineStartRT.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStopRT = new VariableFragment(ff, "baseline_stop_time");
@@ -387,7 +399,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                     1, 1024);
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
                     Math.max(1, peakNormalizers.size()), 1024);
-            String[] normalizationMethodsString = new String[Math.max(1,peakNormalizers.size())];
+            String[] normalizationMethodsString = new String[Math.max(1, peakNormalizers.size())];
             ArrayDouble.D1 apexRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 startRT = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 snrArray = new ArrayDouble.D1(peaklist.size());
@@ -399,6 +411,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             ArrayDouble.D1 bstopV = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 area = new ArrayDouble.D1(peaklist.size());
             ArrayDouble.D1 areaNormalized = new ArrayDouble.D1(peaklist.size());
+            ArrayDouble.D1 peakHeightArray = new ArrayDouble.D1(peaklist.size());
             peakSourceFileArray.setString(0, ff.getName());
             if (peakNormalizers.isEmpty()) {
                 normalizationMethodArray.setString(0, "None");
@@ -424,6 +437,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
                 startRT.setDouble(i, p.getStartTime());
                 stopRT.setDouble(i, p.getStopTime());
                 area.setDouble(i, p.getArea());
+                peakHeightArray.setDouble(i, p.getApexIntensity());
                 bstartRT.setDouble(i, p.getStartTime());
                 bstartV.setDouble(i, p.getBaselineStartValue());
                 bstopRT.setDouble(i, p.getStopTime());
@@ -445,6 +459,7 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
             peakStartRT.setArray(startRT);
             peakStopRT.setArray(stopRT);
             peakArea.setArray(area);
+            peakHeight.setArray(peakHeightArray);
             baseLineStartRT.setArray(bstartRT);
             baseLineStopRT.setArray(bstopRT);
             baseLineStartValue.setArray(bstartV);

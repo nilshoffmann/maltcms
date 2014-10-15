@@ -64,6 +64,9 @@ public class Peak1DTest {
             new Peak1D(89, 255, 352),
             new Peak1D(830, 1240, 2241)
         };
+        for (int i = 0; i < scans.length; i++) {
+            scans[i].setIndex(i);
+        }
         return Arrays.asList(scans);
     }
 
@@ -144,6 +147,7 @@ public class Peak1DTest {
             Peak1D original = peaks.get(i);
             Peak1D restored = peaksRestored.get(i);
             Assert.assertEquals(original, restored);
+            Assert.assertEquals(original.getIndex(), restored.getIndex());
         }
     }
 }
