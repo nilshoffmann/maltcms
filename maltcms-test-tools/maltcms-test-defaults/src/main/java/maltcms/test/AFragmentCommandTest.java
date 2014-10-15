@@ -28,15 +28,22 @@
 package maltcms.test;
 
 import cross.Factory;
+import cross.annotations.AnnotationInspector;
+import cross.commands.ICommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.ImmutableFileFragment;
 import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflow;
 import cross.datastructures.workflow.IWorkflow;
+import cross.exception.ResourceNotAvailableException;
 import cross.test.LogMethodName;
 import cross.test.SetupLogging;
+import cross.vocabulary.CvResolver;
+import cross.vocabulary.ICvResolver;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,14 +55,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import ucar.ma2.Array;
 
 /**
- * <p>Abstract AFragmentCommandTest class.</p>
+ * <p>
+ * Abstract AFragmentCommandTest class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 public abstract class AFragmentCommandTest {
@@ -68,7 +78,8 @@ public abstract class AFragmentCommandTest {
     public LogMethodName lmn = new LogMethodName();
 
     /**
-     * <p>setLogLevelFor.</p>
+     * <p>
+     * setLogLevelFor.</p>
      *
      * @param prefix a {@link java.lang.String} object.
      * @param logLevel a {@link org.apache.log4j.Level} object.
@@ -101,7 +112,8 @@ public abstract class AFragmentCommandTest {
     }
 
     /**
-     * <p>setLogLevelFor.</p>
+     * <p>
+     * setLogLevelFor.</p>
      *
      * @param cls a {@link java.lang.Class} object.
      * @param logLevel a {@link org.apache.log4j.Level} object.
@@ -111,7 +123,8 @@ public abstract class AFragmentCommandTest {
     }
 
     /**
-     * <p>setLogLevelFor.</p>
+     * <p>
+     * setLogLevelFor.</p>
      *
      * @param pkg a {@link java.lang.Package} object.
      * @param logLevel a {@link org.apache.log4j.Level} object.
@@ -121,7 +134,8 @@ public abstract class AFragmentCommandTest {
     }
 
     /**
-     * <p>createWorkflow.</p>
+     * <p>
+     * createWorkflow.</p>
      *
      * @param outputDirectory a {@link java.io.File} object.
      * @param commands a {@link java.util.List} object.
@@ -151,7 +165,8 @@ public abstract class AFragmentCommandTest {
     }
 
     /**
-     * <p>testWorkflow.</p>
+     * <p>
+     * testWorkflow.</p>
      *
      * @param w a {@link cross.datastructures.workflow.IWorkflow} object.
      * @return a {@link cross.datastructures.tuple.TupleND} object.
@@ -161,6 +176,25 @@ public abstract class AFragmentCommandTest {
             w.getConfiguration().setProperty("output.overwrite", true);
             TupleND<IFileFragment> t = w.call();
             w.save();
+            setLogLevelFor(ICvResolver.class, Level.ALL);
+            CvResolver cvResolver = new CvResolver();
+            for (IFileFragment ff : t) {
+                for (ICommand command : w.getCommandSequence().getCommands()) {
+                    IFileFragment testFrag = new FileFragment();
+                    testFrag.addSourceFile(ff);
+                    for (String variable : AnnotationInspector.getProvidedVariables(command)) {
+                        log.info("Evaluating results for variable {}, resolved: {}", variable, cvResolver.translate(variable));
+                        try {
+                            IVariableFragment var = testFrag.getChild(cvResolver.translate(variable));
+                            Array a = var.getArray();
+                            Assert.assertNotNull(a);
+                        } catch (ResourceNotAvailableException rnae) {
+                            Assert.fail(rnae.getLocalizedMessage());
+                        }
+                    }
+                }
+            }
+
             return t;
         } catch (Exception e) {
             copyToInspectionDir(w, e);
@@ -170,7 +204,8 @@ public abstract class AFragmentCommandTest {
     }
 
     /**
-     * <p>copyToInspectionDir.</p>
+     * <p>
+     * copyToInspectionDir.</p>
      *
      * @param w a {@link cross.datastructures.workflow.IWorkflow} object.
      * @param t a {@link java.lang.Throwable} object.
