@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import maltcms.ui.charts.AChart;
 import maltcms.ui.charts.PlotRunner;
 import maltcms.ui.charts.XYChart;
@@ -48,11 +49,13 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
 
 /**
- * <p>ArrayTools class.</p>
+ * <p>
+ * ArrayTools class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
+@Slf4j
 public class ArrayTools {
 
     /**
@@ -110,25 +113,29 @@ public class ArrayTools {
             }
         }
         if (visualize) {
-            final AChart<XYPlot> xyc1 = new XYChart(
-                    "Visualization of sorted standard deviation",
-                    new String[]{StringTools.removeFileExt(ff.getName())},
-                    new Array[]{h}, new Array[]{g}, "#",
-                    "standard deviation", true);
-            final XYPlot plot = xyc1.create();
-            for (int i = 0; i < quantil.length; i++) {
-                plot.addDomainMarker(new ValueMarker(position[i]));
+            try {
+                final AChart<XYPlot> xyc1 = new XYChart(
+                        "Visualization of sorted standard deviation",
+                        new String[]{StringTools.removeFileExt(ff.getName())},
+                        new Array[]{h}, new Array[]{g}, "#",
+                        "standard deviation", true);
+                final XYPlot plot = xyc1.create();
+                for (int i = 0; i < quantil.length; i++) {
+                    plot.addDomainMarker(new ValueMarker(position[i]));
+                }
+                final PlotRunner pr1 = new PlotRunner(plot,
+                        "Plot of sorted standard deviation", StringTools.
+                        removeFileExt(ff.getName())
+                        + "_sortedStd", ac.getWorkflow().getOutputDirectory(ac));
+                pr1.configure(Factory.getInstance().getConfiguration());
+                final File f1 = pr1.getFile();
+                final DefaultWorkflowResult dwr1 = new DefaultWorkflowResult(f1,
+                        ac, ac.getWorkflowSlot(), ff);
+                ac.getWorkflow().append(dwr1);
+                pr1.call();
+            } catch (Exception ex) {
+                log.warn("Caught exception while creating plot: ", ex);
             }
-            final PlotRunner pr1 = new PlotRunner(plot,
-                    "Plot of sorted standard deviation", StringTools.
-                    removeFileExt(ff.getName())
-                    + "_sortedStd", ac.getWorkflow().getOutputDirectory(ac));
-            pr1.configure(Factory.getInstance().getConfiguration());
-            final File f1 = pr1.getFile();
-            final DefaultWorkflowResult dwr1 = new DefaultWorkflowResult(f1,
-                    ac, ac.getWorkflowSlot(), ff);
-            ac.getWorkflow().append(dwr1);
-            Factory.getInstance().submitJob(pr1);
         }
         return value;
     }

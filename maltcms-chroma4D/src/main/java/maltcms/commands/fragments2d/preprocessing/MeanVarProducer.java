@@ -68,7 +68,7 @@ import ucar.ma2.IndexIterator;
 @Data
 @RequiresVariables(names = {"var.modulation_time", "var.scan_rate"})
 @ProvidesVariables(names = {"var.mean_ms_intensity", "var.var_ms_intensity",
-    "var.sd_ms_intensity", "var.v_total_intensity", "var.v_mass_values",
+    "var.sd_ms_intensity", "var.v_total_intensity",
     "var.v_total_intensity_1d", "var.meanms_1d_horizontal_index",
     "var.meanms_1d_horizontal", "var.meanms_1d_vertical_index",
     "var.meanms_1d_vertical", "var.maxms_1d_horizontal_index",
@@ -109,14 +109,20 @@ public class MeanVarProducer extends AFragmentCommand {
     private double minStandardDeviationQuantil = 0.01d;
     @Configurable(value = "-1.0d")
     private double minStandardDeviation = -1.0d;
+    
+    private Tuple2D<Double, Double> massRange;
+    @Configurable
+    private double massResolution = 1.0d;
+    
 
     /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<>();
-        Tuple2D<Double, Double> massRange = MaltcmsTools.getMinMaxMassRange(t);
+        massRange = MaltcmsTools.getMinMaxMassRange(t);
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
+        ScanLineCacheFactory.setMassResolution(massResolution);
         for (final IFileFragment ff : t) {
             log.info("Computing mean and std for {}", StringTools.removeFileExt(ff.getName()));
             final IFileFragment fret = new FileFragment(
@@ -425,12 +431,12 @@ public class MeanVarProducer extends AFragmentCommand {
             final IScanLine slc) {
         final ArrayDouble.D1 mean = new ArrayDouble.D1(slc.getBinsSize());
         final ArrayDouble.D1 var = new ArrayDouble.D1(slc.getBinsSize());
-        // TODO: für jedes mz ein eigenen count? oder doch einer fuer alle?
         final ArrayInt.D1 nn = new ArrayInt.D1(slc.getBinsSize());
 
         int n = 0;
         double delta = 0, meanCurrent = 0, x = 0, v = 0;
         double inten;
+        int minMass = MaltcmsTools.binMZ(massRange.getFirst(), massRange.getFirst(), massRange.getSecond(), massResolution);
         int mass;
         for (int i = 0; i < slc.getScanLineCount(); i++) {
             if (i % 100 == 0) {
@@ -442,7 +448,7 @@ public class MeanVarProducer extends AFragmentCommand {
                 final IndexIterator intenIter = ms.getSecond().getIndexIterator();
                 while (massIter.hasNext() && intenIter.hasNext()) {
                     inten = intenIter.getDoubleNext();
-                    mass = massIter.getIntNext();
+                    mass = MaltcmsTools.binMZ(massIter.getDoubleNext(), massRange.getFirst(), massRange.getSecond(), massResolution);
                     n = nn.get(mass) + 1;
                     nn.set(mass, n);
                     meanCurrent = mean.get(mass);

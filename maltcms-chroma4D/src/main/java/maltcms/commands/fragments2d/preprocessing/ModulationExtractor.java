@@ -38,6 +38,7 @@ import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
@@ -62,7 +63,7 @@ import ucar.nc2.Dimension;
  * implementations.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 @Data
@@ -70,7 +71,7 @@ import ucar.nc2.Dimension;
     "var.scan_rate"})
 @ProvidesVariables(names = {"var.scan_index", "var.scan_acquisition_time",
     "var.mass_values", "var.intensity_values", "var.total_intensity",
-    "var.scan_rate", "var.modulation_time"})
+    "var.mass_range_min", "var.mass_range_max"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class ModulationExtractor extends AFragmentCommand {
 
@@ -84,12 +85,22 @@ public class ModulationExtractor extends AFragmentCommand {
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
     @Configurable(name = "var.scan_index")
     private String scanIndexVar = "scan_index";
+    @Configurable(name = "var.mass_range_min")
+    private String massRangeMinVar = "mass_range_min";
+    @Configurable(name = "var.mass_range_max")
+    private String massRangeMaxVar = "mass_range_max";
+    @Configurable(name = "var.mass_values")
+    private String massValuesVar = "mass_values";
+    @Configurable(name = "var.intensity_values")
+    private String intensityValuesVar = "intensity_values";
     @Configurable(value = "-1")
     private int startModulation = -1;
     @Configurable(value = "-1")
     private int endModulation = -1;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration cfg) {
         this.totalIntensityVar = cfg.getString("var.total_intensity",
@@ -98,10 +109,15 @@ public class ModulationExtractor extends AFragmentCommand {
                 "modulation_time");
         this.scanRateVar = cfg.getString("var.scan_rate", "scan_rate");
         this.scanAcquisitionTimeVar = cfg.getString("var.scan_acquisition_time", "scan_acquisition_time");
+        this.massRangeMinVar = cfg.getString("var.mass_range_min", "mass_range_min");
+        this.massRangeMaxVar = cfg.getString("var.mass_range_max", "mass_range_max");
+        this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
+        this.intensityValuesVar = cfg.getString("var.intensity_values", "intensity_values");
     }
 
     /**
-     * <p>get1DArraySubset.</p>
+     * <p>
+     * get1DArraySubset.</p>
      *
      * @param a a {@link ucar.ma2.Array} object.
      * @param modulationStart a int.
@@ -114,7 +130,8 @@ public class ModulationExtractor extends AFragmentCommand {
     }
 
     /**
-     * <p>get1DArraySubset.</p>
+     * <p>
+     * get1DArraySubset.</p>
      *
      * @param a a {@link ucar.ma2.Array} object.
      * @param modulationStart a int.
@@ -145,7 +162,8 @@ public class ModulationExtractor extends AFragmentCommand {
     }
 
     /**
-     * <p>modulationIndexToScanIndex.</p>
+     * <p>
+     * modulationIndexToScanIndex.</p>
      *
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param interModulationIndex a int.
@@ -159,7 +177,8 @@ public class ModulationExtractor extends AFragmentCommand {
     }
 
     /**
-     * <p>intraModulationIndexToScanIndex.</p>
+     * <p>
+     * intraModulationIndexToScanIndex.</p>
      *
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param interModulationIndex a int.
@@ -206,7 +225,9 @@ public class ModulationExtractor extends AFragmentCommand {
      *
      * @see cross.commands.fragments.AFragmentCommand#getDescription()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
@@ -230,7 +251,9 @@ public class ModulationExtractor extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         final TupleND<IFileFragment> res = new TupleND<>();
@@ -240,16 +263,17 @@ public class ModulationExtractor extends AFragmentCommand {
             log.info("Reading 1D data from x: {} to {}; y: {} to {}, with {} scans per modulation", new Object[]{ranges[0], ranges[1], ranges[2], ranges[3], ranges[4]});
             Array sat = get1DArraySubset(ff.getChild(scanAcquisitionTimeVar).getArray(), ranges[0], ranges[1], ranges[4]);
             Array tic = get1DArraySubset(ff.getChild(totalIntensityVar).getArray(), ranges[0], ranges[1], ranges[4]);
-            Array indexSubset = get1DArraySubset(ff.getChild(scanIndexVar).getArray(), ranges[0], ranges[1], ranges[4]);
-            IVariableFragment indexSubsetVar = new VariableFragment(work, "scan_index");
-            indexSubsetVar.setArray(indexSubset);
-            IVariableFragment massesVar = ff.getChild("mass_values");
-            massesVar.setIndex(indexSubsetVar);
-            List<Array> massSubset = massesVar.getIndexedArray();
+            Array mass_range_min = get1DArraySubset(ff.getChild(massRangeMinVar).getArray(), ranges[0], ranges[1], ranges[4]);
+            Array mass_range_max = get1DArraySubset(ff.getChild(massRangeMaxVar).getArray(), ranges[0], ranges[1], ranges[4]);
+            IVariableFragment indexVar = ff.getChild(scanIndexVar);
+            Array indexSubset = get1DArraySubset(indexVar.getArray(), ranges[0], ranges[1], ranges[4]);
+            IVariableFragment massesVar = ff.getChild(massValuesVar);
+            massesVar.setIndex(indexVar);
+            List<Array> massSubset = createIndexedSubset(massesVar, indexSubset);
             int massDim = ArrayTools.getSizeForFlattenedArrays(massSubset);
-            IVariableFragment intensVar = ff.getChild("intensity_values");
-            intensVar.setIndex(indexSubsetVar);
-            List<Array> intensSubset = intensVar.getIndexedArray();
+            IVariableFragment intensVar = ff.getChild(intensityValuesVar);
+            intensVar.setIndex(indexVar);
+            List<Array> intensSubset = createIndexedSubset(intensVar, indexSubset);
 
             //correct the index array for new offset
             int minIndex = (int) MAMath.getMinimum(indexSubset);
@@ -262,6 +286,8 @@ public class ModulationExtractor extends AFragmentCommand {
                 iter.setIntCurrent(current - minIndex);
             }
 
+            IVariableFragment targetIndex = new VariableFragment(work, scanIndexVar);
+            targetIndex.setArray(indexSubset);
             IVariableFragment targetMasses = new VariableFragment(work, massesVar.getName());
             targetMasses.setIndexedArray(massSubset);
             targetMasses.setDimensions(adaptDimensions(massesVar, new int[]{massDim}));
@@ -276,6 +302,14 @@ public class ModulationExtractor extends AFragmentCommand {
             IVariableFragment satVar = new VariableFragment(work, scanAcquisitionTimeVar);
             satVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(scanAcquisitionTimeVar).getDimensions()[0].getName(), tic.getShape()[0])});
             satVar.setArray(sat);
+            
+            IVariableFragment mrminVar = new VariableFragment(work, massRangeMinVar);
+            mrminVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(totalIntensityVar).getDimensions()[0].getName(), tic.getShape()[0])});
+            mrminVar.setArray(mass_range_min);
+            IVariableFragment mrmaxVar = new VariableFragment(work, massRangeMaxVar);
+            mrmaxVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(totalIntensityVar).getDimensions()[0].getName(), tic.getShape()[0])});
+            mrmaxVar.setArray(mass_range_max);
+            
             work.setAttributes(ff.getAttributes().toArray(new Attribute[ff.getAttributes().size()]));
             work.save();
             res.add(work);
@@ -283,12 +317,24 @@ public class ModulationExtractor extends AFragmentCommand {
         return res;
     }
 
+    private List<Array> createIndexedSubset(IVariableFragment indexedVariable, Array indices) {
+        List<Array> subset = new ArrayList<Array>();
+        List<Array> intensSubset = indexedVariable.getIndexedArray();
+        for (int i = 0; i < indices.getShape()[0]; i++) {
+            int idx = indices.getInt(i);
+            subset.add(intensSubset.get(idx));
+        }
+        return subset;
+    }
+
     /*
      * (non-Javadoc)
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

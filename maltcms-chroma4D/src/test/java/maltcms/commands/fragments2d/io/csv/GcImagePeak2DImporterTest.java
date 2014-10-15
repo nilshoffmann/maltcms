@@ -39,6 +39,7 @@ import java.util.List;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ZipResourceExtractor;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -46,7 +47,7 @@ import org.junit.Test;
  * @author Nils Hoffmann
  */
 public class GcImagePeak2DImporterTest extends AFragmentCommandTest {
-    
+
     @Test
     public void testGcImagePeak2DImporter() throws IOException {
         File dataFolder = tf.newFolder("gcImageTestFolder");
@@ -55,7 +56,7 @@ public class GcImagePeak2DImporterTest extends AFragmentCommandTest {
                 "/cdf/2D/mut_t1_a.cdf.gz", dataFolder);
         File file = ZipResourceExtractor.extract(
                 "/csv/gcimage/reduced/mut_t1_a.csv", dataFolder);
-        
+
         List<IFragmentCommand> commands = new ArrayList<>();
 //        Default2DVarLoader default2DVarLoader = new Default2DVarLoader();
 //        default2DVarLoader.setScanRate(100);
@@ -70,7 +71,17 @@ public class GcImagePeak2DImporterTest extends AFragmentCommandTest {
                 sourceFile));
         TupleND<IFileFragment> workflowResults = testWorkflow(w);
         IFileFragment resultFragment = workflowResults.get(0);
-        Peak2D.fromFragment(resultFragment, "tic_peaks");
+        List<Peak2D> peaks = Peak2D.fromFragment2D(resultFragment, "tic_peaks");
+        Assert.assertEquals(375, peaks.size());
+        Peak2D firstPeak = peaks.get(0);
+//        1	M000664_A146007-101-xxx_NA_1470.57_TRUE_VAR5_ALK_Butanoic acid, 4-amino-3-hydroxy- (3TMS)	Group 1			11.5	2.23	12423	12423
+        //index is zero based
+        Assert.assertEquals(0, firstPeak.getIndex());
+        Assert.assertEquals("M000664_A146007-101-xxx_NA_1470.57_TRUE_VAR5_ALK_Butanoic acid, 4-amino-3-hydroxy- (3TMS)", firstPeak.getName());
+        Assert.assertEquals(11.5d * 60.d, firstPeak.getFirstRetTime(), 0.0001);
+        Assert.assertEquals(2.23d, firstPeak.getSecondRetTime(), 0.0001);
+        Assert.assertEquals(12423, firstPeak.getArea(), 0.0001);
+        Assert.assertEquals(12423, firstPeak.getApexIntensity(), 0.0001);
     }
-    
+
 }

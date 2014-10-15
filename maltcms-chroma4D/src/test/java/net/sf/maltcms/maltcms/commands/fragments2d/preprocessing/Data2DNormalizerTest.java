@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.preprocessing.Data2DNormalizer;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ZipResourceExtractor;
@@ -47,21 +48,24 @@ import org.junit.experimental.categories.Category;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class Default2DVarLoaderTest extends AFragmentCommandTest {
+public class Data2DNormalizerTest extends AFragmentCommandTest {
 
     @Test
-    public void testDefault2DVarLoader() throws IOException {
+    public void testData2DNormalizer() throws IOException {
         File dataFolder = tf.newFolder("chroma4DTestData");
         File outputBase = tf.newFolder("chroma4DTestOut");
         File inputFile = ZipResourceExtractor.extract(
                 "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
-        Default2DVarLoader d2vl = new Default2DVarLoader();
-        d2vl.setEstimateModulationTime(false);
-        d2vl.setModulationTime(5.0d);
-        d2vl.setScanRate(100.0);
+        Data2DNormalizer d = new Data2DNormalizer();
+        d.setApplyTopHatFilter(true);
+        d.setTopHatFilterWindow(100);
+        d.setApplyMovingAverage(true);
+        d.setMovingAverageWindow(30);
+        d.setApplyMovingMedian(true);
+        d.setMovingMedianWindow(50);
 
-        IWorkflow w = createWorkflow(outputBase, Arrays.asList((IFragmentCommand)d2vl), Arrays.asList(inputFile));
+        IWorkflow w = createWorkflow(outputBase, Arrays.asList((IFragmentCommand)d), Arrays.asList(inputFile));
         testWorkflow(w);
     }
 }

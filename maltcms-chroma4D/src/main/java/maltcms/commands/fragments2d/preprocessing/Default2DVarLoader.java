@@ -96,7 +96,7 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String totalIntensity1dVar = "total_intensity_1d";
     @Configurable(name = "var.scan_acquisition", value = "scan_acquisition_time")
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
-    @Configurable(name = "var.scan_acquisition_1d",
+    @Configurable(name = "var.scan_acquisition_time_1d",
             value = "scan_acquisition_time_1d")
     private String scanAcquisitionTime1dVar = "scan_acquisition_time_1d";
     @Configurable(name = "var.total_intensity_2d", value = "total_intensity_2d")

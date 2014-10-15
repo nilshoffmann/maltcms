@@ -42,6 +42,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.tools.ArrayTools;
@@ -64,7 +66,7 @@ import ucar.ma2.IndexIterator;
  * of every chromatogram.
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
@@ -89,8 +91,8 @@ public class MeanVarVis extends AFragmentCommand {
     private String totalIntensity1dVar = "total_intensity_1d";
     @Configurable(name = "var.v_total_intensity_1d", value = "v_total_intensity_1d")
     private String vtotalIntensity1DVar = "v_total_intensity_1d";
-    @Configurable(name = "var.scan_acquisition_1d", value = "scan_acquisition_1d")
-    private String scanAcquisitionTime1dVar = "scan_acquisition_1d";
+    @Configurable(name = "var.scan_acquisition_time_1d", value = "scan_acquisition_time_1d")
+    private String scanAcquisitionTime1dVar = "scan_acquisition_time_1d";
     @Configurable(name = "var.meanms_1d_horizontal", value = "meanms_1d_horizontal")
     private String meanMSHorizontalVar = "meanms_1d_horizontal";
     @Configurable(name = "var.meanms_1d_horizontal_index", value = "meanms_1d_horizontal_index")
@@ -120,7 +122,9 @@ public class MeanVarVis extends AFragmentCommand {
     @Configurable(value = "false")
     private boolean useLogScale = false;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment ff : t) {
@@ -175,14 +179,19 @@ public class MeanVarVis extends AFragmentCommand {
             final DefaultWorkflowResult dwr = new DefaultWorkflowResult(f,
                     this, getWorkflowSlot(), ff);
             getWorkflow().append(dwr);
-            Factory.getInstance().submitJob(pr);
-
+            try {
+                pr.call();
+            } catch (Exception ex) {
+                log.warn("Caught exception while trying to plot: ", ex);
+            }
             meanMaxMSVisualization(ff);
         }
         return t;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.meanMSIntensityVar = cfg.getString("var.mean_ms_intensity",
@@ -335,7 +344,11 @@ public class MeanVarVis extends AFragmentCommand {
         pl.configure(Factory.getInstance().getConfiguration());
         final DefaultWorkflowResult dwr1 = new DefaultWorkflowResult(pl.getFile(), this, this.getWorkflowSlot(), resource);
         this.getWorkflow().append(dwr1);
-        Factory.getInstance().submitJob(pl);
+        try {
+            pl.call();
+        } catch (Exception ex) {
+            log.warn("Caught Exception while creating plot: ", ex);
+        }
     }
 
     /**
@@ -357,13 +370,17 @@ public class MeanVarVis extends AFragmentCommand {
         ImageTools.saveImage(bi2, filename, this.format, getWorkflow().getOutputDirectory(this), elem);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Visualization of mean, variance, standard deviation and more.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

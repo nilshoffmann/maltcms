@@ -59,7 +59,7 @@ import ucar.ma2.Index;
  */
 @Slf4j
 @Data
-@ProvidesVariables(names = {"var.excluded_masses",
+@ProvidesVariables(names = {
     "var.total_intensity_filtered"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class Data2DNormalizer extends AFragmentCommand {
