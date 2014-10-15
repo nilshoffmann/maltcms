@@ -29,7 +29,7 @@ package maltcms.io.xml.mzML;
 
 import java.io.File;
 import java.util.List;
-import junit.framework.Assert;
+import org.junit.Assert;
 import uk.ac.ebi.jmzml.model.mzml.CV;
 import uk.ac.ebi.jmzml.model.mzml.CVList;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
