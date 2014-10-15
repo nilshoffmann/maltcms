@@ -36,12 +36,12 @@ Maltcms is <a href="http://sf.net/p/maltcms/info/license.html" alt="License">dua
 * clustering of chromatograms based on alignments
 
 ## ChromA4D
-* peak finder for comcodehensive GCxGC-MS and other multicolumn chromatography-MS
+* peak finder for comprehensive GCxGC-MS and other multicolumn chromatography-MS
 * peak area integration based on 2D-TIC
 * multiple alignment and peak matching based on mass spectral similarities
 
 ## Analytical Pyrolysis
-* peak finder for comcodehensive GCxGC-MS and other multicolumn chromatography-MS
+* peak finder for comprehensive GCxGC-MS and other multicolumn chromatography-MS
 * peak area integration based on 2D-TIC
 * multiple alignment and peak matching based on mass spectral similarities
 
