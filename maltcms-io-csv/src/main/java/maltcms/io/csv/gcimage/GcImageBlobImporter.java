@@ -49,6 +49,7 @@ import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakType;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.util.Assert;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -118,10 +119,13 @@ public class GcImageBlobImporter {
         peak2d.setArea(GcImageBlobParser.parseDouble(tr.get(GcImageBlobParser.ColumnName.VOLUME), locale));
         peak2d.setApexIntensity(GcImageBlobParser.parseDouble(tr.get(GcImageBlobParser.ColumnName.PEAK_VALUE), locale));
         peak2d.setIndex(index);
-        peak2d.setName(tr.get(GcImageBlobParser.ColumnName.BLOBID) + " Name: " + tr.get(GcImageBlobParser.ColumnName.COMPOUND_NAME));
+        peak2d.setName(tr.get(GcImageBlobParser.ColumnName.COMPOUND_NAME));
+//        peak2d.get(GcImageBlobParser.ColumnName.BLOBID);
         peak2d.setPeakType(PeakType.TIC_FILTERED);
         log.debug("Adding peak at rt1: " + rt1 + " ; rt2: " + rt2);
         peak2d.setApexIndex(chromatogram.getIndexFor(rt1 + rt2));
+        Assert.isTrue(!Double.isNaN(peak2d.getArea()));
+        Assert.isTrue(!Double.isNaN(peak2d.getApexIntensity()));
         return peak2d;
     }
 
