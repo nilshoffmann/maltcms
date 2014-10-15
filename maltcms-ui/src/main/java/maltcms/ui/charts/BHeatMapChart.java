@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
 import org.jfree.chart.axis.NumberAxis;
-import ucar.ma2.ArrayDouble;
+import ucar.ma2.Array;
 
 /**
  * Creates a chart with labeled domain axis, displaying a heatmap as
@@ -51,8 +51,8 @@ public class BHeatMapChart extends AChart<XYBPlot> {
     private String label = "";
     private String title = "";
     private String filename = "";
-    private ArrayDouble.D1 xaxis = null;
-    private ArrayDouble.D1 yaxis = null;
+    private Array xaxis = null;
+    private Array yaxis = null;
 
     /**
      * Default constructor.
@@ -65,7 +65,7 @@ public class BHeatMapChart extends AChart<XYBPlot> {
      */
     public BHeatMapChart(final String bFilename, final String xLabel,
             final String yLabel,
-            final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> axis,
+            final Tuple2D<Array, Array> axis,
             final String seriesLabel) {
         EvalTools.notNull(new Object[]{bFilename, xLabel, yLabel}, this);
         this.filename = bFilename;
@@ -83,12 +83,12 @@ public class BHeatMapChart extends AChart<XYBPlot> {
         domain.setLowerMargin(0);
         domain.setUpperMargin(0);
         domain.setAutoRange(false);
-        domain.setRange(xaxis.get(0), xaxis.get(xaxis.getShape()[0] - 1));
+        domain.setRange(xaxis.getDouble(0), xaxis.getDouble(xaxis.getShape()[0] - 1));
         final NumberAxis values = new NumberAxis(ylabel);
         values.setLowerMargin(0);
         values.setUpperMargin(0);
         values.setAutoRange(false);
-        values.setRange(yaxis.get(0), yaxis.get(yaxis.getShape()[0] - 1));
+        values.setRange(yaxis.getDouble(0), yaxis.getDouble(yaxis.getShape()[0] - 1));
         XYBPlot xybp = null;
         try {
             xybp = new XYBPlot(this.filename, domain, values);
