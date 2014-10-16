@@ -53,9 +53,11 @@ import ucar.ma2.Array;
 @ServiceProvider(service = AFragmentCommand.class)
 public class VariableDataExporter extends AFragmentCommand {
 
-    private final String description = "Exports one-dimensional variables to csv format ";
+    private final String description = "Exports one-dimensional variables to "
+            + "tab separated value format (tsv).";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
-    @Configurable
+    @Configurable(description="A list of namespaced variable names to export, "
+            + "like \"var.total_intensity\".")
     private List<String> varNames = new ArrayList<>(0);
 
     /** {@inheritDoc} */
@@ -66,10 +68,10 @@ public class VariableDataExporter extends AFragmentCommand {
         for (final IFileFragment iff : t) {
             final File path = getWorkflow().getOutputDirectory(this);
             for (final String s : this.varNames) {
-                final Array a = iff.getChild(s).getArray();
+                final Array a = iff.getChild(getCvResolver().translate(s)).getArray();
                 csvw.writeArray(path.getAbsolutePath(), StringTools.
                         removeFileExt(iff.getName())
-                        + "_" + s, a);
+                        + "_" + getCvResolver().translate(s), a);
             }
             iff.clearArrays();
         }

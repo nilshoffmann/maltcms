@@ -79,7 +79,7 @@ import ucar.ma2.MAMath;
     "var.multiple_alignment_creator"})
 @Slf4j
 @Data
-@ServiceProvider(service = AFragmentCommand.class)
+//@ServiceProvider(service = AFragmentCommand.class)
 public class PolynomialRtWarp extends AFragmentCommand {
 
     private final String description = "Warps Chromatograms to a given reference, according to alignment paths.";

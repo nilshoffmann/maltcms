@@ -105,13 +105,21 @@ public class MeanVarProducer extends AFragmentCommand {
     private String maxMSVerticalIndexVar = "maxms_1d_vertical_index";
     @Configurable(name = "var.used_mass_values", value = "used_mass_values")
     private String usedMassValuesVar = "used_mass_values";
-    @Configurable(value = "0.01d")
+    @Configurable(value = "0.01d", description="The quantile of the minimum "
+            + "standard deviation of the intensity values to use. If value "
+            + "is > 0, the given quantile will be used to calculate the minimum"
+            + "standard deviation.")
     private double minStandardDeviationQuantil = 0.01d;
-    @Configurable(value = "-1.0d")
+    @Configurable(value = "-1.0d", description="The minimum standard deviation "
+            + "of the intensity values to use. This fixed value is used,"
+            + "if \"minStandardDeviationQuantil\" is 0.")
     private double minStandardDeviation = -1.0d;
     
     private Tuple2D<Double, Double> massRange;
-    @Configurable
+    @Configurable(description="Mass resolution to use for generation of profile "
+            + "EICs. 1.0 means nominal mass accuracy. 10.0 results in ten times"
+            + " higher resolution, up to the first decimal point. High values "
+            + "may significantly increase both memory usage and runtime.")
     private double massResolution = 1.0d;
     
 

@@ -61,17 +61,22 @@ public class CwtEicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds EIC peaks using  Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    @Configurable
+    @Configurable(description="Minimum cwt scale to require a peak to reach.")
     private int minScale = 10;
-    @Configurable
+    @Configurable(description="Maximum cwt scale to calculate.")
     private int maxScale = 100;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated. Is not used internally.")
     private double minPercentile = 5.0d;
-    @Configurable
+    @Configurable(description="If true, peaks will be integrated in the original"
+            + " signal domain within the bounds as determined by the cwt.")
     private boolean integratePeaks = true;
-    @Configurable
+    @Configurable(description="If true, save scaleogram details.")
     private boolean saveGraphics = false;
-    @Configurable
+    @Configurable(description="Mass resolution to use for generation of EICs. "
+            + "1.0 means nominal mass accuracy. 10.0 results in ten times higher"
+            + " resolution, up to the first decimal point. High values may"
+            + "significantly increase both memory usage and runtime.")
     private double massResolution = 1.0d;
 
     /**

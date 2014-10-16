@@ -61,14 +61,12 @@ import ucar.nc2.Dimension;
 @ServiceProvider(service = AFragmentCommand.class)
 public class PeakAreaNormalizer extends AFragmentCommand {
 
-    @Configurable
+    @Configurable(description="A list of IPeakNormalizers to apply to the peaks"
+            + " created by an upstream command.")
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
-    /** {@inheritDoc} */
-    @Override
-    public String getDescription() {
-        return "Normalizes peak areas using user-defineable normalization methods.";
-    }
+    private final String description = "Normalizes peak areas using"
+            + " user-defineable normalization methods.";
 
     /** {@inheritDoc} */
     @Override

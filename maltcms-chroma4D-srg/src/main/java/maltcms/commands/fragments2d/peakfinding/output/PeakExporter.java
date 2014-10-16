@@ -50,7 +50,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.ms.Metabolite2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
@@ -59,6 +58,7 @@ import maltcms.io.csv.CSVWriter;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.jdom.Element;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -72,6 +72,7 @@ import ucar.ma2.MAMath;
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IPeakExporter.class)
 public class PeakExporter implements IPeakExporter {
 
     private IWorkflow workflow;

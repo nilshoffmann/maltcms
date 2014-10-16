@@ -82,18 +82,27 @@ public class GradientVisualizer extends AFragmentCommand {
     private String scanRateVar = "scan_rate";
     @Configurable(name = "var.modulation_time", value = "modulation_time")
     private String modulationTimeVar = "modulation_time";
-    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
+    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv",
+            description="The location of the color ramp used for plotting.")
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
-    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
+    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png",
+            description="The file type used for saving plots.")
     private String format = "png";
     @Configurable(name = "ucar.nc2.NetcdfFile.fillValueDouble",
             value = "9.9692099683868690e+36d")
     private double doubleFillValue;
-    @Configurable(name = "images.thresholdLow", value = "0")
+    @Configurable(name = "images.thresholdLow", value = "0", description=
+            "The minimum intensity value to be included in plots.")
     private double threshold = 0;
+    @Configurable(description="The similarity to use for gradient calculation.")
     private IArraySimilarity similarity = new ArrayWeightedCosine();
-    @Configurable(value = "false")
+    @Configurable(value = "false", description="If true, use similarity to "
+            + "fixed mass spectrum.")
     private boolean absolut = false;
+    @Configurable(description="The x position of the fixed mass spectrum.")
+    private int x = 0; 
+    @Configurable(description="The y position of the fixed mass spectrum.")
+    private int y = 0;
 
     /** {@inheritDoc} */
     @Override
@@ -123,7 +132,7 @@ public class GradientVisualizer extends AFragmentCommand {
             final IScanLine slc = ScanLineCacheFactory.getScanLineCache(ff);
             slc.setCacheModulations(false);
             Array old = null, actual = null;
-            final Point start = new Point(410, 274);
+            final Point start = new Point(x, y);
             if (this.absolut) {
                 old = slc.getScanlineMS(start.x).get(start.y);
             }
@@ -200,7 +209,7 @@ public class GradientVisualizer extends AFragmentCommand {
     /** {@inheritDoc} */
     @Override
     public String getDescription() {
-        return "Will visualize the distance gradient in y direction for all modulations.";
+        return "(Experimental) Will visualize the similarity gradient in y direction for all modulations.";
     }
 
     /** {@inheritDoc} */

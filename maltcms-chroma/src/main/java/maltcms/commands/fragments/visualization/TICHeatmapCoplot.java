@@ -95,7 +95,8 @@ public class TICHeatmapCoplot extends AFragmentCommand {
 
     private final String description = "Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    @Configurable(name = "images.colorramp")
+    @Configurable(name = "images.colorramp", description="The location of the "
+            + "color ramp to use for plotting.")
     private String colorRampLocation = "res/colorRamps/bcgyr.csv";
     @Configurable(name = "var.total_intensity")
     private String totalIntensityVar = "total_intensity";

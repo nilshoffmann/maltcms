@@ -114,7 +114,8 @@ import ucar.ma2.Index;
     "var.scan_index"})
 @RequiresOptionalVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index", "var.tic_peaks", "var.eic_peaks",
-    "var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area", "var.peak_index_list"})
+    "var.first_column_elution_time", "var.second_column_elution_time", "var.peak_area",
+    "var.peak_index_list", "var.anchors.retention_scans", "var.anchors.retention_index_names"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
@@ -158,47 +159,82 @@ public class PeakCliqueAlignment extends AFragmentCommand {
     private String scanAcquisitionTime = "scan_acquisition_time";
     @Configurable(name = "var.peak_area")
     private String peakAreaVariable = "peak_area";
-    @Configurable
+    @Configurable(description="If true, will check for user supplied anchors"
+            + " and use them to augment other peak data, as provided by e.g."
+            + " tic_peaks, eic_peaks, or peak_index_list."
+            + "Requires upstream command to provide var.anchors.retention_scans"
+            + " and var.anchors.retention_names."
+            + "If false, no user-supplied anchors will be used.")
     private boolean useUserSuppliedAnchors = false;
-    @Configurable
+    @Configurable(description="Minimum clique size parameter. "
+            + "Controls the minimum number of peaks in a clique to be "
+            + "reported by the alignment. If set to -1, only complete "
+            + "cliques will be reported.")
     private int minCliqueSize = -1;
-    @Configurable
+    @Configurable(description="If true, stores peak similarities for every "
+            + "pairwise similarity calculation. May create a large number of "
+            + "output files (quadratic in number of chromatograms).")
     private boolean savePeakSimilarities = false;
-    @Configurable
+    @Configurable(description="If true, stores multiple alignment file with "
+            + "1D peak retention times.")
     private boolean savePeakMatchRTTable = true;
-    @Configurable
+    @Configurable(description="If true, stores multiple alignment file with "
+            + "peak areas.")
     private boolean savePeakMatchAreaTable = true;
-    @Configurable
+    @Configurable(description="If true, stores multiple alignment file with "
+            + "percentage of peak areas.")
     private boolean savePeakMatchAreaPercentTable = true;
-    @Configurable
+    @Configurable(description="If true, stores the multiple alignment in "
+            + "Maltcms XML alignment format.")
     private boolean saveXMLAlignment = true;
     @Deprecated
-    @Configurable
+    @Configurable(description = "Deprecated. Parameter will be ignored. "
+            + "Use minBbhFraction instead.")
     private int maxBBHErrors = 0;
-    @Configurable
+    @Configurable(description="Fraction of peaks in a potential cluster required"
+            + " to be considered valid. 1.0 means, that all peaks must be "
+            + "bidirectional-best hits of each other. The clusters then "
+            + "correspond to true cliques. Lower values will allow incomplete "
+            + "bidirectional-best hits. Use lower values, if the group "
+            + "membership criterion is too strict and leads to exclusion of"
+            + " too many peaks. Inspect output for number of incompatible"
+            + " peaks, to observe the effect. May increase the number of false positives.")
     private double minBbhFraction = 1.0d;
-    @Configurable
+    @Configurable(description="If true, save plots of cliques and of One-Way "
+            + "Anova and F-Test results.")
     private boolean savePlots = false;
-    @Configurable
+    @Configurable(description="If true, save unmatched peaks in msp compatible format.")
     private boolean saveUnmatchedPeaks = false;
-    @Configurable
+    @Configurable(description="If true, save incompatible peaks in msp "
+            + "compatible format.")
     private boolean saveIncompatiblePeaks = false;
-    @Configurable
+    @Configurable(description="If true, save unassigned peaks in msp compatible"
+            + " format.")
     private boolean saveUnassignedPeaks = false;
-    @Configurable
+    @Configurable(description="If true, use sparse mass spectra instead of "
+            + "binned ones. May reduce memory footprint, but will increase "
+            + "runtime.")
     private boolean useSparseArrays = false;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated, use a Peak2DMSFactory to use 2D "
+            + "retention times for peaks")
     private boolean use2DRetentionTimes = false;
-    @Configurable
+    @Configurable(description="Use a custom worker factory, use WorkerFactory "
+            + "for 1D data, Worker2DFactory for 2D data.")
     private IWorkerFactory workerFactory = new WorkerFactory();
-    @Configurable
+    @Configurable(description="Use a custom peak factory, use Peak1DFactory for "
+            + "1D data without MS, Peak1DMSFactory for 1D data with MS, or "
+            + "Peak2DMSFactory for 2D data with MS.")
     private IPeakFactory peakFactory = new Peak1DMSFactory();
-    @Configurable
+    @Configurable(description="Sets the retention time normalization factor "
+            + "for multiple peak alignment output of retention times. The factor"
+            + " is multiplied with the native retention time of each peak.")
     private double rtNormalizationFactor = 1 / 60.0d;
-    @Configurable
+    @Configurable(description="Output format for retention times. Default has"
+            + " three trailing decimal places: \"0.000\" .")
     private String rtOutputFormat = "0.000";
     @Deprecated
-    @Configurable
+    @Configurable(description="Deprecated. Use minBbhFraction instead.")
     private boolean postProcessCliques = false;
 
     /** {@inheritDoc} */

@@ -71,9 +71,11 @@ public class EICHeatmapCoplot extends TICHeatmapCoplot {
 
     private final String description = "Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    @Configurable
+    @Configurable(description="A list of eics as doubles.")
     private List<String> drawEICs;
-    @Configurable
+    @Configurable(description="The width of each eic. E.g. for eic=55, "
+            + "eicBinSize=1.0, the eic will have range [55,55+eicBinSize), "
+            + "where the latter bound is exclusive.")
     private double eicBinSize = 1.0d;
 
     /*

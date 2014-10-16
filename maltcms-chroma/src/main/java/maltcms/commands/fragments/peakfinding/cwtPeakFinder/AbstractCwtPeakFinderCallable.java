@@ -72,7 +72,8 @@ public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFind
     private URI input;
     @Configurable
     private URI output;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated. Is not used internally.")
     private double minPercentile = 5.0d;
     @Configurable
     private boolean integratePeaks = true;

@@ -103,9 +103,9 @@ public class ChromatogramWarp2 extends AFragmentCommand {
     private String multipleAlignmentTypeVariableName = "multiple_alignment_type";
     @Configurable(name = "var.multiple_alignment_creator")
     private String multipleAlignmentCreatorVariableName = "multiple_alignment_creator";
-    @Configurable
+    @Configurable(description="If true, compressed nominal mass spectra will be averaged.")
     private boolean averageCompressions = false;
-    @Configurable
+    @Configurable(description="If set, defines the location of an alignment file.")
     private String alignmentLocation = "";
     @Configurable(name = "var.scan_acquisition_time")
     private String satvar = "scan_acquisition_time";

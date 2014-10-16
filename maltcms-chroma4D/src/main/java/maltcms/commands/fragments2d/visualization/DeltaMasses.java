@@ -63,9 +63,11 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AFragmentCommand.class)
 public class DeltaMasses extends AFragmentCommand {
 
-    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
+    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv",
+            description="The location of the color ramp used for plotting.")
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
-    @Configurable(name = "images.thresholdLow", value = "0.0")
+    @Configurable(name = "images.thresholdLow", value = "0.0",
+            description="The minimum intensity value to be included in plots.")
     private double lowThreshold = 0.0d;
 
     /** {@inheritDoc} */

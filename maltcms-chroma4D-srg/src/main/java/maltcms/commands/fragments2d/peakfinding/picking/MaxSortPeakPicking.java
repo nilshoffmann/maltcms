@@ -37,19 +37,23 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.datastructures.ms.IChromatogram2D;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
 /**
- * <p>MaxSortPeakPicking class.</p>
+ * <p>
+ * MaxSortPeakPicking class.</p>
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IPeakPicking.class)
 public class MaxSortPeakPicking implements IPeakPicking {
 
     @Configurable(name = "totalIntensityRedoVar", value = "total_intensity")
@@ -68,7 +72,9 @@ public class MaxSortPeakPicking implements IPeakPicking {
     @Configurable(value = "100")
     private int k = 100;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
@@ -111,7 +117,9 @@ public class MaxSortPeakPicking implements IPeakPicking {
         return finalPeaks;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Point> findPeaks(IChromatogram2D chrom) {
         log.info("Running {} with:", this.getClass().getName());
@@ -139,7 +147,9 @@ public class MaxSortPeakPicking implements IPeakPicking {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx, int dy) {
         dx = Math.max(dx, 3);
@@ -203,7 +213,9 @@ public class MaxSortPeakPicking implements IPeakPicking {
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration cfg) {
         this.secondScanIndexVar = cfg.getString(this.getClass().getName()

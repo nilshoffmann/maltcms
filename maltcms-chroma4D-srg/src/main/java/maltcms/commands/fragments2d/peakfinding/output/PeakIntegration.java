@@ -58,6 +58,7 @@ import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -65,10 +66,11 @@ import ucar.ma2.ArrayDouble;
  * Does the Peak Integration on basis of the unique masses.
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IPeakIntegration.class)
 public class PeakIntegration implements IPeakIntegration {
 
     @Configurable(value = "1")
@@ -76,13 +78,17 @@ public class PeakIntegration implements IPeakIntegration {
     @Configurable(name = "plot", value = "false")
     private boolean plotIntegration = false;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
 //        this.plotIntegration = cfg.getBoolean(this.getClass().getName()
@@ -112,7 +118,9 @@ public class PeakIntegration implements IPeakIntegration {
         return startEnd;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void integrate(final Peak2D peak, final IFileFragment ff,
             final List<Array> otic, final IWorkflow workflow) {

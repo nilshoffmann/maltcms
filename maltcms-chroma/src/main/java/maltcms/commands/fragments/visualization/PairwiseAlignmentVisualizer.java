@@ -101,37 +101,40 @@ public class PairwiseAlignmentVisualizer extends AFragmentCommand {
 
     private final String description = "Creates different plots for pairwise alignments of chromatograms.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated")
     private boolean normalize = false;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated")
     private boolean normalize_global = false;
-    @Configurable
+    @Configurable(description="Height in pixels of the pairwise alignment map.")
     private int mapheight = 100;
     @Configurable(name = "var.total_intensity")
     private String total_intensity = "total_intensity";
     @Configurable(name = "var.scan_acquisition_time")
     private String scan_acquisition_time = "scan_acquisition_time";
-    @Configurable
+    @Configurable(description="If true, subtract chromatogram start times.")
     private boolean substract_start_time = true;
-    @Configurable
+    @Configurable(description="If true, plot pairs with first element only")
     private boolean pairsWithFirstElement;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated")
     private boolean showChromatogramHeatmap = false;
-    @Configurable
+    @Configurable(description="Height in pixels of the plotted chromatogram profiles.")
     private int chromheight = 100;
-    @Configurable
+    @Configurable(description="The time unit used for plotting.")
     private String timeUnit = "min";
-    @Configurable
+    @Configurable(description="If true, create a pairwise chart showing the alignment map.")
     private boolean createMapTICChart = true;
-    @Configurable
+    @Configurable(description="If true, create a comparative pairwise chart for alignments.")
     private boolean createComparativeTICChart = true;
-    @Configurable
+    @Configurable(description="If true, create a differential intensity chart of aligned chromatograms.")
     private boolean createDifferentialTICChart = true;
-    @Configurable
+    @Configurable(description="If true, create a ratio intenstiy chart of aligned chromatograms.")
     private boolean createRatioTICChart = true;
-    @Configurable
+    @Configurable(description="If true, create a superimposed chart of aligned chromatograms.")
     private boolean createSuperimposedTICChart = true;
-    @Configurable
+    @Configurable(description="The y axis label on the plots.")
     private String y_axis_label = "TIC";
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)

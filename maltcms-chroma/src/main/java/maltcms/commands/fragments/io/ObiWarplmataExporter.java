@@ -62,13 +62,13 @@ public class ObiWarplmataExporter extends AFragmentCommand {
 
     private final String description = "Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
-    @Configurable
+    @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
-    @Configurable
+    @Configurable(name = "var.binned_intensity_values")
     private String binnedIntensitiesVariableName = "binned_intensity_values";
-    @Configurable
+    @Configurable(name = "var.binned_scan_index")
     private String binnedScanIndexVariableName = "binned_scan_index";
-    @Configurable
+    @Configurable(name = "var.binned_mass_values")
     private String binnedMassesVariableName = "binned_mass_values";
 
     /*

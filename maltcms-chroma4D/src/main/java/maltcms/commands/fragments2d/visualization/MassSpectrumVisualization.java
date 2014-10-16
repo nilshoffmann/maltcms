@@ -71,7 +71,8 @@ public class MassSpectrumVisualization extends AFragmentCommand {
     private String modulationVar = "modulation_time";
     @Configurable(name = "var.scan_rate", value = "scan_rate")
     private String scanRateVar = "scan_rate";
-    @Configurable(value = "0")
+    @Configurable(value = "0", description="An array of integer scan indices "
+            + "to plot.")
     private int[] indices = new int[]{0};
 
     /** {@inheritDoc} */

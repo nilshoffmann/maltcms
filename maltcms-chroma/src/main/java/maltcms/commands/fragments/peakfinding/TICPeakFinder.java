@@ -79,15 +79,18 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakFinder extends AFragmentCommand {
 
-    @Configurable
+    @Configurable(description="The minimal local signal-to-noise threshold "
+            + "required for a peak to be reported.")
     private double peakThreshold = 0.01d;
-    @Configurable
+    @Configurable(description="If true, a plot of the local estimated "
+            + "signal-to-noise and of peak locations will be created.")
     private boolean saveGraphics = false;
-    @Configurable
+    @Configurable(description="If true, peak areas will be integrated.")
     private boolean integratePeaks = false;
-    @Configurable
+    @Configurable(description="If true, the tic will be used to integrate peaks.")
     private boolean integrateTICPeaks = true;
-    @Configurable
+    @Configurable(description="Width of the sliding window for local snr"
+            + " estimation. ")
     private int snrWindow = 50;
     @Configurable(name = "var.total_intensity")
     private String ticVarName = "total_intensity";
@@ -97,20 +100,29 @@ public class TICPeakFinder extends AFragmentCommand {
     private String ticPeakVarName = "tic_peaks";
     @Configurable
     private String ticFilteredVarName = "tic_filtered";
-    @Configurable
+    @Configurable(description="If true, the raw tic will be used for "
+            + "integration. If false, the smoothed and filtered "
+            + "tic will be used.")
     private boolean integrateRawTic = true;
-    @Configurable
+    @Configurable(description="The minimum number of scans between two peak apices."
+            + "The second peak will be omitted, if it is closer to the first"
+            + " peak than allowed by the parameter.")
     private int peakSeparationWindow = 10;
-    @Configurable
+    @Deprecated
+    @Configurable(description="The removal of overlapping peaks is currently unavailable.")
     private boolean removeOverlappingPeaks = true;
-    @Configurable
+    @Configurable(description="If true, the estimated baseline is subtracted"
+            + " from the smoothed and filtered tic.")
     private boolean subtractBaseline = false;
-    @Configurable
+    @Configurable(description="The baseline estimator to use.")
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
-    @Configurable
+    @Configurable(description="The filters to use for smoothing and filtering"
+            + " of the tic.")
     private List<AArrayFilter> filter = Arrays.asList(
             (AArrayFilter) new MultiplicationFilter());
-    @Configurable
+    @Configurable(description = "A list of peak normalizers. Each normalizer is "
+            + "invoked and its result multiplied to the intermediate result "
+            + "with the original peak's area.")
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
 
     /** {@inheritDoc} */

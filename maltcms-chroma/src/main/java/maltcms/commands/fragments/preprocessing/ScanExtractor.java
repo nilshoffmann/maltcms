@@ -76,14 +76,21 @@ public class ScanExtractor extends AFragmentCommand {
     private String scanAcquisitionTimeVar = "scan_acquisition_time";
     @Configurable(name = "var.scan_index")
     private String scanIndexVar = "scan_index";
-    @Configurable(value = "-1")
+    @Configurable(value = "-1", description="The start index to include. "
+            + "A value of -1 means to select the first start scan "
+            + "automatically.")
     private int startScan = -1;
-    @Configurable(value = "-1")
+    @Configurable(value = "-1", description="The end index to include. A value"
+            + " of -1 will automtically select the last available index.")
     private int endScan = -1;
 
-    @Configurable(value = "-Inf")
+    @Configurable(value = "-Inf", description="The start time to include in "
+            + "scan extraction. If value is different from -Inf, startScan "
+            + "will be used instead.")
     private double startTime = Double.NEGATIVE_INFINITY;
-    @Configurable(value = "+Inf")
+    @Configurable(value = "+Inf", description="The end time to include in "
+            + "scan extraction. If value is different from +Inf, endScan will"
+            + " be used instead.")
     private double endTime = Double.POSITIVE_INFINITY;
 
     /**

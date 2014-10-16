@@ -111,15 +111,20 @@ public class MeanVarVis extends AFragmentCommand {
     private String maxMSVerticalIndexVar = "maxms_1d_vertical_index";
     @Configurable(name = "var.used_mass_values", value = "used_mass_values")
     private String usedMassValuesVar = "used_mass_values";
-    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
+    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png",
+            description="The file format to use for saving plots.")
     private String format = "png";
-    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
+    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv",
+            description="The color ramp location.")
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
-    @Configurable(name = "images.thresholdLow", value = "0")
+    @Configurable(name = "images.thresholdLow", value = "0", description=""
+            + "Minimum intensity to be included in images.")
     private double lowThreshold = 0.0d;
-    @Configurable(value = "false")
+    @Configurable(value = "false", description="If true, will create additional "
+            + "visualizations.")
     private boolean differentVisualizations = false;
-    @Configurable(value = "false")
+    @Configurable(value = "false", description="If true, will use a log scale "
+            + "for plotting of intensities.")
     private boolean useLogScale = false;
 
     /**

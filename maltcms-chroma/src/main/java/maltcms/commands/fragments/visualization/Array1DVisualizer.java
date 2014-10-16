@@ -75,15 +75,17 @@ public class Array1DVisualizer extends AFragmentCommand {
     private String xAxisLabel = "Scans";
     @Configurable(name = "maltcms.commands.fragments.visualization.y_axis_label")
     private String yAxisLabel = "Counts";
-    @Configurable
+    @Configurable(description="If true, create pairwise plots.")
     private boolean pairwise = false;
-    @Configurable
+    @Configurable(description="If true, create plots with first chromatogram.")
     private boolean pairwiseWithFirst = true;
-    @Configurable
+    @Configurable(description="If true, subtract start time from displayed "
+            + "retention times. This can be beneficial for chromatograms with "
+            + "varying start times.")
     private boolean substractStartTime = true;
-    @Configurable
+    @Configurable(description="If true, put all charts into one.")
     private boolean allInOneChart = false;
-    @Configurable
+    @Configurable(description="The time unit to use. E.g. \"s\" for seconds.")
     private String timeUnit = "s";
 
     /** {@inheritDoc} */

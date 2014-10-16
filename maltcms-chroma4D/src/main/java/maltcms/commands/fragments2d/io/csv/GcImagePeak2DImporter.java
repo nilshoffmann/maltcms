@@ -79,13 +79,14 @@ import ucar.ma2.IndexIterator;
 @ServiceProvider(service = AFragmentCommand.class)
 public class GcImagePeak2DImporter extends AFragmentCommand {
 
-    @Configurable()
+    @Configurable(description="The locale to use for parsing of numbers.")
     private String localeString = Locale.US.toString();
-    @Configurable
+    @Configurable(description="A list of report file paths. Report names must"
+            + " match the chromatogram names, without file extension.")
     private List<String> reportFiles = Collections.emptyList();
     @Configurable(name = "var.peak_index_list", value = "peak_index_list")
     private String peakListVar = "peak_index_list";
-    @Configurable
+    @Configurable(description="The quotation character used for parsing of text.")
     private String quotationCharacter = "\"";
 
     /**

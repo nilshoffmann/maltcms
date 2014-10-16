@@ -76,7 +76,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 
     private final String description = "Joins a number of sequentially acquired chromatograms into a two-dimensional chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
-    @Configurable
+    @Configurable(description="The output file name.")
     private String outputFileName = null;
     @Configurable(description = "The modulation period between column switching in seconds.")
     private double modulationTime = 60.0;

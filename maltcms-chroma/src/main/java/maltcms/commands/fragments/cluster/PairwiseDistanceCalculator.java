@@ -74,14 +74,21 @@ import ucar.ma2.MAMath.MinMax;
 @ServiceProvider(service = AFragmentCommand.class)
 public class PairwiseDistanceCalculator extends AFragmentCommand {
 
-    @Configurable
+    @Configurable(description="If true, assumes that the comparison function "
+            + "between mass spectra behaves like a cost function "
+            + "(smaller is better). If false, assumes that the function "
+            + "behaves like a similarity or score function (larger is better).")
     private boolean minimizingLocalDistance = false;
-    @Configurable
+    @Configurable(description="If true, calculates similarities / distances only "
+            + "with the first chromatogram. If false, calculates all (n-1)*n/2 alignments.")
     private boolean pairsWithFirstElement = false;
-    @Configurable
+    @Configurable(description="Sets the variable name used to store whether the"
+            + " similarity or distance function used required minimization (1)"
+            + " or maximization (0)")
     private String minArrayComp = "minimizing_array_comp";
-    @Configurable
+    @Configurable(description="Suffix for the pairwise_distances.cdf files. E.g. for \"_CUST\", the result file will be named \"pairwise_distances_CUST.cdf\" .")
     private String pwdExtension = "";
+    @Configurable(description="The worker factory to use for chromatogram / MS comparison. Use either TicDtwWorkerFactory or MziDtwWorkerFactory.")
     private AWorkerFactory workerFactory = new MziDtwWorkerFactory();
 
     /*

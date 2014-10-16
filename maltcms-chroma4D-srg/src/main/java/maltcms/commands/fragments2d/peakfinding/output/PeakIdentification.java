@@ -46,6 +46,7 @@ import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.tools.ArrayTools2;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
@@ -58,6 +59,7 @@ import ucar.ma2.IndexIterator;
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IPeakIdentification.class)
 public class PeakIdentification implements IPeakIdentification {
 
     private MetaboliteQueryDB mqdb;
@@ -122,11 +124,11 @@ public class PeakIdentification implements IPeakIdentification {
                             osRes.size());
                     for (Tuple2D<Double, IMetabolite> t : ms.getMatches()) {
                         PeakAnnotation pa = PeakAnnotation.builder().
-                            score(t.getFirst()).
-                            metabolite(t.getSecond()).
-                            database(dbf).
-                            similarityFunction(similarity.toString()).
-                        build();
+                                score(t.getFirst()).
+                                metabolite(t.getSecond()).
+                                database(dbf).
+                                similarityFunction(similarity.toString()).
+                                build();
                         hits.add(pa);
                     }
                     qc.terminate();

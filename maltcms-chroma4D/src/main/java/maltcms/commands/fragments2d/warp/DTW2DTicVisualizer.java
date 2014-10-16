@@ -47,6 +47,7 @@ import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.testing.Visualization2D;
+import maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer;
 import maltcms.commands.fragments2d.warp.visualization.IVisualization;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ImageTools;
@@ -98,14 +99,13 @@ public class DTW2DTicVisualizer extends AFragmentCommand {
     private String secondColumnTimeVar = "second_column_time";
     private int scanspermodulation = -1;
     @Configurable(name = "maltcms.ui.charts.PlotRunner.serializeJFreeChart",
-            value = "true")
+            value = "true", description="If true, create serialized plots.")
     private boolean createSerialized = true;
-    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
+    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png",
+            description="The file format to save plots in.")
     private String format = "png";
-    @Configurable(
-            value = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer")
-    private String visualizerClass = "maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer";
-    private IVisualization visualizer;
+    @Configurable(description="The visualizer to use.")
+    private IVisualization visualizer = new Default2DTWVisualizer();
 
     /** {@inheritDoc} */
     @Override

@@ -70,11 +70,11 @@ public class CwtPeakFinder extends AFragmentCommand {
     private double radius = 10.0d;
     @Configurable(description = "The maxmimum number of neighbors expected in the given radius.")
     private int maxNeighbors = 15;
-    @Configurable(description = "Whether the scaleogram image should be saved.")
+    @Configurable(description = "If true, the scaleogram image will be saved.")
     private boolean saveScaleogramImage = false;
-    @Configurable(description = "Whether the quad tree image should be saved.")
+    @Configurable(description = "If true, the quad tree image will be saved.")
     private boolean saveQuadTreeImage = false;
-    @Configurable(description = "Whether the 2D TIC ridge overlay images should be saved, before and after filtering.")
+    @Configurable(description = "If true, the 2D TIC ridge overlay images will be saved, before and after filtering.")
     private boolean saveRidgeOverlayImages = false;
     @Configurable(description = "The maximum number of ridges to report. Actual number of ridges reported may be lower, depending on the other parameters.")
     private int maxRidges = 5000;

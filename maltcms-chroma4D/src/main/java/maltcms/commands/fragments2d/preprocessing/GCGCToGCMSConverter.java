@@ -87,7 +87,8 @@ import ucar.ma2.ArrayInt;
 @ServiceProvider(service = AFragmentCommand.class)
 public class GCGCToGCMSConverter extends AFragmentCommand {
 
-    @Configurable(value = "5")
+    @Configurable(value = "5", description = "The signal-to-noise threshold."
+            + "Intensities below this value will be set to 0.")
     private double snrthreshold = 5;
 
     /**

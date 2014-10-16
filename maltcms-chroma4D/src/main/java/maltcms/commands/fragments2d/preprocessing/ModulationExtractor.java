@@ -93,9 +93,11 @@ public class ModulationExtractor extends AFragmentCommand {
     private String massValuesVar = "mass_values";
     @Configurable(name = "var.intensity_values")
     private String intensityValuesVar = "intensity_values";
-    @Configurable(value = "-1")
+    @Configurable(value = "-1", description="The index of the start modulation"
+            + " to extract.")
     private int startModulation = -1;
-    @Configurable(value = "-1")
+    @Configurable(value = "-1", description="The index of the last modulation"
+            + " to extract.")
     private int endModulation = -1;
 
     /**

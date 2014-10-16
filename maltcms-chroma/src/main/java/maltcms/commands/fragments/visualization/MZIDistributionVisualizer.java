@@ -28,6 +28,8 @@
 package maltcms.commands.fragments.visualization;
 
 import cross.Factory;
+import cross.annotations.Configurable;
+import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
@@ -55,21 +57,26 @@ import ucar.ma2.MAMath.MinMax;
  * Plot the distribution of values looking at mz bin values.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
+@RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class MZIDistributionVisualizer extends AFragmentCommand {
 
-    private final String description = "Creates plot of distribution of mass values versus intensity values in a chromatogram.";
+    private final String description = "Creates plot of distribution of nominal mass values versus intensity values in a chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;
     protected IFileFragment filea;
+    @Configurable(name="var.mass_values")
     private String x_var = "mass_values";
+    @Configurable(name="var.intensity_values")
     private String y_var = "intensity_values";
     private final boolean one_for_each = true;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         for (final IFileFragment f : t) {
@@ -130,7 +137,9 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
         return t;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         super.configure(cfg);
@@ -145,7 +154,9 @@ public class MZIDistributionVisualizer extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.VISUALIZATION;

@@ -63,6 +63,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakIntegration;
 import maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking;
+import maltcms.commands.fragments2d.peakfinding.srg.IPeakSeparator;
 import maltcms.commands.fragments2d.peakfinding.srg.IRegionGrowing;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.datastructures.ms.Chromatogram2D;
@@ -137,33 +138,40 @@ public class SeededRegionGrowing extends AFragmentCommand {
             value = "boundary_peak_index", type = String.class)
     private String boundaryPeakIndexVar = "boundary_peak_index";
     @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png",
-            type = String.class)
+            type = String.class, description="The format for saved plots.")
     private final String format = "png";
     @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv",
-            type = String.class)
+            type = String.class, description="The location of the color ramp to use")
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
     @Configurable(name = "ucar.nc2.NetcdfFile.fillValueDouble",
             value = "9.9692099683868690e+36d", type = double.class)
     private double doubleFillValue;
-    @Configurable(name = "images.thresholdLow", value = "0", type = double.class)
+    @Configurable(name = "images.thresholdLow", value = "0", type = double.class, 
+            description="The minimum intensity value to include in images.")
     private double threshold = 0;
     @Configurable(value = "true", type = boolean.class)
     private boolean separate = true;
-    @Configurable(value = "false", type = boolean.class)
+    @Deprecated
+    @Configurable(value = "false", type = boolean.class, description="Deprecated.")
     private boolean doNormalization = false;
-    @Configurable(value = "false", type = boolean.class)
+    @Configurable(value = "false", type = boolean.class, description="If true,"
+            + "peaks will be integrated.")
     private boolean doIntegration = false;
-    private int scansPerModulation = 0;
-    @Configurable
+    @Configurable(description="The peak picking implementation to use. "
+            + "Use SimplePeakPicking for standalone operation, or "
+            + "TicPeakPicking, if another peak finder, such as CWTPeakFinder "
+            + "has already detected peaks.")
     private IPeakPicking peakPicking;
-    @Configurable
+    @Configurable(description="The region growing implementation to use.")
     private IRegionGrowing regionGrowing;
-    @Configurable
+    @Configurable(description="The peak integration implementation to use.")
     private IPeakIntegration integration;
-    @Configurable
+    @Configurable(description="The peak exporter implementation to use.")
     private IPeakExporter peakExporter;
-    @Configurable
-    private PeakSeparator peakSeparator = new PeakSeparator();
+    @Configurable(description="The peak separator implementation to use.")
+    private IPeakSeparator peakSeparator = new PeakSeparator();
+    
+    private int scansPerModulation = 0;
     private List<List<Peak2D>> peakLists = new ArrayList<>();
 
     /**

@@ -85,17 +85,17 @@ public class ChromatogramVisualizer extends AFragmentCommand {
     private String mzVariableName = "mass_values";
     @Configurable(name = "var.scan_acquisition_time")
     private String scanAcquisitionTimeVariableName = "scan_acquisition_time";
-    @Configurable
+    @Configurable(description="The file format to save plots in.")
     private String format = "png";
-    @Configurable
+    @Configurable(description="The location of the color ramp to use for plots.")
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
-    @Configurable
+    @Configurable(description="The number of color samples to use.")
     private int sampleSize = 1024;
-    @Configurable
+    @Configurable(description="The minimum intensity value to include in plots.")
     private double lowThreshold = 0.0d;
-    @Configurable
+    @Configurable(description="If true, subtract start time.")
     private boolean substractStartTime = false;
-    @Configurable
+    @Configurable(description="The time unit used for plotting.")
     private String timeUnit = "min";
 
     /** {@inheritDoc} */
@@ -157,6 +157,8 @@ public class ChromatogramVisualizer extends AFragmentCommand {
                         getArray().copy();
                 log.debug("Using scan acquisition time0 {}", domains[0]);
                 switch (this.timeUnit) {
+                    case "s":
+                        break;
                     case "min":
                         log.info("Converting seconds to minutes");
                         domains[0] = ArrayTools.divBy60(domains[0]);

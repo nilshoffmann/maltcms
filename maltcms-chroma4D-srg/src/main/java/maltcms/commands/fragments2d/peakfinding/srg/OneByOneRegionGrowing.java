@@ -40,6 +40,7 @@ import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -53,6 +54,7 @@ import ucar.ma2.ArrayDouble;
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IRegionGrowing.class)
 public class OneByOneRegionGrowing implements IRegionGrowing {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")

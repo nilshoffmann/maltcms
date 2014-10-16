@@ -70,7 +70,7 @@ public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
     private String boundaryPeakListVar = "boundary_index_list";
     @Configurable(name = "var.region_index_list", value = "region_index_list")
     private String regionIndexListVar = "region_index_list";
-    @Configurable(value = "false")
+    @Configurable(value = "false", description="If true, fill the peak areas.")
     private boolean fillPeakArea = false;
 
     /** {@inheritDoc} */

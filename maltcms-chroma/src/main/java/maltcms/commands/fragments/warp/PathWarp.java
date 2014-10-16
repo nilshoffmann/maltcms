@@ -91,11 +91,11 @@ public class PathWarp extends AFragmentCommand {
     private String massValuesVar = "mass_values";
     @Configurable(name = "var.intensity_values", value = "intensity_values")
     private String intensValuesVar = "intensity_values";
-    @Configurable
+    @Configurable(description="If true, average aligned mass spectra.")
     private boolean average = false;
     @Configurable(
             name = "maltcms.datastructures.alignment.DefaultPairSet.minScansBetweenAnchors",
-            value = "5")
+            value = "5", description="The minimum number of scans between anchors.")
     private int minScansBetweenAnchors = 5;
 
     /**

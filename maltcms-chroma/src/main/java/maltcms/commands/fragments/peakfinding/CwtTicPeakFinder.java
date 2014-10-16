@@ -63,17 +63,21 @@ public class CwtTicPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds TIC peaks using Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    @Configurable
+    @Configurable(description = "Minimum cwt scale to require a peak to reach.")
     private int minScale = 10;
-    @Configurable
+    @Configurable(description = "Maximum cwt scale to calculate.")
     private int maxScale = 100;
-    @Configurable
+    @Deprecated
+    @Configurable(description = "Deprecated. Is not used internally.")
     private double minPercentile = 5.0d;
-    @Configurable
+    @Configurable(description = "If true, peaks will be integrated in the original"
+            + " signal domain within the bounds as determined by the cwt.")
     private boolean integratePeaks = true;
-    @Configurable
+    @Configurable(description = "If true, save scaleogram details.")
     private boolean saveGraphics = false;
-    @Configurable
+    @Configurable(description = "A list of peak normalizers. Each normalizer is "
+            + "invoked and its result multiplied to the intermediate result "
+            + "with the original peak's area.")
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
     @Configurable(name = "var.total_intensity")
     private String totalIntensityVar = "total_intensity";
@@ -85,7 +89,7 @@ public class CwtTicPeakFinder extends AFragmentCommand {
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         ICompletionService<PeakFinderWorkerResult> completionService
                 = createCompletionService(PeakFinderWorkerResult.class);
-        initProgress(2*t.size());
+        initProgress(2 * t.size());
         for (IFileFragment f : t) {
             CwtTicPeakFinderCallable cwt = new CwtTicPeakFinderCallable();
             cwt.setInput(f.getUri());
@@ -107,12 +111,12 @@ public class CwtTicPeakFinder extends AFragmentCommand {
                 resultsUris.add(res.getResultUri());
                 for (WorkflowResult wf : res.getWorkflowResults()) {
                     getWorkflow().append(
-                        new DefaultWorkflowResult(
-                            wf.getResource(), 
-                            this,
-                            wf.getWorkflowSlot(),
-                            wf.getResources()
-                        )
+                            new DefaultWorkflowResult(
+                                    wf.getResource(),
+                                    this,
+                                    wf.getWorkflowSlot(),
+                                    wf.getResources()
+                            )
                     );
                 }
                 getWorkflow().append(getProgress().nextStep());

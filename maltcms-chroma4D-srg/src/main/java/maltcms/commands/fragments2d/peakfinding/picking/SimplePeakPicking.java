@@ -37,18 +37,21 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IChromatogram2D;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
 
 /**
- * <p>SimplePeakPicking class.</p>
+ * <p>
+ * SimplePeakPicking class.</p>
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IPeakPicking.class)
 public class SimplePeakPicking implements IPeakPicking {
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
@@ -65,7 +68,9 @@ public class SimplePeakPicking implements IPeakPicking {
     @Configurable(value = "1")
     private double stdPerc = 1.0d;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
@@ -84,7 +89,9 @@ public class SimplePeakPicking implements IPeakPicking {
         return intensities;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Point> findPeaks(IChromatogram2D chrom) {
         this.log.info("Running {} with:", this.getClass().getName());
@@ -96,7 +103,9 @@ public class SimplePeakPicking implements IPeakPicking {
                 this.maxDy, this.stdPerc);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Point> findPeaksNear(IChromatogram2D chrom, Point p, int dx, int dy) {
         // FIXME nicht statisch 7
@@ -175,11 +184,13 @@ public class SimplePeakPicking implements IPeakPicking {
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration cfg) {
-        this.secondScanIndexVar = cfg.getString(this.getClass().getName() 
-                +".second_column_scan_index", "second_column_scan_index");
+        this.secondScanIndexVar = cfg.getString(this.getClass().getName()
+                + ".second_column_scan_index", "second_column_scan_index");
         this.totalIntensityVar = cfg.getString(this.getClass().getName()
                 + ".totalIntensityVar", "total_intensity");
     }

@@ -83,8 +83,6 @@ import ucar.ma2.MAMath.MinMax;
  * Draw the pairwise distance and/or cumulative distance matrix used for
  * alignment.
  *
- * TODO implement visualization of anchors.
- *
  * @author Nils Hoffmann
  * 
  */
@@ -100,9 +98,9 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     private String filename;
     private String reference_file_name;
     private String query_file_name;
-    @Configurable
+    @Configurable(description="The file format to save plots in.")
     private String format = "png";
-    @Configurable
+    @Configurable(description="The height of the chromatogram profile in pixels.")
     private int chromatogramHeight = 200;
     @Configurable
     private String left_chromatogram_var = "total_intensity";
@@ -112,19 +110,20 @@ public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
     private String path_i;
     @Configurable(name = "")
     private String path_j;
-    @Configurable
+    @Deprecated
+    @Configurable(description="Deprecated")
     private boolean full_spec = false;
-    @Configurable
+    @Configurable(description="The location of the color ramp used for plotting.")
     private String colorramp_location = "res/colorRamps/bw.csv";
-    @Configurable
+    @Configurable(description="The number of color samples used in plots.")
     private int sampleSize = 1024;
-    @Configurable
+    @Configurable(description="If true, plot only pairs with first chromatogram.")
     private boolean pairsWithFirstElement = false;
-    @Configurable
+    @Configurable(description="If true, plot the alignment path.")
     private boolean drawPath = true;
-    @Configurable
+    @Configurable(description="A list of matrix variables to plot")
     private List<String> matrix_vars = Arrays.asList("cumulative_distance", "pairwise_distance");
-    @Configurable
+    @Configurable(description="The font size used for labels in pt.")
     private int fontsize = 30;
 
     /**

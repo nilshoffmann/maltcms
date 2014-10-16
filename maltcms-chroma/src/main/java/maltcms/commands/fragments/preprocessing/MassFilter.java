@@ -75,9 +75,10 @@ public class MassFilter extends AFragmentCommand {
 
     private final String description = "Removes defined masses and associated intensities from chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;
-    @Configurable
+    @Configurable(description="A list of (exact) masses to exclude.")
     private List<String> excludeMasses = new LinkedList<>();
-    @Configurable(name = "mass_epsilon")
+    @Configurable(description="The allowed deviation in m/z from the given "
+            + "excluded masses.")
     private double epsilon = 0.1;
     @Configurable(name = "var.mass_values")
     private String massValuesVar = "mass_values";
@@ -87,7 +88,8 @@ public class MassFilter extends AFragmentCommand {
     private String scanIndexVar = "scan_index";
     @Configurable(name = "var.total_intensity")
     private String totalIntensVar = "total_intensity";
-    @Configurable
+    @Configurable(description="If true, inverts the meaning of excluded masses"
+            + " to include masses, to allow selective inclusion of EICs.")
     private boolean invert = false;
 
     /** {@inheritDoc} */

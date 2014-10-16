@@ -52,10 +52,11 @@ import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
 
 /**
- * <p>Data2DNormalizer class.</p>
+ * <p>
+ * Data2DNormalizer class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 @Data
@@ -74,26 +75,36 @@ public class Data2DNormalizer extends AFragmentCommand {
     private String modulationTimeVar = "modulation_time";
     @Configurable(name = "var.second_column_scan_index")
     private String secondScanIndexVar = "second_column_scan_index";
-    @Configurable
+    @Configurable(description = "If true, apply a moving average filter on the "
+            + "2D TIC.")
     private boolean applyMovingAverage = false;
-    @Configurable
+    @Configurable(description = "The width of the moving average window. "
+            + "Effective width is 2*w+1.")
     private int movingAverageWindow = 3;
-    @Configurable
+    @Configurable(description = "If true, apply a moving median filter on the "
+            + "2D TIC.")
     private boolean applyMovingMedian = true;
-    @Configurable
+    @Configurable(description="The width of the moving median window. "
+            + "Effective width is 2*w+1.")
     private int movingMedianWindow = 3;
-    @Configurable
+    @Configurable(description="If true, apply a morphological top-hat filter"
+            + "on the 2D TIC.")
     private boolean applyTopHatFilter = true;
-    @Configurable
+    @Configurable(description="The width of the top-hat filter window. "
+            + "Effective width is 2*w+1.")
     private int topHatFilterWindow = 5;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Normalizes 2D / GCxGC-MS data";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> ret = new TupleND<>();
@@ -221,7 +232,9 @@ public class Data2DNormalizer extends AFragmentCommand {
      * cross.commands.fragments.AFragmentCommand#configure(org.apache.commons
      * .configuration.Configuration)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -234,7 +247,9 @@ public class Data2DNormalizer extends AFragmentCommand {
                 "second_column_scan_index");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

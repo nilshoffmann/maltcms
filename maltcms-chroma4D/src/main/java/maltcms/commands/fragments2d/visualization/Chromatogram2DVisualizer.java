@@ -92,16 +92,20 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
     private final String secondColumnScanIndexVar = "second_column_scan_index";
     @Configurable(name = "var.second_column_time", value = "second_column_time")
     private String secondColumnTimeVar = "second_column_time";
-    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv")
+    @Configurable(name = "images.colorramp", value = "res/colorRamps/bcgyr.csv",
+            description="The location of the color ramp used for plotting.")
     private String colorrampLocation = "res/colorRamps/bcgyr.csv";
-    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png")
+    @Configurable(name = "maltcms.ui.charts.PlotRunner.filetype", value = "png",
+            description="The file type used for saving plots.")
     private final String format = "png";
     @Configurable(name = "ucar.nc2.NetcdfFile.fillValueDouble",
             value = "9.9692099683868690e+36d")
     private double doubleFillValue;
-    @Configurable(name = "images.thresholdLow", value = "0")
+    @Configurable(name = "images.thresholdLow", value = "0", description=
+            "The minimum intensity value to be included in plots.")
     private double threshold = 0;
-    @Configurable(value = "false")
+    @Configurable(value = "false", description="If true, remove the mean "
+            + "intensity before plotting.")
     private boolean substractMean = false;
 
     /** {@inheritDoc} */

@@ -60,28 +60,35 @@ import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
 
 /**
- * <p>TICPeakListImporter class.</p>
+ * <p>
+ * TICPeakListImporter class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakListImporter extends AFragmentCommand {
 
-    private final String description = "Imports tic peak data from csv files";
+    private final String description = "Imports tic peak data from tab "
+            + "separated value (tsv) files with column header";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;
-    @Configurable
+    @Configurable(description = "The list of files to read as tic peak lists.")
     private List<String> filesToRead = Collections.emptyList();
-    @Configurable
+    @Configurable(description = "The scan index offset. Value is added to peak "
+            + "index from file. E.g. if scan index is 1 in the file and "
+            + "scanIndexOffset=-1, the resulting scan index will be 0.")
     private int scanIndexOffset = 0;
-    @Configurable(value = "SCAN")
+    @Configurable(value = "SCAN", description = "Value of the scan index column"
+            + " name in the csv peak file.")
     private String scanIndexColumnName = "SCAN";
     @Configurable(value = "var.tic_peaks")
     private String ticPeakVarName = "tic_peaks";
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(Configuration cfg) {
         super.configure(cfg);
@@ -93,7 +100,9 @@ public class TICPeakListImporter extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> t) {
         TupleND<IFileFragment> retf = new TupleND<>();

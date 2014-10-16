@@ -104,9 +104,11 @@ public class CenterStarAlignment extends AFragmentCommand {
     @Configurable(name = "var.multiple_alignment_creator")
     private String multipleAlignmentCreatorVariableName = "multiple_alignment_creator";
     private boolean minimizeDist;
-    @Configurable(value = "false")
+    @Configurable(value = "false", description=
+            "If true, align all chromatograms to the first one. "
+            + "If false, select reference automatically from pairwise similarities provided by upstream command.")
     private boolean alignToFirst = false;
-    @Configurable
+    @Configurable(description="Base name (without file extension) of the chromatogram to use as the center to align to. Overrides automatic selection.")
     private String centerSequence = "";
 
     /** {@inheritDoc} */

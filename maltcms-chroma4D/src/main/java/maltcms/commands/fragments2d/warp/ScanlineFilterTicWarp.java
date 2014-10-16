@@ -56,8 +56,6 @@ import ucar.ma2.Array;
 @RequiresOptionalVariables(names = {"var.v_total_intensity"})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
-    // FIXME extends ScanlineTicWarp und dann filter drauf anwenden. Dann kann
-    // filter auch gewählt werden
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensity = "total_intensity";

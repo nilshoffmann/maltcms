@@ -88,21 +88,32 @@ public class EICPeakFinder extends AFragmentCommand {
 
     private final String description = "Finds peaks within on mass channels.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;
-    @Configurable
+    @Configurable(description="The filters to use for smoothing and filtering"
+            + " of the tic.")
     private List<AArrayFilter> filter = new ArrayList<>();
-    @Configurable
+    @Configurable(description="The baseline estimator to use.")
     private IBaselineEstimator baselineEstimator = new LoessMinimaBaselineEstimator();
-    @Configurable
+    @Configurable(description="The minimum number of scans between two peak apices."
+            + "The second peak will be omitted, if it is closer to the first"
+            + " peak than allowed by the parameter.")
     private int peakSeparationWindow = 20;
-    @Configurable
+    @Configurable(description="If true, peak integration will be performed on "
+            + "the raw EICs, instead of on the smoothed and filtered ones.")
     private boolean integrateRawEic = false;
-    @Configurable
+    @Configurable(description = "A list of peak normalizers. Each normalizer is "
+            + "invoked and its result multiplied to the intermediate result "
+            + "with the original peak's area.")
     private List<IPeakNormalizer> peakNormalizers = Collections.emptyList();
-    @Configurable(value = "0.01d")
+    @Configurable(description="The minimal local signal-to-noise threshold "
+            + "required for a peak to be reported.")
     private double peakThreshold = 20.0d;
-    @Configurable(value = "20")
+    @Deprecated
+    @Configurable(description="Deprecated, currently unused.")
     private int filterWindow = 10;
-    @Configurable
+    @Configurable(description="Mass resolution to use for generation of EICs. "
+            + "1.0 means nominal mass accuracy. 10.0 results in ten times higher"
+            + " resolution, up to the first decimal point. High values may"
+            + "significantly increase both memory usage and runtime.")
     private double massResolution = 1.0d;
 
     private final Peak1DUtilities peakUtilities = new Peak1DUtilities();

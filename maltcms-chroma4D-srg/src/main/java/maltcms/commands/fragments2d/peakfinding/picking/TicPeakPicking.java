@@ -42,6 +42,7 @@ import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.quadTree.QuadTree;
 import org.apache.commons.configuration.Configuration;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Uses 2d peaks from variable tic_peaks, as provided by CWTPeakFinder.
@@ -52,6 +53,7 @@ import org.apache.commons.configuration.Configuration;
  */
 @Slf4j
 @Data
+@ServiceProvider(service = IPeakPicking.class)
 public class TicPeakPicking implements IPeakPicking {
 
     private QuadTree<Peak2D> quadTree;

@@ -63,8 +63,9 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Dimension;
 
 /**
- * This command should be the first in all 2d pipelines handling dense 2d chromatograms.
- * It creates different variables like scan_rate, modulation_time etc.
+ * This command should be the first in all 2d pipelines handling dense 2d
+ * chromatograms. It creates different variables like scan_rate, modulation_time
+ * etc.
  *
  * @author Mathias Wilhelm
  * @author Nils Hoffmann
@@ -111,10 +112,13 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String firstColumnElutionTimeVar = "first_column_elution_time";
     @Configurable(name = "var.second_column_elution_time", value = "second_column_elution_time")
     private String secondColumnElutionTimeVar = "second_column_elution_time";
-    @Configurable(name = "var.modulation_time.default", value = "5.0d")
+    @Configurable(name = "var.modulation_time.default", value = "5.0d",
+            description = "The modulation time period in seconds.")
     private double modulationTime = 5.0d;
     private double scanDuration = 0.0d;
-    @Configurable(name = "var.scan_rate.default", value="-1.0d")
+    @Configurable(name = "var.scan_rate.default", value = "-1.0d", description
+            = "The scan rate. If value = -1.0d, the scan rate will be estimated "
+            + "from the retention time difference of the first few scans.")
     private double scanRate = -1.0d;
 //	private double scanAcquisitionTimeOffset = 0.0d;
     private String modulationIndex0Dimension = "modulation_index_0";
@@ -122,17 +126,22 @@ public class Default2DVarLoader extends AFragmentCommand {
     private String modulationTimeDimension = "modulation_time";
     private String scanRateDimension = "scan_rate";
     private String scanNumberDimension = "scan_number";
+    @Configurable(description = "(Experimental) If true, estimate modulation time from 1D TIC.")
     private boolean estimateModulationTime = false;
     @Configurable(description = "Maximum allowed difference in scan acquisition times for scan rate estimation.")
     private double maxScanAcquisitionTimeDelta = 0.0001d;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final ArrayList<IFileFragment> ret = new ArrayList<>();
@@ -201,7 +210,9 @@ public class Default2DVarLoader extends AFragmentCommand {
         return al;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.totalIntensityVar = cfg.getString("var.total_intensity",
@@ -630,13 +641,17 @@ public class Default2DVarLoader extends AFragmentCommand {
         return tic2dvar;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Default var loader for 2d data. Will create different variables.";
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.GENERAL_PREPROCESSING;

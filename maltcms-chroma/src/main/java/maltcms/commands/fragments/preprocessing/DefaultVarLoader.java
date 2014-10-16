@@ -61,9 +61,13 @@ public class DefaultVarLoader extends AFragmentCommand {
 
     private final String description = "Loads default and additional variables as defined in the configuration.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
-    @Configurable
+    @Configurable(description="A list of required variable names to load. "
+            + "Currently, only non-namespaced variable names are supported, "
+            + "e.g. \"total_intensity\".")
     private List<String> defaultVariables = Collections.emptyList();
-    @Configurable
+    @Configurable(description="A list of optional variable names to load. "
+            + "Currently, only non-namespaced variable names are supported, "
+            + "e.g. \"total_intensity\".")
     private List<String> additionalVariables = Collections.emptyList();
 
     /** {@inheritDoc} */

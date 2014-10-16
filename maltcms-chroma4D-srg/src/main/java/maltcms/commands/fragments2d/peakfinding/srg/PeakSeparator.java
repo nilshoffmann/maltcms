@@ -40,6 +40,7 @@ import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.math.functions.IScalarArraySimilarity;
 import maltcms.tools.ArrayTools;
+import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -53,7 +54,8 @@ import ucar.ma2.ArrayDouble;
  */
 @Slf4j
 @Data
-public class PeakSeparator {
+@ServiceProvider(service = IPeakSeparator.class)
+public class PeakSeparator implements IPeakSeparator {
 
     private double minDist = 0.995;
     private IScalarArraySimilarity separationSimilarity;
@@ -69,6 +71,7 @@ public class PeakSeparator {
      * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      * @param rts a {@link cross.datastructures.tuple.Tuple2D} object.
      */
+    @Override
     public void startSeparationFor(List<PeakArea2D> peakAreaList,
             IChromatogram2D chrom,
             Tuple2D<Array, Array> rts) {
@@ -228,7 +231,7 @@ public class PeakSeparator {
      * @param useMeanMs a boolean.
      * @return a boolean.
      */
-    public boolean shouldBeSeparated(List<PeakArea2D> list,
+    private boolean shouldBeSeparated(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, boolean useMeanMs) {
 
         double min = Double.POSITIVE_INFINITY, c;
@@ -281,7 +284,7 @@ public class PeakSeparator {
      * object.
      * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      */
-    public void separatePeaks(List<PeakArea2D> list,
+    private void separatePeaks(List<PeakArea2D> list,
             IScalarArraySimilarity similarity, IChromatogram2D chrom) {
 
 //        distance = new Array2DTimePenalized();
@@ -339,7 +342,7 @@ public class PeakSeparator {
      * @param list a {@link java.util.List} object.
      * @param chrom a {@link maltcms.datastructures.ms.IChromatogram2D} object.
      */
-    public void mergePeaks(List<PeakArea2D> list,
+    private void mergePeaks(List<PeakArea2D> list,
             IChromatogram2D chrom) {
 
         double max = Double.NEGATIVE_INFINITY;

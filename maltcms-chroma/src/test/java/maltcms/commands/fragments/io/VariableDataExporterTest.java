@@ -69,7 +69,46 @@ public class VariableDataExporterTest extends AFragmentCommandTest {
         File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         VariableDataExporter vde = new VariableDataExporter();
-        vde.setVarNames(Arrays.asList("total_intensity"));
+        vde.setVarNames(Arrays.asList("var.total_intensity"));
+        commands.add(vde);
+        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
+                inputFile1));
+        testWorkflow(w);
+        List<IWorkflowResult> results = w.getResultsFor(new CSVWriter());
+        Assert.assertEquals(1, results.size());
+        IWorkflowResult workflowResult = results.get(0);
+        FileFragment testFragment = new FileFragment(inputFile1);
+
+        CSVReader reader = new CSVReader();
+        reader.setFieldSeparator("\t");
+        reader.setFirstLineHeaders(false);
+        reader.setSkipCommentLines(true);
+        try (BufferedReader is = new BufferedReader(new FileReader(((IWorkflowFileResult) workflowResult).getFile()))) {
+            String line;
+            int lineCounter = 0;
+            ArrayDouble.D1 array = new ArrayDouble.D1(testFragment.getChild("total_intensity").getDimensions()[0].getLength());
+            while ((line = is.readLine()) != null) {
+                log.info("Parsing line {}", line);
+                if(!line.isEmpty()) {
+                    array.setDouble(lineCounter, Double.parseDouble(line));
+                }
+                lineCounter++;
+            }
+            Assert.assertEquals(testFragment.getChild("total_intensity").getDimensions()[0].getLength(), lineCounter - 1);
+            Array difference = ArrayTools.diff(array, testFragment.getChild("total_intensity").getArray());
+            Assert.assertEquals(0, ArrayTools.integrate(difference), 0.0001);
+        }
+    }
+    
+    @Test
+    public void testVariableDataExporterWithNamespacedVariable() throws IOException {
+        File dataFolder = tf.newFolder("chromaTestData");
+        File inputFile1 = ZipResourceExtractor.extract(
+                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
+        List<IFragmentCommand> commands = new ArrayList<>();
+        VariableDataExporter vde = new VariableDataExporter();
+        vde.setVarNames(Arrays.asList("var.total_intensity"));
         commands.add(vde);
         IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
                 inputFile1));
