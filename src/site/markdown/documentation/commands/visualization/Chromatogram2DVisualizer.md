@@ -1,7 +1,7 @@
 <h1>Chromatogram2DVisualizer</h1>
-Class: `maltcms.commands.fragments2d.visualization.Chromatogram2DVisualizer`
-Description: 2D chromatogram visualization
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.visualization.Chromatogram2DVisualizer`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: 2D chromatogram visualization  
 
 ---
 
@@ -25,24 +25,39 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `colorramp`
-Default Value: `res/colorRamps/bcgyr.csv`
-Description: 
+**Name**: `colorramp`  
+**Default Value**: `res/colorRamps/bcgyr.csv`  
+**Description**:  
+The location of the color ramp used for plotting.  
 
-Name: `filetype`
-Default Value: `png`
-Description: 
+---
 
-Name: `fillValueDouble`
-Default Value: `9.9692099683868690e+36d`
-Description: 
+**Name**: `thresholdLow`  
+**Default Value**: `0`  
+**Description**:  
+The minimum intensity value to be included in plots.  
 
-Name: `thresholdLow`
-Default Value: `0`
-Description: 
+---
 
-Name: `substractMean`
-Default Value: `false`
-Description: 
+**Name**: `substractMean`  
+**Default Value**: `false`  
+**Description**:  
+If true, remove the mean intensity before plotting.  
+
+---
+
+**Name**: `filetype`  
+**Default Value**: `png`  
+**Description**:  
+The file type used for saving plots.  
+
+---
+
+**Name**: `fillValueDouble`  
+**Default Value**: `9.9692099683868690e+36d`  
+**Description**:  
+  
+
+---
 
 

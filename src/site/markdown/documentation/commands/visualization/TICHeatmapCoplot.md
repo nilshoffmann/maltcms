@@ -1,7 +1,7 @@
 <h1>TICHeatmapCoplot</h1>
-Class: `maltcms.commands.fragments.visualization.TICHeatmapCoplot`
-Description: Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments.visualization.TICHeatmapCoplot`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)  
 
 ---
 
@@ -23,6 +23,9 @@ Workflow Slot: VISUALIZATION
 
 <h2>Configurable Properties</h2>
 
-Description: 
+**Description**:  
+The location of the color ramp to use for plotting.  
+
+---
 
 

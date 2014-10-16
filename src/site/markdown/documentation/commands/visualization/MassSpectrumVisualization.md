@@ -1,7 +1,7 @@
 <h1>MassSpectrumVisualization</h1>
-Class: `maltcms.commands.fragments2d.visualization.MassSpectrumVisualization`
-Description: Visualize one mass spectrum.
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.visualization.MassSpectrumVisualization`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Visualize one mass spectrum.  
 
 ---
 
@@ -25,8 +25,11 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `indices`
-Default Value: `0`
-Description: 
+**Name**: `indices`  
+**Default Value**: `0`  
+**Description**:  
+An array of integer scan indices to plot.  
+
+---
 
 

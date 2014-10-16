@@ -1,7 +1,7 @@
 <h1>DTW2DTicVisualizer</h1>
-Class: `maltcms.commands.fragments2d.warp.DTW2DTicVisualizer`
-Description: Creates an image containing both chromatograms in different color channels of the image using the warp path. Optionaly it will create a serialized XYBPlot
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.warp.DTW2DTicVisualizer`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Creates an image containing both chromatograms in different color channels of the image using the warp path. Optionaly it will create a serialized XYBPlot  
 
 ---
 
@@ -23,16 +23,25 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `serializeJFreeChart`
-Default Value: `true`
-Description: 
+**Name**: `visualizer`  
+**Default Value**: `Default2DTWVisualizer(peakListVar=peak_index_list, holdi=true, holdj=true, globalmax=false, black=true, filter=true, normalize=true, threshold=6.0, horizontal=true, currentrasterline=-1, binSize=256)`  
+**Description**:  
+The visualizer to use.  
 
-Name: `filetype`
-Default Value: `png`
-Description: 
+---
 
-Name: `visualizerClass`
-Default Value: `maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer`
-Description: 
+**Name**: `filetype`  
+**Default Value**: `png`  
+**Description**:  
+The file format to save plots in.  
+
+---
+
+**Name**: `serializeJFreeChart`  
+**Default Value**: `true`  
+**Description**:  
+If true, create serialized plots.  
+
+---
 
 

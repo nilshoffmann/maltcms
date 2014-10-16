@@ -1,7 +1,7 @@
 <h1>MeanVarProducer</h1>
-Class: `maltcms.commands.fragments2d.preprocessing.MeanVarProducer`
-Description: Produces mean and variance of a chromatogram
-Workflow Slot: GENERAL_PREPROCESSING
+**Class**: `maltcms.commands.fragments2d.preprocessing.MeanVarProducer`  
+**Workflow Slot**: GENERAL_PREPROCESSING  
+**Description**: Produces mean and variance of a chromatogram  
 
 ---
 
@@ -17,7 +17,6 @@ Workflow Slot: GENERAL_PREPROCESSING
 	var.var_ms_intensity
 	var.sd_ms_intensity
 	var.v_total_intensity
-	var.v_mass_values
 	var.v_total_intensity_1d
 	var.meanms_1d_horizontal_index
 	var.meanms_1d_horizontal
@@ -33,12 +32,25 @@ Workflow Slot: GENERAL_PREPROCESSING
 ---
 
 <h2>Configurable Properties</h2>
-Name: `minStandardDeviationQuantil`
-Default Value: `0.01d`
-Description: 
+**Name**: `massResolution`  
+**Default Value**: `1.0`  
+**Description**:  
+Mass resolution to use for generation of profile EICs. 1.0 means nominal mass accuracy. 10.0 results in ten times higher resolution, up to the first decimal point. High values may significantly increase both memory usage and runtime.  
 
-Name: `minStandardDeviation`
-Default Value: `-1.0d`
-Description: 
+---
+
+**Name**: `minStandardDeviation`  
+**Default Value**: `-1.0d`  
+**Description**:  
+The minimum standard deviation of the intensity values to use. This fixed value is used,if "minStandardDeviationQuantil" is 0.  
+
+---
+
+**Name**: `minStandardDeviationQuantil`  
+**Default Value**: `0.01d`  
+**Description**:  
+The quantile of the minimum standard deviation of the intensity values to use. If value is > 0, the given quantile will be used to calculate the minimumstandard deviation.  
+
+---
 
 

@@ -1,7 +1,7 @@
 <h1>ANDIChromImporter</h1>
-Class: `maltcms.commands.fragments.io.ANDIChromImporter`
-Description: Maps data in ANDIChrom format to Maltcms/ANDIMS compatible naming scheme.
-Workflow Slot: FILECONVERSION
+**Class**: `maltcms.commands.fragments.io.ANDIChromImporter`  
+**Workflow Slot**: FILECONVERSION  
+**Description**: Maps data in ANDIChrom format to Maltcms/ANDIMS compatible naming scheme.  
 
 ---
 

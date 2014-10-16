@@ -1,7 +1,7 @@
 <h1>DenseArrayProducer</h1>
-Class: `maltcms.commands.fragments.preprocessing.DenseArrayProducer`
-Description: Creates a binned representation of a chromatogram.
-Workflow Slot: GENERAL_PREPROCESSING
+**Class**: `maltcms.commands.fragments.preprocessing.DenseArrayProducer`  
+**Workflow Slot**: GENERAL_PREPROCESSING  
+**Description**: Creates a binned representation of a chromatogram.  
 
 ---
 
@@ -24,32 +24,53 @@ Workflow Slot: GENERAL_PREPROCESSING
 ---
 
 <h2>Configurable Properties</h2>
-Name: `normalizeScans`
-Default Value: `false`
-Description: 
+**Name**: `ignoreMinMaxMassArrays`  
+**Default Value**: `false`  
+**Description**:  
+If true, ignore values in variables mass_range_min and mass_range_max. Will then determine mass ranges from the actual mass_values.  
 
-Name: `maskedMasses`
-Default Value: `null`
-Description: 
+---
 
-Name: `invertMaskedMasses`
-Default Value: `false`
-Description: 
+**Name**: `invertMaskedMasses`  
+**Default Value**: `false`  
+**Description**:  
+If true, invert the logic of masked masses, effectively only selecting intensities associated to the masked masses.  
 
-Name: `ignoreMinMaxMassArrays`
-Default Value: `false`
-Description: 
+---
 
-Name: `normalizeMeanVariance`
-Default Value: `false`
-Description: 
+**Name**: `maskedMasses`  
+**Default Value**: `null`  
+**Description**:  
+List of masses that should be masked, removing their associated intensities from each scan they occur in.  
 
-Name: `normalizeEicsToUnity`
-Default Value: `false`
-Description: 
+---
 
-Name: `massBinResolution`
-Default Value: `1.0`
-Description: 
+**Name**: `massBinResolution`  
+**Default Value**: `1.0`  
+**Description**:  
+Mass resolution to use for generation of profile EICs. 1.0 means nominal mass accuracy. 10.0 results in ten times higher resolution, up to the first decimal point. High values may significantly increase both memory usage and runtime.  
+
+---
+
+**Name**: `normalizeEicsToUnity`  
+**Default Value**: `false`  
+**Description**:  
+If true, normalizes all EIC intensities between 0 and 1,before other normalizations are applied. Mutually exclusive with normalizeMeanVariance.  
+
+---
+
+**Name**: `normalizeMeanVariance`  
+**Default Value**: `false`  
+**Description**:  
+If true, normalize intensities per EIC, based on that EIC's mean intensity and variance. If false,normalized intensities to length one for each scan. Mutually exclusive with normalizeEicsToUnity.  
+
+---
+
+**Name**: `normalizeScans`  
+**Default Value**: `false`  
+**Description**:  
+If true, scans will be normalized.  
+
+---
 
 

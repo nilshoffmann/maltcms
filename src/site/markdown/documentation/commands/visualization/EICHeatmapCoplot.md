@@ -1,7 +1,7 @@
 <h1>EICHeatmapCoplot</h1>
-Class: `maltcms.commands.fragments.visualization.EICHeatmapCoplot`
-Description: Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments.visualization.EICHeatmapCoplot`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis  
 
 ---
 
@@ -28,15 +28,24 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `drawEICs`
-Default Value: `null`
-Description: 
 
-Name: `eicBinSize`
-Default Value: `1.0`
-Description: 
+**Description**:  
+  
 
+---
 
-Description: 
+**Name**: `drawEICs`  
+**Default Value**: `null`  
+**Description**:  
+A list of eics as doubles.  
+
+---
+
+**Name**: `eicBinSize`  
+**Default Value**: `1.0`  
+**Description**:  
+The width of each eic. E.g. for eic=55, eicBinSize=1.0, the eic will have range [55,55+eicBinSize), where the latter bound is exclusive.  
+
+---
 
 

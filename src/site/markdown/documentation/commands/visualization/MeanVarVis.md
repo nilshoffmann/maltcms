@@ -1,7 +1,7 @@
 <h1>MeanVarVis</h1>
-Class: `maltcms.commands.fragments2d.preprocessing.MeanVarVis`
-Description: Visualization of mean, variance, standard deviation and more.
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.preprocessing.MeanVarVis`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Visualization of mean, variance, standard deviation and more.  
 
 ---
 
@@ -31,24 +31,39 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `filetype`
-Default Value: `png`
-Description: 
+**Name**: `colorramp`  
+**Default Value**: `res/colorRamps/bcgyr.csv`  
+**Description**:  
+The color ramp location.  
 
-Name: `colorramp`
-Default Value: `res/colorRamps/bcgyr.csv`
-Description: 
+---
 
-Name: `thresholdLow`
-Default Value: `0`
-Description: 
+**Name**: `thresholdLow`  
+**Default Value**: `0`  
+**Description**:  
+Minimum intensity to be included in images.  
 
-Name: `differentVisualizations`
-Default Value: `false`
-Description: 
+---
 
-Name: `useLogScale`
-Default Value: `false`
-Description: 
+**Name**: `differentVisualizations`  
+**Default Value**: `false`  
+**Description**:  
+If true, will create additional visualizations.  
+
+---
+
+**Name**: `useLogScale`  
+**Default Value**: `false`  
+**Description**:  
+If true, will use a log scale for plotting of intensities.  
+
+---
+
+**Name**: `filetype`  
+**Default Value**: `png`  
+**Description**:  
+The file format to use for saving plots.  
+
+---
 
 

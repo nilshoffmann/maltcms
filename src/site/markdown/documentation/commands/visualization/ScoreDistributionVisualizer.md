@@ -1,7 +1,7 @@
 <h1>ScoreDistributionVisualizer</h1>
-Class: `maltcms.commands.fragments.visualization.ScoreDistributionVisualizer`
-Description: Generates a histogram plot of score distributions from variable pairwise_distance
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments.visualization.ScoreDistributionVisualizer`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Generates a histogram plot of score distributions from variable pairwise_distance  
 
 ---
 

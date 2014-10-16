@@ -1,7 +1,7 @@
 <h1>MassFilter</h1>
-Class: `maltcms.commands.fragments.preprocessing.MassFilter`
-Description: Removes defined masses and associated intensities from chromatogram.
-Workflow Slot: GENERAL_PREPROCESSING
+**Class**: `maltcms.commands.fragments.preprocessing.MassFilter`  
+**Workflow Slot**: GENERAL_PREPROCESSING  
+**Description**: Removes defined masses and associated intensities from chromatogram.  
 
 ---
 
@@ -24,15 +24,25 @@ Workflow Slot: GENERAL_PREPROCESSING
 ---
 
 <h2>Configurable Properties</h2>
-Name: `excludeMasses`
-Default Value: `[]`
-Description: 
+**Name**: `epsilon`  
+**Default Value**: `0.1`  
+**Description**:  
+The allowed deviation in m/z from the given excluded masses.  
 
+---
 
-Description: 
+**Name**: `excludeMasses`  
+**Default Value**: `[]`  
+**Description**:  
+A list of (exact) masses to exclude.  
 
-Name: `invert`
-Default Value: `false`
-Description: 
+---
+
+**Name**: `invert`  
+**Default Value**: `false`  
+**Description**:  
+If true, inverts the meaning of excluded masses to include masses, to allow selective inclusion of EICs.  
+
+---
 
 

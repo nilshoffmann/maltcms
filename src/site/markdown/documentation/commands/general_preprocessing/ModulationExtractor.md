@@ -1,7 +1,7 @@
 <h1>ModulationExtractor</h1>
-Class: `maltcms.commands.fragments2d.preprocessing.ModulationExtractor`
-Description: Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.
-Workflow Slot: GENERAL_PREPROCESSING
+**Class**: `maltcms.commands.fragments2d.preprocessing.ModulationExtractor`  
+**Workflow Slot**: GENERAL_PREPROCESSING  
+**Description**: Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.  
 
 ---
 
@@ -18,19 +18,25 @@ Workflow Slot: GENERAL_PREPROCESSING
 	var.mass_values
 	var.intensity_values
 	var.total_intensity
-	var.scan_rate
-	var.modulation_time
+	var.mass_range_min
+	var.mass_range_max
 
 
 ---
 
 <h2>Configurable Properties</h2>
-Name: `startModulation`
-Default Value: `-1`
-Description: 
+**Name**: `endModulation`  
+**Default Value**: `-1`  
+**Description**:  
+The index of the last modulation to extract.  
 
-Name: `endModulation`
-Default Value: `-1`
-Description: 
+---
+
+**Name**: `startModulation`  
+**Default Value**: `-1`  
+**Description**:  
+The index of the start modulation to extract.  
+
+---
 
 

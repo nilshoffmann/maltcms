@@ -1,7 +1,7 @@
 <h1>DefaultVarLoader</h1>
-Class: `maltcms.commands.fragments.preprocessing.DefaultVarLoader`
-Description: Loads default and additional variables as defined in the configuration.
-Workflow Slot: FILECONVERSION
+**Class**: `maltcms.commands.fragments.preprocessing.DefaultVarLoader`  
+**Workflow Slot**: FILECONVERSION  
+**Description**: Loads default and additional variables as defined in the configuration.  
 
 ---
 
@@ -21,12 +21,18 @@ Workflow Slot: FILECONVERSION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `defaultVariables`
-Default Value: `[]`
-Description: 
+**Name**: `additionalVariables`  
+**Default Value**: `[]`  
+**Description**:  
+A list of optional variable names to load. Currently, only non-namespaced variable names are supported, e.g. "total_intensity".  
 
-Name: `additionalVariables`
-Default Value: `[]`
-Description: 
+---
+
+**Name**: `defaultVariables`  
+**Default Value**: `[]`  
+**Description**:  
+A list of required variable names to load. Currently, only non-namespaced variable names are supported, e.g. "total_intensity".  
+
+---
 
 

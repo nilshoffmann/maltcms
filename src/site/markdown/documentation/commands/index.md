@@ -13,6 +13,7 @@
 * [ANDIMSExporter](./fileconversion/ANDIMSExporter.html)
 * [Data1Dto2DConverter](./fileconversion/Data1Dto2DConverter.html)
 * [DefaultVarLoader](./fileconversion/DefaultVarLoader.html)
+* [GcImagePeak2DImporter](./fileconversion/GcImagePeak2DImporter.html)
 * [MZMLExporter](./fileconversion/MZMLExporter.html)
 * [ObiWarplmataExporter](./fileconversion/ObiWarplmataExporter.html)
 
@@ -67,6 +68,5 @@
 <h2>WARPING commands</h2>
 * [ChromatogramWarp2](./warping/ChromatogramWarp2.html)
 * [PathWarp](./warping/PathWarp.html)
-* [PolynomialRtWarp](./warping/PolynomialRtWarp.html)
 
 

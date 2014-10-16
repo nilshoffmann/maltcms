@@ -1,7 +1,7 @@
 <h1>TICPeakFinder</h1>
-Class: `maltcms.commands.fragments.peakfinding.TICPeakFinder`
-Description: Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.
-Workflow Slot: PEAKFINDING
+**Class**: `maltcms.commands.fragments.peakfinding.TICPeakFinder`  
+**Workflow Slot**: PEAKFINDING  
+**Description**: Finds peaks based on total ion current (TIC), using a simple extremum search within a window, combined with a signal-to-noise parameter to select peaks.  
 
 ---
 
@@ -15,75 +15,116 @@ Workflow Slot: PEAKFINDING
 <h3>Provided</h3>
 	var.tic_peaks
 	var.tic_filtered
-	andichrom.var.peak_name
-	andichrom.dimension.peak_number
-	andichrom.var.peak_retention_time
-	andichrom.var.peak_start_time
-	andichrom.var.peak_end_time
-	andichrom.var.peak_area
-	andichrom.var.baseline_start_time
-	andichrom.var.baseline_stop_time
-	andichrom.var.baseline_start_value
-	andichrom.var.baseline_stop_value
+	var.peak_name
+	var.peak_retention_time
+	var.peak_start_time
+	var.peak_end_time
+	var.peak_area
+	var.baseline_start_time
+	var.baseline_stop_time
+	var.baseline_start_value
+	var.baseline_stop_value
 
 
 ---
 
 <h2>Configurable Properties</h2>
-Name: `peakThreshold`
-Default Value: `0.01`
-Description: 
+**Name**: `baselineEstimator`  
+**Default Value**: `LoessMinimaBaselineEstimator(bandwidth=0.3, accuracy=1.0E-12, robustnessIterations=2, minimaWindow=100)`  
+**Description**:  
+The baseline estimator to use.  
 
-Name: `saveGraphics`
-Default Value: `false`
-Description: 
+---
 
-Name: `integratePeaks`
-Default Value: `false`
-Description: 
+**Name**: `filter`  
+**Default Value**: `[MultiplicationFilter(factor=1.0)]`  
+**Description**:  
+The filters to use for smoothing and filtering of the tic.  
 
-Name: `integrateTICPeaks`
-Default Value: `true`
-Description: 
+---
 
-Name: `snrWindow`
-Default Value: `50`
-Description: 
+**Name**: `integratePeaks`  
+**Default Value**: `false`  
+**Description**:  
+If true, peak areas will be integrated.  
 
-Name: `ticPeakVarName`
-Default Value: `tic_peaks`
-Description: 
+---
 
-Name: `ticFilteredVarName`
-Default Value: `tic_filtered`
-Description: 
+**Name**: `integrateRawTic`  
+**Default Value**: `true`  
+**Description**:  
+If true, the raw tic will be used for integration. If false, the smoothed and filtered tic will be used.  
 
-Name: `integrateRawTic`
-Default Value: `true`
-Description: 
+---
 
-Name: `peakSeparationWindow`
-Default Value: `10`
-Description: 
+**Name**: `integrateTICPeaks`  
+**Default Value**: `true`  
+**Description**:  
+If true, the tic will be used to integrate peaks.  
 
-Name: `removeOverlappingPeaks`
-Default Value: `true`
-Description: 
+---
 
-Name: `subtractBaseline`
-Default Value: `false`
-Description: 
+**Name**: `peakNormalizers`  
+**Default Value**: `[]`  
+**Description**:  
+A list of peak normalizers. Each normalizer is invoked and its result multiplied to the intermediate result with the original peak's area.  
 
-Name: `baselineEstimator`
-Default Value: `LoessMinimaBaselineEstimator(bandwidth=0.3, accuracy=1.0E-12, robustnessIterations=2, minimaWindow=100)`
-Description: 
+---
 
-Name: `filter`
-Default Value: `[MultiplicationFilter(factor=1.0)]`
-Description: 
+**Name**: `peakSeparationWindow`  
+**Default Value**: `10`  
+**Description**:  
+The minimum number of scans between two peak apices.The second peak will be omitted, if it is closer to the first peak than allowed by the parameter.  
 
-Name: `peakNormalizers`
-Default Value: `[]`
-Description: 
+---
+
+**Name**: `peakThreshold`  
+**Default Value**: `0.01`  
+**Description**:  
+The minimal local signal-to-noise threshold required for a peak to be reported.  
+
+---
+
+**Name**: `removeOverlappingPeaks`  
+**Default Value**: `true`  
+**Description**:  
+The removal of overlapping peaks is currently unavailable.  
+
+---
+
+**Name**: `saveGraphics`  
+**Default Value**: `false`  
+**Description**:  
+If true, a plot of the local estimated signal-to-noise and of peak locations will be created.  
+
+---
+
+**Name**: `snrWindow`  
+**Default Value**: `50`  
+**Description**:  
+Width of the sliding window for local snr estimation.   
+
+---
+
+**Name**: `subtractBaseline`  
+**Default Value**: `false`  
+**Description**:  
+If true, the estimated baseline is subtracted from the smoothed and filtered tic.  
+
+---
+
+**Name**: `ticFilteredVarName`  
+**Default Value**: `tic_filtered`  
+**Description**:  
+  
+
+---
+
+**Name**: `ticPeakVarName`  
+**Default Value**: `tic_peaks`  
+**Description**:  
+  
+
+---
 
 

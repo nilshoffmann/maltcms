@@ -1,7 +1,7 @@
 <h1>ObiWarplmataExporter</h1>
-Class: `maltcms.commands.fragments.io.ObiWarplmataExporter`
-Description: Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)
-Workflow Slot: FILECONVERSION
+**Class**: `maltcms.commands.fragments.io.ObiWarplmataExporter`  
+**Workflow Slot**: FILECONVERSION  
+**Description**: Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)  
 
 ---
 
@@ -20,20 +20,4 @@ Workflow Slot: FILECONVERSION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `scanAcquisitionTimeVariableName`
-Default Value: `scan_acquisition_time`
-Description: 
-
-Name: `binnedIntensitiesVariableName`
-Default Value: `binned_intensity_values`
-Description: 
-
-Name: `binnedScanIndexVariableName`
-Default Value: `binned_scan_index`
-Description: 
-
-Name: `binnedMassesVariableName`
-Default Value: `binned_mass_values`
-Description: 
-
 

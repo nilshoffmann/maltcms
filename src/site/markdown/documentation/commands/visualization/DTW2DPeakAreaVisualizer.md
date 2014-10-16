@@ -1,7 +1,7 @@
 <h1>DTW2DPeakAreaVisualizer</h1>
-Class: `maltcms.commands.fragments2d.warp.DTW2DPeakAreaVisualizer`
-Description: Creates an image containing both chromatograms in different color channels of the image using the warp path. Optionaly it will create a serialized XYBPlot
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.warp.DTW2DPeakAreaVisualizer`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Creates an image containing both chromatograms in different color channels of the image using the warp path. Optionaly it will create a serialized XYBPlot  
 
 ---
 
@@ -30,18 +30,30 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `fillPeakArea`
-Default Value: `false`
-Description: 
+**Name**: `fillPeakArea`  
+**Default Value**: `false`  
+**Description**:  
+If true, fill the peak areas.  
+
+---
+
+**Name**: `visualizer`  
+**Default Value**: `Default2DTWVisualizer(peakListVar=peak_index_list, holdi=true, holdj=true, globalmax=false, black=true, filter=true, normalize=true, threshold=6.0, horizontal=true, currentrasterline=-1, binSize=256)`  
+**Description**:  
+  
+
+---
 
 
-Description: 
+**Description**:  
+  
+
+---
 
 
-Description: 
+**Description**:  
+  
 
-Name: `visualizerClass`
-Default Value: `maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer`
-Description: 
+---
 
 

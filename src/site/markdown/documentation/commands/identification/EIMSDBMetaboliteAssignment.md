@@ -1,7 +1,7 @@
 <h1>EIMSDBMetaboliteAssignment</h1>
-Class: `maltcms.commands.fragments.assignment.EIMSDBMetaboliteAssignment`
-Description: Putative identification of EI-MS peaks for each chromatogram against the given databases.
-Workflow Slot: IDENTIFICATION
+**Class**: `maltcms.commands.fragments.assignment.EIMSDBMetaboliteAssignment`  
+**Workflow Slot**: IDENTIFICATION  
+**Description**: Putative identification of EI-MS peaks for each chromatogram against the given databases.  
 
 ---
 

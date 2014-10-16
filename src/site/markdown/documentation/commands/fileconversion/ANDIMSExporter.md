@@ -1,7 +1,7 @@
 <h1>ANDIMSExporter</h1>
-Class: `maltcms.commands.fragments.io.ANDIMSExporter`
-Description: Creates ANDIMS compliant output.
-Workflow Slot: FILECONVERSION
+**Class**: `maltcms.commands.fragments.io.ANDIMSExporter`  
+**Workflow Slot**: FILECONVERSION  
+**Description**: Creates ANDIMS compliant output.  
 
 ---
 

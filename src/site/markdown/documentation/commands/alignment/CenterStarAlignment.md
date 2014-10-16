@@ -1,7 +1,7 @@
 <h1>CenterStarAlignment</h1>
-Class: `maltcms.commands.fragments.alignment.CenterStarAlignment`
-Description: Creates a multiple alignment by selecting a reference chromatogram based on highest overall similarity or lowest overall distance of reference to other chromatograms.
-Workflow Slot: ALIGNMENT
+**Class**: `maltcms.commands.fragments.alignment.CenterStarAlignment`  
+**Workflow Slot**: ALIGNMENT  
+**Description**: Creates a multiple alignment by selecting a reference chromatogram based on highest overall similarity or lowest overall distance of reference to other chromatograms.  
 
 ---
 
@@ -23,12 +23,18 @@ Workflow Slot: ALIGNMENT
 ---
 
 <h2>Configurable Properties</h2>
-Name: `alignToFirst`
-Default Value: `false`
-Description: 
+**Name**: `alignToFirst`  
+**Default Value**: `false`  
+**Description**:  
+If true, align all chromatograms to the first one. If false, select reference automatically from pairwise similarities provided by upstream command.  
 
-Name: `centerSequence`
-Default Value: ``
-Description: 
+---
+
+**Name**: `centerSequence`  
+**Default Value**: ``  
+**Description**:  
+Base name (without file extension) of the chromatogram to use as the center to align to. Overrides automatic selection.  
+
+---
 
 

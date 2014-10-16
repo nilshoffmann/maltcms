@@ -1,7 +1,7 @@
 <h1>DeltaMasses</h1>
-Class: `maltcms.commands.fragments2d.visualization.DeltaMasses`
-Description: Visualization of delta masses
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.visualization.DeltaMasses`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Visualization of delta masses  
 
 ---
 
@@ -19,12 +19,18 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `colorramp`
-Default Value: `res/colorRamps/bcgyr.csv`
-Description: 
+**Name**: `colorramp`  
+**Default Value**: `res/colorRamps/bcgyr.csv`  
+**Description**:  
+The location of the color ramp used for plotting.  
 
-Name: `thresholdLow`
-Default Value: `0.0`
-Description: 
+---
+
+**Name**: `thresholdLow`  
+**Default Value**: `0.0`  
+**Description**:  
+The minimum intensity value to be included in plots.  
+
+---
 
 

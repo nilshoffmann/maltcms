@@ -1,7 +1,7 @@
 <h1>CSVAnchorReader</h1>
-Class: `maltcms.commands.fragments.io.CSVAnchorReader`
-Description: Reads anchors stored in csv/tsv compatible format.
-Workflow Slot: FILEIO
+**Class**: `maltcms.commands.fragments.io.CSVAnchorReader`  
+**Workflow Slot**: FILEIO  
+**Description**: Reads anchors stored in csv/tsv compatible format.  
 
 ---
 
@@ -19,31 +19,52 @@ Workflow Slot: FILEIO
 ---
 
 <h2>Configurable Properties</h2>
-Name: `time`
-Default Value: `false`
-Description: 
 
-Name: `index`
-Default Value: `true`
-Description: 
+**Description**:  
+  
 
-Name: `scan`
-Default Value: `true`
-Description: 
+---
 
-Name: `location`
-Default Value: `[]`
-Description: 
+**Name**: `index`  
+**Default Value**: `true`  
+**Description**:  
+  
 
+---
 
-Description: 
+**Name**: `scan`  
+**Default Value**: `true`  
+**Description**:  
+  
 
-Name: `basedir`
-Default Value: ``
-Description: 
+---
 
-Name: `max_names_length`
-Default Value: `-2147483648`
-Description: 
+**Name**: `time`  
+**Default Value**: `false`  
+**Description**:  
+  
+
+---
+
+**Name**: `basedir`  
+**Default Value**: ``  
+**Description**:  
+  
+
+---
+
+**Name**: `location`  
+**Default Value**: `[]`  
+**Description**:  
+  
+
+---
+
+**Name**: `max_names_length`  
+**Default Value**: `-2147483648`  
+**Description**:  
+  
+
+---
 
 

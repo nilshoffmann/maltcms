@@ -1,7 +1,7 @@
 <h1>GradientVisualizer</h1>
-Class: `maltcms.commands.fragments2d.visualization.GradientVisualizer`
-Description: Will visualize the distance gradient in y direction for all modulations.
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments2d.visualization.GradientVisualizer`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: (Experimental) Will visualize the similarity gradient in y direction for all modulations.  
 
 ---
 
@@ -27,24 +27,60 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `colorramp`
-Default Value: `res/colorRamps/bcgyr.csv`
-Description: 
+**Name**: `colorramp`  
+**Default Value**: `res/colorRamps/bcgyr.csv`  
+**Description**:  
+The location of the color ramp used for plotting.  
 
-Name: `filetype`
-Default Value: `png`
-Description: 
+---
 
-Name: `fillValueDouble`
-Default Value: `9.9692099683868690e+36d`
-Description: 
+**Name**: `thresholdLow`  
+**Default Value**: `0`  
+**Description**:  
+The minimum intensity value to be included in plots.  
 
-Name: `thresholdLow`
-Default Value: `0`
-Description: 
+---
 
-Name: `absolut`
-Default Value: `false`
-Description: 
+**Name**: `absolut`  
+**Default Value**: `false`  
+**Description**:  
+If true, use similarity to fixed mass spectrum.  
+
+---
+
+**Name**: `similarity`  
+**Default Value**: `ArrayWeightedCosine{}`  
+**Description**:  
+The similarity to use for gradient calculation.  
+
+---
+
+**Name**: `x`  
+**Default Value**: `0`  
+**Description**:  
+The x position of the fixed mass spectrum.  
+
+---
+
+**Name**: `y`  
+**Default Value**: `0`  
+**Description**:  
+The y position of the fixed mass spectrum.  
+
+---
+
+**Name**: `filetype`  
+**Default Value**: `png`  
+**Description**:  
+The file type used for saving plots.  
+
+---
+
+**Name**: `fillValueDouble`  
+**Default Value**: `9.9692099683868690e+36d`  
+**Description**:  
+  
+
+---
 
 

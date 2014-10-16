@@ -1,7 +1,7 @@
 <h1>Default2DVarLoader</h1>
-Class: `maltcms.commands.fragments2d.preprocessing.Default2DVarLoader`
-Description: Default var loader for 2d data. Will create different variables.
-Workflow Slot: GENERAL_PREPROCESSING
+**Class**: `maltcms.commands.fragments2d.preprocessing.Default2DVarLoader`  
+**Workflow Slot**: GENERAL_PREPROCESSING  
+**Description**: Default var loader for 2d data. Will create different variables.  
 
 ---
 
@@ -28,8 +28,18 @@ Workflow Slot: GENERAL_PREPROCESSING
 ---
 
 <h2>Configurable Properties</h2>
-Name: `maxScanAcquisitionTimeDelta`
-Default Value: `1.0E-4`
-Description: 
-Maximum allowed difference in scan acquisition times for scan rate estimation.
+**Name**: `estimateModulationTime`  
+**Default Value**: `false`  
+**Description**:  
+(Experimental) If true, estimate modulation time from 1D TIC.  
+
+---
+
+**Name**: `maxScanAcquisitionTimeDelta`  
+**Default Value**: `1.0E-4`  
+**Description**:  
+Maximum allowed difference in scan acquisition times for scan rate estimation.  
+
+---
+
 

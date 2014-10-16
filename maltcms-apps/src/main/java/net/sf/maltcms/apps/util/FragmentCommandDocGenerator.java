@@ -150,11 +150,11 @@ public class FragmentCommandDocGenerator {
                 try (BufferedWriter bw = new BufferedWriter(new FileWriter(mdFile))) {
                     bw.write("<h1>" + command.getClass().getSimpleName() + "</h1>");
                     bw.newLine();
-                    bw.write("Class: `" + command.getClass().getCanonicalName()+"`");
+                    bw.write("**Class**: `" + command.getClass().getCanonicalName() + "`  ");
                     bw.newLine();
-                    bw.write("Description: " + command.getDescription());
+                    bw.write("**Workflow Slot**: " + command.getWorkflowSlot() + "  ");
                     bw.newLine();
-                    bw.write("Workflow Slot: " + command.getWorkflowSlot());
+                    bw.write("**Description**: " + command.getDescription() + "  ");
                     bw.newLine();
                     bw.newLine();
                     bw.write("---");
@@ -189,7 +189,9 @@ public class FragmentCommandDocGenerator {
                     bw.newLine();
                     bw.write("<h2>Configurable Properties</h2>");
                     bw.newLine();
-                    for (String configKey : AnnotationInspector.getRequiredConfigKeys(command)) {
+                    ArrayList<String> configKeys = new ArrayList<>(AnnotationInspector.getRequiredConfigKeys(command));
+                    Collections.sort(configKeys);
+                    for (String configKey : configKeys) {
                         if (!configKey.startsWith("var.")) {
                             String description = AnnotationInspector.getDescriptionFor(command.getClass(), configKey);
                             String defaultValue = AnnotationInspector.getDefaultValueFor(command.getClass(), configKey);
@@ -198,9 +200,9 @@ public class FragmentCommandDocGenerator {
                                 try {
                                     PropertyDescriptor propDescr = BeanUtils.getPropertyDescriptor(command.getClass(), propertyName);
                                     if (propDescr != null) {
-                                        bw.write("Name: `" + propertyName+"`");
+                                        bw.write("**Name**: `" + propertyName + "`  ");
                                         bw.newLine();
-                                        bw.write("Default Value: `" + propDescr.getReadMethod().invoke(command)+"`");
+                                        bw.write("**Default Value**: `" + propDescr.getReadMethod().invoke(command) + "`  ");
                                     }
                                 } catch (SecurityException ex) {
                                     log.warn("Security exception while trying to access method '" + configKey + "'", ex);
@@ -212,14 +214,18 @@ public class FragmentCommandDocGenerator {
                                     log.warn("Invocation target exception while trying to invoke method '" + configKey + "'", ex);
                                 }
                             } else {
-                                bw.write("Name: `" + propertyName+"`");
+                                bw.write("**Name**: `" + propertyName + "`  ");
                                 bw.newLine();
-                                bw.write("Default Value: `" + defaultValue+"`");
+                                bw.write("**Default Value**: `" + defaultValue + "`  ");
                             }
                             bw.newLine();
-                            bw.write("Description: ");
+                            bw.write("**Description**:  ");
                             bw.newLine();
-                            bw.write("" + description);
+                            bw.write("" + description + "  ");
+                            bw.newLine();
+                            bw.newLine();
+                            bw.write("---");
+                            bw.newLine();
                             bw.newLine();
                         }
                     }

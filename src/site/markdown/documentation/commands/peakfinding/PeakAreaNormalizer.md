@@ -1,7 +1,7 @@
 <h1>PeakAreaNormalizer</h1>
-Class: `maltcms.commands.fragments.peakfinding.PeakAreaNormalizer`
-Description: Normalizes peak areas using user-defineable normalization methods.
-Workflow Slot: PEAKFINDING
+**Class**: `maltcms.commands.fragments.peakfinding.PeakAreaNormalizer`  
+**Workflow Slot**: PEAKFINDING  
+**Description**: Normalizes peak areas using user-defineable normalization methods.  
 
 ---
 
@@ -18,8 +18,11 @@ Workflow Slot: PEAKFINDING
 ---
 
 <h2>Configurable Properties</h2>
-Name: `peakNormalizers`
-Default Value: `[]`
-Description: 
+**Name**: `peakNormalizers`  
+**Default Value**: `[]`  
+**Description**:  
+A list of IPeakNormalizers to apply to the peaks created by an upstream command.  
+
+---
 
 

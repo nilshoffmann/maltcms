@@ -1,7 +1,7 @@
 <h1>CreateHorizontalTicVector</h1>
-Class: `maltcms.commands.fragments2d.warp.CreateHorizontalTicVector`
-Description: Creates the horizontal TIC-vector after warping the first time axis.
-Workflow Slot: GENERAL_PREPROCESSING
+**Class**: `maltcms.commands.fragments2d.warp.CreateHorizontalTicVector`  
+**Workflow Slot**: GENERAL_PREPROCESSING  
+**Description**: Creates the horizontal TIC-vector after warping the first time axis.  
 
 ---
 

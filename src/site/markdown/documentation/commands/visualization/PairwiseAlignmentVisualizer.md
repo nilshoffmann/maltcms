@@ -1,7 +1,7 @@
 <h1>PairwiseAlignmentVisualizer</h1>
-Class: `maltcms.commands.fragments.visualization.PairwiseAlignmentVisualizer`
-Description: Creates different plots for pairwise alignments of chromatograms.
-Workflow Slot: VISUALIZATION
+**Class**: `maltcms.commands.fragments.visualization.PairwiseAlignmentVisualizer`  
+**Workflow Slot**: VISUALIZATION  
+**Description**: Creates different plots for pairwise alignments of chromatograms.  
 
 ---
 
@@ -22,60 +22,102 @@ Workflow Slot: VISUALIZATION
 ---
 
 <h2>Configurable Properties</h2>
-Name: `normalize`
-Default Value: `false`
-Description: 
+**Name**: `chromheight`  
+**Default Value**: `100`  
+**Description**:  
+Height in pixels of the plotted chromatogram profiles.  
 
-Name: `normalize_global`
-Default Value: `false`
-Description: 
+---
 
-Name: `mapheight`
-Default Value: `100`
-Description: 
+**Name**: `createComparativeTICChart`  
+**Default Value**: `true`  
+**Description**:  
+If true, create a comparative pairwise chart for alignments.  
 
-Name: `substract_start_time`
-Default Value: `true`
-Description: 
+---
 
-Name: `pairsWithFirstElement`
-Default Value: `false`
-Description: 
+**Name**: `createDifferentialTICChart`  
+**Default Value**: `true`  
+**Description**:  
+If true, create a differential intensity chart of aligned chromatograms.  
 
-Name: `showChromatogramHeatmap`
-Default Value: `false`
-Description: 
+---
 
-Name: `chromheight`
-Default Value: `100`
-Description: 
+**Name**: `createMapTICChart`  
+**Default Value**: `true`  
+**Description**:  
+If true, create a pairwise chart showing the alignment map.  
 
-Name: `timeUnit`
-Default Value: `min`
-Description: 
+---
 
-Name: `createMapTICChart`
-Default Value: `true`
-Description: 
+**Name**: `createRatioTICChart`  
+**Default Value**: `true`  
+**Description**:  
+If true, create a ratio intenstiy chart of aligned chromatograms.  
 
-Name: `createComparativeTICChart`
-Default Value: `true`
-Description: 
+---
 
-Name: `createDifferentialTICChart`
-Default Value: `true`
-Description: 
+**Name**: `createSuperimposedTICChart`  
+**Default Value**: `true`  
+**Description**:  
+If true, create a superimposed chart of aligned chromatograms.  
 
-Name: `createRatioTICChart`
-Default Value: `true`
-Description: 
+---
 
-Name: `createSuperimposedTICChart`
-Default Value: `true`
-Description: 
+**Name**: `mapheight`  
+**Default Value**: `100`  
+**Description**:  
+Height in pixels of the pairwise alignment map.  
 
-Name: `y_axis_label`
-Default Value: `TIC`
-Description: 
+---
+
+**Name**: `normalize`  
+**Default Value**: `false`  
+**Description**:  
+Deprecated  
+
+---
+
+**Name**: `normalize_global`  
+**Default Value**: `false`  
+**Description**:  
+Deprecated  
+
+---
+
+**Name**: `pairsWithFirstElement`  
+**Default Value**: `false`  
+**Description**:  
+If true, plot pairs with first element only  
+
+---
+
+**Name**: `showChromatogramHeatmap`  
+**Default Value**: `false`  
+**Description**:  
+Deprecated  
+
+---
+
+**Name**: `substract_start_time`  
+**Default Value**: `true`  
+**Description**:  
+If true, subtract chromatogram start times.  
+
+---
+
+**Name**: `timeUnit`  
+**Default Value**: `min`  
+**Description**:  
+The time unit used for plotting.  
+
+---
+
+**Name**: `y_axis_label`  
+**Default Value**: `TIC`  
+**Description**:  
+The y axis label on the plots.  
+
+---
 
 

@@ -1,7 +1,7 @@
 <h1>DataFileVariablePrinter</h1>
-Class: `maltcms.commands.fragments.io.DataFileVariablePrinter`
-Description: Prints available variables for provided file fragments
-Workflow Slot: FILEIO
+**Class**: `maltcms.commands.fragments.io.DataFileVariablePrinter`  
+**Workflow Slot**: FILEIO  
+**Description**: Prints available variables for provided file fragments  
 
 ---
 
