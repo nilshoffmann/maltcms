@@ -669,13 +669,13 @@ public class MZMLDataSource implements IDataSource {
         SerializableArray sa = getCache().get(getVariableCacheKey(var));
         if (sa == null) {
             final Tuple2D<Array, Array> t = initMinMaxMZ(var, um);
-            variableToArrayCache.put(var.getParent().getUri() + ">" + this.mass_range_min, new SerializableArray(t.getFirst()));
-            variableToArrayCache.put(var.getParent().getUri() + ">" + this.mass_range_max, new SerializableArray(t.getSecond()));
+            getCache().put(var.getParent().getUri() + ">" + this.mass_range_min, new SerializableArray(t.getFirst()));
+            getCache().put(var.getParent().getUri() + ">" + this.mass_range_max, new SerializableArray(t.getSecond()));
         }
         if (var.getName().equals(this.mass_range_min)) {
-            return variableToArrayCache.get(getVariableCacheKey(getVariable(var.getParent(), this.mass_range_min)));
+            return getCache().get(getVariableCacheKey(getVariable(var.getParent(), this.mass_range_min)));
         } else if (var.getName().equals(this.mass_range_max)) {
-            return variableToArrayCache.get(getVariableCacheKey(getVariable(var.getParent(), this.mass_range_max)));
+            return getCache().get(getVariableCacheKey(getVariable(var.getParent(), this.mass_range_max)));
         }
         throw new IllegalArgumentException(
                 "Method accepts only one of mass_range_min or mass_range_max as varname!");
