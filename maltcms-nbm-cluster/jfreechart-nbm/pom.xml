@@ -12,6 +12,7 @@
     <packaging>nbm</packaging>
 
     <name>Lib JFreeChart</name>
+    <description>NetBeans Library Wrapper Module for JFreeChart.</description>
 
     <build>
         <plugins>

@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io-mzml</artifactId>
     <name>Maltcms IO Provider MZML</name>
+    <description>Datasource Implementation for MzML.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

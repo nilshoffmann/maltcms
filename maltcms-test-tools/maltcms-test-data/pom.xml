@@ -9,6 +9,7 @@
     </parent>
     <artifactId>maltcms-test-data</artifactId>
     <name>Maltcms Test Data</name>
+    <description>Test datasets in different formats.</description>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

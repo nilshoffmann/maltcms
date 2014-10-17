@@ -9,6 +9,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-io-xlsx</artifactId>
     <name>Maltcms IO Provider XLS(X)</name>
+    <description>Datasource Implementation for MS XLS(X).</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

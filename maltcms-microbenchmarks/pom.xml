@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-microbenchmarks</artifactId>
     <name>Maltcms Microbenchmarks</name>
+    <description>Testing Module for Performance Evaluation of Similarity Functions.</description>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>

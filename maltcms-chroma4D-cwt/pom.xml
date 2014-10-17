@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-chroma4D-cwt</artifactId>
     <name>Maltcms ChromA4D CWT</name>
+    <description>Continuous Wavelet Transform based Peakfinding for 2D Chromatography.</description>
     <packaging>jar</packaging>
     <build>
         <plugins>

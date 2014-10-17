@@ -11,7 +11,7 @@
     <artifactId>maltcms-test-tools</artifactId>
     <packaging>pom</packaging>
     <name>Maltcms Test Tools</name>
-
+    <description>Test utilities and datasets.</description>
     <modules>
         <module>maltcms-test-defaults</module>
         <module>maltcms-test-data</module>

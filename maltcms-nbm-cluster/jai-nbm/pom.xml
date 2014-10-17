@@ -12,6 +12,7 @@
     <packaging>nbm</packaging>
 
     <name>Lib JAI</name>
+    <description>NetBeans Library Wrapper Module for Java Advanced Imaging.</description>
 
     <dependencies>
         <dependency>

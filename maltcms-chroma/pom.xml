@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-chroma</artifactId>
     <name>Maltcms ChromA</name>
+    <description>Algorithms and Commands mainly for 1D Chromatography.</description>
     <build>
         <plugins>
             <!-- include to run integration tests -->

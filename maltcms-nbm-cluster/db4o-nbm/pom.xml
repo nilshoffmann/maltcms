@@ -12,6 +12,7 @@
     <packaging>nbm</packaging>
 
     <name>Lib db4o</name>
+    <description>NetBeans Library Wrapper Module for db4o.</description>
 
     <dependencies>
         <dependency>

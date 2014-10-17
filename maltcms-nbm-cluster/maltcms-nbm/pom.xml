@@ -12,6 +12,7 @@
     <packaging>nbm</packaging>
 
     <name>Lib Maltcms</name>
+    <description>NetBeans Library Wrapper Module for Maltcms.</description>
 
     <dependencies>
         <dependency>

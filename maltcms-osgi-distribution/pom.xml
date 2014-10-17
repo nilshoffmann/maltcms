@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-osgi-distribution</artifactId>
     <name>Maltcms Distribution OSGI</name>
+    <description>(Experimental) Creates the Maltcms OSGI Bundle Distribution.</description>
     <packaging>bundle</packaging>
     <profiles>
         <profile>

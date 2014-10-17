@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io-openms-featurexml</artifactId>
     <name>Maltcms IO Provider OpenMS FeatureXML</name>
+    <description>XML Binding Parser for OpenMS FeatureXML Format.</description>
     <packaging>jar</packaging>
     <build>
         <plugins>

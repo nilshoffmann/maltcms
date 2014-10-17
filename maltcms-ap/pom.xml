@@ -9,6 +9,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-ap</artifactId>
     <name>Maltcms Analytical Pyrolysis</name>
+    <description>User Interface and Implementation for Analytical Pyrolysis Workflows.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>false</maven.test.skip>

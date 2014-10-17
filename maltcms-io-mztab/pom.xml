@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io-mztab</artifactId>
     <name>Maltcms IO Provider mzTab</name>
+    <description>(Highly Experimental) Support for mzTab Creation and Export.</description>
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>

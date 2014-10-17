@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-experimental</artifactId>
     <name>Maltcms Experimental</name>
+    <description>(Experimental) Implementations, Testbed for new Developments.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -10,6 +10,15 @@
     <artifactId>jxl-osgi</artifactId>
     <version>2.6.12</version>
     <name>JXL OSGI</name>
+    <description>OSGI Wrapper module for JXL API http://jexcelapi.sourceforge.net/</description>
+    <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/jxl-osgi</url>
+    <distributionManagement>
+        <site>
+            <id>maltcms.sf.net</id>
+            <name>maltcms.sf.net</name>
+            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.parent.version}/${project.artifactId}</url>
+        </site>
+    </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

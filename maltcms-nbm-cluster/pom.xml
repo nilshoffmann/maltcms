@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-nbm-cluster</artifactId>
     <name>Maltcms Distribution NBM</name>
+    <description>Creates the Maltcms NetBeans Module (NBM) Cluster.</description>
     <packaging>pom</packaging>
 
     <profiles>

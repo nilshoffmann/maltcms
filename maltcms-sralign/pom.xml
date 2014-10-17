@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-sralign</artifactId>
     <name>Maltcms Symbolic Rep Alignment</name>
+    <description>(Deprecated) Implementation of Sub-Sampled 1D Time Series Alignment.</description>
     <dependencies>
         <dependency>
             <groupId>edu.ucar.unidata</groupId>

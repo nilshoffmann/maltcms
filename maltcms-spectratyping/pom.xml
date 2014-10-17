@@ -9,6 +9,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-spectratyping</artifactId>
     <name>Maltcms Spectratyping</name>
+    <description>(Experimental) Pipeline for Spectratyping.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

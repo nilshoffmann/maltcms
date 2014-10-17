@@ -10,6 +10,15 @@
     <artifactId>poi-osgi</artifactId>
     <version>3.9</version>
     <name>POI OSGI</name>
+    <description>OSGI Wrapper module for Apache POI API http://poi.apache.org/</description>
+    <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/poi-osgi</url>
+    <distributionManagement>
+        <site>
+            <id>maltcms.sf.net</id>
+            <name>maltcms.sf.net</name>
+            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.parent.version}/${project.artifactId}</url>
+        </site>
+    </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -36,7 +45,7 @@
             <version>3.9</version>
             <!--<scope>provided</scope>-->
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <artifactId>xml-apis</artifactId>
             <groupId>xml-apis</groupId>
             <type>jar</type>

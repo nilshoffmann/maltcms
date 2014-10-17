@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-ap-distribution</artifactId>
     <name>Maltcms Analytical Pyrolysis Distribution Binary</name>
+    <description>Creates the Maltcms Binary Distribution for Analytical Pyrolysis.</description>
     <packaging>pom</packaging>
     
     <build>

@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-xml-alignment</artifactId>
     <name>Maltcms Xml Alignment Format</name>
+    <description>Maltcms XML Alignment Format Schema and Implementation.</description>
     <packaging>jar</packaging>
     <build>
         <plugins>

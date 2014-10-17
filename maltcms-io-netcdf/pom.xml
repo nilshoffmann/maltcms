@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io-netcdf</artifactId>
     <name>Maltcms IO Provider NetCDF</name>
+    <description>Datasource Implementation for NetCDF, ANDI-MS, and ANDI-CHROM.</description>
     <build>
         <plugins>
             <!-- include to run integration tests -->

@@ -9,6 +9,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-cv</artifactId>
     <name>Maltcms Controlled Vocabulary</name>
+    <description>Controlled Vocabulary Term Resolution for Variable Names.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

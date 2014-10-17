@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io-mzdata</artifactId>
     <name>Maltcms IO Provider MZDATA</name>
+    <description>(Deprecated) Datasource Implementation for mzData.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

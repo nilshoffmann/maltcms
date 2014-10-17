@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io</artifactId>
     <name>Maltcms IO</name>
+    <description>IO Utilities for CSV and Color Ramps.</description>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

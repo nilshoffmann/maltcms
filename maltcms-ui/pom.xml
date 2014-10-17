@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-ui</artifactId>
     <name>Maltcms UI</name>
+    <description>Utilities for Charting and Plotting.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

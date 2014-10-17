@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-distribution</artifactId>
     <name>Maltcms Distribution Binary</name>
+    <description>Creates the Maltcms Binary Distribution.</description>
     <packaging>pom</packaging>
     
     <build>

@@ -10,12 +10,6 @@
     <groupId>net.sf.maltcms.test</groupId>
     <artifactId>maltcms-test-defaults</artifactId>
     <name>Maltcms Test Defaults</name>
+    <description>Test utilities for fragment commands and workflows.</description>
     <packaging>jar</packaging>
-    <!--    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-        </dependency>
-    </dependencies>-->
 </project>

@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-xml-annotation</artifactId>
     <name>Maltcms Xml Annotation Format</name>
+    <description>Maltcms XML Feature Format Schema and Implementation.</description>
     <packaging>jar</packaging>
     <build>
         <plugins>

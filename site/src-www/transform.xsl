@@ -471,6 +471,12 @@
             <xsl:when test="./@target=$PAGENAME">
                 <xsl:attribute name="class">active</xsl:attribute>
             </xsl:when>
+			<xsl:when test="./@group=$GROUPNAME">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:when>
+			<xsl:when test="./@subgroup=$GROUPNAME">
+                <xsl:attribute name="class">active</xsl:attribute>
+            </xsl:when>
         </xsl:choose>
 
         <xsl:element name="a">

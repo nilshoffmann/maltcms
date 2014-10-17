@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-commands</artifactId>
     <name>Maltcms Commands</name>
+    <description>Similarities for Feature Vectors and Time Series thereof, such as Cosine and Dynamic Time Warping.</description>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>

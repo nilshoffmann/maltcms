@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-db</artifactId>
     <name>Maltcms DB</name>
+    <description>Utilities for Metabolite DB Creation and Search/Identification.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-io-mz5</artifactId>
     <name>Maltcms IO Provider MZ5</name>
+    <description>(Experimental) Datasource Implementation for MZ5.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

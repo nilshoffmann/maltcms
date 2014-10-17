@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-chroma4D</artifactId>
     <name>Maltcms ChromA4D</name>
+    <description>Algorithms and Commands mainly for 2D Chromatography.</description>
     <build>
         <plugins>
             <!-- include to run integration tests -->

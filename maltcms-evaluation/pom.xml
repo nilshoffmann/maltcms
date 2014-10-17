@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-evaluation</artifactId>
     <name>Maltcms Evaluation</name>
+    <description>Utilities for Comparison of Multiple Peak Alignments.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>false</maven.test.skip>

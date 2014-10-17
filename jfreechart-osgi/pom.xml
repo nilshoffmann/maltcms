@@ -10,6 +10,15 @@
     <artifactId>jfreechart-osgi</artifactId>
     <version>1.0.14.1</version>
     <name>JFreeChart OSGI</name>
+    <description>OSGI Wrapper module for JFreeChart, http://www.jfree.org</description>
+    <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/jfreechart-osgi</url>
+    <distributionManagement>
+        <site>
+            <id>maltcms.sf.net</id>
+            <name>maltcms.sf.net</name>
+            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.parent.version}/${project.artifactId}</url>
+        </site>
+    </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

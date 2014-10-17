@@ -14,6 +14,8 @@
 * Peak finding classes have been refactored to share large amounts of similar code, this may require adaptation of the pipeline configurations.
 * Extended IChromatogram2D interface to allow retrieval of 2D time bound region.
 
+A list of non-compatible API changes can be found for each module in the module **Project Reports** section, under **Clirr**.
+
 ### Dependencies
 
 * Updated cross dependency to latest stable 1.4.0 release. 

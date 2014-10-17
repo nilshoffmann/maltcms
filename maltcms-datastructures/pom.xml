@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-datastructures</artifactId>
     <name>Maltcms Datastructures</name>
+    <description>Datastructures for Chromatography and Mass Spectrometry.</description>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

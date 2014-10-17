@@ -51,6 +51,9 @@
 
         <group nname="Maui" ident="maui">
             <ref target="maui/index" />
+            <ref target="maui/gettingStarted" />
+            <ref target="users/support" />
+            <a href="https://sourceforge.net/p/maltcmsui/wiki" title="Wiki">Wiki</a>
         </group>
 
         <group nname="News" ident="news">
@@ -60,7 +63,8 @@
         <group nname="Developers" ident="developers">
             <ref target="developers/api" />
             <a href="http://sf.net/projects/maltcms/" title="Project Website at Sourceforge">Project@SF</a>
-            <a href="http://sf.net/p/maltcms/wiki" title="Wiki">Wiki</a>
+            <a href="http://sf.net/p/maltcms/wiki" title="Wiki">Maltcms Wiki</a>
+            <a href="http://sf.net/p/maltcmsui/wiki" title="Wiki">Maui Wiki</a>
             <!--			<group nname="Tutorials" ident="tutorials">
                 <ref target="developers/tutorials/programmaticWorkflow" />
             </group>-->
@@ -116,4 +120,5 @@
     <xi:include href="info/contact.xml" parse="xml" />
     <!--    Maui -->
     <xi:include href="maui/index.xml" parse="xml" />
+    <xi:include href="maui/gettingStarted.xml" parse="xml" />
 </site>

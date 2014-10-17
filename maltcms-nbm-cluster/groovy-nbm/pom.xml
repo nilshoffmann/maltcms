@@ -12,6 +12,7 @@
     <packaging>nbm</packaging>
 
     <name>Lib Groovy</name>
+    <description>NetBeans Library Wrapper Module for Groovy.</description>
 
     <build>
         <plugins>

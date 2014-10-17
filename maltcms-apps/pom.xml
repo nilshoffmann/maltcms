@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-apps</artifactId>
     <name>Maltcms Apps</name>
+    <description>The Maltcms CLI Application.</description>
     <dependencies>
         <dependency>
             <groupId>commons-cli</groupId>

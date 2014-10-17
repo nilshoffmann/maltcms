@@ -9,6 +9,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-io-csv</artifactId>
     <name>Maltcms IO Provider CSV</name>
+    <description>Parser Support for ChromaTOF, GC Image, and FSA Formats.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-resources</artifactId>
     <name>Maltcms Runtime Resources</name>
+    <description>Required Resources for the Maltcms Application.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

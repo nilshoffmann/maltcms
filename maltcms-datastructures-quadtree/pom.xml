@@ -8,6 +8,7 @@
     </parent>
     <artifactId>maltcms-datastructures-quadtree</artifactId>
     <name>Maltcms QuadTree</name>
+    <description>Generic 2D Spatial Index Datastructure mainly for 2D Chromatography.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
