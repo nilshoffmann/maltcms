@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-chroma4D</artifactId>
     <name>Maltcms ChromA4D</name>
-    <url>http://maltcms.sourceforge.net</url>
     <build>
         <plugins>
             <!-- include to run integration tests -->

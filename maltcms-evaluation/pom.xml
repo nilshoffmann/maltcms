@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-evaluation</artifactId>
     <name>Maltcms Evaluation</name>
-    <url>http://maltcms.sourceforge.net</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>false</maven.test.skip>

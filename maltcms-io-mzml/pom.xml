@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-io-mzml</artifactId>
     <name>Maltcms IO Provider MZML</name>
-    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

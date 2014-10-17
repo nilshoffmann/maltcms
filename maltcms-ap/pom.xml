@@ -9,7 +9,6 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-ap</artifactId>
     <name>Maltcms Analytical Pyrolysis</name>
-    <url>http://maltcms.sourceforge.net</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.test.skip>false</maven.test.skip>

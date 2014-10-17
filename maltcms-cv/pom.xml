@@ -9,7 +9,6 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-cv</artifactId>
     <name>Maltcms Controlled Vocabulary</name>
-    <url>http://maltcms.sourceforge.net</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

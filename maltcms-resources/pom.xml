@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-resources</artifactId>
     <name>Maltcms Runtime Resources</name>
-    <url>http://maltcms.sourceforge.net</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

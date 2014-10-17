@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-io-mztab</artifactId>
     <name>Maltcms IO Provider mzTab</name>
-    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>

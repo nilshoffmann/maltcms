@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-distribution</artifactId>
     <name>Maltcms Distribution Binary</name>
-    <url>http://maltcms.sourceforge.net</url>
     <packaging>pom</packaging>
     
     <build>

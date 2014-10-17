@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-execution</artifactId>
     <name>Maltcms Execution</name>
-    <url>http://maltcms.sourceforge.net</url>
     <packaging>jar</packaging>
     <dependencies>
 	

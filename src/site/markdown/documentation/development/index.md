@@ -5,9 +5,9 @@
 - [Git](http://git-scm.com) (for source code access)
 - [Java JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Maven 3](http://maven.apache.org/download.html)
-- Any IDE supporting maven 2/3 integration and subversion support
-    - [NetBeans 7.+](http://netbeans.org/)
-    - [Eclipse 3.+ (Indigo) or 4.+](http://eclipse.org/)
+- Any IDE supporting maven 3 integration and subversion support
+    - [NetBeans 8.+](http://netbeans.org/)
+    - [Eclipse 4.+](http://eclipse.org/)
     (requires additional m2e plugin and 
      git plugins)
     - [IntelliJ Idea 10.5](http://www.jetbrains.com/idea/)
@@ -71,7 +71,7 @@ In order to use the Maltcms artifacts in your code, include them in the dependen
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>maltcms-distribution</artifactId>
-            <version>1.3.1</version>
+            <version>1.3.2</version>
             <type>pom</type>
         </dependency>
     </dependencies>
@@ -82,7 +82,7 @@ or in the dependency management section of your pom if you want to specify the v
         <dependency>
             <groupId>net.sf.maltcms</groupId>
             <artifactId>cross-main</artifactId>
-            <version>1.3.1</version>
+            <version>1.4.0</version>
         </dependency>
         </dependencies>
     </dependencyManagement>
@@ -100,6 +100,4 @@ The following pages give a more detailed overview of different aspects when deve
 with Maltcms.
 
 - [Maven](./maven.html)
-- [Data Access](./dataAccess.html)
-- [Parallel Processing](./parallelProcessing.html)
 - [Custom Workflow Elements](./customWorkflowElements.html)

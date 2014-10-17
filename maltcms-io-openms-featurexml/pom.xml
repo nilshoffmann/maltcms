@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-io-openms-featurexml</artifactId>
     <name>Maltcms IO Provider OpenMS FeatureXML</name>
-    <url>http://maltcms.sourceforge.net</url>
     <packaging>jar</packaging>
     <build>
         <plugins>

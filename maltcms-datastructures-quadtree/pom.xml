@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-datastructures-quadtree</artifactId>
     <name>Maltcms QuadTree</name>
-    <url>http://maltcms.sourceforge.net</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

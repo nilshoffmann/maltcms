@@ -25,4 +25,7 @@ Currently, the following fragment commands are available for execution
 within the pipeline:
 
 [List of Fragment Commands](./commands/index.html)
+
+These pages also give detailed information about the user-definable properties that
+are supported by each command.
 	

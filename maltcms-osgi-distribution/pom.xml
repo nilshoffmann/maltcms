@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-osgi-distribution</artifactId>
     <name>Maltcms Distribution OSGI</name>
-    <url>http://maltcms.sourceforge.net</url>
     <packaging>bundle</packaging>
     <profiles>
         <profile>

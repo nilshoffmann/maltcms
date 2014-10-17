@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-sralign</artifactId>
     <name>Maltcms Symbolic Rep Alignment</name>
-    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
             <groupId>edu.ucar.unidata</groupId>

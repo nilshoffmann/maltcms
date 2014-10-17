@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-ap-distribution</artifactId>
     <name>Maltcms Analytical Pyrolysis Distribution Binary</name>
-    <url>http://maltcms.sourceforge.net</url>
     <packaging>pom</packaging>
     
     <build>

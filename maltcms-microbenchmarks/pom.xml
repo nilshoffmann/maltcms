@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-microbenchmarks</artifactId>
     <name>Maltcms Microbenchmarks</name>
-    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>

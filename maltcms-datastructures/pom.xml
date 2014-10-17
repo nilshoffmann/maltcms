@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-datastructures</artifactId>
     <name>Maltcms Datastructures</name>
-    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

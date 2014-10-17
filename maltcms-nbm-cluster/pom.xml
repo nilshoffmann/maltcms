@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-nbm-cluster</artifactId>
     <name>Maltcms Distribution NBM</name>
-    <url>http://maltcms.sourceforge.net</url>
     <packaging>pom</packaging>
 
     <profiles>

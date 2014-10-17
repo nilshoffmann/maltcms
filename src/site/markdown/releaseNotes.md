@@ -1,11 +1,12 @@
 # Release Notes
 
-## Changes for version 1.4.0
+## Changes for version 1.3.2
 ### Improvements
 * Added support for import of GcImage Blob Reports in csv format as peak data in `maltcms.commands.fragments2d.io.csv.GcImagePeak2DImporter`.
 * Fixed an issue in `MZMLExporterWorker` where validation would fail, if file names started with numbers.
 * Added support in `Peak2D` for reading and writing of peak lists from and to netcdf. 
 * Refactored and simplified `SeededRegionGrowing` to primarily use the `IChromatogram2D` interface.
+* Updated documentation.
 
 ### API Changes
 

@@ -8,7 +8,6 @@
     </parent>
     <artifactId>maltcms-apps</artifactId>
     <name>Maltcms Apps</name>
-    <url>http://maltcms.sourceforge.net</url>
     <dependencies>
         <dependency>
             <groupId>commons-cli</groupId>

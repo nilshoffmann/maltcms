@@ -10,7 +10,6 @@
     <artifactId>jfreechart-osgi</artifactId>
     <version>1.0.14.1</version>
     <name>JFreeChart OSGI</name>
-    <url>http://jfreechart.sourceforge.net/</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
