@@ -58,7 +58,6 @@ import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.datastructures.caches.RingBuffer;
 import maltcms.datastructures.peak.Peak1D;
-import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
 import maltcms.ui.charts.AChart;

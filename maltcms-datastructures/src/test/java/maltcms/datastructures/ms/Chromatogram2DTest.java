@@ -33,10 +33,10 @@ import cross.test.LogMethodName;
 import cross.test.SetupLogging;
 import java.io.File;
 import java.io.IOException;
-import static java.lang.Math.log;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.caches.SparseScanLineCache;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -125,13 +125,13 @@ public class Chromatogram2DTest {
         IVariableFragment scanRate = f.addChild("scan_rate");
         scanRate.setArray(Array.factory(new double[]{0.4}));
         IVariableFragment si = f.addChild("scan_index");
-        int[] sis = new int[]{0, 1, 2, 3, 4, 5, 6};
+        int[] sis = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
         si.setArray(Array.factory(sis));
         IVariableFragment ms = f.addChild("mass_values");
-        double[] mvs = new double[]{74.241, 74.521, 70.4214, 75.869, 90.421, 61.515, 89.124};
+        double[] mvs = new double[]{74.241, 74.521, 70.4214, 75.869, 90.421, 61.515, 89.124, 98.872};
         ms.setArray(Array.factory(mvs));
         IVariableFragment is = f.addChild("intensity_values");
-        int[] ivs = new int[]{896, 89613, 8979694, 78585, 89563, 56704, 76124};
+        int[] ivs = new int[]{896, 89613, 8979694, 78585, 89563, 56704, 76124, 962132};
         is.setArray(Array.factory(ivs));
         f.addChild("total_intensity").setArray(Array.factory(ivs));
         f.save();
@@ -169,11 +169,12 @@ public class Chromatogram2DTest {
     @Test
     public void testBuildScan() throws IOException {
         sl.setLogLevel(Chromatogram2DTest.class, Level.INFO.toString());
+        sl.setLogLevel(SparseScanLineCache.class, Level.INFO.toString());
         File file = tf.newFile("testFragment.cdf");
         Chromatogram2D chrom = createDenseTestChromatogram2D(file);
-        int[] expectedIndices = new int[]{0, 1, 2, 3, 4, 5, 6};
-        int[] firstColumnIndices = new int[]{0, 0, 1, 1, 2, 2};
-        int[] secondColumnIndices = new int[]{0, 1, 0, 1, 0, 1};
+        int[] expectedIndices = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
+        int[] firstColumnIndices = new int[]{0, 0, 1, 1, 2, 2, 3, 3};
+        int[] secondColumnIndices = new int[]{0, 1, 0, 1, 0, 1, 0, 1};
         for (int i = 0; i < expectedIndices.length; i++) {
             //currently uses scan line cache, which requires a dense chromatogram
             log.info("Checking index {}", i);

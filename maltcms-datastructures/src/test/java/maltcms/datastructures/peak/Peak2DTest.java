@@ -111,7 +111,7 @@ public class Peak2DTest {
     }
 
     /**
-     * Test of getFeature method, of class Peak1D.
+     * Test of getFeature method, of class Peak2D.
      */
     @Test
     public void testGetFeature() {
@@ -143,7 +143,7 @@ public class Peak2DTest {
     }
 
     /**
-     * Test of getFeatureNames method, of class Peak1D.
+     * Test of getFeatureNames method, of class Peak2D.
      */
     @Test
     public void testGetFeatureNames() {
