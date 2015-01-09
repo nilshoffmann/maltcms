@@ -80,7 +80,7 @@ public class GcImageBlobParserTest {
     public void testCommonsCsvParsing() throws IOException {
         File dataFolder = tf.newFolder("gcImageTestFolder");
         File file = ZipResourceExtractor.extract(
-                "/csv/gcimage/reduced/mut_t1_a.csv", dataFolder);
+                "/csv/gcimage/reduced/mut_t1_a.csv.gz", dataFolder);
         Locale locale = Locale.US;
         CSVParser parser = null;
         try {
@@ -117,7 +117,7 @@ public class GcImageBlobParserTest {
         File sourceFile = ZipResourceExtractor.extract(
                 "/cdf/2D/mut_t1_a.cdf.gz", dataFolder);
         File file = ZipResourceExtractor.extract(
-                "/csv/gcimage/reduced/mut_t1_a.csv", dataFolder);
+                "/csv/gcimage/reduced/mut_t1_a.csv.gz", dataFolder);
         File subFolder = tf.newFolder("gcImageRefTestFolder");
         FileFragment tmpFrag = new FileFragment(subFolder, sourceFile.getName());
         tmpFrag.addSourceFile(new FileFragment(sourceFile));
