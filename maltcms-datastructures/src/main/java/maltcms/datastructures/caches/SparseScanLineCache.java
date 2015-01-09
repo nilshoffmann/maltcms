@@ -40,6 +40,7 @@ import cross.tools.StringTools;
 import java.awt.Point;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +79,7 @@ public class SparseScanLineCache implements IScanLine {
     private String scanRateVar = "scan_rate";
     private String totalIntensityVar = "total_intensity";
     private String secondColumnIndexVar = "second_column_scan_index";
-    private List<List<Integer>> xyToScanIndexMap;
+    private List<int[]> xyToScanIndexMap;
     private IVariableFragment scanIndex = null;
     private IVariableFragment massValues = null;
     private IVariableFragment massIntensities = null;
@@ -147,7 +148,7 @@ public class SparseScanLineCache implements IScanLine {
     private Array createUpxyIndexMap(IFileFragment iff) {
         final Integer scanspermodulation = getScansPerModulation();
         int nscans = iff.getChild(totalIntensityVar, true).getDimensions()[0].getLength();
-        Integer modulationCnt = nscans / scanspermodulation + nscans % scanspermodulation == 0 ? 0 : 1;
+        Integer modulationCnt = (nscans / scanspermodulation) + (nscans % scanspermodulation == 0 ? 0 : 1);
         final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt);
         for (int i = 0; i < modulationCnt; i++) {
             secondColumnIndex.set(i, scanspermodulation * i);
@@ -168,16 +169,38 @@ public class SparseScanLineCache implements IScanLine {
         } catch (ResourceNotAvailableException rnae) {
             secondScanIndex = createUpxyIndexMap(this.iff);
         }
-        final IndexIterator iter = secondScanIndex.getIndexIterator();
-        int lastScanIndex = iter.getIntNext();
-        while (iter.hasNext()) {
-            List<Integer> tmpList = new ArrayList<>();
-            final int currentScanIndex = iter.getIntNext();
-            for (; lastScanIndex < currentScanIndex; lastScanIndex++) {
-                tmpList.add(lastScanIndex);
+//        final IndexIterator iter = secondScanIndex.getIndexIterator();
+//        int lastScanIndex = iter.getIntNext();
+        int offset = 0;
+        for(int i = 0; i<secondScanIndex.getShape()[0];i++) {
+            log.info("Modulation {}", i);
+            int[] tmpList = new int[scansPerModulation];
+//            final int currentScanIndex = iter.getIntNext();
+            int k = 0;
+            for (int j = offset; j<offset+scansPerModulation;j++) {
+                log.info("Adding xyToScanIndex index {}",j);
+                tmpList[k++] = j;
             }
             this.xyToScanIndexMap.add(tmpList);
+            offset+=scansPerModulation;
         }
+//        final IndexIterator iter = secondScanIndex.getIndexIterator();
+////        int lastScanIndex = iter.getIntNext();
+//        int i = 0;
+//        while (iter.hasNext()) {
+//            i = iter.getIntNext();
+//            Integer[] scanIndexArray = new Integer[scansPerModulation];
+//            for(;i<scansPerModulation;i++) {
+//                scanIndexArray[i] = i;
+//            }
+//            Arrays.fill(scanIndexArray, i++);
+////            List<Integer> tmpList = new ArrayList<>();
+////            final int currentScanIndex = iter.getIntNext();
+////            for (; lastScanIndex < currentScanIndex; lastScanIndex++) {
+////                tmpList.add(lastScanIndex);
+////            }
+//            this.xyToScanIndexMap.add(Arrays.asList(scanIndexArray));
+//        }
     }
 
     /**
@@ -321,12 +344,12 @@ public class SparseScanLineCache implements IScanLine {
             return Collections.emptyList();
         }
         try {
-            int last = this.xyToScanIndexMap.get(x).size() - 1;
-            int maxindex = this.xyToScanIndexMap.get(x).get(last);
+            int last = this.xyToScanIndexMap.get(x).length - 1;
+            int maxindex = this.xyToScanIndexMap.get(x)[last];
             if (maxindex > this.lastIndex) {
                 maxindex = this.lastIndex;
             }
-            final Range range = new Range(this.xyToScanIndexMap.get(x).get(0), maxindex);
+            final Range range = new Range(this.xyToScanIndexMap.get(x)[0], maxindex);
             final Range[] r = new Range[]{range};
             this.scanIndex.setRange(r);
             this.massValues.setIndex(this.scanIndex);
