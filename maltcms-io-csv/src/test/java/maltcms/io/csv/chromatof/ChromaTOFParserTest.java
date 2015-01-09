@@ -67,7 +67,7 @@ public class ChromaTOFParserTest {
     public void testChromaTOFParser2DRT1RT2() throws IOException {
         File dataFolder = tf.newFolder("chromaTofTestFolder");
         File file = ZipResourceExtractor.extract(
-                "/csv/chromatof/reduced/mut_t1_a.csv", dataFolder);
+                "/csv/chromatof/reduced/2D/mut_t1_a.csv.gz", dataFolder);
         Locale locale = Locale.US;
         ChromaTOFParser parser = ChromaTOFParser.create(file, true, locale);
         LinkedHashSet<ColumnName> columnNames = parser.parseHeader(file, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
@@ -88,7 +88,7 @@ public class ChromaTOFParserTest {
     public void testChromaTOFParser2DRT() throws IOException {
         File dataFolder = tf.newFolder("chromaTofTestFolder");
         File file = ZipResourceExtractor.extract(
-                "/csv/chromatof/full/mut_t1_a.csv", dataFolder);
+                "/csv/chromatof/full/2D/mut_t1_a.csv.gz", dataFolder);
         Locale locale = Locale.US;
         ChromaTOFParser parser = ChromaTOFParser.create(file, true, locale);
         LinkedHashSet<ColumnName> columnNames = parser.parseHeader(file, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
