@@ -147,7 +147,7 @@ public class SparseScanLineCache implements IScanLine {
     private Array createUpxyIndexMap(IFileFragment iff) {
         final Integer scanspermodulation = getScansPerModulation();
         int nscans = iff.getChild(totalIntensityVar, true).getDimensions()[0].getLength();
-        Integer modulationCnt = nscans/scanspermodulation + nscans%scanspermodulation==0?0:1;
+        Integer modulationCnt = nscans / scanspermodulation + nscans % scanspermodulation == 0 ? 0 : 1;
         final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt);
         for (int i = 0; i < modulationCnt; i++) {
             secondColumnIndex.set(i, scanspermodulation * i);
@@ -289,7 +289,7 @@ public class SparseScanLineCache implements IScanLine {
      */
     @Override
     public int getScanLineCount() {
-        return (this.lastIndex / this.scansPerModulation);
+        return this.xyToScanIndexMap.size();//this.(this.lastIndex / this.scansPerModulation);
     }
 
     /**
@@ -317,7 +317,7 @@ public class SparseScanLineCache implements IScanLine {
      * @return complete ms list of the scan line
      */
     private synchronized List<Tuple2D<Array, Array>> loadScanline(final int x) {
-        if (x > this.xyToScanIndexMap.size() - 1) {
+        if (x > this.lastIndex) {
             return Collections.emptyList();
         }
         try {
@@ -425,13 +425,14 @@ public class SparseScanLineCache implements IScanLine {
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(int x, int y) {
         try {
-            if ((x >= 0) && (y >= 0) && (y < this.scansPerModulation)
-                    && (x < this.getScanLineCount())) {
+            if ((x >= 0) && (y >= 0) && (x + y <= this.lastIndex)) {
                 return getScanlineSparseMS(x).get(y);
             } else {
+                log.info("Returning null");
                 return null;
             }
         } catch (final IndexOutOfBoundsException e) {
+            log.warn("", e);
             return null;
         }
     }

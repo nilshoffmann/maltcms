@@ -2,6 +2,12 @@
 <content group="news" ident="news/index" nname="News" publish="yes" toRoot="../" lastchanged="$Date$ by $Author$">
     <column id="content">
         <h1>News</h1>
+        <h2>2014</h2>
+        <ul class="unbulletedlist">
+            <li>
+                <ref target="news/maui1_3_2" alt="Maltcms 1.3.2 Release on October 17th, 2014" />
+            </li>
+        </ul>
         <h2>2013</h2>
         <ul class="unbulletedlist">
             <li>

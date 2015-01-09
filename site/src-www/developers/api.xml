@@ -5,10 +5,9 @@
         <div class="block">
             <h2>Maltcms Maven Sites (including JavaDoc API)</h2>
             <ul style="list-style: none;">
-                <!--
                 <li>
-                    <a href="../maven/maltcms/1.3.1/index.html" title="Maven Site for Maltcms 1.3.1">1.3.1</a>
-                </li>-->
+                    <a href="../maven/maltcms/1.3.2/index.html" title="Maven Site for Maltcms 1.3.2">1.3.2</a>
+                </li>
                 <li>
                     <a href="../maven/maltcms/1.3.0/index.html" title="Maven Site for Maltcms 1.3.0">1.3.0</a>
                 </li>

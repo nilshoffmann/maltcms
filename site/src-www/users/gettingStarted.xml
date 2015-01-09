@@ -10,6 +10,9 @@
             <h2>Current Documentation and Getting Started guides</h2>
             <ul>
                 <li>
+                    <a href="http://maltcms.sourceforge.net/maven/maltcms/1.3.2/index.html">Instructions for Maltcms 1.3.2</a>
+                </li>
+                <li>
                     <a href="http://maltcms.sourceforge.net/maven/maltcms/1.3.0/index.html">Instructions for Maltcms 1.3.0</a>
                 </li>
                 <li>

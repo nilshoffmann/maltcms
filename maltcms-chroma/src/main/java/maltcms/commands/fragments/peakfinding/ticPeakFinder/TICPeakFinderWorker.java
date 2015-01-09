@@ -58,6 +58,7 @@ import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.datastructures.caches.RingBuffer;
 import maltcms.datastructures.peak.Peak1D;
+import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
 import maltcms.ui.charts.AChart;
@@ -320,11 +321,13 @@ public class TICPeakFinderWorker implements Callable<PeakFinderWorkerResult>, Se
         } else {
             peaks = new ArrayList<>(pprs.getTs().size());
             for (Integer idx : pprs.getTs()) {
-                Peak1D pk = new Peak1D();
-                pk.setSnr(pprs.getSnrValues()[idx]);
-                pk.setApexIndex(idx);
-                pk.setFile(outputFragment.getName());
-                peaks.add(pk);
+                peaks.add(
+                    Peak1D.builder1D().
+                        snr(pprs.getSnrValues()[idx]).
+                        apexIndex(idx).
+                        file(outputFragment.getName()).
+                    build()
+                );
             }
         }
         return saveResults(f, outputFragment, pprs, peaks);
@@ -426,8 +429,13 @@ public class TICPeakFinderWorker implements Callable<PeakFinderWorkerResult>, Se
         startIndex = Math.max(0, startIndex);
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
-        pb.setFile(chromatogram.getUri().toString());
+        final Peak1D pb = 
+            Peak1D.builder1D().
+                startIndex(startIndex).
+                apexIndex(apexIndex).
+                stopIndex(stopIndex).
+                file(chromatogram.getUri().toString()).
+            build();
         integratePeak(pb, ticToIntegrate);
         return pb;
     }

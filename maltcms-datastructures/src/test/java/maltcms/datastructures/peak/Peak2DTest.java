@@ -39,6 +39,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.peak.Peak2D.Peak2DBuilder;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
 import org.junit.Assert;
@@ -62,36 +63,45 @@ public class Peak2DTest {
     public LogMethodName lmn = new LogMethodName();
 
     public List<Peak2D> createPeaks() {
-        Peak2D p1 = new Peak2D();
-        p1.setIndex(0);
-        p1.setStartIndex(35);
-        p1.setApexIndex(40);
-        p1.setStopIndex(45);
-        p1.setFirstRetTime(3400.0d);
-        p1.setSecondRetTime(2.21d);
+        Peak2DBuilder builder1 = Peak2D.builder2D();
+        builder1.
+            index(0).
+            startIndex(35).
+            apexIndex(40).
+            stopIndex(45).
+            firstRetTime(3400.0d).
+            secondRetTime(2.21d);
         PeakArea2D peakArea1 = new PeakArea2D(new Point(5,200), ArrayTools.randomUniform(100, 50, 100000), 9869123.987, 40, 500);
-        p1.setPeakArea(peakArea1);
-        p1.setArea(peakArea1.getAreaIntensity());
-        Peak2D p2 = new Peak2D();
-        p2.setIndex(1);
-        p2.setStartIndex(57);
-        p2.setApexIndex(60);
-        p2.setStopIndex(64);
-        p2.setFirstRetTime(3787.0d);
-        p2.setSecondRetTime(1.752d);
+        builder1.
+            peakArea(peakArea1).
+            area(peakArea1.getAreaIntensity());
+        Peak2D p1 = builder1.build();
+        Peak2DBuilder builder2 = Peak2D.builder2D();
+        builder2.
+            index(1).
+            startIndex(57).
+            apexIndex(60).
+            stopIndex(64).
+            firstRetTime(3787.0d).
+            secondRetTime(1.752d);
         PeakArea2D peakArea2 = new PeakArea2D(new Point(7,141), ArrayTools.randomUniform(100, 50, 100000), 21415.125, 50, 500);
-        p2.setPeakArea(peakArea2);
-        p2.setArea(peakArea2.getAreaIntensity());
-        Peak2D p3 = new Peak2D();
-        p3.setIndex(2);
-        p3.setStartIndex(87);
-        p3.setApexIndex(92);
-        p3.setStopIndex(110);
-        p3.setFirstRetTime(5232.0d);
-        p3.setSecondRetTime(3.75d);
+        builder2.
+            peakArea(peakArea2).
+            area(peakArea2.getAreaIntensity());
+        Peak2D p2 = builder2.build();
+        Peak2DBuilder builder3 = Peak2D.builder2D();
+        builder3.
+            index(2).
+            startIndex(87).
+            apexIndex(92).
+            stopIndex(110).
+            firstRetTime(5232.0d).
+            secondRetTime(3.75d);
         PeakArea2D peakArea3 = new PeakArea2D(new Point(14,345), ArrayTools.randomUniform(100, 50, 100000), 567613.155, 50, 500);
-        p3.setPeakArea(peakArea3);
-        p3.setArea(peakArea3.getAreaIntensity());
+        builder3.
+            peakArea(peakArea3).
+            area(peakArea3.getAreaIntensity());
+        Peak2D p3 = builder3.build();
         Peak2D[] scans = {
             p1,
             p2,

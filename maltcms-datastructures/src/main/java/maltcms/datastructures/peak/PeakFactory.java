@@ -30,24 +30,25 @@ package maltcms.datastructures.peak;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.tools.MathTools;
-import java.awt.Point;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import maltcms.datastructures.ms.IChromatogram2D;
+import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
 import maltcms.tools.MaltcmsTools;
 import ucar.ma2.InvalidRangeException;
 
 /**
- * <p>PeakFactory class.</p>
+ * <p>
+ * PeakFactory class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 public class PeakFactory {
 
     /**
-     * <p>createPeak1DEicRaw.</p>
+     * <p>
+     * createPeak1DEicRaw.</p>
      *
      * @param file a {@link java.io.File} object.
      * @param startIndex a int.
@@ -62,9 +63,11 @@ public class PeakFactory {
     }
 
     /**
-     * <p>createPeak1DEicRaw.</p>
+     * <p>
+     * createPeak1DEicRaw.</p>
      *
-     * @param fragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param fragment a {@link cross.datastructures.fragments.IFileFragment}
+     * object.
      * @param startIndex a int.
      * @param apexIndex a int.
      * @param stopIndex a int.
@@ -73,19 +76,21 @@ public class PeakFactory {
      * @return a {@link maltcms.datastructures.peak.Peak1D} object.
      */
     public static Peak1D createPeak1DEicRaw(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
-        Peak1D peak = new Peak1D();
-        peak.setPeakType(PeakType.EIC_RAW);
-        peak.setExtractedIonCurrent((double[]) MaltcmsTools.getEIC(fragment, startMass, stopMass, false, false, startIndex, stopIndex - startIndex).get1DJavaArray(double.class));
-        peak.setArea(MathTools.sum(peak.getExtractedIonCurrent()));
-        peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex - startIndex]);
-        peak.setFile(fragment.getUri().toString());
-        peak.setStartIndex(startIndex);
-        peak.setApexIndex(apexIndex);
-        peak.setStopIndex(stopIndex);
-        peak.setStartTime(MaltcmsTools.getScanAcquisitionTime(fragment, startIndex));
-        peak.setApexTime(MaltcmsTools.getScanAcquisitionTime(fragment, apexIndex));
-        peak.setStopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
-        return peak;
+        Peak1DBuilder builder = Peak1D.builder1D();
+        double[] eic = (double[]) MaltcmsTools.getEIC(fragment, startMass, stopMass, false, false, startIndex, stopIndex - startIndex).get1DJavaArray(double.class);
+        builder.
+            peakType(PeakType.EIC_RAW).
+            extractedIonCurrent(eic).
+            area(MathTools.sum(eic)).
+            apexIntensity(eic[apexIndex - startIndex]).
+            file(fragment.getUri().toString()).
+            startIndex(startIndex).
+            apexIndex(apexIndex).
+            stopIndex(stopIndex).
+            startTime(MaltcmsTools.getScanAcquisitionTime(fragment, startIndex)).
+            apexTime(MaltcmsTools.getScanAcquisitionTime(fragment, apexIndex)).
+            stopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
+        return builder.build();
     }
 
 //    public static Peak1D createPeak1DEicBinned(File file, int startIndex, int apexIndex, int stopIndex, double startMass, double stopMass) {
@@ -107,7 +112,8 @@ public class PeakFactory {
 //        return peak;
 //    }
     /**
-     * <p>createPeak1DTic.</p>
+     * <p>
+     * createPeak1DTic.</p>
      *
      * @param file a {@link java.io.File} object.
      * @param startIndex a int.
@@ -120,34 +126,39 @@ public class PeakFactory {
     }
 
     /**
-     * <p>createPeak1DTic.</p>
+     * <p>
+     * createPeak1DTic.</p>
      *
-     * @param fragment a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param fragment a {@link cross.datastructures.fragments.IFileFragment}
+     * object.
      * @param startIndex a int.
      * @param apexIndex a int.
      * @param stopIndex a int.
      * @return a {@link maltcms.datastructures.peak.Peak1D} object.
      */
     public static Peak1D createPeak1DTic(IFileFragment fragment, int startIndex, int apexIndex, int stopIndex) {
-        Peak1D peak = new Peak1D();
-        peak.setPeakType(PeakType.TIC_RAW);
+        Peak1DBuilder builder = Peak1D.builder1D();
+        builder.peakType(PeakType.TIC_RAW);
+        double[] eic = {0};
         try {
-            peak.setExtractedIonCurrent((double[]) fragment.getChild("total_intensity").getArray().section(new int[]{startIndex}, new int[]{stopIndex - startIndex}).get1DJavaArray(double.class));
+            eic = (double[]) fragment.getChild("total_intensity").getArray().section(new int[]{startIndex}, new int[]{stopIndex - startIndex}).get1DJavaArray(double.class);
         } catch (InvalidRangeException ex) {
             Logger.getLogger(PeakFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        peak.setArea(MathTools.sum(peak.getExtractedIonCurrent()));
-        peak.setApexIntensity(peak.getExtractedIonCurrent()[apexIndex - startIndex]);
-        peak.setFile(fragment.getUri().toString());
-        peak.setStartIndex(startIndex);
-        peak.setApexIndex(apexIndex);
-        peak.setStopIndex(stopIndex);
-        peak.setStartTime(MaltcmsTools.getScanAcquisitionTime(fragment, startIndex));
-        peak.setApexTime(MaltcmsTools.getScanAcquisitionTime(fragment, apexIndex));
-        peak.setStopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
-        return peak;
+        builder.extractedIonCurrent(eic);
+        builder.
+            area(MathTools.sum(eic)).
+            apexIntensity(eic[apexIndex - startIndex]).
+            file(fragment.getUri().toString()).
+            startIndex(startIndex).
+            apexIndex(apexIndex).
+            stopIndex(stopIndex).
+            startTime(MaltcmsTools.getScanAcquisitionTime(fragment, startIndex)).
+            apexTime(MaltcmsTools.getScanAcquisitionTime(fragment, apexIndex)).
+            stopTime(MaltcmsTools.getScanAcquisitionTime(fragment, stopIndex));
+        return builder.build();
     }
-//    public static Peak2D createPeak2DTic(IChromatogram2D chromatogram2D, PeakArea2D peakArea2D) {
+//    public static Peak2D createPeak2DTic(IFileFragment fragment, ) {
 //        Peak2D peak2D = new Peak2D();
 //        peak2D.setPeakType(PeakType.TIC);
 //        for(Point point:peakArea2D) {

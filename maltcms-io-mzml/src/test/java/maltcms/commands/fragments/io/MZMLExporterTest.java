@@ -98,6 +98,8 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         MZMLExporter mzmlExporter = new MZMLExporter();
         mzmlExporter.setValidate(true);
         mzmlExporter.setSpectrumCacheSize(20);
+        mzmlExporter.setCompressSpectra(true);
+        mzmlExporter.setCompressChromatograms(true);
         commands.add(mzmlExporter);
         log.warn("testApply creating workflow");
         IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());

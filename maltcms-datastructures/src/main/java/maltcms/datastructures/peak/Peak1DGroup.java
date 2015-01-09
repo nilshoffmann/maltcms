@@ -67,9 +67,6 @@ public class Peak1DGroup implements Iterable<Peak1D> {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private TreeSet<Peak1D> peakSet;
-//    @Getter(AccessLevel.NONE)
-//    @Setter(AccessLevel.NONE)
-//    private Tuple2D<Array, Array> apexMassSpectrum;
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private SerializableArray massValues;
@@ -85,28 +82,20 @@ public class Peak1DGroup implements Iterable<Peak1D> {
     private double apexIntensity = Double.NaN;
     private double area = Double.NaN;
 
-    /**
+    
+     /**
      * <p>
      * Constructor for Peak1DGroup.</p>
      *
-     * @param fragment a {@link cross.datastructures.fragments.IFileFragment}
-     * object.
-     * @param scanIndex a int.
-     * @param raw a boolean.
+     * @param massValues the mass values.
+     * @param intensityValues the intensity values.
+     * @param peaks the peaks of this group.
      */
-    public Peak1DGroup(IFileFragment fragment, int scanIndex, boolean raw) {
-        Tuple2D<Array, Array> ms = null;
-        if (raw) {
-            ms = MaltcmsTools.getMS(fragment, scanIndex);
-        } else {
-            ms = MaltcmsTools.getBinnedMS(fragment, scanIndex);
-        }
-        massValues = new SerializableArray(ms.getFirst());
-        intensityValues = new SerializableArray(ms.getSecond());
-        MinMax mm = MAMath.getMinMax(ms.getFirst());
-        Peak1D peak = PeakFactory.createPeak1DTic(fragment, scanIndex, scanIndex, scanIndex);
+    public Peak1DGroup(Array massValues, Array intensityValues, Peak1D ... peaks) {
+        this.massValues = new SerializableArray(massValues);
+        this.intensityValues = new SerializableArray(intensityValues);
         this.peakSet = new TreeSet<>(new Peak1DComparator());
-        this.peakSet.add(peak);
+        this.peakSet.addAll(Arrays.asList(peaks));
     }
 
     /**

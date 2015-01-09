@@ -20,7 +20,7 @@
             </ul>
         </div>
         <download href="http://maltcms.de/maui/installation.html" title="Download" text="Get Maui 1.2.1" provider="Provided by sourceforge.net"/>
-        <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.3/" title="Download" text="Get Maltcms 1.3" provider="Provided by sourceforge.net"/>
+        <download href="http://sf.net/projects/maltcms/files/maltcms/maltcms-1.3/" title="Download" text="Get Maltcms 1.3.2" provider="Provided by sourceforge.net"/>
         <siteimage/>
     </header>
     <categories class="nav nav-pills span12">
@@ -95,6 +95,7 @@
     <xi:include href="news/netbeansRcpTraining2.xml" parse="xml"/>
     <xi:include href="news/netbeansMauiFeature.xml" parse="xml"/>
     <xi:include href="news/perspektive2010.xml" parse="xml"/>
+    <xi:include href="news/maltcms1_3_2.xml" parse="xml"/>
     <xi:include href="news/maltcms1_3.xml" parse="xml"/>
     <xi:include href="news/maltcms1_2_1.xml" parse="xml"/>
     <xi:include href="news/maltcms1_2.xml" parse="xml"/>

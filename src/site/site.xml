@@ -19,7 +19,7 @@
         <artifactId>reflow-maven-skin</artifactId>
         <version>1.1.1</version>
     </skin>
-<custom>
+    <custom>
         <reflowSkin>
             <theme>bootswatch-spacelab</theme>
             <highlightJs>true</highlightJs>
@@ -82,8 +82,8 @@
             </item>
             <item name="Development" href="./documentation/development/index.html" collapse="true">
                 <item name="Maven" href="./documentation/development/maven.html"/>
-                    <!--<item name="Data Access" href="./documentation/development/dataAccess.html"/>-->
-                    <!--<item name="Parallel Processing" href="./documentation/development/parallelProcessing.html"/>-->
+                <!--<item name="Data Access" href="./documentation/development/dataAccess.html"/>-->
+                <!--<item name="Parallel Processing" href="./documentation/development/parallelProcessing.html"/>-->
                 <item name="Custom Workflow Elements" href="./documentation/development/customWorkflowElements.html"/>
                 <item name="Java API" href="./apidocs/index.html" />
             </item>

@@ -36,6 +36,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
+import maltcms.datastructures.peak.Peak2D.Peak2DBuilder;
 import maltcms.io.xml.bindings.annotation.AnnotationType;
 import maltcms.io.xml.bindings.annotation.AnnotationsType;
 import maltcms.io.xml.bindings.annotation.AttributeType;
@@ -181,7 +183,7 @@ public class MaltcmsAnnotationFactory {
         for (AnnotationsType ann : ma.getAnnotations()) {
             String type = ann.getType();
             if (type.equals(Peak1D.class.getName())) {
-                Peak1D p = new Peak1D();
+                Peak1DBuilder builder = Peak1D.builder1D();
                 List<AnnotationType> atl = ann.getAnnotation();
                 if (!atl.isEmpty()) {
                     if (atl.size() != 1) {
@@ -192,41 +194,41 @@ public class MaltcmsAnnotationFactory {
                     for (AttributeType at : annt.getAttribute()) {
                         switch (at.getName()) {
                             case "name":
-                                p.setName(at.getValue());
+                                builder.name(at.getValue());
                                 break;
                             case "scan_index":
-                                p.setApexIndex(Integer.parseInt(at.getValue()));
+                                builder.apexIndex(Integer.parseInt(at.getValue()));
                                 break;
                             case "apex_index":
-                                p.setApexIndex(Integer.parseInt(at.getValue()));
+                                builder.apexIndex(Integer.parseInt(at.getValue()));
                                 break;
                             case "start_index":
-                                p.setStartIndex(Integer.parseInt(at.getValue()));
+                                builder.startIndex(Integer.parseInt(at.getValue()));
                                 break;
                             case "stop_index":
-                                p.setStopIndex(Integer.parseInt(at.getValue()));
+                                builder.stopIndex(Integer.parseInt(at.getValue()));
                                 break;
                             case "apex_time":
-                                p.setApexTime(Double.parseDouble(at.getValue()));
+                                builder.apexTime(Double.parseDouble(at.getValue()));
                                 break;
                             case "start_time":
-                                p.setStartTime(Double.parseDouble(at.getValue()));
+                                builder.startTime(Double.parseDouble(at.getValue()));
                                 break;
                             case "stop_time":
-                                p.setStopTime(Double.parseDouble(at.getValue()));
+                                builder.stopTime(Double.parseDouble(at.getValue()));
                                 break;
                             case "area":
-                                p.setArea(Double.parseDouble(at.getValue()));
+                                builder.area(Double.parseDouble(at.getValue()));
                                 break;
                             case "intensity":
-                                p.setApexIntensity(Double.parseDouble(at.getValue()));
+                                builder.apexIntensity(Double.parseDouble(at.getValue()));
                                 break;
                             case "mw":
-                                p.setMw(Double.parseDouble(at.getValue()));
+                                builder.mw(Double.parseDouble(at.getValue()));
                                 break;
                         }
                     }
-                    peaks.add(p);
+                    peaks.add(builder.build());
                 }
             }
         }
@@ -310,50 +312,50 @@ public class MaltcmsAnnotationFactory {
      * @return a {@link maltcms.datastructures.peak.Peak2D} object.
      */
     public Peak2D getPeakAnnotation(AnnotationType peak) {
-        Peak2D p = new Peak2D();
+        Peak2DBuilder builder = Peak2D.builder2D();
         for (AttributeType at : peak.getAttribute()) {
             switch (at.getName()) {
                 case "name":
-                    p.setName(at.getValue());
+                    builder.name(at.getValue());
                     break;
                 case "scan_index":
-                    p.setApexIndex(Integer.parseInt(at.getValue()));
+                    builder.apexIndex(Integer.parseInt(at.getValue()));
                     break;
                 case "apex_index":
-                    p.setApexIndex(Integer.parseInt(at.getValue()));
+                    builder.apexIndex(Integer.parseInt(at.getValue()));
                     break;
                 case "start_index":
-                    p.setStartIndex(Integer.parseInt(at.getValue()));
+                    builder.startIndex(Integer.parseInt(at.getValue()));
                     break;
                 case "stop_index":
-                    p.setStopIndex(Integer.parseInt(at.getValue()));
+                    builder.stopIndex(Integer.parseInt(at.getValue()));
                     break;
                 case "apex_time":
-                    p.setApexTime(Double.parseDouble(at.getValue()));
+                    builder.apexTime(Double.parseDouble(at.getValue()));
                     break;
                 case "start_time":
-                    p.setStartTime(Double.parseDouble(at.getValue()));
+                    builder.startTime(Double.parseDouble(at.getValue()));
                     break;
                 case "stop_time":
-                    p.setStopTime(Double.parseDouble(at.getValue()));
+                    builder.stopTime(Double.parseDouble(at.getValue()));
                     break;
                 case "area":
-                    p.setArea(Double.parseDouble(at.getValue()));
+                    builder.area(Double.parseDouble(at.getValue()));
                     break;
                 case "intensity":
-                    p.setApexIntensity(Double.parseDouble(at.getValue()));
+                    builder.apexIntensity(Double.parseDouble(at.getValue()));
                     break;
                 case "mw":
-                    p.setMw(Double.parseDouble(at.getValue()));
+                    builder.mw(Double.parseDouble(at.getValue()));
                     break;
                 case "first_column_retention_time":
-                    p.setFirstRetTime(Double.parseDouble(at.getValue()));
+                    builder.firstRetTime(Double.parseDouble(at.getValue()));
                     break;
                 case "second_column_retention_time":
-                    p.setSecondRetTime(Double.parseDouble(at.getValue()));
+                    builder.secondRetTime(Double.parseDouble(at.getValue()));
                     break;
                 case "index":
-                    p.setIndex(Integer.parseInt(at.getValue()));
+                    builder.index(Integer.parseInt(at.getValue()));
                     break;
                 case "similarity":
                     break;
@@ -361,7 +363,7 @@ public class MaltcmsAnnotationFactory {
                     break;
             }
         }
-        return p;
+        return builder.build();
     }
 
     /**

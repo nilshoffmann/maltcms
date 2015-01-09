@@ -60,9 +60,9 @@ public class Peak1DTest {
     public List<Peak1D> createPeaks() {
         Peak1D[] scans = {
             //default scan
-            new Peak1D(35, 40, 45),
-            new Peak1D(89, 255, 352),
-            new Peak1D(830, 1240, 2241)
+            Peak1D.builder1D().startIndex(35).apexIndex(40).stopIndex(45).build(),
+            Peak1D.builder1D().startIndex(89).apexIndex(255).stopIndex(352).build(),
+            Peak1D.builder1D().startIndex(830).apexIndex(1240).stopIndex(2241).build()
         };
         for (int i = 0; i < scans.length; i++) {
             scans[i].setIndex(i);

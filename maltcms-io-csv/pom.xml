@@ -5,6 +5,7 @@
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
         <version>1.3.2-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-io-csv</artifactId>
@@ -37,13 +38,13 @@
         <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-data</artifactId>
-            <version>1.3.2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-defaults</artifactId>
-            <version>1.3.2-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>

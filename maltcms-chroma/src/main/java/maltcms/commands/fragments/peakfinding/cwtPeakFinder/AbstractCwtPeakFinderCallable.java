@@ -39,13 +39,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.experimental.Builder;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.datastructures.peak.Peak1D;
+import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
 import maltcms.datastructures.peak.PeakType;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.rank.Rank;
@@ -97,15 +97,20 @@ public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFind
         Index tidx = tic.getIndex();
         Array sat = f.getChild("scan_acquisition_time").getArray();
         Index sidx = sat.getIndex();
-        List<Peak1D> p2 = new LinkedList<>();
+        List<Peak1D> peaks = new LinkedList<>();
         for (Ridge ridge : r) {
             log.debug("Processing Ridge " + (index + 1) + " "
                     + r.size());
-            Peak1D p = new Peak1D();
-            p.setApexIndex(ridge.getGlobalScanIndex());
-            p.setFile(f.getName());
-            p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
-            p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
+            Peak1D p = null;
+            Peak1DBuilder builder = Peak1D.builder1D();
+            builder.
+                startIndex(ridge.getGlobalScanIndex()).
+                apexIndex(ridge.getGlobalScanIndex()).
+                stopIndex(ridge.getGlobalScanIndex()).
+                file(f.getName()).
+                apexIntensity(tic.getDouble(tidx.set(ridge.getGlobalScanIndex()))).
+                apexTime(sat.getDouble(sidx.set(ridge.getGlobalScanIndex())));
+                        
             int[] scaleBounds = mhwf.getContinuousWaveletTransform().
                     getBoundsForWavelet(p.getApexIndex(), ridge.
                             getIndexOfMaximum(), tic.getShape()[0]);
@@ -114,18 +119,19 @@ public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFind
             for (int i = scaleBounds[0]; i <= scaleBounds[1]; i++) {
                 area += tic.getDouble(i);
             }
-            p.setStartIndex(scaleBounds[0]);
-            p.setStopIndex(scaleBounds[1]);
-            //TODO SNR for wavelet ridges
-            p.setSnr(Double.NaN);
-            p.setArea(area);
-            p.setStartTime(sat.getDouble(scaleBounds[0]));
-            p.setStopTime(sat.getDouble(scaleBounds[1]));
-            p.setPeakType(peakType);//PeakType.TIC_RAW
-            p2.add(p);
+            builder.
+                startIndex(scaleBounds[0]).
+                stopIndex(scaleBounds[1]).
+                snr(Double.NaN).
+                area(area).
+                startTime(sat.getDouble(scaleBounds[0])).
+                stopTime(sat.getDouble(scaleBounds[1])).
+                peakType(peakType);
+            p = builder.build();
+            peaks.add(p);
             index++;
         }
-        return p2;
+        return peaks;
     }
 
     protected void filterRidgesByResponse(List<Rank<Ridge>> ranks, Array tic) {

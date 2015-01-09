@@ -534,6 +534,7 @@
                     <plugin>
                         <groupId>org.projectlombok</groupId>
                         <artifactId>lombok-maven-plugin</artifactId>
+                        <version>${version.lombok.maven}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>sun.jdk</groupId>
@@ -589,6 +590,7 @@
         <module>jxl-osgi</module>
         <module>poi-osgi</module>
         <module>jfreechart-osgi</module>
+        <module>jmzml-osgi</module>
         <module>maltcms-microbenchmarks</module>
     </modules>
     <dependencyManagement>

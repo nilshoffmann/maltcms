@@ -1,7 +1,9 @@
-Folder 'full' contains original full chromatof csv reports for the C. reinhardtii 
-dataset. The selection represents only a subset of the original data.
+Folder 'full/1D' contains original full chromatof csv reports of a 1D GC-MS acquisition. Thanks to H. Kuich, Berlin Institute of Health for providing the file.
 
-Folder 'reduced' contains chromatof reports with a reduced number of peaks, following
+Folder 'full/2D' contains original full chromatof csv reports for the C. reinhardtii 
+dataset [1]. The selection represents only a subset of the original data.
+
+Folder 'reduced/2D' contains chromatof reports with a reduced number of peaks, following
 the procedure described in [1].
 
 References: 

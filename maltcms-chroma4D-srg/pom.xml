@@ -9,6 +9,14 @@
     <artifactId>maltcms-chroma4D-srg</artifactId>
     <name>Maltcms ChromA4D SRG</name>
     <description>Seeded MS-based Region Growing for Peak Integration in 2D Chromatography.</description>
+    <build>
+        <plugins>
+            <!-- include to run integration tests -->
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>edu.ucar.unidata</groupId>
@@ -87,15 +95,15 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+<!--        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-chroma4D-cwt</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>-->
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <packaging>jar</packaging>
 </project>
-
-
-
-
-
-

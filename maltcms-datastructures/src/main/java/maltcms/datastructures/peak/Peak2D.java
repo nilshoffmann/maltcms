@@ -31,21 +31,21 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.FragmentTools;
-import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.PublicMemberGetters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.ms.IMetabolite;
-import maltcms.datastructures.ms.Metabolite;
+import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
 import ucar.ma2.Array;
@@ -61,17 +61,229 @@ import ucar.nc2.Dimension;
  *
  */
 @Slf4j
-@EqualsAndHashCode(callSuper = true, exclude = {
-    "firstScanIndex", "secondScanIndex", "peakArea", "reference", "names", "identification"})
+@EqualsAndHashCode(callSuper = true, exclude = {"peakArea"})
 @Data
 public class Peak2D extends Peak1D implements Serializable {
 
+    public static class Peak2DBuilder {
+
+        private int startIndex = -1;
+        private int apexIndex = -1;
+        private int stopIndex = -1;
+        private double apexIntensity = Double.NaN;
+        private double startTime = Double.NaN;
+        private double stopTime = Double.NaN;
+        private double apexTime = Double.NaN;
+        private double area = Double.NaN;
+        private double normalizedArea = Double.NaN;
+        private double mw = Double.NaN;
+        private double[] extractedIonCurrent;
+        private double snr = Double.NaN;
+        private String file = "";
+        private PeakType peakType = PeakType.UNDEFINED;
+        private String[] normalizationMethods = {"None"};
+        private String name = "";
+        private List<PeakAnnotation> peakAnnotations = Collections.emptyList();
+        private double baselineStartTime = Double.NaN;
+        private double baselineStopTime = Double.NaN;
+        private double baselineStartValue = Double.NaN;
+        private double baselineStopValue = Double.NaN;
+        private int index = -1;
+        private UUID uniqueId = UUID.randomUUID();
+        private PeakArea2D peakArea = null;
+        private double firstRetTime = Double.NaN;
+        private double secondRetTime = -Double.NaN;
+
+        private Peak2DBuilder() {
+        }
+
+        public Peak2DBuilder startIndex(final int value) {
+            this.startIndex = value;
+            return this;
+        }
+
+        public Peak2DBuilder apexIndex(final int value) {
+            this.apexIndex = value;
+            return this;
+        }
+
+        public Peak2DBuilder stopIndex(final int value) {
+            this.stopIndex = value;
+            return this;
+        }
+
+        public Peak2DBuilder apexIntensity(final double value) {
+            this.apexIntensity = value;
+            return this;
+        }
+
+        public Peak2DBuilder startTime(final double value) {
+            this.startTime = value;
+            return this;
+        }
+
+        public Peak2DBuilder stopTime(final double value) {
+            this.stopTime = value;
+            return this;
+        }
+
+        public Peak2DBuilder apexTime(final double value) {
+            this.apexTime = value;
+            return this;
+        }
+
+        public Peak2DBuilder area(final double value) {
+            this.area = value;
+            return this;
+        }
+
+        public Peak2DBuilder normalizedArea(final double value) {
+            this.normalizedArea = value;
+            return this;
+        }
+
+        public Peak2DBuilder mw(final double value) {
+            this.mw = value;
+            return this;
+        }
+
+        public Peak2DBuilder extractedIonCurrent(final double[] value) {
+            this.extractedIonCurrent = value;
+            return this;
+        }
+
+        public Peak2DBuilder snr(final double value) {
+            this.snr = value;
+            return this;
+        }
+
+        public Peak2DBuilder file(final String value) {
+            this.file = value;
+            return this;
+        }
+
+        public Peak2DBuilder peakType(final PeakType value) {
+            this.peakType = value;
+            return this;
+        }
+
+        public Peak2DBuilder normalizationMethods(final String[] value) {
+            this.normalizationMethods = value;
+            return this;
+        }
+
+        public Peak2DBuilder name(final String value) {
+            this.name = value;
+            return this;
+        }
+
+        public Peak2DBuilder peakAnnotations(final List<PeakAnnotation> value) {
+            this.peakAnnotations = value;
+            return this;
+        }
+
+        public Peak2DBuilder baselineStartTime(final double value) {
+            this.baselineStartTime = value;
+            return this;
+        }
+
+        public Peak2DBuilder baselineStopTime(final double value) {
+            this.baselineStopTime = value;
+            return this;
+        }
+
+        public Peak2DBuilder baselineStartValue(final double value) {
+            this.baselineStartValue = value;
+            return this;
+        }
+
+        public Peak2DBuilder baselineStopValue(final double value) {
+            this.baselineStopValue = value;
+            return this;
+        }
+
+        public Peak2DBuilder index(final int value) {
+            this.index = value;
+            return this;
+        }
+
+        public Peak2DBuilder uniqueId(final UUID value) {
+            this.uniqueId = value;
+            return this;
+        }
+
+        public Peak2DBuilder peakArea(final PeakArea2D value) {
+            this.peakArea = value;
+            return this;
+        }
+
+        public Peak2DBuilder firstRetTime(final double value) {
+            this.firstRetTime = value;
+            return this;
+        }
+
+        public Peak2DBuilder secondRetTime(final double value) {
+            this.secondRetTime = value;
+            return this;
+        }
+
+        public Peak2D build() {
+            return new maltcms.datastructures.peak.Peak2D(startIndex, apexIndex, stopIndex, apexIntensity, startTime, stopTime, apexTime, area, normalizedArea, mw, extractedIonCurrent, snr, file, peakType, normalizationMethods, name, peakAnnotations, baselineStartTime, baselineStopTime, baselineStartValue, baselineStopValue, index, uniqueId, peakArea, firstRetTime, secondRetTime);
+        }
+
+    }
+
+    public static Peak2DBuilder builder2D() {
+        return new Peak2DBuilder();
+    }
+
+    private Peak2D(final int startIndex, final int apexIndex, final int stopIndex, final double apexIntensity, final double startTime, final double stopTime, final double apexTime, final double area, final double normalizedArea, final double mw, final double[] extractedIonCurrent, final double snr, final String file, final PeakType peakType, final String[] normalizationMethods, final String name, final List<PeakAnnotation> peakAnnotations, final double baselineStartTime, final double baselineStopTime, final double baselineStartValue, final double baselineStopValue, final int index, final UUID uniqueId, final PeakArea2D peakArea, final double firstRetTime, final double secondRetTime) {
+        super(index, startIndex, apexIndex, stopIndex, apexIntensity, area, normalizedArea, normalizationMethods, startTime, stopTime, apexTime, baselineStartTime, baselineStopTime, baselineStartValue, baselineStopValue, mw, extractedIonCurrent, snr, file, peakType, name, peakAnnotations, uniqueId);
+        this.peakArea = peakArea;
+        this.firstRetTime = firstRetTime;
+        this.secondRetTime = secondRetTime;
+    }
+
     private PeakArea2D peakArea = null;
-    private double firstRetTime = -1.0d;
-    private double secondRetTime = -1.0d;
+    private double firstRetTime = Double.NaN;
+    private double secondRetTime = -Double.NaN;
 
-    public Peak2D() {
-
+    /**
+     * Creates a new Peak2D object from the given values. It is generally
+     * advised to use the {@link Peak2DBuilder}, obtainable from
+     * {@link Peak22D#builder2D()}.
+     *
+     * @param index, default value: -1.
+     * @param startIndex, default value: -1.
+     * @param apexIndex, default value: -1.
+     * @param stopIndex, default value: -1.
+     * @param apexIntensity, default value: NaN.
+     * @param area, default value: NaN.
+     * @param normalizedArea, default value: NaN.
+     * @param normalizationMethods, default value: &#123;"None"&#125;.
+     * @param startTime, default value: NaN.
+     * @param stopTime, default value: NaN.
+     * @param apexTime, default value: NaN.
+     * @param baselineStartTime, default value: NaN.
+     * @param baselineStopTime, default value: NaN.
+     * @param baselineStartValue, default value: NaN.
+     * @param baselineStopValue, default value: NaN.
+     * @param mw, default value: NaN.
+     * @param extractedIonCurrent, default value: undefined/null.
+     * @param snr, default value: NaN.
+     * @param file, default value: "".
+     * @param peakType, default value: PeakType.UNDEFINED.
+     * @param name, default value: "".
+     * @param peakAnnotations, default value: Collections.emptyList().
+     * @param uniqueId
+     *
+     */
+//    @Builder(builderMethodName = "builder2D")
+    public Peak2D(int index, int startIndex, int apexIndex, int stopIndex, double apexIntensity, double area, double normalizedArea, String[] normalizationMethods, double startTime, double stopTime, double apexTime, double baselineStartTime, double baselineStopTime, double baselineStartValue, double baselineStopValue, double mw, double[] extractedIonCurrent, double snr, String file, PeakType peakType, String name, List<PeakAnnotation> peakAnnotations, PeakArea2D peakArea, double firstRetTime, double secondRetTime, UUID uniqueId) {
+        super(index, startIndex, apexIndex, stopIndex, apexIntensity, area, normalizedArea, normalizationMethods, startTime, stopTime, apexTime, baselineStartTime, baselineStopTime, baselineStartValue, baselineStopValue, mw, extractedIonCurrent, snr, file, peakType, name, peakAnnotations, uniqueId);
+        this.peakArea = peakArea;
+        this.firstRetTime = firstRetTime;
+        this.secondRetTime = secondRetTime;
     }
 
     /**
@@ -126,27 +338,6 @@ public class Peak2D extends Peak1D implements Serializable {
 
     /**
      * <p>
-     * main.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
-     */
-    public static void main(String[] args) {
-        Peak2D p = new Peak2D();
-        p.setApexIndex(50);
-        p.setStartIndex(30);
-        p.setStopIndex(80);
-        p.setFirstRetTime(380);
-        p.setSecondRetTime(3.12);
-        log.info("ApexIndex: {}", p.getFeature("ApexIndex"));
-        log.info("StartIndex: {}", p.getFeature("StartIndex"));
-        log.info("StopIndex: {}", p.getFeature("StopIndex"));
-        log.info("FirstRetTime: {}", p.getFeature("FirstRetTime"));
-        log.info("SecondRetTime: {}", p.getFeature("SecondRetTime"));
-        // log.info(p.getFeature("PeakArea"));
-    }
-
-    /**
-     * <p>
      * fromFragment2D.</p>
      *
      * @param ff a {@link cross.datastructures.fragments.IFileFragment} object.
@@ -192,34 +383,35 @@ public class Peak2D extends Peak1D implements Serializable {
         ArrayInt.D1 peakPositions = (ArrayInt.D1) peaks.getArray();
         ArrayList<Peak2D> peaklist = new ArrayList<>(peakPositions.getShape()[0]);
         for (int i = 0; i < peakPositions.getShape()[0]; i++) {
-            Peak2D p = new Peak2D();
-            p.setIndex(i);
+            Peak2DBuilder builder = Peak2D.builder2D();
             if (normalizationMethods.isEmpty()) {
-                p.setNormalizationMethods(new String[]{"None"});
+                builder.normalizationMethods(new String[]{"None"});
             } else {
-                p.setNormalizationMethods(normalizationMethods.toArray(new String[normalizationMethods.size()]));
+                builder.normalizationMethods(normalizationMethods.toArray(new String[normalizationMethods.size()]));
             }
-            p.setFile(sourceFileName.getString(0));
-            p.setName(peakNames.getString(i));
-            p.setApexTime(apexRt.getDouble(i));
-            p.setStartTime(startRT.getDouble(i));
-            p.setFirstRetTime(firstColumnRT.getDouble(i));
-            p.setSecondRetTime(secondColumnRT.getDouble(i));
-            p.setStopTime(stopRT.getDouble(i));
-            p.setArea(area.getDouble(i));
-            p.setNormalizedArea(normalizedArea.getDouble(i));
-            p.setApexIntensity(peakHeight.getDouble(i));
-            p.setBaselineStartTime(baseLineStartRT.getDouble(i));
-            p.setBaselineStopTime(baseLineStopRT.getDouble(i));
-            p.setBaselineStartValue(baseLineStartValue.getDouble(i));
-            p.setBaselineStopValue(baseLineStopValue.getDouble(i));
-            p.setApexIndex(peakPositions.getInt(i));
-            p.setStartIndex(peakStartIndex.getInt(i));
-            p.setStopIndex(peakEndIndex.getInt(i));
-            p.setSnr(snr.getDouble(i));
-            p.setPeakType(PeakType.valueOf(peakType.getString(i)));
-            p.setMw(peakDetectionChannel.getDouble(i));
-            peaklist.add(p);
+            builder.
+                    index(i).
+                    file(sourceFileName.getString(0)).
+                    name(peakNames.getString(i)).
+                    apexTime(apexRt.getDouble(i)).
+                    startTime(startRT.getDouble(i)).
+                    firstRetTime(firstColumnRT.getDouble(i)).
+                    secondRetTime(secondColumnRT.getDouble(i)).
+                    stopTime(stopRT.getDouble(i)).
+                    area(area.getDouble(i)).
+                    normalizedArea(normalizedArea.getDouble(i)).
+                    apexIntensity(peakHeight.getDouble(i)).
+                    baselineStartTime(baseLineStartRT.getDouble(i)).
+                    baselineStopTime(baseLineStopRT.getDouble(i)).
+                    baselineStartValue(baseLineStartValue.getDouble(i)).
+                    baselineStopValue(baseLineStopValue.getDouble(i)).
+                    apexIndex(peakPositions.getInt(i)).
+                    startIndex(peakStartIndex.getInt(i)).
+                    stopIndex(peakEndIndex.getInt(i)).
+                    snr(snr.getDouble(i)).
+                    peakType(PeakType.valueOf(peakType.getString(i))).
+                    mw(peakDetectionChannel.getDouble(i));
+            peaklist.add(builder.build());
         }
         return peaklist;
     }
@@ -332,6 +524,9 @@ public class Peak2D extends Peak1D implements Serializable {
                     names.setString(i, "");
                 } else {
                     names.setString(i, name);
+                }
+                if (p.getPeakType() == null) {
+                    p.setPeakType(PeakType.UNDEFINED);
                 }
                 peakTypeArray.setString(i, p.getPeakType().name());
                 snrArray.set(i, p.getSnr());

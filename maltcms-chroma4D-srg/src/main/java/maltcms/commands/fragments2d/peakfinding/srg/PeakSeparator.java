@@ -311,22 +311,27 @@ public class PeakSeparator implements IPeakSeparator {
             maxD = Double.NEGATIVE_INFINITY;
             maxArg = -1;
             for (PeakArea2D pa : list) {
-//                rt1diff = Math.abs(p.x - pa.getSeedPoint().x)
-//                        * (double) slc.getScansPerModulation();
-//                rt2diff = Math.abs(p.y - pa.getSeedPoint().y);
-                //getRT1RT2ForSeed(p),
-//                        getRT1RT2ForSeed(pa.getSeedPoint()),
-                aD = similarity.apply(new double[]{0, 0}, new double[]{0, 0},
-                        pa.getSeedMS(), chrom.getScanLineImpl().getMassSpectrum(p));
-                if (aD > maxD) {
-                    maxD = aD;
-                    maxArg = c;
+                Array ms = chrom.getScanLineImpl().getMassSpectrum(p);
+                if (ms != null) {
+                    aD = similarity.apply(new double[]{0, 0}, new double[]{0, 0},
+                            pa.getSeedMS(), ms);
+                    if (aD > maxD) {
+                        maxD = aD;
+                        maxArg = c;
+                    }
+                    c++;
+                } else {
+                    log.warn("Mass Spectrum for point {} was null!", p);
                 }
-                c++;
             }
             if (maxArg >= 0 && !list.isEmpty()) {
-                list.get(maxArg).addRegionPoint(p, chrom.getScanLineImpl().getMassSpectrum(p),
-                        ArrayTools.integrate(chrom.getScanLineImpl().getMassSpectrum(p)));
+                Array ms = chrom.getScanLineImpl().getMassSpectrum(p);
+                if (ms != null) {
+                    list.get(maxArg).addRegionPoint(p, ms,
+                            ArrayTools.integrate(ms));
+                } else {
+                    log.warn("Mass Spectrum for point {} was null!", p);
+                }
             }
         }
 
@@ -359,8 +364,13 @@ public class PeakSeparator implements IPeakSeparator {
         for (int i = 0; i < list.size(); i++) {
             if (i != maxArg) {
                 for (Point p : list.get(i).getRegionPoints()) {
-                    pa.addRegionPoint(p, chrom.getScanLineImpl().getMassSpectrum(p),
-                            ArrayTools.integrate(chrom.getScanLineImpl().getMassSpectrum(p)));
+                    Array ms = chrom.getScanLineImpl().getMassSpectrum(p);
+                    if (ms != null) {
+                        pa.addRegionPoint(p, ms,
+                                ArrayTools.integrate(ms));
+                    } else {
+                        log.warn("Mass Spectrum for point {} was null!", p);
+                    }
                 }
                 list.get(i).setMerged(true);
             }

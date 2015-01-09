@@ -47,6 +47,7 @@ import maltcms.datastructures.ms.IChromatogram1D;
 import maltcms.datastructures.ms.IScan1D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakType;
+import maltcms.io.csv.ParserUtilities;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.util.Assert;
@@ -65,8 +66,8 @@ import ucar.nc2.Dimension;
 @Value
 public class GcImageBlobImporter {
 
-    private final Locale locale;
     private final String quotationCharacter;
+    private final Locale locale;
 
     public List<Peak2D> importPeaks(File peakReport, IChromatogram chromatogram) {
         CSVParser parser = null;
@@ -101,10 +102,10 @@ public class GcImageBlobImporter {
         int index = 0;
         for (CSVRecord record : records) {
             Logger.getLogger(GcImageBlobImporter.class.getName()).log(Level.INFO, record.toString());
-            double rt1 = GcImageBlobParser.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_I), locale);
+            double rt1 = ParserUtilities.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_I), locale);
             //convert from minutes to seconds
             rt1 *= 60;
-            double rt2 = GcImageBlobParser.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_II), locale);
+            double rt2 = ParserUtilities.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_II), locale);
             peaks.add(create2DPeak(index, chromatogram, record, rt1, rt2));
             index++;
         }
@@ -112,18 +113,20 @@ public class GcImageBlobImporter {
     }
 
     public Peak2D create2DPeak(int index, IChromatogram chromatogram, CSVRecord tr, double rt1, double rt2) {
-        Peak2D peak2d = new Peak2D();
-        peak2d.setFirstRetTime(rt1);
-        peak2d.setSecondRetTime(rt2);
-        peak2d.setApexTime(rt1 + rt2);
-        peak2d.setArea(GcImageBlobParser.parseDouble(tr.get(GcImageBlobParser.ColumnName.VOLUME), locale));
-        peak2d.setApexIntensity(GcImageBlobParser.parseDouble(tr.get(GcImageBlobParser.ColumnName.PEAK_VALUE), locale));
-        peak2d.setIndex(index);
-        peak2d.setName(tr.get(GcImageBlobParser.ColumnName.COMPOUND_NAME));
-//        peak2d.get(GcImageBlobParser.ColumnName.BLOBID);
-        peak2d.setPeakType(PeakType.TIC_FILTERED);
         log.debug("Adding peak at rt1: " + rt1 + " ; rt2: " + rt2);
-        peak2d.setApexIndex(chromatogram.getIndexFor(rt1 + rt2));
+        double volume = ParserUtilities.parseDouble(tr.get(GcImageBlobParser.ColumnName.VOLUME), locale);
+        double value = ParserUtilities.parseDouble(tr.get(GcImageBlobParser.ColumnName.PEAK_VALUE), locale);
+        Peak2D peak2d = Peak2D.builder2D().
+            firstRetTime(rt1).
+            secondRetTime(rt2).
+            apexTime(rt1 + rt2).
+            area(volume).
+            apexIntensity(value).
+            index(index).
+            name(tr.get(GcImageBlobParser.ColumnName.COMPOUND_NAME)).
+            peakType(PeakType.TIC_FILTERED).
+            apexIndex(chromatogram.getIndexFor(rt1 + rt2)).
+        build();
         Assert.isTrue(!Double.isNaN(peak2d.getArea()));
         Assert.isTrue(!Double.isNaN(peak2d.getApexIntensity()));
         return peak2d;

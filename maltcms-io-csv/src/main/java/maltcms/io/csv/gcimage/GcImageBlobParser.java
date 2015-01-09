@@ -30,9 +30,6 @@ package maltcms.io.csv.gcimage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.QuoteMode;
@@ -45,14 +42,41 @@ public class GcImageBlobParser {
 
     public enum ColumnName {
 
+        /**
+         * The blob id. Original column name: "BlobID"
+         */
         BLOBID("BlobID"),
+        /**
+         * The putative compound name. Original column name: "Compound Name"
+         */
         COMPOUND_NAME("Compound Name"),
+        /**
+         * The assigned group name. Original column name: "Group Name"
+         */
         GROUP_NAME("Group Name"),
+        /**
+         * The inclusion flag. Original column name: "Inclusion"
+         */
         INCLUSION("Inclusion"),
+        /**
+         * The name of the internal standard. Original column name: "Internal Standard"
+         */
         INTERNAL_STANDARD("Internal Standard"),
+        /**
+         * The first column retention time of a GCxGC peak. Original column name: "Retention I (min)"
+         */
         RETENTION_I("Retention I (min)"),
+        /**
+         * The second column retention time of a GCxGC peak. Original column name: "Retention II (sec)"
+         */
         RETENTION_II("Retention II (sec)"),
+        /**
+         * The peak value. Original column name: "Peak Value"
+         */
         PEAK_VALUE("Peak Value"),
+        /**
+         * The integrated volume. Original column name: "Volume"
+         */
         VOLUME("Volume");
 
         private final String originalName;
@@ -100,22 +124,6 @@ public class GcImageBlobParser {
             format = CSVFormat.RFC4180.withHeader().withQuote(quotationCharacter.charAt(0)).withQuoteMode(QuoteMode.MINIMAL);
         }
         return CSVParser.parse(file, Charset.forName("UTF-8"), format);
-    }
-
-    public static double parseDouble(String s, Locale locale) {
-        if (s == null || s.isEmpty()) {
-            return Double.NaN;
-        }
-        try {
-            return NumberFormat.getNumberInstance(locale).parse(s).doubleValue();
-        } catch (ParseException ex) {
-            try {
-                return NumberFormat.getNumberInstance(Locale.US).parse(s).
-                        doubleValue();
-            } catch (ParseException ex1) {
-                return Double.NaN;
-            }
-        }
     }
 
 }

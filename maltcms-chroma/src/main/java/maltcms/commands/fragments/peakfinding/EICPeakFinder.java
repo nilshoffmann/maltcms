@@ -327,7 +327,11 @@ public class EICPeakFinder extends AFragmentCommand {
         startIndex = Math.max(0, startIndex);
 
         log.debug("start: {}, stop: {}", startIndex, stopIndex);
-        final Peak1D pb = new Peak1D(startIndex, apexIndex, stopIndex);
+        final Peak1D pb = Peak1D.builder1D().
+            startIndex(startIndex).
+            apexIndex(apexIndex).
+            stopIndex(stopIndex).
+        build();
         pb.setFile(chromatogram.getUri().toString());
         if (integrateRawEic) {
             integratePeak(pb, null, rawEIC);

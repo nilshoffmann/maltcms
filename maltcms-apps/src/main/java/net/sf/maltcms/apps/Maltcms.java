@@ -535,19 +535,14 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * org.apache.commons.cli.
      *
      * @param s
-     * @param sep
-     * @param ssep
      * @param l a {@link java.lang.String} object.
      * @param descr a {@link java.lang.String} object.
      * @param sep a boolean.
      * @param ssep a char.
      * @param arg
-     * @param args
-     * @param argname
      * @param args a boolean.
      * @param numArgs a int.
      * @param optional_arg
-     * @param optional_args
      * @param optional_args a boolean.
      * @param num_optional_args a int.
      * @param argname a {@link java.lang.String} object.

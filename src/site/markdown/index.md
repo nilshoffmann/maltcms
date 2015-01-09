@@ -4,9 +4,9 @@ Maltcms is a JAVA framework for preprocessing, alignment, analysis and visualiza
 Maltcms is implemented in the platform-independent JAVA programming language. 
 The individual modules of Maltcms are managed and built using [Maven](http://maven.apache.org).
 
-If you want to use Maltcms in your own projects, please see the <a href="gettingStarted.html" alt="Getting Started">Getting Started</a> page for more details.
+If you want to use Maltcms in your own projects, please see the <a href="gettingStarted.html">Getting Started</a> page for more details.
 
-Maltcms is <a href="http://sf.net/p/maltcms/info/license.html" alt="License">dual licensed</a> under either the Lesser General Public License (L-GPL v3), or, at the licensees discretion, under the terms of the Eclipse Public License (EPL v1).
+Maltcms is <a href="http://maltcms.sourceforge.net/info/license.html">dual licensed</a> under either the Lesser General Public License (L-GPL v3), or, at the licensees discretion, under the terms of the Eclipse Public License (EPL v1).
 
 ---
 
@@ -21,7 +21,7 @@ Maltcms is <a href="http://sf.net/p/maltcms/info/license.html" alt="License">dua
 * efficient access to files of arbitrary size
 * easy to use level-of-abstraction application programming interface
 * creation of charts and plots for chromatograms, mass spectra, aligned and unaligned
-* academic and business friendly licensing (<a href="http://sf.net/p/maltcms/info/license.html" title="License">L-GPL v3 or EPL</a>)
+* academic and business friendly licensing (<a href="http://maltcms.sourceforge.net/info/license.html" title="License">L-GPL v3 or EPL</a>)
 
 ## Parallelization
 * individual tasks can be executed concurrently

@@ -56,7 +56,7 @@ import ucar.ma2.Range;
  * TODO: Change to {@link maltcms.datastructures.caches.AScanLineCache}
  *
  * @author Mathias Wilhelm
- * 
+ *
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
@@ -149,7 +149,9 @@ public class ScanLineCache implements IScanLine {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.massValuesVar = cfg.getString("var.mass_values", "mass_values");
@@ -197,7 +199,9 @@ public class ScanLineCache implements IScanLine {
         return MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massResolution);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean getCacheModulation() {
         return this.cacheModulations;
@@ -213,7 +217,9 @@ public class ScanLineCache implements IScanLine {
         return this.lastIndex;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Array getMassSpectrum(final int x, final int y) {
         try {
@@ -228,7 +234,9 @@ public class ScanLineCache implements IScanLine {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Array getMassSpectrum(final Point p) {
         return getMassSpectrum(p.x, p.y);
@@ -275,7 +283,9 @@ public class ScanLineCache implements IScanLine {
         return loadScanline(x);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getScansPerModulation() {
         return this.scansPerModulation;
@@ -331,7 +341,9 @@ public class ScanLineCache implements IScanLine {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCacheModulations(final boolean cacheMod) {
         this.cacheModulations = cacheMod;
@@ -361,14 +373,18 @@ public class ScanLineCache implements IScanLine {
         this.log.info("	Cachemiss: {}", this.cachemiss);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Tuple2D<Array, Array>> getScanlineSparseMS(int x) {
         throw new NotImplementedException(
                 "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(int x, int y) {
         final Array intensities = getMassSpectrum(x, y);
@@ -379,20 +395,24 @@ public class ScanLineCache implements IScanLine {
             }
             return new Tuple2D<Array, Array>(mz, intensities);
         } else {
-            this.log.info("Intensities from getMassSpectra in ScanLineCache is null.");
+            this.log.info("Intensities from getMassSpectra in ScanLineCache for x={},y={} is null!", x, y);
             return null;
         }
         // throw new NotImplementedException(
         // "SLC don't support sparse MS yet. Please use SparseScanlineCache or CachedScanLineList instead.");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Tuple2D<Array, Array> getSparseMassSpectrum(Point p) {
         return getSparseMassSpectrum(p.x, p.y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Point mapIndex(int scanIndex) {
         // FIXME: use xyMap to get x and y
@@ -401,25 +421,33 @@ public class ScanLineCache implements IScanLine {
         return new Point(x, y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int mapPoint(int x, int y) {
         return this.xyToScanIndexMap.get(x).get(y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int mapPoint(Point p) {
         return mapPoint(p.x, p.y);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
         this.cache.clear();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setBinSize(int i) {
         throw new NotImplementedException("This method is deprecated!");

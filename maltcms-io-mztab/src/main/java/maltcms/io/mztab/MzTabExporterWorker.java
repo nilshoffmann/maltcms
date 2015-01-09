@@ -32,7 +32,7 @@ public class MzTabExporterWorker implements Callable<URI>, Serializable {
     /** {@inheritDoc} */
     @Override
     public URI call() throws Exception {
-        MZTabDescription descr = new MZTabDescription("1.0 rc5", MZTabDescription.Mode.Complete, MZTabDescription.Type.Quantification);
+        MZTabDescription descr = new MZTabDescription("1.0", MZTabDescription.Mode.Complete, MZTabDescription.Type.Quantification);
         descr.setId(mzTabId);
         Metadata m = new Metadata(descr);
         Software s = new Software(m.getSoftwareMap().size());

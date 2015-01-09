@@ -62,14 +62,19 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakIntegration;
+import maltcms.commands.fragments2d.peakfinding.output.PeakExporter;
+import maltcms.commands.fragments2d.peakfinding.output.PeakIntegration;
 import maltcms.commands.fragments2d.peakfinding.picking.IPeakPicking;
+import maltcms.commands.fragments2d.peakfinding.picking.SimplePeakPicking;
 import maltcms.commands.fragments2d.peakfinding.srg.IPeakSeparator;
 import maltcms.commands.fragments2d.peakfinding.srg.IRegionGrowing;
+import maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.ms.IScan2D;
 import maltcms.datastructures.peak.Peak2D;
+import maltcms.datastructures.peak.Peak2D.Peak2DBuilder;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ArrayTools2;
@@ -161,13 +166,13 @@ public class SeededRegionGrowing extends AFragmentCommand {
             + "Use SimplePeakPicking for standalone operation, or "
             + "TicPeakPicking, if another peak finder, such as CWTPeakFinder "
             + "has already detected peaks.")
-    private IPeakPicking peakPicking;
+    private IPeakPicking peakPicking = new SimplePeakPicking();
     @Configurable(description="The region growing implementation to use.")
-    private IRegionGrowing regionGrowing;
+    private IRegionGrowing regionGrowing = new OneByOneRegionGrowing();
     @Configurable(description="The peak integration implementation to use.")
-    private IPeakIntegration integration;
+    private IPeakIntegration integration = new PeakIntegration();
     @Configurable(description="The peak exporter implementation to use.")
-    private IPeakExporter peakExporter;
+    private IPeakExporter peakExporter = new PeakExporter();
     @Configurable(description="The peak separator implementation to use.")
     private IPeakSeparator peakSeparator = new PeakSeparator();
     
@@ -391,13 +396,16 @@ public class SeededRegionGrowing extends AFragmentCommand {
                 }
             }
             s = pas.get(i);
-            peak = new Peak2D();
             x = times.getFirst().getDouble(s.getIndex());
             y = times.getSecond().getDouble(s.getIndex());
-            peak.setPeakArea(s);
-            peak.setFirstRetTime(x);
-            peak.setSecondRetTime(y);
-            peak.setApexIndex(s.getIndex());
+            peak = Peak2D.builder2D().
+                peakArea(s).
+                firstRetTime(x).
+                secondRetTime(y).
+                startIndex(s.getIndex()).
+                apexIndex(s.getIndex()).
+                stopIndex(s.getIndex()).
+            build();
             peaklist.add(peak);
         }
 

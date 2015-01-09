@@ -27,34 +27,37 @@
  */
 package maltcms.io.csv;
 
+import cross.datastructures.tuple.Tuple2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import maltcms.io.csv.chromatof.ChromaTOFParser;
-import maltcms.io.csv.chromatof.TableRow;
+import java.util.TreeMap;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * Generic utility methods for csv parsing and numeric conversion.
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 public class ParserUtilities {
 
-    public double parseDouble(String s, Locale locale) {
+    /**
+     * Parse a numeric string using the specified locale. When a ParseException
+     * is caught, the method returns Double.NaN.
+     *
+     * @param s the string to parse.
+     * @param locale the locale to use for numeric conversion.
+     * @return the double value. May be NaN if s is null, empty, or unparseable
+     */
+    public static double parseDouble(String s, Locale locale) {
         if (s == null || s.isEmpty()) {
             return Double.NaN;
         }
@@ -70,127 +73,7 @@ public class ParserUtilities {
         }
     }
 
-    public LinkedHashSet<String> getHeader(File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
-        LinkedHashSet<String> globalHeader = new LinkedHashSet<>();
-        ArrayList<String> header = null;
-        String fileName = f.getName().substring(0, f.getName().lastIndexOf(
-                "."));
-        //System.out.println("Processing report " + fileName);
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(f));
-            String line = "";
-            int lineCount = 0;
-            while ((line = br.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    String[] lineArray = splitLine(line, fieldSeparator, quotationCharacter);//line.split(String.valueOf(FIELD_SEPARATOR));
-                    if (header == null) {
-                        if (normalizeColumnNames) {
-                            for (int i = 0; i < lineArray.length; i++) {
-                                lineArray[i] = lineArray[i].trim().toUpperCase().
-                                        replaceAll(" ", "_");
-                            }
-                        }
-                        header = new ArrayList<>(Arrays.asList(
-                                lineArray));
-                        break;
-                    }
-                    lineCount++;
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ChromaTOFParser.class.getName()).log(
-                    Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(ChromaTOFParser.class.getName()).log(
-                        Level.SEVERE, null, ex);
-            }
-        }
-        globalHeader.addAll(header);
-        return globalHeader;
-    }
-
-    public String[] splitLine(String line, String fieldSeparator, String quoteSymbol) {
-        switch (fieldSeparator) {
-            case ",":
-                Pattern p = Pattern.compile("((\")([^\"]*)(\"))");
-                Matcher m = p.matcher(line);
-                List<String> results = new LinkedList<>();
-                int match = 1;
-                while (m.find()) {
-                    results.add(m.group(3).trim());
-                }
-                Pattern endPattern = Pattern.compile(",([\"]{0,1}([^\"]*)[^\"]{0,1}$)");
-                Matcher m2 = endPattern.matcher(line);
-                while (m2.find()) {
-                    results.add(m2.group(1).trim());
-                }
-                return results.toArray(new String[results.size()]);
-            case "\t":
-                return line.replaceAll("\"", "").split("\t");
-            default:
-                throw new IllegalArgumentException("Field separator " + fieldSeparator + " is not supported, only ',' and '\t' are valid!");
-        }
-    }
-
-    public List<TableRow> parseBody(LinkedHashSet<String> globalHeader,
-            File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
-        List<TableRow> body = new ArrayList<>();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new FileReader(f));
-
-            String line = "";
-            int lineCount = 0;
-            List<String> header = null;
-            while ((line = br.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    ArrayList<String> lineList = new ArrayList<>(Arrays.asList(splitLine(line, fieldSeparator, quotationCharacter)));//.split(String.valueOf(FIELD_SEPARATOR))));
-                    if (header == null) {
-                        if (normalizeColumnNames) {
-                            for (int i = 0; i < lineList.size(); i++) {
-                                lineList.set(i, lineList.get(i).trim().toUpperCase().
-                                        replaceAll(" ", "_"));
-                            }
-                        }
-                        header = new ArrayList<>(lineList);
-                    } else {
-                        TableRow tr = new TableRow();
-                        for (String headerColumn : globalHeader) {
-                            int localIndex = getIndexOfHeaderColumn(header,
-                                    headerColumn);
-                            if (localIndex >= 0 && localIndex < lineList.size()) {//found column name
-                                tr.put(headerColumn, lineList.get(localIndex));
-                            } else {//did not find column name
-                                tr.put(headerColumn, null);
-                            }
-                        }
-                        body.add(tr);
-                    }
-                    lineCount++;
-                }
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(ChromaTOFParser.class.getName()).log(Level.SEVERE,
-                    null, ex);
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(ChromaTOFParser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return body;
-    }
-    
-    public HashMap<String, String> getFilenameToGroupMap(File f, String fieldSeparator) {
+    public static HashMap<String, String> getFilenameToGroupMap(File f, String fieldSeparator) {
         List<String> header = null;
         HashMap<String, String> filenameToGroupMap = new LinkedHashMap<>();
         BufferedReader br = null;
@@ -210,29 +93,51 @@ public class ParserUtilities {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ChromaTOFParser.class.getName()).log(Level.SEVERE,
-                    null, ex);
+            log.warn("Caught an IO Exception while reading file " + f, ex);
         } finally {
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(ChromaTOFParser.class.getName()).log(Level.SEVERE, null, ex);
+                    log.warn("Caught an IO Exception while trying to close stream of file " + f, ex);
                 }
             }
         }
         return filenameToGroupMap;
     }
 
-    public int getIndexOfHeaderColumn(List<String> header,
-            String columnName) {
-        int idx = 0;
-        for (String str : header) {
-            if (str.equalsIgnoreCase(columnName)) {
-                return idx;
-            }
-            idx++;
+    /**
+     * Method to convert a mass spectrum in the format contained in ChromaTOF
+     * peak files as pairs of mz and intensity, separated by space :
+     * {@code 102:956 107:119}.
+     *
+     * @param massSpectrum the mass spectrum string to parse.
+     * @return a tuple of double[] masses and int[] intensities.
+     */
+    public static Tuple2D<double[], int[]> convertMassSpectrum(
+            String massSpectrum) {
+        if (massSpectrum == null) {
+            log.warn("Warning: mass spectral data was null!");
+            return new Tuple2D<>(new double[0], new int[0]);
         }
-        return -1;
+        String[] mziTuples = massSpectrum.split(" ");
+        TreeMap<Float, Integer> tm = new TreeMap<>();
+        for (String tuple : mziTuples) {
+            if (tuple.contains(":")) {
+                String[] tplArray = tuple.split(":");
+                tm.put(Float.valueOf(tplArray[0]), Integer.valueOf(tplArray[1]));
+            } else {
+                log.warn("Warning: encountered strange tuple: {} within ms: {}", new Object[]{tuple, massSpectrum});
+            }
+        }
+        double[] masses = new double[tm.keySet().size()];
+        int[] intensities = new int[tm.keySet().size()];
+        int i = 0;
+        for (Float key : tm.keySet()) {
+            masses[i] = key;
+            intensities[i] = tm.get(key);
+            i++;
+        }
+        return new Tuple2D<>(masses, intensities);
     }
 }

@@ -401,6 +401,6 @@
         </dependency>
     </dependencies>
     <properties>
-        <distributionName>maltcms-distribution-${project.version}</distributionName>
+        <distributionName>maltcms-${project.version}</distributionName>
     </properties>
 </project>

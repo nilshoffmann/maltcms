@@ -37,6 +37,7 @@ import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
+import maltcms.io.csv.ParserUtilities;
 import maltcms.io.csv.gcimage.GcImageBlobParser.ColumnName;
 import maltcms.test.ZipResourceExtractor;
 import org.apache.commons.csv.CSVParser;
@@ -97,7 +98,7 @@ public class GcImageBlobParserTest {
                 if (counter <= 10) {
                     Assert.assertEquals(
                             secondColumnRts[((int) counter) - 1],
-                            GcImageBlobParser.parseDouble(r.get(ColumnName.RETENTION_II), locale),
+                            ParserUtilities.parseDouble(r.get(ColumnName.RETENTION_II), locale),
                             0.0d
                     );
                 }
@@ -126,7 +127,7 @@ public class GcImageBlobParserTest {
         Assert.assertEquals(375, chrom.getNumberOfScans());
         Assert.assertEquals(500, chrom.getNumberOfScansPerModulation());
         Locale locale = Locale.US;
-        GcImageBlobImporter importer = new GcImageBlobImporter(locale, "\"");
+        GcImageBlobImporter importer = new GcImageBlobImporter("\"", locale);
         List<Peak2D> peaks = importer.importPeaks(file, chrom);
         Assert.assertEquals(375, peaks.size());
     }

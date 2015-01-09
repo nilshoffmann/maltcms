@@ -21,7 +21,7 @@ Maltcms processing pipelines are linear and non-branching. Although, you can cou
 linking to the data that should be processed. Intermediate results can be saved individually with different semantics. One can create variables in a file fragment that have the same name as in a previous step of the pipeline or a previous pipeline. The older variable is then shadowed by the new one, allowing to substitute e.g. the original intensity profile with a filtered one. However, you are free to create variables with arbitrary names (following the netcdf cdm conventions). Every processing element in a maltcms pipeline, termed a 'fragment command' should declare the variables it requires for operation and it should also declare, which variables it provides. Optionally, a fragment command can declare additional variables that it needs to perform additional things, but which are not required for the basic operation.
 
 <h3>Developing with Maltcms</h3>
-Maltcms uses Maven 3 as its build system. Maven offers the advantage to modularize a complex and large software system into seperate, independent units of functionality. [More about the build system](./maven.html)
+Maltcms uses Maven 3 as its build system. Maven offers the advantage to modularize a complex and large software system into seperate, independent units of functionality. [More about the build system.](./development/maven.html)
 
 
 

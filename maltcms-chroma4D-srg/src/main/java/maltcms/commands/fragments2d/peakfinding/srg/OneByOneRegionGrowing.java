@@ -248,28 +248,30 @@ public class OneByOneRegionGrowing implements IRegionGrowing {
         }
         if (ap.y >= 0 && ap.y < slc.getScansPerModulation() && ap.x >= 0 && ap.x < slc.getScanLineCount()) {
             final Array apMS = slc.getMassSpectrum(ap);
-            if (isNear(similarity, meanMS, apMS, minDistance)) {
-                try {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Adding region point " + ap);
+            if (apMS != null) {
+                if (isNear(similarity, meanMS, apMS, minDistance)) {
+                    try {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Adding region point " + ap);
+                        }
+                        snake.addRegionPoint(ap, apMS, this.intensities.get(idx(
+                                ap.x, ap.y)));
+                        if (log.isDebugEnabled()) {
+                            log.debug("Adding neighbor point " + ap);
+                        }
+                        snake.addNeighborOf(ap);
+                    } catch (ArrayIndexOutOfBoundsException ex) {
+                        log.error(
+                                "Tried to use point {} and access index {}, allowed : [0,{}]",
+                                new Object[]{ap, idx(ap.x, ap.y),
+                                    this.intensities.getShape()[0] - 1});
                     }
-                    snake.addRegionPoint(ap, apMS, this.intensities.get(idx(
-                            ap.x, ap.y)));
+                } else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Adding neighbor point " + ap);
+                        log.debug("Adding boundary point " + ap);
                     }
-                    snake.addNeighborOf(ap);
-                } catch (ArrayIndexOutOfBoundsException ex) {
-                    log.error(
-                            "Tried to use point {} and access index {}, allowed : [0,{}]",
-                            new Object[]{ap, idx(ap.x, ap.y),
-                                this.intensities.getShape()[0] - 1});
+                    snake.addBoundaryPoint(ap);
                 }
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Adding boundary point " + ap);
-                }
-                snake.addBoundaryPoint(ap);
             }
         }
     }

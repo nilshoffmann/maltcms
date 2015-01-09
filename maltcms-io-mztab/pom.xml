@@ -12,8 +12,15 @@
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
-            <artifactId>jmztab</artifactId>
-            <version>2.1.5</version>
+            <artifactId>jmztab-modular-model</artifactId>
+            <version>${jmztab.version}</version>
+            <!-- based on mzTab specification version 1.0 RC5-->
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride</groupId>
+            <artifactId>jmztab-modular-util</artifactId>
+            <version>${jmztab.version}</version>
+            <!-- based on mzTab specification version 1.0 RC5-->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -56,5 +63,6 @@
     </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jmztab.version>3.0.0</jmztab.version>
     </properties>
 </project>

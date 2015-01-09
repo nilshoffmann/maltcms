@@ -153,14 +153,15 @@ public class Chromatogram2D implements IChromatogram2D {
      *
      * @param i a int.
      * @return a {@link maltcms.datastructures.ms.IScan2D} object.
-     * @throws ArrayIndexOutOfBoundsException if the requested index is out of bounds
+     * @throws ArrayIndexOutOfBoundsException if the requested index is out of
+     * bounds
      */
     protected IScan2D buildScan(int i) {
-        if(i>getNumberOfScans()) {
-            throw new ArrayIndexOutOfBoundsException("Requested index "+i+" was out of bounds [0,"+(getNumberOfScans()-1)+"]");
+        if (i < 0 || i > getNumberOfScans()) {
+            throw new ArrayIndexOutOfBoundsException("Requested index " + i + " was out of bounds [0," + (getNumberOfScans() - 1) + "]");
         }
         Point p = this.isl.mapIndex(i);
-        if (p.x > 0 && p.y > 0 && p.x < getNumberOfModulations() && p.y < getNumberOfScansPerModulation()) {
+        if (p!=null && p.x >= 0 && p.y >= 0 && (p.x + p.y < getNumberOfScans())) {
             final Tuple2D<Array, Array> t = this.isl.getSparseMassSpectrum(p.x, p.y);
             double sat1 = satOffset + (p.x * getModulationDuration());
             double sat = MaltcmsTools.getScanAcquisitionTime(this.parent, i);
@@ -174,9 +175,9 @@ public class Chromatogram2D implements IChromatogram2D {
             return s;
         } else {
             throw new ArrayIndexOutOfBoundsException(
-                "Requested index "+i+", mapped to point "+p.x+";"+p.y+
-                " was out of bounds x => [0;"+(getNumberOfModulations()-1)+"]"+
-                " y => [0;"+(getNumberOfScansPerModulation()-1)+"]");
+                    "Requested index " + i + ", mapped to point " + p.x + ";" + p.y
+                    + " was out of bounds x => [0;" + (getNumberOfModulations() - 1) + "]"
+                    + " y => [0;" + (getNumberOfScansPerModulation() - 1) + "]");
         }
     }
 

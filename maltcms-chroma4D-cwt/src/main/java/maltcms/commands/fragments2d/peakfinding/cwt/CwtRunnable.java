@@ -81,6 +81,7 @@ import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.ms.IScan2D;
 import maltcms.datastructures.peak.MaltcmsAnnotationFactory;
 import maltcms.datastructures.peak.Peak2D;
+import maltcms.datastructures.peak.Peak2D.Peak2DBuilder;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.quadTree.QuadTree;
@@ -223,34 +224,32 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
     private List<Peak2D> createPeaksForRidges(IFileFragment f, Array tic,
             Array sat, List<Ridge> r, int spm) {
         int index = 0;
-        Index tidx = tic.getIndex();
-        Index sidx = sat.getIndex();
-        // List<Scan2D> scans = new ArrayList<Scan2D>();
-//		log.info("Building scans");
         List<Peak2D> p2 = new LinkedList<>();
         Chromatogram2D chrom = new Chromatogram2D(f);
         Tuple2D<Double, Double> massRange = chrom.getMassRange();
         ScanLineCacheFactory.setMinMass(massRange.getFirst());
         ScanLineCacheFactory.setMaxMass(massRange.getSecond());
-//        IScanLine isl = ScanLineCacheFactory.getScanLineCache(f);
         for (Ridge ridge : r) {
 //			log.info("Processing Ridge " + (index + 1) + "/"
 //				+ r.size());
-            IScan2D scan = chrom.getScan(ridge.getGlobalScanIndex());
-            Peak2D p = new Peak2D();
+            int scanIndex = ridge.getGlobalScanIndex();
+            IScan2D scan = chrom.getScan(scanIndex);
+            Peak2DBuilder builder = Peak2D.builder2D();
+            Peak2D p = null;
+            double apexTime = sat.getDouble(scanIndex);
             // Point pt = ic2d.getPointFor(ridge.getGlobalScanIndex());
-            p.setIndex(index++);
-            // Scan2D s2d = ic2d.getScaartn(ridge.getGlobalScanIndex());
-            // scans.add(s2d);
-            p.setFirstRetTime(scan.getFirstColumnScanAcquisitionTime());
-            p.setSecondRetTime(scan.getSecondColumnScanAcquisitionTime());
-            p.setApexIndex(ridge.getGlobalScanIndex());
-            p.setFile(f.getName());
-            p.setApexIntensity(tic.getDouble(tidx.set(p.getApexIndex())));
-            p.setApexTime(sat.getDouble(sidx.set(p.getApexIndex())));
-            p.setStartTime(p.getApexTime());
-            p.setStopTime(p.getApexTime());
-            p2.add(p);
+            builder.index(index++).
+            firstRetTime(scan.getFirstColumnScanAcquisitionTime()).
+            secondRetTime(scan.getSecondColumnScanAcquisitionTime()).
+            startIndex(scanIndex).
+            apexIndex(scanIndex).
+            stopIndex(scanIndex).
+            file(f.getName()).
+            apexIntensity(tic.getDouble(scanIndex)).
+            apexTime(apexTime).
+            startTime(apexTime).
+            stopTime(apexTime);
+            p = builder.build();
             Point2D.Double ps = getPointForRidge(ridge, spm);
             Point seed = new Point((int) ps.getX(), (int) ps.getY());
             Array ms = scan.getIntensities();
@@ -258,15 +257,10 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
                 PeakArea2D pa2 = new PeakArea2D(seed, ms,
                         p.getApexIntensity(), p.getApexIndex(), spm);
                 p.setPeakArea(pa2);
-                //pi.setName(p);
-//                List<Tuple2D<Double, IMetabolite>> t = p.getNames();
-//                for (Tuple2D<Double, IMetabolite> tple : t) {
-////				log.info("Score: " + tple.getFirst() + " Name: "
-////					+ tple.getSecond().getName());
-//                }
             } else {
                 log.warn("Could not retrieve mass spectrum for point " + seed);
             }
+            p2.add(p);
         }
         return p2;
     }

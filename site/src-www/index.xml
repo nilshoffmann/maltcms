@@ -91,6 +91,9 @@
             <h1>News</h1>
             <ul class="unbulletedlist">
                 <li>
+                    <ref target="news/maltcms1_3_2" alt="Maltcms 1.3.2 Released on October 17th, 2014"/>
+                </li>
+                <li>
                     <ref target="news/bipace2dBioinformatics" alt="Publication: Bipace 2d"/>
                 </li>
                 <li>

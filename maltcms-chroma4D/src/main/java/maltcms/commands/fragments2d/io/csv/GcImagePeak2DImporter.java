@@ -176,7 +176,7 @@ public class GcImagePeak2DImporter extends AFragmentCommand {
         if (location.isEmpty()) {
             throw new ConstraintViolationException("Could not initialize report files!");
         }
-        GcImageBlobImporter gci = new GcImageBlobImporter(locale, quotationCharacter);
+        GcImageBlobImporter gci = new GcImageBlobImporter(quotationCharacter, locale);
         final ArrayList<IFileFragment> ret = new ArrayList<>();
         Map<IChromatogram1D, File> chromToFileMap = getChromatogramToReportFileMap(t, location);
         if (chromToFileMap.keySet().size() != t.size()) {
