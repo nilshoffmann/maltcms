@@ -58,19 +58,16 @@ import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 
 /**
- * <p>
- * Peak1D class.</p>
+ * Peak1D models a standard 1D chromatographic peak.
  *
- * @author Nils Hoffmann
- *
- * Peak1D models a standard 1D chromatographic peak. If you want to model mass
- * spectral peaks over time, use a Peak1DGroup instance.
+ * If you want to model mass spectral peaks over time, use a Peak1DGroup
+ * instance.
  *
  * Peak1D objects can be compared using <code>equals</code>. Each peak
  * additionally has a random unique id, that can be retrieved using
  * <code>getUniqueId()</code>.
  *
- *
+ * @author Nils Hoffmann
  */
 @Data
 @EqualsAndHashCode(exclude = "uniqueId")
@@ -282,8 +279,8 @@ public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
 
     /**
      * Creates a new Peak1D object from the given values. It is generally
-     * advised to use the {@link Peak1DPeak1DBuilder}, obtainable from
-     * {@link Peak1D#builder()}.
+     * advised to use the {@link Peak1DBuilder}, obtainable from
+     * {@link Peak1D#builder1D()}.
      *
      * @param index, default value: -1.
      * @param startIndex, default value: -1.
