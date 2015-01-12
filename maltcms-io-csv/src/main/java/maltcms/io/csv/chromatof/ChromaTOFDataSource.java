@@ -60,6 +60,7 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
+import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
 /**
@@ -70,19 +71,21 @@ import ucar.nc2.Dimension;
 @Data
 @ServiceProvider(service = IDataSource.class)
 public class ChromaTOFDataSource implements IDataSource {
-    
+
     private Locale locale = Locale.US;
     private String[] supportedFormats = {"csv", "txt", "tsv"};
     private NetcdfDataSource ndf = new NetcdfDataSource();
-    private String tmpDir = ".";
-    
+
     private File getCdfFileForPeakList(File importDir, String peakListName) {
         File fragmentFile = new File(importDir, StringTools.removeFileExt(
                 peakListName) + ".cdf");
         return fragmentFile;
     }
-    
-    private IFileFragment toCdfFile(File peakFile, File cdfFile) {
+
+    private synchronized IFileFragment toCdfFile(File peakFile) {
+        File cdfFile = getCdfFileForPeakList(new File(System.getProperty("java.io.tmpdir")), peakFile.getName());
+        //delete file when Maltcms exits
+        cdfFile.deleteOnExit();
         if (cdfFile.exists()) {
             log.info("Using existing temporary artificial chromatogram file {}", cdfFile);
             return new FileFragment(cdfFile);
@@ -93,6 +96,8 @@ public class ChromaTOFDataSource implements IDataSource {
             Tuple2D<LinkedHashSet<ChromaTOFParser.ColumnName>, List<TableRow>> report = ChromaTOFParser.parseReport(parser, peakFile, true);
             List<TableRow> peaks = report.getSecond();
             Mode mode = parser.getMode(peaks);
+            //this file fragments requires the same file extension as the original peak list, but in the cdfFile location.
+            //calling save() below will create the actual cdf file.
             FileFragment f = new FileFragment(cdfFile);
             Dimension scanNumber = new Dimension("scan_number", peaks.size(), true);
             int points = 0;
@@ -179,7 +184,7 @@ public class ChromaTOFDataSource implements IDataSource {
                 secondColumnElutionTimeVar.setArray(secondColumnElutionTime);
                 secondColumnElutionTimeVar.setDimensions(new Dimension[]{scanNumber});
             }
-            f.addSourceFile(new FileFragment(peakFile));
+//            f.addSourceFile(new FileFragment(peakFile.toURI()));
             f.save();
             return new FileFragment(cdfFile);
         } catch (IllegalArgumentException iae) {
@@ -187,7 +192,7 @@ public class ChromaTOFDataSource implements IDataSource {
                     + cdfFile, iae);
         }
     }
-    
+
     @Override
     public int canRead(IFileFragment ff) {
         try {
@@ -229,51 +234,70 @@ public class ChromaTOFDataSource implements IDataSource {
         }
         return 0;
     }
-    
+
+    private IFileFragment getConvertedPeakList(IFileFragment f) {
+        IFileFragment convertedPeakList = toCdfFile(new File(f.getUri()));
+        return convertedPeakList;
+    }
+
     @Override
     public ArrayList<Array> readAll(IFileFragment f) throws IOException, ResourceNotAvailableException {
-        IFileFragment convertedPeakList = toCdfFile(new File(f.getUri()),
-                getCdfFileForPeakList(new File(tmpDir), f.getName()));
+        IFileFragment convertedPeakList = getConvertedPeakList(f);
         return ndf.readAll(convertedPeakList);
     }
-    
+
     @Override
     public ArrayList<Array> readIndexed(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        IFileFragment convertedPeakList = toCdfFile(new File(f.getParent().getUri()),
-                getCdfFileForPeakList(new File(tmpDir), f.getParent().getName()));
+        IFileFragment convertedPeakList = getConvertedPeakList(f.getParent());
         IVariableFragment fc = convertedPeakList.getChild(f.getName());
         IVariableFragment ic = convertedPeakList.getChild(f.getIndex().getName());
         fc.setIndex(ic);
         return ndf.readIndexed(fc);
     }
-    
+
     @Override
     public Array readSingle(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        IFileFragment convertedPeakList = toCdfFile(new File(f.getParent().getUri()),
-                getCdfFileForPeakList(new File(tmpDir), f.getName()));
-        IVariableFragment fc = convertedPeakList.getChild(f.getName());
-        return ndf.readSingle(fc);
+        IFileFragment convertedPeakList = getConvertedPeakList(f.getParent());
+        IVariableFragment toBeRead = VariableFragment.createCompatible(convertedPeakList, f);
+        Array array = ndf.readSingle(toBeRead);
+        f.setRange(toBeRead.getRange());
+        f.setDimensions(toBeRead.getDimensions());
+        f.setAttributes(toBeRead.getAttributes().toArray(new Attribute[toBeRead.getAttributes().size()]));
+        return array;
     }
-    
+
     @Override
     public ArrayList<IVariableFragment> readStructure(IFileFragment f) throws IOException {
-        IFileFragment convertedPeakList = toCdfFile(new File(f.getUri()),
-                getCdfFileForPeakList(new File(tmpDir), f.getName()));
-        return ndf.readStructure(convertedPeakList);
+        IFileFragment convertedPeakList = getConvertedPeakList(f);
+        ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+        for (IVariableFragment ivf : ndf.readStructure(convertedPeakList)) {
+            IVariableFragment toBeCreated = VariableFragment.createCompatible(f, ivf);
+            toBeCreated.setDataType(ivf.getDataType());
+            toBeCreated.setRange(ivf.getRange());
+            toBeCreated.setDimensions(ivf.getDimensions());
+            toBeCreated.setAttributes(ivf.getAttributes().toArray(new Attribute[ivf.getAttributes().size()]));
+            al.add(toBeCreated);
+        }
+        return al;
     }
-    
+
     @Override
     public IVariableFragment readStructure(IVariableFragment f) throws IOException, ResourceNotAvailableException {
-        IFileFragment convertedPeakList = toCdfFile(new File(f.getParent().getUri()),
-                getCdfFileForPeakList(new File(tmpDir), f.getParent().getName()));
-        return ndf.readStructure(convertedPeakList.getChild(f.getName()));
+        IFileFragment convertedPeakList = getConvertedPeakList(f.getParent());
+        IVariableFragment toBeRead = VariableFragment.createCompatible(convertedPeakList, f);
+        toBeRead = ndf.readStructure(toBeRead);
+        f.setDataType(toBeRead.getDataType());
+        f.setRange(toBeRead.getRange());
+        f.setDimensions(toBeRead.getDimensions());
+        f.setAttributes(toBeRead.getAttributes().toArray(new Attribute[toBeRead.getAttributes().size()]));
+        return f;
     }
-    
+
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(supportedFormats);
     }
-    
+
     @Override
     public boolean write(IFileFragment f) {
         EvalTools.notNull(this.ndf, this);
@@ -288,23 +312,19 @@ public class ChromaTOFDataSource implements IDataSource {
         log.info("To: {}", filename);
         return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }
-    
+
     @Override
     public void configure(Configuration cfg) {
         locale = LocaleUtils.toLocale(cfg.getString(getClass().getName() + ".locale", "en_US"));
         this.ndf = new NetcdfDataSource();
         this.ndf.configure(cfg);
-        tmpDir = cfg.getString("java.io.tmpdir");
     }
-    
+
     @Override
     public void configurationChanged(ConfigurationEvent ce) {
         if (ce.getPropertyName().equals(getClass().getName() + ".locale")) {
             locale = LocaleUtils.toLocale((String) ce.getPropertyValue());
         }
-        if (ce.getPropertyName().equals(getClass().getName() + ".tmpDir")) {
-            tmpDir = (String) ce.getPropertyValue();
-        }
     }
-    
+
 }

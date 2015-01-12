@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.commons.lang.LocaleUtils;
 import org.junit.Assert;
@@ -71,7 +72,7 @@ import ucar.nc2.Dimension;
  */
 @Slf4j
 public class ChromaTOFDataSourceTest {
-    
+
     @Rule
     public SetupLogging sl = new SetupLogging();
     @Rule
@@ -81,22 +82,17 @@ public class ChromaTOFDataSourceTest {
     @Rule
     public ExtractClassPathFiles gcMsFiles = new ExtractClassPathFiles(tf, "/csv/chromatof/full/1D/chromatof-1D-sample.csv.gz");
     @Rule
-    public ExtractClassPathFiles gcgcMsFiles = new ExtractClassPathFiles(tf, "/csv/chromatof/full/2D/mut_t1_a.csv.gz","/csv/chromatof/reduced/2D/mut_t1_a.csv.gz");
+    public ExtractClassPathFiles gcgcMsFiles = new ExtractClassPathFiles(tf, "/csv/chromatof/full/2D/mut_t1_a.csv.gz", "/csv/chromatof/reduced/2D/mut_t1_a.csv.gz");
     @Rule
     public ExtractClassPathFiles negativeFiles = new ExtractClassPathFiles(tf, "/csv/gcimage/reduced/mut_t1_a.csv.gz");
 
     ChromaTOFDataSource getDataSource() {
         return getDataSource("en_US");
     }
-    
+
     ChromaTOFDataSource getDataSource(String locale) {
         ChromaTOFDataSource ds = new ChromaTOFDataSource();
         ds.setLocale(LocaleUtils.toLocale(locale));
-        try {
-            ds.setTmpDir(tf.newFolder().getAbsolutePath());
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
         return ds;
     }
 
@@ -105,7 +101,7 @@ public class ChromaTOFDataSourceTest {
      */
     @Before
     public void setUp() {
-        Factory.getInstance().getDataSourceFactory().setDataSources(Arrays.asList(ChromaTOFDataSource.class.getCanonicalName()));
+        Factory.getInstance().getDataSourceFactory().setDataSources(Arrays.asList(NetcdfDataSource.class.getCanonicalName(), ChromaTOFDataSource.class.getCanonicalName()));
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
     }
 
@@ -142,7 +138,6 @@ public class ChromaTOFDataSourceTest {
         sl.setLogLevel("cross.datastructures.fragments",
                 "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
-        sl.setLogLevel("maltcms.io.xml.mzML", "DEBUG");
         for (File f : gcgcMsFiles.getFiles()) {
             List<Array> l = getDataSource().readAll(new FileFragment(f));
             Assert.assertTrue(l.size() > 0);
@@ -157,7 +152,6 @@ public class ChromaTOFDataSourceTest {
         sl.setLogLevel("cross.datastructures.fragments",
                 "INFO");
         sl.setLogLevel("maltcms.io.andims", "INFO");
-        sl.setLogLevel("maltcms.io.xml.mzML", "INFO");
     }
 
     /**
@@ -218,8 +212,8 @@ public class ChromaTOFDataSourceTest {
             Array ticA = getDataSource().readSingle(tic);
             Assert.assertNotNull(ticA);
             Assert.assertTrue(ticA.getShape()[0] > 0);
-//            Assert.assertTrue(ticA.getShape()[0] == a.getShape()[0]);
-//            Assert.assertTrue(tic.getRange()[0].toString().equals(si.getRange()[0].toString()));
+            Assert.assertTrue(ticA.getShape()[0] == a.getShape()[0]);
+            Assert.assertTrue(tic.getRange()[0].toString().equals(si.getRange()[0].toString()));
 
             IVariableFragment sat = ff.getChild("scan_acquisition_time");
             Array satA = getDataSource().readSingle(sat);
@@ -238,8 +232,8 @@ public class ChromaTOFDataSourceTest {
             ticA = getDataSource().readSingle(tic);
             Assert.assertNotNull(ticA);
             Assert.assertTrue(ticA.getShape()[0] > 0);
-//            Assert.assertTrue(ticA.getShape()[0] == a.getShape()[0]);
-//            Assert.assertTrue(tic.getRange()[0].toString().equals(si.getRange()[0].toString()));
+            Assert.assertTrue(ticA.getShape()[0] == a.getShape()[0]);
+            Assert.assertTrue(tic.getRange()[0].toString().equals(si.getRange()[0].toString()));
 
             sat = ff.getChild("scan_acquisition_time");
             satA = getDataSource().readSingle(sat);
@@ -408,7 +402,6 @@ public class ChromaTOFDataSourceTest {
      */
     @Test
     public void testWriteRead() throws IOException {
-//        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
                 "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
@@ -429,15 +422,10 @@ public class ChromaTOFDataSourceTest {
         Assert.assertEquals(testCdfUri, ff.getUri());
         boolean b = ff.save();
         Assert.assertTrue(b);
-//        FileFragment.clearFragments();
         IVariableFragment variable1 = Factory.getInstance().getDataSourceFactory().getDataSourceFor(ff).readStructure(new ImmutableVariableFragment2(ff, "variable1"));
         Assert.assertNotNull(variable1.getArray());
         testDirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
                 variableToArray);
-//        FileFragment.clearFragments();
-//        testIndirectRead(testCdfUri, variableNames, indexedVariableNames, attributes, variableAttributes, usedDimensions, unusedDimensions,
-//                variableToArray);
-//        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
                 "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
@@ -613,7 +601,6 @@ public class ChromaTOFDataSourceTest {
      */
     @Test
     public void testMultiChainedReadWrite() {
-//        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
                 "DEBUG");
         sl.setLogLevel("maltcms.io.andims", "DEBUG");
@@ -671,7 +658,6 @@ public class ChromaTOFDataSourceTest {
                     log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }
-//        FileFragment.clearFragments();
         sl.setLogLevel("cross.datastructures.fragments",
                 "OFF");
         sl.setLogLevel("maltcms.io.andims", "INFO");
