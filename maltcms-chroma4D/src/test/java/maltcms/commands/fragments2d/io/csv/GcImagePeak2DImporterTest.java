@@ -55,7 +55,7 @@ public class GcImagePeak2DImporterTest extends AFragmentCommandTest {
         File sourceFile = ZipResourceExtractor.extract(
                 "/cdf/2D/mut_t1_a.cdf.gz", dataFolder);
         File file = ZipResourceExtractor.extract(
-                "/csv/gcimage/reduced/mut_t1_a.csv", dataFolder);
+                "/csv/gcimage/reduced/mut_t1_a.csv.gz", dataFolder);
 
         List<IFragmentCommand> commands = new ArrayList<>();
 //        Default2DVarLoader default2DVarLoader = new Default2DVarLoader();
