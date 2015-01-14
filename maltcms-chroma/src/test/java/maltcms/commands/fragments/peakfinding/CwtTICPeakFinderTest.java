@@ -30,13 +30,16 @@ package maltcms.commands.fragments.peakfinding;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
+import maltcms.tools.MaltcmsTools;
+import org.apache.log4j.Level;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -47,15 +50,20 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class CwtTICPeakFinderTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz");
+
+    @Before
+    public void initLogging() {
+        setLogLevelFor(CwtTicPeakFinder.class, Level.DEBUG);
+    }
+
     /**
      *
      */
     @Test
     public void testCwtTicPeakFinder() throws IOException {
-        File dataFolder = tf.newFolder("chromaTest Data ö");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(CwtTICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         CwtTicPeakFinder tpf = new CwtTicPeakFinder();
         tpf.setIntegratePeaks(true);
@@ -63,8 +71,7 @@ public class CwtTICPeakFinderTest extends AFragmentCommandTest {
         tpf.setMinScale(5);
         tpf.setSaveGraphics(true);
         commands.add(tpf);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 

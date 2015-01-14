@@ -36,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -46,16 +48,14 @@ import org.junit.experimental.categories.Category;
  */
 @Category(IntegrationTest.class)
 public class CwtEICPeakFinderTest extends AFragmentCommandTest {
-
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz");
     /**
      *
      */
     @Test
     public void testCwtEicPeakFinder() throws IOException {
-        File dataFolder = tf.newFolder("chromaTest Data ö");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(CwtEICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         CwtEicPeakFinder tpf = new CwtEicPeakFinder();
         tpf.setIntegratePeaks(true);
@@ -64,8 +64,7 @@ public class CwtEICPeakFinderTest extends AFragmentCommandTest {
         tpf.setSaveGraphics(true);
         tpf.setMassResolution(1.0d);
         commands.add(tpf);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 

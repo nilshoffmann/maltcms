@@ -27,8 +27,6 @@
  */
 package maltcms.math.functions.similarities;
 
-import com.carrotsearch.hppc.ObjectDoubleMap;
-import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
 import cross.cache.ICacheDelegate;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;

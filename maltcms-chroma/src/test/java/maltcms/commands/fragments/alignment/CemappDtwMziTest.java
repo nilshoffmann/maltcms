@@ -67,7 +67,7 @@ import org.junit.experimental.categories.Category;
 public class CemappDtwMziTest extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
@@ -77,7 +77,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
-        File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
@@ -91,7 +90,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
         commands.add(cwarp2);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -102,7 +101,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
-        File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
@@ -116,7 +114,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
         commands.add(cwarp2);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -148,7 +146,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.NONE);
-        File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
@@ -178,7 +175,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
         commands.add(cwarp2);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -192,7 +189,6 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         setLogLevelFor("cross.datastructures.workflow.DefaultWorkflow", Level.INFO);
         setLogLevelFor("cross.datastructures.pipeline.CommandPipeline", Level.INFO);
         Fragments.setDefaultFragmentCacheType(CacheType.EHCACHE);
-        File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
@@ -222,7 +218,7 @@ public class CemappDtwMziTest extends AFragmentCommandTest {
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
         commands.add(cwarp2);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 }

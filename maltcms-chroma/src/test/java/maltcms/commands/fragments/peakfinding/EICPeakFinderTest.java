@@ -42,7 +42,9 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineE
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -53,15 +55,15 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class EICPeakFinderTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz");
+
     /**
      *
      */
     @Test
     public void testEicPeakFinder() throws IOException {
-        File dataFolder = tf.newFolder("chromaTest Data ö");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(EICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
@@ -81,8 +83,7 @@ public class EICPeakFinderTest extends AFragmentCommandTest {
         tpf.setPeakSeparationWindow(10);
         tpf.setPeakThreshold(3.0d);
         commands.add(tpf);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 

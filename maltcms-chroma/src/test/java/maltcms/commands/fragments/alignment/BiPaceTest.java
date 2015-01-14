@@ -33,17 +33,24 @@ import cross.test.IntegrationTest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.Worker2DFactory;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak2DMSFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
+import maltcms.math.functions.IArraySimilarity;
+import maltcms.math.functions.IScalarSimilarity;
+import maltcms.math.functions.ProductSimilarity;
+import maltcms.math.functions.similarities.ArrayWeightedCosine2;
+import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -54,17 +61,14 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class BiPaceTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz","/cdf/1D/glucoseB.cdf.gz");
     /**
      *
      */
     @Test
-    public void testChromA() throws IOException {
-        File dataFolder = tf.newFolder("chromaTest Data ö");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder("chromaTest Out ü");
+    public void testBipaceWithTicPeakFinding() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
@@ -85,9 +89,40 @@ public class BiPaceTest extends AFragmentCommandTest {
         tpf.setPeakThreshold(3.0d);
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2));
+        IWorkflow w = createWorkflow(tf.newFolder("klda äÄas"), commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
+    /**
+     *
+     */
+    @Test
+    public void testBipaceWithChromaTofInput() throws IOException {
+        List<IFragmentCommand> commands = new ArrayList<>();
+        commands.add(new DefaultVarLoader());
+        commands.add(new DenseArrayProducer());
+        PeakCliqueAlignment bipace2D = new PeakCliqueAlignment();
+        Peak2DMSFactory p2dms = new Peak2DMSFactory();
+        bipace2D.setPeakFactory(p2dms);
+        Worker2DFactory workerFactory = new Worker2DFactory();
+        workerFactory.setAssumeSymmetricSimilarity(true);
+        workerFactory.setMaxRTDifferenceRt1(120);
+        workerFactory.setMaxRTDifferenceRt2(2);
+        ProductSimilarity ps = new ProductSimilarity();
+        GaussianDifferenceSimilarity gds1 = new GaussianDifferenceSimilarity();
+        gds1.setThreshold(0.9);
+        gds1.setTolerance(15);
+        GaussianDifferenceSimilarity gds2 = new GaussianDifferenceSimilarity();
+        gds2.setThreshold(0.99);
+        gds2.setTolerance(0.25);
+        ps.setScalarSimilarities(new IScalarSimilarity[]{gds1, gds2});
+        ArrayWeightedCosine2 awc = new ArrayWeightedCosine2();
+        ps.setArraySimilarities(new IArraySimilarity[]{awc});
+        workerFactory.setSimilarityFunction(ps);
+        bipace2D.setWorkerFactory(workerFactory);
+        commands.add(bipace2D);
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
+        testWorkflow(w);
+
+    }
 }

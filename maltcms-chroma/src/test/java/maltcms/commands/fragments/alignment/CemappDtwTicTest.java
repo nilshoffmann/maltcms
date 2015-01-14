@@ -31,7 +31,6 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -64,12 +63,11 @@ import org.junit.experimental.categories.Category;
 public class CemappDtwTicTest extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz", "/cdf/1D/mannitolB.cdf.gz");
 
     @Test
     public void testCemappDtwTICFull() throws IOException {
-        File outputBase = tf.newFolder("testCemappDtwFullTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
@@ -83,7 +81,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
         commands.add(cwarp2);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -111,7 +109,6 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
      */
     @Test
     public void testCemappDtwTICConstrained() throws IOException {
-        File outputBase = tf.newFolder("testCemappDtwConstrainedTestOut");
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
@@ -137,7 +134,7 @@ public class CemappDtwTicTest extends AFragmentCommandTest {
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
         cwarp2.setIndexedVars(new LinkedList<String>());
         commands.add(cwarp2);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 }

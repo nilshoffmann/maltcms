@@ -30,7 +30,6 @@ package maltcms.commands.fragments.preprocessing;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ import org.junit.experimental.categories.Category;
 public class DenseArrayProducerTest extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
     public DenseArrayProducerTest() {
@@ -67,7 +66,6 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
      */
     @Test
     public void testDirectApply() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
@@ -78,7 +76,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
         log.info("DenseArrayProducer: {}", dap);
         commands.add(dap);
         commands.add(new PeakCliqueAlignment());
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -87,7 +85,6 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
      */
     @Test
     public void testApply() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
@@ -97,7 +94,7 @@ public class DenseArrayProducerTest extends AFragmentCommandTest {
         DenseArrayProducer dap = new DenseArrayProducer();
         log.info("DenseArrayProducer: {}", dap);
         commands.add(dap);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 }

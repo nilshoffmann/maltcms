@@ -34,13 +34,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import ucar.ma2.Array;
 
@@ -50,32 +50,33 @@ import ucar.ma2.Array;
  */
 public class TICPeakListImporterTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz");
+
     /**
      *
      */
     @Test
     public void testTicPeakListImporter() throws IOException {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+        File dataFolder = tf.newFolder();
         File ticPeakFile = new File(dataFolder, "glucoseA.txt");
         FileUtils.write(ticPeakFile,
-            "STUFF1\tSCAN\tOTHERSTUFF\n" +
-            "214\t5\t5137\n" +
-            "876\t10\t7681\n" +
-            "13\t862\t89791\n",
-            Charset.forName("UTF-8")
+                "STUFF1\tSCAN\tOTHERSTUFF\n"
+                + "214\t5\t5137\n"
+                + "876\t10\t7681\n"
+                + "13\t862\t89791\n",
+                Charset.forName("UTF-8")
         );
         //5, 10, 13
-        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
+        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         TICPeakListImporter tpli = new TICPeakListImporter();
         ArrayList<String> filesToRead = new ArrayList<String>();
         filesToRead.add(ticPeakFile.getAbsolutePath());
         tpli.setFilesToRead(filesToRead);
         commands.add(tpli);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(outputBase, commands, testFiles.getFiles());
         IFileFragment f = testWorkflow(w).get(0);
         Array ticPeaks = f.getChild("tic_peaks").getArray();
         Array refTicPeaks = Array.factory(new int[]{5, 10, 862});
@@ -84,26 +85,24 @@ public class TICPeakListImporterTest extends AFragmentCommandTest {
             Assert.assertEquals(refTicPeaks.getInt(i), ticPeaks.getInt(i));
         }
     }
-    
+
     /**
      *
      */
     @Test
     public void testTicPeakListImporterWithOffset() throws IOException {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+        File dataFolder = tf.newFolder();
         int offset = -1;
         File ticPeakFile = new File(dataFolder, "glucoseA.txt");
         FileUtils.write(ticPeakFile,
-            "STUFF1\tSCAN\tOTHERSTUFF\n" +
-            "214\t5\t5137\n" +
-            "876\t10\t7681\n" +
-            "13\t862\t89791\n",
-            Charset.forName("UTF-8")
+                "STUFF1\tSCAN\tOTHERSTUFF\n"
+                + "214\t5\t5137\n"
+                + "876\t10\t7681\n"
+                + "13\t862\t89791\n",
+                Charset.forName("UTF-8")
         );
         //5, 10, 13
-        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
+        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         TICPeakListImporter tpli = new TICPeakListImporter();
         tpli.setScanIndexOffset(offset);
@@ -111,8 +110,7 @@ public class TICPeakListImporterTest extends AFragmentCommandTest {
         filesToRead.add(ticPeakFile.getAbsolutePath());
         tpli.setFilesToRead(filesToRead);
         commands.add(tpli);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(outputBase, commands, testFiles.getFiles());
         IFileFragment f = testWorkflow(w).get(0);
         Array ticPeaks = f.getChild("tic_peaks").getArray();
         Array refTicPeaks = Array.factory(new int[]{4, 9, 861});

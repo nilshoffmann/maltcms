@@ -45,10 +45,12 @@ import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
 import org.apache.log4j.Level;
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -58,6 +60,14 @@ import org.junit.experimental.categories.Category;
  */
 @Category(IntegrationTest.class)
 public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
+
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+        "/cdf/1D/glucoseA.cdf.gz", 
+        "/cdf/1D/glucoseB.cdf.gz", 
+        "/cdf/1D/mannitolA.cdf.gz", 
+        "/cdf/1D/mannitolB.cdf.gz"
+    );
 
     @Before
     public void configureLogging() {
@@ -74,16 +84,6 @@ public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
     @Ignore
     @Test
     public void testProgressiveTreeAlignment() throws IOException {
-        File dataFolder = tf.newFolder("chromaTest Data ö");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File inputFile2 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseB.cdf.gz", dataFolder);
-        File inputFile3 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolA.cdf.gz", dataFolder);
-        File inputFile4 = ZipResourceExtractor.extract(
-                "/cdf/1D/mannitolB.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder("chromaTest Out ü");
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
@@ -110,8 +110,7 @@ public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
         commands.add(new PeakCliqueAlignment());
         commands.add(new PairwiseDistanceCalculator());
         commands.add(new ProgressiveTreeAlignment());
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1, inputFile2, inputFile3, inputFile4));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 

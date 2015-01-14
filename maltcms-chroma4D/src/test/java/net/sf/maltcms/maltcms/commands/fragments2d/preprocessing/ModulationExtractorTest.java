@@ -31,7 +31,6 @@ import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +38,10 @@ import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.commands.fragments2d.preprocessing.ModulationExtractor;
 import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -53,12 +53,12 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class ModulationExtractorTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+
     @Test
     public void testModulationExtractor() throws IOException {
-        File dataFolder = tf.newFolder("chroma4DTestData");
-        File outputBase = tf.newFolder("chroma4DTestOut");
-        File inputFile = ZipResourceExtractor.extract(
-                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
         Default2DVarLoader d2vl = new Default2DVarLoader();
         d2vl.setEstimateModulationTime(false);
@@ -68,9 +68,9 @@ public class ModulationExtractorTest extends AFragmentCommandTest {
         me.setStartModulation(10);
         me.setEndModulation(50);
 
-        IWorkflow w = createWorkflow(outputBase, Arrays.asList(
+        IWorkflow w = createWorkflow(Arrays.asList(
                 (IFragmentCommand) d2vl, (IFragmentCommand) me),
-                Arrays.asList(inputFile));
+                testFiles.getFiles());
         for (IFileFragment f : testWorkflow(w)) {
             Chromatogram2D chrom2 = new Chromatogram2D(f);
             Assert.assertEquals(40, chrom2.getNumberOfModulations());

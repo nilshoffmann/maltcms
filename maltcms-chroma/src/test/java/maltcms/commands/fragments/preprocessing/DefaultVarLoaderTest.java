@@ -60,7 +60,7 @@ import ucar.ma2.Array;
 public class DefaultVarLoaderTest extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz");
 
     public DefaultVarLoaderTest() {
@@ -73,11 +73,10 @@ public class DefaultVarLoaderTest extends AFragmentCommandTest {
      */
     @Test
     public void testDirectApply() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         DefaultVarLoader dvl = new DefaultVarLoader();
         commands.add(dvl);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 }

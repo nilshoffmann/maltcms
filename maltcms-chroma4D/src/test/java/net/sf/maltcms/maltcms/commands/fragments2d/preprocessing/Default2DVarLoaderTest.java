@@ -30,14 +30,14 @@ package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -49,19 +49,19 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class Default2DVarLoaderTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+
     @Test
     public void testDefault2DVarLoader() throws IOException {
-        File dataFolder = tf.newFolder("chroma4DTestData");
-        File outputBase = tf.newFolder("chroma4DTestOut");
-        File inputFile = ZipResourceExtractor.extract(
-                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
         Default2DVarLoader d2vl = new Default2DVarLoader();
         d2vl.setEstimateModulationTime(false);
         d2vl.setModulationTime(5.0d);
         d2vl.setScanRate(100.0);
 
-        IWorkflow w = createWorkflow(outputBase, Arrays.asList((IFragmentCommand)d2vl), Arrays.asList(inputFile));
+        IWorkflow w = createWorkflow(Arrays.asList((IFragmentCommand) d2vl), testFiles.getFiles());
         testWorkflow(w);
     }
 }

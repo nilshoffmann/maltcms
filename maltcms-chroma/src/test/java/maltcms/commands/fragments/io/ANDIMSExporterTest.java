@@ -33,39 +33,32 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
-import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
+import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Nils Hoffmann
  */
 public class ANDIMSExporterTest extends AFragmentCommandTest {
-
+    @Rule
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+        "/cdf/1D/glucoseA.cdf.gz"
+    );
     /**
      *
      */
     @Test
     public void testANDIMSExporter() throws IOException {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
+        File dataFolder = tf.newFolder();
         File outputBase = tf.newFolder(ANDIMSExporterTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new ANDIMSExporter());
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
 }

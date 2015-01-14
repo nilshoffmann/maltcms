@@ -33,7 +33,6 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +58,7 @@ import org.junit.experimental.categories.Category;
 public class MassFilterTest extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz");
 
     public MassFilterTest() {
@@ -72,7 +71,6 @@ public class MassFilterTest extends AFragmentCommandTest {
      */
     @Test
     public void testDirectApply() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
@@ -80,7 +78,7 @@ public class MassFilterTest extends AFragmentCommandTest {
         commands.add(se);
         MassFilter mf = new MassFilter();
         mf.setExcludeMasses(Arrays.asList(new String[]{"73.0","74.0","75.0"}));
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         TupleND<IFileFragment> results;
         //execute workflow
         results = testWorkflow(w);
