@@ -53,11 +53,10 @@ public class DataFileVariablePrinterTest extends AFragmentCommandTest {
      */
     @Test
     public void testDataFileVariablePrinter() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         DataFileVariablePrinter dvl = new DataFileVariablePrinter();
         commands.add(dvl);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, ecpf.getFiles());
         testWorkflow(w);
     }
 }

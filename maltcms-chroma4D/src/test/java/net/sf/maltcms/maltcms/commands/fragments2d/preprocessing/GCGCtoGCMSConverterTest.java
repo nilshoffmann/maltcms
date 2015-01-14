@@ -28,9 +28,7 @@
 package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 
 import cross.annotations.AnnotationInspector;
-import cross.commands.ICommand;
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
@@ -39,18 +37,17 @@ import cross.exception.ResourceNotAvailableException;
 import cross.test.IntegrationTest;
 import cross.vocabulary.CvResolver;
 import cross.vocabulary.ICvResolver;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.commands.fragments2d.preprocessing.GCGCToGCMSConverter;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import ucar.ma2.Array;
@@ -63,12 +60,12 @@ import ucar.ma2.Array;
 @Category(IntegrationTest.class)
 public class GCGCtoGCMSConverterTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+
     @Test
     public void testGCGCtoGCMSConverter() throws IOException {
-        File dataFolder = tf.newFolder("chroma4DTestData");
-        File outputBase = tf.newFolder("chroma4DTestOut");
-        File inputFile = ZipResourceExtractor.extract(
-                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
         Default2DVarLoader d = new Default2DVarLoader();
         d.setEstimateModulationTime(false);
@@ -79,9 +76,7 @@ public class GCGCtoGCMSConverterTest extends AFragmentCommandTest {
         List<IFragmentCommand> list = new ArrayList<>();
         list.add(d);
         list.add(e);
-        IWorkflow w = createWorkflow(outputBase, list,
-                Arrays.asList(inputFile)
-        );
+        IWorkflow w = createWorkflow(list, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -97,7 +92,7 @@ public class GCGCtoGCMSConverterTest extends AFragmentCommandTest {
             //GCGCtoGCMSConverter does not reference its sourcefile 
             //to avoid confusion/mixing of 1D and 2D chromatogram aspects
             for (IFileFragment ff : t) {
-                for (String variable : AnnotationInspector.getProvidedVariables(w.getCommandSequence().getCommands().get(w.getCommandSequence().getCommands().size()-1))) {
+                for (String variable : AnnotationInspector.getProvidedVariables(w.getCommandSequence().getCommands().get(w.getCommandSequence().getCommands().size() - 1))) {
                     log.info("Evaluating results for variable {}, resolved: {}", variable, cvResolver.translate(variable));
                     try {
                         IVariableFragment var = ff.getChild(cvResolver.translate(variable));

@@ -38,8 +38,10 @@ import java.util.Arrays;
 import java.util.List;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 
 /**
@@ -48,12 +50,13 @@ import org.junit.Test;
  */
 public class GcImagePeak2DImporterTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/mut_t1_a.cdf.gz");
+    
     @Test
     public void testGcImagePeak2DImporter() throws IOException {
         File dataFolder = tf.newFolder("gcImageTestFolder");
-        File outputBase = tf.newFolder("gcImageTestOutputFolder");
-        File sourceFile = ZipResourceExtractor.extract(
-                "/cdf/2D/mut_t1_a.cdf.gz", dataFolder);
         File file = ZipResourceExtractor.extract(
                 "/csv/gcimage/reduced/mut_t1_a.csv.gz", dataFolder);
 
@@ -67,8 +70,7 @@ public class GcImagePeak2DImporterTest extends AFragmentCommandTest {
         importer.setQuotationCharacter("\"");
         importer.setReportFiles(Arrays.asList(new String[]{file.getAbsolutePath()}));
         commands.add(importer);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                sourceFile));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         TupleND<IFileFragment> workflowResults = testWorkflow(w);
         IFileFragment resultFragment = workflowResults.get(0);
         List<Peak2D> peaks = Peak2D.fromFragment2D(resultFragment, "tic_peaks");

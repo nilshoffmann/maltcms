@@ -54,7 +54,7 @@ import org.springframework.context.ApplicationContext;
 public class MyFragmentCommandTest extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
     /**
@@ -62,7 +62,6 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
      */
     @Test
     public void testProgrammaticWorkflow() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         MyFragmentCommand cmd = new MyFragmentCommand();
         cmd.setFilter(Arrays.asList(new AArrayFilter[]{new SqrtFilter()}));
@@ -77,7 +76,7 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
         commands.add(new DecoratingFragmentCommand());
         commands.add(new SameInSameOutFragmentCommand());
         commands.add(new TransparentFragmentCommand());
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
@@ -86,13 +85,12 @@ public class MyFragmentCommandTest extends AFragmentCommandTest {
      */
     @Test
     public void testApplicationContextWorkflow() throws IOException {
-        File outputBase = tf.newFolder();
         DefaultApplicationContextFactory dacf = new DefaultApplicationContextFactory(Arrays.asList("/cfg/pipelines/xml/workflowDefaults.xml", "/cfg/pipelines/xml/myFragmentCommand.xml"), new PropertiesConfiguration());
         ApplicationContext ac = dacf.createClassPathApplicationContext();
         IWorkflow w = ac.getBean(IWorkflow.class);
         w.setFactory(Factory.getInstance());
-        w.getCommandSequence().setInput(FragmentTools.immutable(ecpf.getFiles()));
-        w.setOutputDirectory(outputBase);
+        w.getCommandSequence().setInput(FragmentTools.immutable(testFiles.getFiles()));
+        w.setOutputDirectory(tf.newFolder());
         testWorkflow(w);
     }
 }

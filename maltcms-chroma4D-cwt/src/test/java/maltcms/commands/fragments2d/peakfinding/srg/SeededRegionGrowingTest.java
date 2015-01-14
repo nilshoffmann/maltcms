@@ -33,9 +33,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing;
@@ -43,9 +41,10 @@ import maltcms.commands.fragments2d.peakfinding.cwt.CwtPeakFinder;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -55,13 +54,13 @@ import org.junit.experimental.categories.Category;
  */
 @Category(IntegrationTest.class)
 public class SeededRegionGrowingTest extends AFragmentCommandTest {
-
+    
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+    
     @Test
     public void testPeakFinder() throws IOException {
-        File dataFolder = tf.newFolder("chroma4DTestData");
-        File outputBase = tf.newFolder("chroma4DTestOut");
-        File inputFile = ZipResourceExtractor.extract(
-                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(CwtPeakFinder.class, Level.DEBUG);
         setLogLevelFor(SeededRegionGrowing.class, Level.DEBUG);
         setLogLevelFor(NetcdfDataSource.class, Level.ERROR);
@@ -78,7 +77,7 @@ public class SeededRegionGrowingTest extends AFragmentCommandTest {
         l.add(d2vl);
         l.add(cpf);
         l.add(srg);
-        IWorkflow w = createWorkflow(outputBase, l, Arrays.asList(inputFile));
+        IWorkflow w = createWorkflow(l, testFiles.getFiles());
         try {
             TupleND<IFileFragment> results = w.call();
             w.save();

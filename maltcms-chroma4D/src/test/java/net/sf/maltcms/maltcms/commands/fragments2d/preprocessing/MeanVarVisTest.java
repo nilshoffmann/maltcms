@@ -30,7 +30,6 @@ package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +37,9 @@ import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.commands.fragments2d.preprocessing.MeanVarProducer;
 import maltcms.commands.fragments2d.preprocessing.MeanVarVis;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -50,13 +50,12 @@ import org.junit.experimental.categories.Category;
 @Slf4j
 @Category(IntegrationTest.class)
 public class MeanVarVisTest extends AFragmentCommandTest {
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
 
     @Test
     public void testMeanVarVis() throws IOException {
-        File dataFolder = tf.newFolder("chroma4DTestData");
-        File outputBase = tf.newFolder("chroma4DTestOut");
-        File inputFile = ZipResourceExtractor.extract(
-                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
         Default2DVarLoader d = new Default2DVarLoader();
         d.setEstimateModulationTime(false);
@@ -65,12 +64,12 @@ public class MeanVarVisTest extends AFragmentCommandTest {
         MeanVarProducer e = new MeanVarProducer();
         MeanVarVis f = new MeanVarVis();
         f.setDifferentVisualizations(true);
-        IWorkflow w = createWorkflow(outputBase,
+        IWorkflow w = createWorkflow(
             Arrays.asList(
                 (IFragmentCommand) d,
                 (IFragmentCommand) e,
                 (IFragmentCommand) f),
-            Arrays.asList(inputFile)
+            testFiles.getFiles()
         );
         testWorkflow(w);
     }

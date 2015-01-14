@@ -41,9 +41,11 @@ import java.util.logging.Logger;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
 import org.apache.log4j.Level;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -55,12 +57,12 @@ import org.junit.experimental.categories.Category;
 @Category(IntegrationTest.class)
 public class CwtPeakFinderTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+
     @Test
     public void testPeakFinder() throws IOException {
-        File dataFolder = tf.newFolder("chroma4DTestData");
-        File outputBase = tf.newFolder("chroma4DTestOut");
-        File inputFile = ZipResourceExtractor.extract(
-                "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz", dataFolder);
         setLogLevelFor(CwtPeakFinder.class, Level.ALL);
         Default2DVarLoader d2vl = new Default2DVarLoader();
 //        d2vl.setEstimateModulationTime(true);
@@ -71,7 +73,7 @@ public class CwtPeakFinderTest extends AFragmentCommandTest {
         List<IFragmentCommand> l = new LinkedList<>();
         l.add(d2vl);
         l.add(cpf);
-        IWorkflow w = createWorkflow(outputBase, l, Arrays.asList(inputFile));
+        IWorkflow w = createWorkflow(l, testFiles.getFiles());
         try {
             TupleND<IFileFragment> results = w.call();
             w.save();

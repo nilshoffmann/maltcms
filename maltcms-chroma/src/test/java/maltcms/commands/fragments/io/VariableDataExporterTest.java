@@ -44,9 +44,11 @@ import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
 import maltcms.io.csv.CSVReader;
 import maltcms.io.csv.CSVWriter;
 import maltcms.test.AFragmentCommandTest;
+import maltcms.test.ExtractClassPathFiles;
 import maltcms.test.ZipResourceExtractor;
 import maltcms.tools.ArrayTools;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -58,26 +60,25 @@ import ucar.ma2.ArrayDouble;
 @Slf4j
 public class VariableDataExporterTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz");
+
     /**
      *
      */
     @Test
     public void testVariableDataExporter() throws IOException {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         VariableDataExporter vde = new VariableDataExporter();
         vde.setVarNames(Arrays.asList("var.total_intensity"));
         commands.add(vde);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
         List<IWorkflowResult> results = w.getResultsFor(new CSVWriter());
         Assert.assertEquals(1, results.size());
         IWorkflowResult workflowResult = results.get(0);
-        FileFragment testFragment = new FileFragment(inputFile1);
+        FileFragment testFragment = new FileFragment(testFiles.getFiles().get(0));
 
         CSVReader reader = new CSVReader();
         reader.setFieldSeparator("\t");
@@ -89,7 +90,7 @@ public class VariableDataExporterTest extends AFragmentCommandTest {
             ArrayDouble.D1 array = new ArrayDouble.D1(testFragment.getChild("total_intensity").getDimensions()[0].getLength());
             while ((line = is.readLine()) != null) {
                 log.info("Parsing line {}", line);
-                if(!line.isEmpty()) {
+                if (!line.isEmpty()) {
                     array.setDouble(lineCounter, Double.parseDouble(line));
                 }
                 lineCounter++;
@@ -99,24 +100,19 @@ public class VariableDataExporterTest extends AFragmentCommandTest {
             Assert.assertEquals(0, ArrayTools.integrate(difference), 0.0001);
         }
     }
-    
+
     @Test
     public void testVariableDataExporterWithNamespacedVariable() throws IOException {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         VariableDataExporter vde = new VariableDataExporter();
         vde.setVarNames(Arrays.asList("var.total_intensity"));
         commands.add(vde);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
         List<IWorkflowResult> results = w.getResultsFor(new CSVWriter());
         Assert.assertEquals(1, results.size());
         IWorkflowResult workflowResult = results.get(0);
-        FileFragment testFragment = new FileFragment(inputFile1);
+        FileFragment testFragment = new FileFragment(testFiles.getFiles().get(0));
 
         CSVReader reader = new CSVReader();
         reader.setFieldSeparator("\t");
@@ -128,7 +124,7 @@ public class VariableDataExporterTest extends AFragmentCommandTest {
             ArrayDouble.D1 array = new ArrayDouble.D1(testFragment.getChild("total_intensity").getDimensions()[0].getLength());
             while ((line = is.readLine()) != null) {
                 log.info("Parsing line {}", line);
-                if(!line.isEmpty()) {
+                if (!line.isEmpty()) {
                     array.setDouble(lineCounter, Double.parseDouble(line));
                 }
                 lineCounter++;
