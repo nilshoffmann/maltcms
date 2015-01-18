@@ -123,8 +123,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             final ExitVmException npe) {
         int ecode;
         Maltcms.shutdown(1, log);
-        log.error("Caught an ExitVmException!", npe.getLocalizedMessage());
-        log.debug("ExitVmException Stack Trace:", npe);
+        log.error("Caught an ExitVmException: ", npe);
         ecode = 1;
         System.exit(ecode);
     }
@@ -713,7 +712,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 } catch (final ConfigurationException e) {
                     this.log.error(e.getLocalizedMessage());
                 }
-            } else if (!cl.hasOption("b")) {
+            } else if (!cl.hasOption("b") && !cl.hasOption("p")) {
                 throw new ExitVmException("Please supply a configuration file!");
             }
             // cmdLine options override default options and system options
@@ -733,7 +732,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
         if (printOptions) {
             printOptions(cfg);
-            System.exit(1);
         }
         return new CompositeConfiguration(Arrays.asList(cfg));
     }
