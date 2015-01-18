@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
@@ -83,9 +84,13 @@ public class ChromaTOFDataSource implements IDataSource {
     }
 
     private synchronized IFileFragment toCdfFile(File peakFile) {
-        File cdfFile = getCdfFileForPeakList(new File(System.getProperty("java.io.tmpdir")), peakFile.getName());
-        //delete file when Maltcms exits
-        cdfFile.deleteOnExit();
+        File tmpDir = new File(System.getProperty("java.io.tmpdir"), "maltcms");
+        File baseDir = new File(tmpDir, ChromaTOFDataSource.class.getSimpleName());
+        File sourceDirectoryUUID = new File(baseDir, UUID.nameUUIDFromBytes(peakFile.getParentFile().getAbsolutePath().getBytes()).toString());
+        sourceDirectoryUUID.mkdirs();
+        //TODO digest peakFile, store in sourceDirectoryUUID/.peakFile.getName()
+        //only reuse file if digest matches that stored in .peakFile.getName()
+        File cdfFile = getCdfFileForPeakList(sourceDirectoryUUID, peakFile.getName());
         if (cdfFile.exists()) {
             log.info("Using existing temporary artificial chromatogram file {}", cdfFile);
             return new FileFragment(cdfFile);
