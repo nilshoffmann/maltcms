@@ -98,7 +98,7 @@ public class ChromaTOFDataSource implements IDataSource {
         log.info("Creating new temporary artificial chromatogram file {}", cdfFile);
         try {
             ChromaTOFParser parser = ChromaTOFParser.create(peakFile, true, locale);
-            Tuple2D<LinkedHashSet<ChromaTOFParser.ColumnName>, List<TableRow>> report = ChromaTOFParser.parseReport(parser, peakFile, true);
+            Tuple2D<LinkedHashSet<ChromaTOFParser.TableColumn>, List<TableRow>> report = ChromaTOFParser.parseReport(parser, peakFile, true);
             List<TableRow> peaks = report.getSecond();
             Mode mode = parser.getMode(peaks);
             //this file fragments requires the same file extension as the original peak list, but in the cdfFile location.
@@ -121,7 +121,7 @@ public class ChromaTOFDataSource implements IDataSource {
             double minMass = Double.POSITIVE_INFINITY;
             double maxMass = Double.NEGATIVE_INFINITY;
             for (TableRow tr : peaks) {
-                Tuple2D<double[], int[]> ms = ParserUtilities.convertMassSpectrum(tr.get(ColumnName.SPECTRA));
+                Tuple2D<double[], int[]> ms = ParserUtilities.convertMassSpectrum(tr.get(tr.getColumnForName(ColumnName.SPECTRA)));
                 minMass = Math.min(minMass, MathTools.min(ms.getFirst()));
                 maxMass = Math.max(maxMass, MathTools.max(ms.getFirst()));
                 massMin.set(i, minMass);
@@ -134,16 +134,16 @@ public class ChromaTOFDataSource implements IDataSource {
                 originalIndex.set(i, i);
                 double satValue = Double.NaN;
                 if (mode == Mode.RT_2D_FUSED) {
-                    String[] rts = tr.get(ColumnName.RETENTION_TIME_SECONDS).split(",");
+                    String[] rts = tr.get(tr.getColumnForName(ColumnName.RETENTION_TIME_SECONDS)).split(",");
                     firstColumnElutionTime.set(i, parser.parseDouble(rts[0]));
                     secondColumnElutionTime.set(i, parser.parseDouble(rts[1]));
                     satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
                 } else if (mode == Mode.RT_2D_SEPARATE) {
-                    firstColumnElutionTime.set(i, parser.parseDouble(ColumnName.FIRST_DIMENSION_TIME_SECONDS, tr));
-                    secondColumnElutionTime.set(i, parser.parseDouble(ColumnName.SECOND_DIMENSION_TIME_SECONDS, tr));
+                    firstColumnElutionTime.set(i, parser.parseDouble(tr.getColumnForName(ColumnName.FIRST_DIMENSION_TIME_SECONDS), tr));
+                    secondColumnElutionTime.set(i, parser.parseDouble(tr.getColumnForName(ColumnName.SECOND_DIMENSION_TIME_SECONDS), tr));
                     satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
                 } else {
-                    satValue = parser.parseDouble(tr.get(ColumnName.RETENTION_TIME_SECONDS));
+                    satValue = parser.parseDouble(tr.get(tr.getColumnForName(ColumnName.RETENTION_TIME_SECONDS)));
                 }
                 sat.setDouble(i, satValue);
                 scanOffset += ms.getFirst().length;
@@ -213,24 +213,28 @@ public class ChromaTOFDataSource implements IDataSource {
                 quotationCharacter = ChromaTOFParser.QUOTATION_CHARACTER_NONE;
             }
             //inspect header
-            LinkedHashSet<ChromaTOFParser.ColumnName> header = parser.parseHeader(new File(ff.getUri()), true, fieldSeparator, quotationCharacter);
+            LinkedHashSet<ChromaTOFParser.TableColumn> header = parser.parseHeader(new File(ff.getUri()), true, fieldSeparator, quotationCharacter);
             ChromaTOFParser.ColumnName[] gcMsColumns = {ColumnName.RETENTION_TIME_SECONDS, ColumnName.SPECTRA};
             //this case also covers fused gcxgc data, where both retention times are stored in the R.T. (s) field
-            boolean isChromaTofGcMsFile = true;
-            for (ColumnName cn : gcMsColumns) {
-                if (!header.contains(cn)) {
-                    isChromaTofGcMsFile = false;
+            int isChromaTofGcMsFile = 0;
+            for(ChromaTOFParser.TableColumn tc:header) {
+                for (ColumnName cn : gcMsColumns) {
+                    if (tc.getColumnName()==cn) {
+                        isChromaTofGcMsFile++;
+                    }
                 }
             }
-            boolean isChromaTofGcGcMsFile = true;
+            int isChromaTofGcGcMsFile = 0;
             ChromaTOFParser.ColumnName[] gcgcMsColumns = {ColumnName.FIRST_DIMENSION_TIME_SECONDS, ColumnName.SECOND_DIMENSION_TIME_SECONDS, ColumnName.SPECTRA};
             //this case covers separate gcxgc data
-            for (ColumnName cn : gcgcMsColumns) {
-                if (!header.contains(cn)) {
-                    isChromaTofGcGcMsFile = false;
+            for(ChromaTOFParser.TableColumn tc:header) {
+                for (ColumnName cn : gcgcMsColumns) {
+                    if (tc.getColumnName()==cn) {
+                        isChromaTofGcGcMsFile++;
+                    }
                 }
             }
-            if (isChromaTofGcMsFile || isChromaTofGcGcMsFile) {
+            if (isChromaTofGcMsFile==2 || isChromaTofGcGcMsFile==3) {
                 return 1;
             }
         } catch (IllegalArgumentException iae) {
@@ -274,7 +278,7 @@ public class ChromaTOFDataSource implements IDataSource {
     @Override
     public ArrayList<IVariableFragment> readStructure(IFileFragment f) throws IOException {
         IFileFragment convertedPeakList = getConvertedPeakList(f);
-        ArrayList<IVariableFragment> al = new ArrayList<IVariableFragment>();
+        ArrayList<IVariableFragment> al = new ArrayList<>();
         for (IVariableFragment ivf : ndf.readStructure(convertedPeakList)) {
             IVariableFragment toBeCreated = VariableFragment.createCompatible(f, ivf);
             toBeCreated.setDataType(ivf.getDataType());

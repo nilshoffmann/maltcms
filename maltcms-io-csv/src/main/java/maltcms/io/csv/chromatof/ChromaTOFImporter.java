@@ -78,7 +78,7 @@ public class ChromaTOFImporter {
      */
     public List<Peak1D> importPeaks(File peakReport, IChromatogram chromatogram) {
         ChromaTOFParser parser = ChromaTOFParser.create(peakReport, true, locale);
-        LinkedHashSet<ChromaTOFParser.ColumnName> columnNames = parser.parseHeader(peakReport, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
+        LinkedHashSet<ChromaTOFParser.TableColumn> columnNames = parser.parseHeader(peakReport, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
         List<TableRow> records = parser.parseBody(columnNames, peakReport, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
         List<Peak1D> peaks = parseTable(peakReport, records, chromatogram, parser.getMode(records));
         return peaks;
@@ -108,8 +108,8 @@ public class ChromaTOFImporter {
         for (TableRow record : records) {
             Logger.getLogger(ChromaTOFImporter.class.getName()).log(Level.INFO, record.toString());
             if(mode==Mode.RT_2D_FUSED || mode==Mode.RT_2D_SEPARATE) {
-                double rt1 = ParserUtilities.parseDouble(record.get(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS), locale);
-                double rt2 = ParserUtilities.parseDouble(record.get(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS), locale);
+                double rt1 = ParserUtilities.parseDouble(record.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS), locale);
+                double rt2 = ParserUtilities.parseDouble(record.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS), locale);
                 peaks.add(create2DPeak(index, peakReport, record, rt1, rt2));
             }else{
                 peaks.add(create1DPeak(index, peakReport, record));
@@ -121,14 +121,14 @@ public class ChromaTOFImporter {
 
     protected Peak1D create1DPeak(int index, File peakReport, TableRow tr) {
         //System.out.println("1D chromatogram peak data detected");
-        double area = ParserUtilities.parseDouble(tr.get(ChromaTOFParser.ColumnName.AREA), locale);
+        double area = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.AREA), locale);
         Peak1D p1 = Peak1D.builder1D().
-            name(tr.get(ChromaTOFParser.ColumnName.NAME)).
+            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
             file(peakReport.getAbsolutePath()).
-            apexTime(parseDouble((tr.get(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS)))).
+            apexTime(parseDouble((tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS)))).
             area(area).
             apexIntensity(area).
-            name(tr.get(ChromaTOFParser.ColumnName.NAME)).
+            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
             peakType(PeakType.EIC_FILTERED).
         build();
         Assert.isTrue(!Double.isNaN(p1.getArea()));
@@ -137,16 +137,16 @@ public class ChromaTOFImporter {
     }
 
     protected Peak2D create2DPeak(int index, File peakReport, TableRow tr, double rt1, double rt2) {
-        double area = ParserUtilities.parseDouble(tr.get(ChromaTOFParser.ColumnName.AREA), locale);
+        double area = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.AREA), locale);
         Peak2D p2 = Peak2D.builder2D().
-            name(tr.get(ChromaTOFParser.ColumnName.NAME)).
+            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
             file(peakReport.getAbsolutePath()).
             firstRetTime(rt1).
             secondRetTime(rt2).
             apexTime(rt1 + rt2).
             area(area).
             apexIntensity(area).
-            name(tr.get(ChromaTOFParser.ColumnName.NAME)).
+            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
             peakType(PeakType.EIC_FILTERED).
         build();
         Assert.isTrue(!Double.isNaN(p2.getArea()));
@@ -176,7 +176,7 @@ public class ChromaTOFImporter {
         double minMass = Double.POSITIVE_INFINITY;
         double maxMass = Double.NEGATIVE_INFINITY;
         for (TableRow tr : peaks) {
-            Tuple2D<double[], int[]> ms = ParserUtilities.convertMassSpectrum(tr.get(ChromaTOFParser.ColumnName.SPECTRA));
+            Tuple2D<double[], int[]> ms = ParserUtilities.convertMassSpectrum(tr.getValueForName(ChromaTOFParser.ColumnName.SPECTRA));
             minMass = Math.min(minMass, MathTools.min(ms.getFirst()));
             maxMass = Math.max(maxMass, MathTools.max(ms.getFirst()));
             massMin.set(i, minMass);
@@ -189,16 +189,16 @@ public class ChromaTOFImporter {
             originalIndex.set(i, i);
             double satValue = Double.NaN;
             if (mode == ChromaTOFParser.Mode.RT_2D_FUSED) {
-                String[] rts = tr.get(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS).split(",");
+                String[] rts = tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS).split(",");
                 firstColumnElutionTime.set(i, parser.parseDouble(rts[0]));
                 secondColumnElutionTime.set(i, parser.parseDouble(rts[1]));
                 satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
             } else if (mode == ChromaTOFParser.Mode.RT_2D_SEPARATE) {
-                firstColumnElutionTime.set(i, parser.parseDouble(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS, tr));
-                secondColumnElutionTime.set(i, parser.parseDouble(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS, tr));
+                firstColumnElutionTime.set(i, parser.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS)));
+                secondColumnElutionTime.set(i, parser.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS)));
                 satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
             } else {
-                satValue = parser.parseDouble(tr.get(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS));
+                satValue = parser.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS));
             }
             sat.setDouble(i, satValue);
             scanOffset += ms.getFirst().length;
