@@ -28,13 +28,37 @@
 package maltcms.io.csv.chromatof;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * <p>TableRow class.</p>
+ * <p>
+ * TableRow class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
-public class TableRow extends LinkedHashMap<ChromaTOFParser.ColumnName, String> {
+public class TableRow extends LinkedHashMap<ChromaTOFParser.TableColumn, String> {
+
+    private ChromaTOFParser.ColumnName getColumnName(ChromaTOFParser.TableColumn tableColumn) {
+        if (containsKey(tableColumn)) {
+            return tableColumn.getColumnName();
+        }
+        return ChromaTOFParser.ColumnName.NIL;
+    }
+    
+    public String getValueForName(ChromaTOFParser.ColumnName columnName) {
+        return get(getColumnForName(columnName));
+    }
+
+    public ChromaTOFParser.TableColumn getColumnForName(ChromaTOFParser.ColumnName columnName) {
+        if (columnName != ChromaTOFParser.ColumnName.UNMAPPED) {
+            for (ChromaTOFParser.TableColumn tc : keySet()) {
+                if (tc.getColumnName() == columnName) {
+                    return tc;
+                }
+            }
+        }
+        return ChromaTOFParser.TableColumn.NIL;
+    }
 
 }

@@ -38,6 +38,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Value;
@@ -54,20 +55,78 @@ import maltcms.io.csv.ParserUtilities;
 @Value
 @Slf4j
 public class ChromaTOFParser {
-    
+
     public static String FIELD_SEPARATOR_TAB = "\t";
     public static String FIELD_SEPARATOR_COMMA = ",";
     public static String FIELD_SEPARATOR_SEMICOLON = ";";
-    
+
     public static String QUOTATION_CHARACTER_DOUBLETICK = "\"";
     public static String QUOTATION_CHARACTER_NONE = "";
     public static String QUOTATION_CHARACTER_SINGLETICK = "\'";
-    
+
     private final String fieldSeparator;
     private final String quotationCharacter;
     private final Locale locale;
     private final ParserUtilities parserUtils = new ParserUtilities();
-    
+
+    public final static class TableColumn {
+
+        public final static TableColumn NIL = new TableColumn("NIL", -1);
+
+        private final String name;
+        private final int index;
+        private final ColumnName columnName;
+
+        public TableColumn(String name, int index) {
+            this.name = name;
+            this.index = index;
+            this.columnName = ChromaTOFParser.ColumnName.fromString(name);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public ColumnName getColumnName() {
+            return columnName;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 5;
+            hash = 47 * hash + Objects.hashCode(this.name);
+            hash = 47 * hash + this.index;
+            hash = 47 * hash + Objects.hashCode(this.columnName);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final TableColumn other = (TableColumn) obj;
+            if (!Objects.equals(this.name, other.name)) {
+                return false;
+            }
+            if (this.index != other.index) {
+                return false;
+            }
+            if (this.columnName != other.columnName) {
+                return false;
+            }
+            return true;
+        }
+
+    }
+
     public enum Mode {
 
         /**
@@ -87,7 +146,7 @@ public class ChromaTOFParser {
          */
         RT_2D_SEPARATE
     }
-    
+
     public enum ColumnName {
 
         /**
@@ -258,19 +317,27 @@ public class ChromaTOFParser {
         /**
          * The spectrum of the match. Original column name: "Spectra"
          */
-        SPECTRA("Spectra");
-        
+        SPECTRA("Spectra"),
+        /**
+         * An unmapped column.
+         */
+        UNMAPPED("Unmapped"),
+        /**
+         * Marker column name for non-existant columns.
+         */
+        NIL("NIL");
+
         private final String originalName;
-        
+
         private ColumnName(String originalName) {
             this.originalName = originalName;
         }
-        
+
         @Override
         public String toString() {
             return originalName;
         }
-        
+
         public static ColumnName fromString(String name) {
             switch (name) {
                 case "Name":
@@ -385,28 +452,30 @@ public class ChromaTOFParser {
                 case "SPECTRA":
                     return SPECTRA;
                 default:
-                    throw new IllegalArgumentException("Unsupported column name '" + name + "'");
+                    log.debug("Unsupported column name '" + name + "'");
+                    return UNMAPPED;
+//                    throw new IllegalArgumentException("Unsupported column name '" + name + "'");
             }
         }
     };
-    
-    public static Tuple2D<LinkedHashSet<ChromaTOFParser.ColumnName>, List<TableRow>> parseReport(ChromaTOFParser parser, File f, boolean normalizeColumnNames) {
-        LinkedHashSet<ChromaTOFParser.ColumnName> header = parser.parseHeader(f, normalizeColumnNames, parser.getFieldSeparator(), parser.getQuotationCharacter());
+
+    public static Tuple2D<LinkedHashSet<ChromaTOFParser.TableColumn>, List<TableRow>> parseReport(ChromaTOFParser parser, File f, boolean normalizeColumnNames) {
+        LinkedHashSet<ChromaTOFParser.TableColumn> header = parser.parseHeader(f, normalizeColumnNames, parser.getFieldSeparator(), parser.getQuotationCharacter());
         List<TableRow> table = parser.parseBody(header, f, normalizeColumnNames, parser.getFieldSeparator(), parser.getQuotationCharacter());
         return new Tuple2D<>(header, table);
     }
-    
-    public static Tuple2D<LinkedHashSet<ChromaTOFParser.ColumnName>, List<TableRow>> parseReport(
+
+    public static Tuple2D<LinkedHashSet<ChromaTOFParser.TableColumn>, List<TableRow>> parseReport(
             File f, Locale locale) {
         return parseReport(f, true, locale);
     }
-    
-    public static Tuple2D<LinkedHashSet<ChromaTOFParser.ColumnName>, List<TableRow>> parseReport(
+
+    public static Tuple2D<LinkedHashSet<ChromaTOFParser.TableColumn>, List<TableRow>> parseReport(
             File f, boolean normalizeColumnNames, Locale locale) {
         ChromaTOFParser parser = create(f, normalizeColumnNames, locale);
         return parseReport(parser, f, normalizeColumnNames);
     }
-    
+
     public static ChromaTOFParser create(File f, boolean normalizeColumnNames, Locale locale) throws IllegalArgumentException {
         ChromaTOFParser parser;
         if (f.getName().toLowerCase().endsWith("csv")) {
@@ -418,8 +487,8 @@ public class ChromaTOFParser {
         }
         return parser;
     }
-    
-    public double[] parseDoubleArray(ColumnName fieldName, TableRow row,
+
+    public double[] parseDoubleArray(TableColumn fieldName, TableRow row,
             String elementSeparator) {
         if (row.get(fieldName).contains(elementSeparator)) {
             String[] values = row.get(fieldName).split(elementSeparator);
@@ -431,15 +500,15 @@ public class ChromaTOFParser {
         }
         return new double[]{parseDouble(row.get(fieldName))};
     }
-    
-    public double parseDouble(ColumnName fieldName, TableRow tr) {
+
+    public double parseDouble(TableColumn fieldName, TableRow tr) {
         return parseDouble(tr.get(fieldName));
     }
-    
+
     public double parseDouble(String s) {
-        return parserUtils.parseDouble(s, locale);
+        return ParserUtilities.parseDouble(s, locale);
     }
-    
+
     public double parseIntegrationStartEnd(String s) {
         if (s == null || s.isEmpty()) {
             return Double.NaN;
@@ -450,19 +519,20 @@ public class ChromaTOFParser {
         }
         return parseDouble(s);
     }
-    
+
     public Mode getMode(List<TableRow> body) {
         for (TableRow tr : body) {
-            if (tr.containsKey(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS)) {
+            
+            if (tr.getColumnForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS)!=TableColumn.NIL) {
                 //fused RT mode
-                String rt = tr.get(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS);
+                String rt = tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS);
                 if (rt.contains(",")) {//2D mode
                     return ChromaTOFParser.Mode.RT_2D_FUSED;
                 } else {
                     return ChromaTOFParser.Mode.RT_1D;
                 }
             } else {
-                if (tr.containsKey(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS) && tr.containsKey(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS)) {
+                if (tr.getColumnForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS)!=TableColumn.NIL && tr.getColumnForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS)!=TableColumn.NIL) {
                     return ChromaTOFParser.Mode.RT_2D_SEPARATE;
                 }
             }
@@ -481,8 +551,8 @@ public class ChromaTOFParser {
      * or '''.
      * @return the set of unique column names in order of appearance.
      */
-    public LinkedHashSet<ChromaTOFParser.ColumnName> parseHeader(File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
-        LinkedHashSet<ChromaTOFParser.ColumnName> globalHeader = new LinkedHashSet<>();
+    public LinkedHashSet<ChromaTOFParser.TableColumn> parseHeader(File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
+        LinkedHashSet<ChromaTOFParser.TableColumn> globalHeader = new LinkedHashSet<>();
         ArrayList<String> header = null;
         BufferedReader br = null;
         try {
@@ -515,12 +585,15 @@ public class ChromaTOFParser {
                 log.warn("Caught an IO Exception while trying to close stream of file " + f, ex);
             }
         }
+        int index = 0;
         for (String str : header) {
             try {
-                globalHeader.add(ChromaTOFParser.ColumnName.fromString(str));
+                TableColumn tc = new TableColumn(str, index);
+                globalHeader.add(tc);
             } catch (IllegalArgumentException iae) {
-                log.warn("Unsupported column name '{}'", str);
+                log.debug("Unsupported column name '{}'", str);
             }
+            index++;
         }
         return globalHeader;
     }
@@ -536,10 +609,10 @@ public class ChromaTOFParser {
      * @deprecated use {@link #parseHeader(java.io.File, boolean, java.lang.String, java.lang.String)
      * }
      */
-    public LinkedHashSet<ChromaTOFParser.ColumnName> getHeader(File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
+    public LinkedHashSet<ChromaTOFParser.TableColumn> getHeader(File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
         return parseHeader(f, normalizeColumnNames, fieldSeparator, quotationCharacter);
     }
-    
+
     public String[] splitLine(String line, String fieldSeparator, String quoteSymbol) {
         switch (fieldSeparator) {
             case ",":
@@ -562,15 +635,15 @@ public class ChromaTOFParser {
                 throw new IllegalArgumentException("Field separator " + fieldSeparator + " is not supported, only ',' and '\t' are valid!");
         }
     }
-    
-    public List<TableRow> parseBody(LinkedHashSet<ChromaTOFParser.ColumnName> globalHeader,
+
+    public List<TableRow> parseBody(LinkedHashSet<ChromaTOFParser.TableColumn> globalHeader,
             File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
         List<TableRow> body = new ArrayList<>();
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(f));
             String line = "";
-            List<ChromaTOFParser.ColumnName> header = null;
+            List<ChromaTOFParser.TableColumn> header = null;
             while ((line = br.readLine()) != null) {
                 if (!line.isEmpty()) {
                     ArrayList<String> lineList = new ArrayList<>(Arrays.asList(splitLine(line, fieldSeparator, quotationCharacter)));//.split(String.valueOf(FIELD_SEPARATOR))));
@@ -582,17 +655,22 @@ public class ChromaTOFParser {
                             }
                         }
                         header = new ArrayList<>();
+                        int index = 0;
                         for (String str : lineList) {
-                            header.add(ChromaTOFParser.ColumnName.fromString(str));
+                            TableColumn tc = new TableColumn(str, index);
+                            header.add(tc);
+                            index++;
                         }
                     } else {
                         TableRow tr = new TableRow();
-                        for (ChromaTOFParser.ColumnName headerColumn : globalHeader) {
+                        for (ChromaTOFParser.TableColumn headerColumn : globalHeader) {
+
                             int localIndex = getIndexOfHeaderColumn(header,
                                     headerColumn);
                             if (localIndex >= 0 && localIndex < lineList.size()) {//found column name
                                 tr.put(headerColumn, lineList.get(localIndex));
                             } else {//did not find column name
+                                log.debug("Could not find index of column '{}'", headerColumn.getColumnName());
                                 tr.put(headerColumn, null);
                             }
                         }
@@ -613,18 +691,15 @@ public class ChromaTOFParser {
         }
         return body;
     }
-    
-    public int getIndexOfHeaderColumn(List<ChromaTOFParser.ColumnName> header,
-            ChromaTOFParser.ColumnName columnName) {
-        int idx = 0;
-        for (ChromaTOFParser.ColumnName str : header) {
-            if (str == columnName) {
-                return idx;
+
+    public int getIndexOfHeaderColumn(List<ChromaTOFParser.TableColumn> header,
+            ChromaTOFParser.TableColumn column) {
+        if (column != TableColumn.NIL) {
+            for (ChromaTOFParser.TableColumn str : header) {
+                if (str.getColumnName() == column.getColumnName() && (str.getName().equals(column.getName()))) {
+                    return str.getIndex();
+                }
             }
-//            if (str.equalsIgnoreCase(columnName)) {
-//                return idx;
-//            }
-            idx++;
         }
         return -1;
     }
