@@ -96,3 +96,4 @@ classes/
 !/maltcms-test-tools/maltcms-test-data/src/main/resources/cdf/2D/wt_t2_a.cdf.gz
 !/maltcms-test-tools/maltcms-test-data/src/main/resources/cdf/2D/mut_t2_a.cdf.gz
 !/maltcms-test-tools/maltcms-test-data/src/main/resources/cdf/2D/wt_t1_a.cdf.gz
+!/maltcms-test-tools/maltcms-test-data/src/main/resources/csv/chromatof/full/1D/chromatof-1D-sample-unmapped.csv.gz
