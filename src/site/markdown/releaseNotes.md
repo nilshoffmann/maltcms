@@ -1,5 +1,20 @@
 # Release Notes
 
+## Changes for version 1.4.0
+### Improvements
+* Changed the default array similarity for mass spectra used by the bipace and chroma pipelines to a faster 
+  version of ArrayWeightedCos: `ArrayWeightedCos2`.
+* Added improved support for ChromaTOF peak reports in csv / tsv format.
+* Updated module documentation, added many more examples of API usage.
+* Improved JavaDoc documentation.
+* Fixed an issue with `SparseScanLineCache`.
+* Fixed an initialization issue in `AbstractCwtPeakFinderCallable`.
+
+### API Changes
+* The APIs of `ChromaTOFPeakParser` and `ChromaTOFPeakImporter` have been simplified.
+
+A list of non-compatible API changes can be found for each module in the module **Project Reports** section, under **Clirr**.
+
 ## Changes for version 1.3.2
 ### Improvements
 * Added support for import of GcImage Blob Reports in csv format as peak data in `maltcms.commands.fragments2d.io.csv.GcImagePeak2DImporter`.

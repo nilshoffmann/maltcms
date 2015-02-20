@@ -1,4 +1,15 @@
 <h2>${project.name}</h2>
+This project offers support for parsing of CSV-based tabular peak report data. 
+For XLSX compatible peak file reading, please consult the [XLSX Module](./../maltcms-io-xlsx/index.html) for 
+Agilent peak report support (limited to peak areas).
 
-* [ChromaTOF](./chromatof/index.html) Peak Reports
-* [GC Image](./gcimage/index.html) Blob Reports
+* [ChromaTOF<sup>1</sup>](./chromatof/index.html) Peak Reports
+* [GC Image<sup>2</sup>](./gcimage/index.html) Blob Reports
+
+---
+
+[1]: [Leco ChromaTOF](http://www.leco.com/products/separation-science/software-accessories/chromatof-software)
+ChromaTOF is a registered trademark of LECO Corp., St. Joseph, Michigan, USA.
+
+[2]: [GC Image](http://www.gcimage.com)
+GC Image is a registered trademark of GC Image LLC, Lincoln, Nebraska, USA.

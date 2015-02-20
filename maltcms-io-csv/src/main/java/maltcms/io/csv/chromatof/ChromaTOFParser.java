@@ -472,10 +472,10 @@ public class ChromaTOFParser {
 
     public static Tuple2D<LinkedHashSet<ChromaTOFParser.TableColumn>, List<TableRow>> parseReport(
             File f, boolean normalizeColumnNames, Locale locale) {
-        ChromaTOFParser parser = create(f, normalizeColumnNames, locale);
+        ChromaTOFParser parser = create(f, locale);
         return parseReport(parser, f, normalizeColumnNames);
     }
-
+    
     public static ChromaTOFParser create(File f, boolean normalizeColumnNames, Locale locale) throws IllegalArgumentException {
         ChromaTOFParser parser;
         if (f.getName().toLowerCase().endsWith("csv")) {
@@ -486,6 +486,10 @@ public class ChromaTOFParser {
             throw new IllegalArgumentException("Unsupported file extension '" + f.getName().toLowerCase() + "'! Supported are '.csv', '.tsv', '.txt'.");
         }
         return parser;
+    }
+
+    public static ChromaTOFParser create(File f, Locale locale) throws IllegalArgumentException {
+        return create(f, true, locale);
     }
 
     public double[] parseDoubleArray(TableColumn fieldName, TableRow row,
@@ -601,11 +605,11 @@ public class ChromaTOFParser {
     /**
      * Parse the header of the given file.
      *
-     * @param f
-     * @param normalizeColumnNames
-     * @param fieldSeparator
-     * @param quotationCharacter
-     * @return
+     * @param f the file to parse.
+     * @param normalizeColumnNames if true, column names are capitalized and spaces are replaced by '_'.
+     * @param fieldSeparator the field separator to use, e.g. '\t', ',', or ';'.
+     * @param quotationCharacter the quotation character to use, e.g. '"', '', or '''.
+     * @return the set of unique column names in order of appearance.
      * @deprecated use {@link #parseHeader(java.io.File, boolean, java.lang.String, java.lang.String)
      * }
      */
