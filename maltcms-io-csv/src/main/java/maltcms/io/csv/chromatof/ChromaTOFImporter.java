@@ -28,6 +28,7 @@
 package maltcms.io.csv.chromatof;
 
 import cross.datastructures.fragments.FileFragment;
+import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.ArrayTools;
@@ -44,7 +45,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.ms.IChromatogram;
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakType;
@@ -65,72 +65,96 @@ import ucar.nc2.Dimension;
 @Value
 public class ChromaTOFImporter {
 
-    private final String fieldSeparator;
-    private final String quotationCharacter;
     private final Locale locale;
 
     /**
-     * Import a list of 1D peaks from the given peak report and chromatogram.
-     * These peaks 
+     * Import a list of 1D or 2D peaks from the given peak report and
+     * chromatogram.
+     *
      * @param peakReport the peak report to use for the import.
-     * @param chromatogram the chromatogram related to this peak report.
-     * @return  a list of {@link Peak1D} objects.
+     * @return a list of {@link Peak1D} objects.
      */
-    public List<Peak1D> importPeaks(File peakReport, IChromatogram chromatogram) {
+    public List<? extends Peak1D> importPeaks(File peakReport) {
         ChromaTOFParser parser = ChromaTOFParser.create(peakReport, true, locale);
-        LinkedHashSet<ChromaTOFParser.TableColumn> columnNames = parser.parseHeader(peakReport, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
-        List<TableRow> records = parser.parseBody(columnNames, peakReport, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
-        List<Peak1D> peaks = parseTable(peakReport, records, chromatogram, parser.getMode(records));
+        LinkedHashSet<ChromaTOFParser.TableColumn> columnNames = parser.parseHeader(peakReport, true, parser.getFieldSeparator(), parser.getQuotationCharacter());
+        List<TableRow> records = parser.parseBody(columnNames, peakReport, true, parser.getFieldSeparator(), parser.getQuotationCharacter());
+        List<? extends Peak1D> peaks = parseTable(peakReport, records, parser.getMode(records));
         return peaks;
     }
 
     /**
-     * Creates an artificial chromatogram of mass spectra from the peaks contained 
-     * in the given peakReport file. The newly created chromatogram will be saved 
-     * in extended cdf format, which may contain first and second column retention 
-     * times, if they were present in the original peak file. Other peak data is not 
-     * available from the cdf file.
-     * @param parser the parser instance to use.
-     * @param importDir the directory in which the new artificial chromatogram should be created.
-     * @param peakReport the peak report file.
-     * @param peaks the list of table rows of the parser.
-     * @return the created artifical chromatogram in cdf format.
+     * Import a list of 2D peaks from the given peak report file.
+     *
+     * @param peakReport the peak report to use for the import.
+     * @return a list of {@link Peak2D} objects.
+     * @throws IllegalArgumentException if the peak report does not contain 2D
+     * peaks.
      */
-    public File createArtificialChromatogram(ChromaTOFParser parser, File importDir, File peakReport, List<TableRow> peaks) {
-        ChromaTOFParser.Mode mode = parser.getMode(peaks);
-        return createArtificialChromatogram(parser, importDir, peakReport.getName(), peaks, mode);
+    public List<? extends Peak2D> importPeaks2D(File peakReport) throws IllegalArgumentException {
+        ChromaTOFParser parser = ChromaTOFParser.create(peakReport, true, locale);
+        LinkedHashSet<ChromaTOFParser.TableColumn> columnNames = parser.parseHeader(peakReport, true, parser.getFieldSeparator(), parser.getQuotationCharacter());
+        List<TableRow> records = parser.parseBody(columnNames, peakReport, true, parser.getFieldSeparator(), parser.getQuotationCharacter());
+        Mode mode = parser.getMode(records);
+        if (mode == Mode.RT_2D_FUSED || mode == Mode.RT_2D_SEPARATE) {
+            return (List<Peak2D>) parseTable(peakReport, records, parser.getMode(records));
+        }
+        throw new IllegalArgumentException("Peak report " + peakReport + " did not contain 2D peak data!");
     }
 
-    protected List<Peak1D> parseTable(File peakReport, List<TableRow> records,
-            IChromatogram chromatogram, Mode mode) {
-        List<Peak1D> peaks = new ArrayList<>();
-        int index = 0;
-        for (TableRow record : records) {
-            Logger.getLogger(ChromaTOFImporter.class.getName()).log(Level.INFO, record.toString());
-            if(mode==Mode.RT_2D_FUSED || mode==Mode.RT_2D_SEPARATE) {
+    /**
+     * Creates an artificial chromatogram of mass spectra from the peaks
+     * contained in the given peakReport file. The newly created chromatogram
+     * will be saved in extended cdf format, which may contain first and second
+     * column retention times, if they were present in the original peak file.
+     * Other peak data is not available from the cdf file.
+     *
+     * @param importDir the directory in which the new artificial chromatogram
+     * should be created.
+     * @param peakReport the peak report file.
+     * @param peaks the list of table rows of the parser.
+     * @param mode the parser mode.
+     * @return the created artifical chromatogram in cdf format.
+     */
+    public File createArtificialChromatogram(File importDir, File peakReport, List<TableRow> peaks, Mode mode) {
+        return createArtificialChromatogram(importDir, peakReport.getName(), peaks, mode);
+    }
+
+    protected List<? extends Peak1D> parseTable(File peakReport, List<TableRow> records, Mode mode) {
+        if (mode == Mode.RT_2D_FUSED || mode == Mode.RT_2D_SEPARATE) {
+            List<Peak2D> peaks = new ArrayList<>();
+            int index = 0;
+            for (TableRow record : records) {
+                Logger.getLogger(ChromaTOFImporter.class.getName()).log(Level.INFO, record.toString());
                 double rt1 = ParserUtilities.parseDouble(record.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS), locale);
                 double rt2 = ParserUtilities.parseDouble(record.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS), locale);
                 peaks.add(create2DPeak(index, peakReport, record, rt1, rt2));
-            }else{
-                peaks.add(create1DPeak(index, peakReport, record));
+                index++;
             }
-            index++;
+            return peaks;
+        } else {
+            List<Peak1D> peaks = new ArrayList<>();
+            int index = 0;
+            for (TableRow record : records) {
+                Logger.getLogger(ChromaTOFImporter.class.getName()).log(Level.INFO, record.toString());
+                peaks.add(create1DPeak(index, peakReport, record));
+                index++;
+            }
+            return peaks;
         }
-        return peaks;
     }
 
     protected Peak1D create1DPeak(int index, File peakReport, TableRow tr) {
         //System.out.println("1D chromatogram peak data detected");
         double area = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.AREA), locale);
         Peak1D p1 = Peak1D.builder1D().
-            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
-            file(peakReport.getAbsolutePath()).
-            apexTime(parseDouble((tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS)))).
-            area(area).
-            apexIntensity(area).
-            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
-            peakType(PeakType.EIC_FILTERED).
-        build();
+                name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
+                file(peakReport.getAbsolutePath()).
+                apexTime(parseDouble((tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS)))).
+                area(area).
+                apexIntensity(area).
+                name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
+                peakType(PeakType.EIC_FILTERED).
+                build();
         Assert.isTrue(!Double.isNaN(p1.getArea()));
         Assert.isTrue(!Double.isNaN(p1.getApexIntensity()));
         return p1;
@@ -139,26 +163,40 @@ public class ChromaTOFImporter {
     protected Peak2D create2DPeak(int index, File peakReport, TableRow tr, double rt1, double rt2) {
         double area = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.AREA), locale);
         Peak2D p2 = Peak2D.builder2D().
-            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
-            file(peakReport.getAbsolutePath()).
-            firstRetTime(rt1).
-            secondRetTime(rt2).
-            apexTime(rt1 + rt2).
-            area(area).
-            apexIntensity(area).
-            name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
-            peakType(PeakType.EIC_FILTERED).
-        build();
+                name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
+                file(peakReport.getAbsolutePath()).
+                firstRetTime(rt1).
+                secondRetTime(rt2).
+                apexTime(rt1 + rt2).
+                area(area).
+                apexIntensity(area).
+                name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
+                peakType(PeakType.EIC_FILTERED).
+                build();
         Assert.isTrue(!Double.isNaN(p2.getArea()));
         Assert.isTrue(!Double.isNaN(p2.getApexIntensity()));
         return p2;
     }
 
-    protected File createArtificialChromatogram(ChromaTOFParser parser, File importDir,
+    protected File createArtificialChromatogram(File importDir,
             String peakListName, List<TableRow> peaks, Mode mode) {
         File fragment = new File(importDir, StringTools.removeFileExt(
                 peakListName) + ".cdf");
-        FileFragment f = new FileFragment(fragment);
+        IFileFragment f = createArtificialChromatogram(peaks, mode, new FileFragment(fragment));
+        f.save();
+        return fragment;
+    }
+
+    /**
+     * Creates a non-persistent artificial chromatogram with mass spectra from the given peaks.
+     * Data will be added to the provided IFileFragment instance.
+     * To persist the data, call {@code save()} on the returned file fragment instance.
+     * @param peaks the peaks to convert to an artifical chromatogram.
+     * @param mode the mode, either for 1D data or for 2D data.
+     * @param f the file fragment to use.
+     * @return the same file fragment as provided to the method.
+     */
+    public IFileFragment createArtificialChromatogram(List<TableRow> peaks, Mode mode, IFileFragment f) {
         Dimension scanNumber = new Dimension("scan_number", peaks.size(), true);
         int points = 0;
         List<Array> masses = new ArrayList<>();
@@ -190,15 +228,15 @@ public class ChromaTOFImporter {
             double satValue = Double.NaN;
             if (mode == ChromaTOFParser.Mode.RT_2D_FUSED) {
                 String[] rts = tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS).split(",");
-                firstColumnElutionTime.set(i, parser.parseDouble(rts[0]));
-                secondColumnElutionTime.set(i, parser.parseDouble(rts[1]));
+                firstColumnElutionTime.set(i, ParserUtilities.parseDouble(rts[0], locale));
+                secondColumnElutionTime.set(i, ParserUtilities.parseDouble(rts[1], locale));
                 satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
             } else if (mode == ChromaTOFParser.Mode.RT_2D_SEPARATE) {
-                firstColumnElutionTime.set(i, parser.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS)));
-                secondColumnElutionTime.set(i, parser.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS)));
+                firstColumnElutionTime.set(i, ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS), locale));
+                secondColumnElutionTime.set(i, ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS), locale));
                 satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
             } else {
-                satValue = parser.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS));
+                satValue = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS), locale);
             }
             sat.setDouble(i, satValue);
             scanOffset += ms.getFirst().length;
@@ -244,8 +282,7 @@ public class ChromaTOFImporter {
             secondColumnElutionTimeVar.setArray(secondColumnElutionTime);
             secondColumnElutionTimeVar.setDimensions(new Dimension[]{scanNumber});
         }
-        f.save();
-        return fragment;
+        return f;
     }
 
 }

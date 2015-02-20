@@ -1,31 +1,141 @@
 <h2>ChromaTOF<sup>1</sup> Peak Report Support</h2>
+Support for reading of ChromaTOF reports is two-fold in Maltcms. 
+On a lower level, the *ChromaTOFParser* provides direct access to the 
+comma-separated or tab-separated data file in a simple table oriented format:
 
-<h3>Supported Column Names</h3>
+    //set the locale for correct number parsing
+    Locale locale = Locale.US;
+
+    //create an instance of the ChromaTOFParser for a given file, 
+    //use the given locale
+    ChromaTOFParser parser = ChromaTOFParser.create(file, locale);
+
+    //retrieve the header
+    //instruct the parser to use ',' as the field separator (csv mode), 
+    //with '"' double quotes fencing strings with spaces of commas
+    Set<TableColumn> columnNames = parser.parseHeader(file, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
+
+    //parse the body with the same settings and the given header
+    List<TableRow> records = parser.parseBody(columnNames, file, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
+
+    //access a specific record (indexing starts at 0)
+    TableRow tr2 = records.get(2);
+
+    //the parser will automatically switch to the correct mode, if it detects 
+    //either fused 2D rt data in the 'R.T. (s)' column, or two separate fields 
+    //'1st Dimension Time (s)' and '2nd Dimension Time (s)'
+    Assert.assertEquals(ChromaTOFParser.Mode.RT_2D_SEPARATE, parser.getMode(records));
+
+The *ChromaTOFParser* will determine the actual file type automatically, if the above utility method is used, based on the file extension.
+*.csv* files will be parsed with a ',' as field separator and '"' to fence strings, while 
+*.tsv* and *.txt* files will be parsed with a '\t' as field separator and '' to fence strings.
+
+If you want to determine explicitly, with which settings the parser is created, proceed as follows:
+
+    String fieldSeparator = ChromaTOFParser.FIELD_SEPARATOR_TAB;
+    String quotationCharacter = ChromaTOFParser.QUOTATION_CHARACTER_NONE;
+    Locale locale = Locale.US;
+    ChromaTOFParser parser = new ChromaTOFParser(fieldSeparator, quotationCharacter, locale);
+
+<h4>Convenience Methods / Classes</h4>
+A higher-level API to read ChromaTOF reports is provided by the *ChromaTOFImporter*, giving you 
+direct access to a list of *Peak1D* or *Peak2D* objects:
+
+    Locale locale = Locale.US;
+    ChromaTOFImporter.importer = new ChromaTOFImporter(locale);
+    List<Peak1D> peaks1D = importer.importPeaks(file);
+
+Or alternatively for 2D peaks:
+    
+    try {
+        List<Peak2D> peaks2D = importer.importPeaks2D(file);
+    }catch(IllegalArgumentException iae) {
+        //if file does not contain 2D peaks
+    }
+
+In order to explicitly create a pseudo-ANDI-MS chromatogram with mass spectra, use the following method:
+    
+    File importDir = new File("importDir");
+    File artificialChromatogram = importer.createArtificialChromatogram(importDir, file, peaks, parser.getMode(peaks));
+
+    
+<h4>Using ChromaTOF reports as a FileFragment data source</h4>
+It is also possible to use ChromaTOF reports as direct input to Maltcms workflows. This is automatically 
+possible via the *ChromaTOFDataSource* implementation. However, this data source, in order to conform with 
+the other data sources, provides only a limited amount of information. The initial ChromaTOF report is converted to a more 
+efficient netCDF data format, that conforms to the basic ANDI-MS specifications as used throughout Maltcms. 
+The data source thus provides the following variables:
+
+* *scan_index* (dim: scan_number): the scan index for each mass spectrum.
+* *mass_values* (dim: point_number): the recorded mass values for each mass spectrum.
+* *intensity_values* (dim: point_number): the recorded intensity values for each mass spectrum.
+* *scan_acquisition_time* (dim: scan_number): the recorded acquisition time of a scan (rt1+rt2 for 2D chrom).
+* *total_intensity* (dim: scan_number): the total intensity (area field in ChromaTOF) for each peak/scan.
+* *mass_range_min* (dim: scan_number): the minimum recorded mass for each scan.
+* *mass_range_max* (dim: scan_number): the maximum recorded mass for each scan.
+
+And specifically for 2D chromatography, two additional variables are provided:
+
+* *first_column_elution_time* (dim: scan_number): recorded elution time (s) on the first separation column.
+* *second_column_elution_time* (dim: scan_number): recorded elution time (s) on the second separation column.
+
+<h3>Locale settings</h3>
+By default, the ChromaTOF Parser will use a US locale for parsing numbers. This means,
+that the decimal separator is a "." instead of the ",". Should you experience weird retention times 
+after import, or way off areas, check the locale settings for the *ChromaTOFParser* and *ChromaTOFImporter* classes, if 
+you use them programmatically, or configure the *ChromaTOFDataSource* locale setting, by adding the following 
+property to the *cfg/io.properties* file in the Maltcms base directory:
+
+    maltcms.io.csv.chromatof.ChromaTOFDataSource.locale=de_DE
+
+Maltcms supports the [default Java locales](http://www.oracle.com/technetwork/java/javase/javase7locales-334809.html).
+
 <h3>1D Chromatography Data</h3>
-
-
-
+<h4>Supported Column Names</h4>
+* *Name* : Putative peak name.
+* *R.T. (s)*: Retention Time in seconds. 
+* *Type*: The peak type.
+* *UniqueMass*: The peak's unique mass, as determined by ChromaTOF.
+* *Quant Masses*: The masses used for area quantification.
+* *Quant Mass*: The single mass used for area quantification.
+* *Quant S/N*: The Signal-to-Noise ratio of the quantification masses' signals.
+* *Concentration*: The concentration of the peak.
+* *Sample Concentration*: The sample concentration.
+* *Match*: The match of the peak.
+* *Area*: The quantified, integrated area.
+* *Formula*: The putative sum formula.
+* *CAS*: The chemical abstracts service number of the putative identification.
+* *Similarity*: The match similarity (0-999) of the putative identification.
+* *Reverse*: The reverse match similarity (0-999).
+* *Probability*: The probability of putative peak assignment.
+* *Purity*: The sample purity.
+* *Concerns*: Free form concerns about a peak identification.
+* *S/N*: The Signal-to-Noise ratio of the actual signal.
+* *BaselineModified*: The modified baseline after filtering/baseline estimation.
+* *Quantification*: The peak's quantification value.
+* *Full Width at Half Height*: The full width at half height characterizes the peak elongation.
+* *IntegrationBegin*: The start of area integration.
+* *IntegrationEnd*: The end of area integration.
+* *Hit 1 Name*: The name of the first database match.
+* *Hit 1 Similarity*: The similarity of the first database match.
+* *Hit 1 Reverse*: The reverse similarity of the first database match.
+* *Hit 1 Probability*: The probability of the first database match.
+* *Hit 1 CAS*: The CAS id of the first database match.
+* *Hit 1 Library*: The MSP library name of the database.
+* *Hit 1 Id*: The native id of the first match.
+* *Hit 1 Formula*: The sum formula of the first match.
+* *Hit 1 Weight*: The molecular weight of the first match.
+* *Hit 1 Contributor*: The contributor's name of the first match.
+* *Spectra*: The spectrum of the peak.
+* *Unmapped*: An unmapped column, unsupported by Maltcms (watch the log for these).
+        
 <h3>2D Chromatography Data</h3>
-<h4>Support for fused RT field</h4>
-
+<h4>Supported column names for fused RT field</h4>
+* *R.T. (s)*: Fused 2D retention times in RT field: e.g. *680 , 2.520*
 
 <h4>Support for separate RT fields</h4>
-
-    File dataFolder = tf.newFolder("chromaTofTestFolder");
-    File file = ZipResourceExtractor.extract(
-            "/csv/chromatof/reduced/mut_t1_a.csv", dataFolder);
-    Locale locale = Locale.US;
-    ChromaTOFParser parser = ChromaTOFParser.create(file, true, locale);
-    LinkedHashSet<ColumnName> columnNames = parser.parseHeader(file, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
-    List<TableRow> records = parser.parseBody(columnNames, file, true, ChromaTOFParser.FIELD_SEPARATOR_COMMA, ChromaTOFParser.QUOTATION_CHARACTER_DOUBLETICK);
-    Assert.assertEquals(14, columnNames.size());
-    Assert.assertEquals(375, records.size());
-    TableRow tr2 = records.get(2);
-//        "M000883_A102003-101-xxx_NA_1022.2_TRUE_VAR5_ALK_Pyridine, 3-cyano-","0-0-0","740","2.720","54340","783","945","9879","104","104","","NaN","379.21",104:4198 77:3853 50:2144 51:1881 76:1454 64:905 75:681 78:488 53:389 63:289 105:259 62:244 54:225 103:158 82:117 74:107 56:74 69:68 107:67 60:64 65:41 55:34 127:28 59:28 68:27 94:26 577:25 500:23 697:21 393:20 130:20 444:20 722:19 515:18 679:17 696:17 147:17 622:17 241:17 585:17 395:17 363:16 672:16 200:16 184:16 463:16 745:15 329:15 472:15 298:14 151:14 571:14 486:14 426:14 372:14 354:14 273:14 747:13 520:13 546:13 239:13 532:13 479:13 499:13 377:13 485:13 484:13 694:13 594:12 277:12 521:12 358:12 570:12 387:12 564:12 312:12 267:12 746:11 264:11 709:11 683:11 367:11 691:11 248:11 400:11 583:11 328:11 319:10 491:10 417:10 702:10 382:10 391:10 569:10 446:10 531:10 347:10 136:10 344:10 540:10 455:10 554:10 431:9 613:9 178:9 558:9 609:9 288:9 465:9 252:9 547:9 574:9 84:9 87:9 523:9 327:9 343:9 390:9 618:9 477:9 332:9 490:9 671:8 681:8 525:8 231:8 284:8 537:8 201:8 145:8 434:8 468:8 510:8 404:8 535:8 93:8 470:8 406:8 388:8 191:8 181:8 432:8 314:8 330:8 216:7 482:7 572:7 518:7 488:7 341:7 522:7 466:7 166:7 737:7 695:7 661:7 398:7 169:7 496:7 538:7 600:7 461:6 690:6 666:6 591:6 741:6 424:6 100:6 176:6 163:6 584:6 437:6 517:6 161:6 545:6 142:6 430:6 309:6 686:6 494:6 336:6 562:6 638:6 663:6 596:5 397:5 557:5 291:5 587:5 321:5 699:5 693:5 452:5 706:5 646:5 179:5 292:5 743:5 667:5 716:5 575:5 121:4 528:4 614:4 442:4 729:4 368:4 501:4 727:4 703:4 676:3 342:3 581:3 427:3 222:3 692:3 576:3 438:2 383:2 305:2 624:1 325:1 495:1 154:1 159:0 90:0 245:0 211:0 72:0 124:0 70:0 125:0 57:0 91:0 112:0 275:0 199:0 287:0 143:0 194:0 198:0 101:0 186:0 110:0 164:0 99:0 210:0 297:0 123:0 247:0 108:0 106:0 282:0 293:0 217:0 109:0 133:0 307:0 265:0 114:0 236:0 119:0 206:0 303:0 271:0 315:0 98:0 230:0 318:0 189:0 71:0 278:0 61:0 281:0 324:0 238:0 283:0 240:0 153:0 242:0 243:0 156:0 203:0 73:0 228:0 335:0 162:0 294:0 338:0 339:0 79:0 254:0 299:0 126:0 323:0 128:0 85:0 86:0 261:0 174:0 350:0 351:0 177:0 157:0 158:0 205:0 52:0 139:0 183:0 97:0 360:0 361:0 362:0 276:0 364:0 365:0 279:0 192:0 193:0 369:0 370:0 371:0 285:0 286:0 374:0 375:0 334:0 290:0 378:0 117:0 380:0 381:0 295:0 209:0 384:0 385:0 386:0 300:0 301:0 389:0 215:0 304:0 131:0 306:0 394:0 308:0 266:0 289:0 355:0 95:0 270:0 401:0 402:0 403:0 229:0 405:0 232:0 58:0 408:0 148:0 410:0 411:0 412:0 413:0 152:0 415:0 66:0 155:0 418:0 419:0 420:0 421:0 422:0 423:0 337:0 425:0 251:0 253:0 428:0 255:0 256:0 83:0 258:0 433:0 260:0 348:0 436:0 262:0 88:0 89:0 310:0 180:0 92:0 443:0 357:0 445:0 96:0 447:0 448:0 449:0 450:0 451:0 102:0 453:0 454:0 280:0 456:0 457:0 458:0 459:0 373:0 111:0 462:0 376:0 464:0 115:0 116:0 467:0 118:0 469:0 120:0 471:0 122:0 473:0 474:0 213:0 476:0 302:0 478:0 392:0 480:0 481:0 132:0 440:0 134:0 223:0 137:0 487:0 138:0 489:0 140:0 141:0 492:0 493:0 407:0 320:0 409:0 497:0 498:0 149:0 150:0 414:0 502:0 503:0 67:0 505:0 506:0 507:0 508:0 509:0 160:0 249:0 512:0 513:0 514:0 165:0 429:0 80:0 81:0 257:0 170:0 171:0 435:0 173:0 524:0 175:0 526:0 527:0 441:0 529:0 530:0 269:0 182:0 533:0 534:0 185:0 536:0 187:0 188:0 539:0 190:0 541:0 542:0 543:0 544:0 195:0 196:0 460:0 548:0 549:0 550:0 551:0 202:0 553:0 204:0 555:0 556:0 207:0 208:0 559:0 560:0 561:0 475:0 563:0 214:0 565:0 129:0 567:0 218:0 219:0 483:0 221:0 135:0 399:0 224:0 225:0 226:0 227:0 578:0 579:0 580:0 144:0 582:0 233:0 234:0 235:0 586:0 237:0 588:0 589:0 590:0 416:0 592:0 593:0 244:0 595:0 246:0 597:0 598:0 599:0 250:0 601:0 602:0 603:0 604:0 605:0 606:0 607:0 608:0 259:0 610:0 611:0 612:0 263:0 439:0 615:0 616:0 617:0 268:0 619:0 620:0 621:0 272:0 623:0 274:0 625:0 626:0 627:0 628:0 629:0 630:0 631:0 632:0 633:0 634:0 635:0 636:0 637:0 113:0 639:0 640:0 641:0 642:0 643:0 644:0 645:0 296:0 647:0 648:0 649:0 650:0 651:0 652:0 653:0 654:0 655:0 656:0 657:0 658:0 659:0 573:0 311:0 662:0 313:0 664:0 665:0 316:0 317:0 668:0 669:0 670:0 146:0 322:0 673:0 674:0 675:0 326:0 677:0 678:0 504:0 680:0 331:0 682:0 333:0 684:0 685:0 511:0 687:0 688:0 689:0 340:0 516:0 167:0 168:0 519:0 345:0 346:0 172:0 698:0 349:0 700:0 701:0 352:0 353:0 704:0 705:0 356:0 707:0 708:0 359:0 710:0 711:0 712:0 713:0 714:0 715:0 366:0 717:0 718:0 719:0 720:0 721:0 197:0 723:0 724:0 725:0 726:0 552:0 728:0 379:0 730:0 731:0 732:0 733:0 734:0 735:0 736:0 212:0 738:0 739:0 740:0 566:0 742:0 568:0 744:0 220:0 396:0 660:0 748:0 749:0 750:0
-    Assert.assertEquals("M000883_A102003-101-xxx_NA_1022.2_TRUE_VAR5_ALK_Pyridine, 3-cyano-", tr2.get(ColumnName.NAME));
-    Assert.assertEquals("0-0-0", tr2.get(ColumnName.CAS));
-    Assert.assertEquals("740", tr2.get(ColumnName.FIRST_DIMENSION_TIME_SECONDS));
-    Assert.assertEquals("2.720", tr2.get(ColumnName.SECOND_DIMENSION_TIME_SECONDS));
+* *1st Dimension Time (s)*: First separation column peak elution time, e.g. *680* 
+* *2nd Dimension Time (s)*: Second separation column peak elution time, e.g. *4.125*
 
 ---
 
