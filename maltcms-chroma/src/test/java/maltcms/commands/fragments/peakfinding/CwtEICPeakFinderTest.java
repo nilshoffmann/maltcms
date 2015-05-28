@@ -29,15 +29,13 @@ package maltcms.commands.fragments.peakfinding;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
+import cross.exception.ConstraintViolationException;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.test.ZipResourceExtractor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -54,7 +52,7 @@ public class CwtEICPeakFinderTest extends AFragmentCommandTest {
     /**
      *
      */
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testCwtEicPeakFinder() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
         CwtEicPeakFinder tpf = new CwtEicPeakFinder();
