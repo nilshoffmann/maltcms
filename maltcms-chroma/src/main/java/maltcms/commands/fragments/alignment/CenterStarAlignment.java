@@ -175,8 +175,6 @@ public class CenterStarAlignment extends AFragmentCommand {
                 "var.pairwise_distance_matrix", "pairwise_distance_matrix");
         this.pairwiseDistanceNamesVariableName = cfg.getString(
                 "var.pairwise_distance_names", "pairwise_distance_names");
-        this.minimizingArrayCompVariableName = cfg.getString(
-                "var.minimizing_array_comp", "minimizing_array_comp");
     }
 
     private void addMultipleAlignment(final IFileFragment f,

@@ -63,7 +63,11 @@ public class BiPaceTest extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz","/cdf/1D/glucoseB.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
+
+    @Rule
+    public ExtractClassPathFiles gcgcMsFiles = new ExtractClassPathFiles(tf, "/csv/chromatof/full/2D/mut_t1_a.csv.gz", "/csv/chromatof/reduced/2D/mut_t1_a.csv.gz");
+
     /**
      *
      */
@@ -121,8 +125,7 @@ public class BiPaceTest extends AFragmentCommandTest {
         workerFactory.setSimilarityFunction(ps);
         bipace2D.setWorkerFactory(workerFactory);
         commands.add(bipace2D);
-        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
+        IWorkflow w = createWorkflow(commands, gcgcMsFiles.getFiles());
         testWorkflow(w);
-
     }
 }

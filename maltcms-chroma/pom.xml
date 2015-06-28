@@ -95,6 +95,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-io-csv</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>net.sf.maltcms.test</groupId>
             <artifactId>maltcms-test-data</artifactId>
             <version>${project.version}</version>
