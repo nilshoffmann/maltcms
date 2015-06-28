@@ -59,7 +59,7 @@ public class MzTabExporter extends AFragmentCommand {
                 inputFiles.add(in.get(i).getUri());
             }
             String mzTabId = UUID.randomUUID().toString();
-            URI outputUri = new File(getWorkflow().getOutputDirectory(), mzTabId + ".mztab").toURI();
+//            URI outputUri = new File(getWorkflow().getOutputDirectory(), mzTabId + ".mztab").toURI();
 //            getWorkflow().ics.submit(new MzTabExporterWorker(inputFiles, outputUri, mzTabId));
             return mapToInputUri(ics.call(), in);
         } catch (Exception ex) {
