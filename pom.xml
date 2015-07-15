@@ -823,7 +823,7 @@
                 <artifactId>clirr-maven-plugin</artifactId>
                 <version>${version.clirr.plugin}</version>
                 <configuration>
-                    <!-- Compare the current code against version 1.2 -->
+                    <!-- Compare the current code against configured base version -->
                     <comparisonVersion>${version.maltcms.base}</comparisonVersion>
                 </configuration>
             </plugin>
