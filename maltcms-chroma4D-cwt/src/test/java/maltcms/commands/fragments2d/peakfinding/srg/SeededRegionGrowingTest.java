@@ -54,13 +54,13 @@ import org.junit.experimental.categories.Category;
  */
 @Category(IntegrationTest.class)
 public class SeededRegionGrowingTest extends AFragmentCommandTest {
-    
+
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
-    
+
     @Test
-    public void testPeakFinder() throws IOException {
+    public void testPeakFinder() throws Exception {
         setLogLevelFor(CwtPeakFinder.class, Level.DEBUG);
         setLogLevelFor(SeededRegionGrowing.class, Level.DEBUG);
         setLogLevelFor(NetcdfDataSource.class, Level.ERROR);
@@ -78,11 +78,7 @@ public class SeededRegionGrowingTest extends AFragmentCommandTest {
         l.add(cpf);
         l.add(srg);
         IWorkflow w = createWorkflow(l, testFiles.getFiles());
-        try {
-            TupleND<IFileFragment> results = w.call();
-            w.save();
-        } catch (Exception ex) {
-            Assert.fail(ex.getLocalizedMessage());
-        }
+        TupleND<IFileFragment> results = w.call();
+        w.save();
     }
 }

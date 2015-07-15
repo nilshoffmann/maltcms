@@ -61,7 +61,7 @@
                     <instructions> 
                         <!-- ignore servlet package dependencies -->
                         <Import-Package>!javax.servlet.*;!com.lowagie;*</Import-Package>
-                        <Embed-Dependency>jcommon,jfreechart</Embed-Dependency>
+                        <!--<Embed-Dependency>jcommon,jfreechart</Embed-Dependency>-->
                         <!-- 
                                 state the packages to export, separated by ';' 
                                 if these are not given, dependencies are NOT included 

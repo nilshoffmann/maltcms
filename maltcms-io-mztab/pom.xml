@@ -63,6 +63,6 @@
     </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmztab.version>3.0.0</jmztab.version>
+        <jmztab.version>3.0.2</jmztab.version>
     </properties>
 </project>

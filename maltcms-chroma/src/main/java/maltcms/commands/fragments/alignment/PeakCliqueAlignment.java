@@ -860,8 +860,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
 
         saveToXMLAlignment(t, cliqueList);
         log.info("Adding anchor variables");
-        final TupleND<IFileFragment> ret = cliques.isEmpty() ? originalFragments
-                : addAnchors(result.getPeakToClique(), cliqueList, t, cliques, nameToIndex, peakEdgeMap);
+        final TupleND<IFileFragment> ret = addAnchors(result.getPeakToClique(), cliqueList, t, cliques, nameToIndex, peakEdgeMap);
         for (IFileFragment iff : originalFragments) {
             iff.clearArrays();
         }
