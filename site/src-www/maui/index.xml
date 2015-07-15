@@ -52,7 +52,7 @@
 	        <div class="col-md-4">
 	            <h2>ChromA4D</h2>
 	            <ul>
-	                <li>peak finder for comcodehensive GCxGC-MS and other multicolumn chromatography-MS</li>
+	                <li>peak finder for comprehensive GCxGC-MS and other multicolumn chromatography-MS</li>
 	                <li>peak area integration based on 2D-TIC</li>
 	                <li>multiple alignment and peak matching based on mass spectral similarities</li>
 	            </ul>
