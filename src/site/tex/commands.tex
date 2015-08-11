@@ -1,0 +1,353 @@
+% Hyphenation commands
+\newcommand{\spectrometry}{spectro\-metry\xspace}
+\newcommand{\chromatography}{chroma\-to\-graphy\xspace}
+\newcommand{\chromatogram}{chroma\-to\-gram\xspace}
+\newcommand{\gaschromatography}{gas-chroma\-to\-graphy\xspace} 
+\newcommand{\multidimension}{multi-dimension\xspace}
+\newcommand{\multidimensional}{multi-dimen\-sion\-al\xspace}
+\newcommand{\onedimensional}{one-dimen\-sion\-al\xspace}
+\newcommand{\metabolomics}{meta-bol-omics\xspace}
+\newcommand{\meltdb}{Melt\-DB\xspace}
+\newcommand{\peakfinding}{peak-find\-ing}
+
+%\newcommand{\etal}{\emph{et al.\ }}
+\newcommand{\etal}{~et\,al.\xspace}
+\newcommand{\eg}{e.g.\ }
+\newcommand{\ie}{i.e.\ }
+
+% Abkuerzung fuer URLs: \hrefn{url}
+% Vorsicht bei Tilden (~) in den URLs
+\newcommand{\hrefn}[1]{\href{#1}{#1}}
+
+%Todo am Rand notieren
+%\newcommand{\todo}[1]{%
+%  \ensuremath{\bigstar}%
+%  \marginpar{%
+%  \begin{flushleft}%
+%  \vspace{-1.5\baselineskip}%
+%  \ensuremath{\bigstar}\textbf{TODO:\\}%
+%  {\small #1}%
+%  \end{flushleft}%
+%  }%
+%}%
+
+
+% O(n) Notation
+% \O existiert eigentlich schon und produziert
+% sowas wie ein durchschittssymbol
+\renewcommand{\O}[1]{\mathcal{O}\ensuremath{(#1)}}
+
+
+%einheitliche formatierung fuer zeichenketten
+\newcommand{\str}[1]{{\tt{}#1}}
+
+%einheitliche formatierung fuer dateinamen
+\newcommand{\file}[1]{{\small{}#1}}
+
+
+% Matheumgebungen
+
+%\theoremstyle{definition}
+
+ \newcommand{\mytheorem}[2]{\newtheorem{#1}{\sffamily #2}}
+
+ \mytheorem{lemma}{Lemma}
+ \mytheorem{theorem}{Theorem}
+ \mytheorem{definition}{Definition}
+ \mytheorem{observation}{Observation}
+ \mytheorem{corollary}{Corollary}
+ \mytheorem{prop}{Proposition}
+ \mytheorem{notation}{Notation}
+ \mytheorem{remark}{Remark}
+ \mytheorem{conjecture}{Conjecture}
+ \mytheorem{problem}{Problem}
+
+ 
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\rank}[1]{\left( #1 \right)}
+
+%Beispiel-Umgebung
+ \mytheorem{example_}{Example}
+\newenvironment{example}[1][]{\begin{example_}[#1]\normalfont}{\hfill$\diamond$\end{example_}}
+
+%f�r konkretes Genclustermodel
+ \mytheorem{model_}{Model}
+\newenvironment{model}[1][]{\begin{model_}[#1]}{\end{model_}}
+\newenvironment{model*}[1][]%
+{\medskip\sffamily\noindent\textbf{Model} (#1)\textbf{.}\rmfamily\itshape}%
+{\medskip\normalfont}
+
+
+% Variablen
+\DeclareMathOperator{\Conf}{Conf}
+\DeclareMathOperator{\ci}{CI}
+\DeclareMathOperator{\GS}{GS}
+\DeclareMathOperator{\myl}{\lambda}
+\DeclareMathOperator{\vu}{P}
+\DeclareMathOperator{\vl}{S}
+\DeclareMathOperator{\T}{\#\!F}
+\DeclareMathOperator{\TP}{TP}
+\DeclareMathOperator{\TN}{TN}
+\DeclareMathOperator{\FP}{FP}
+\DeclareMathOperator{\FN}{FN}
+\DeclareMathOperator{\myS}{S}
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\power}{\mathcal{P}}
+\DeclareMathOperator{\filter}{\raisebox{0.65em}{\rotatebox{270}{$\gtrdot$}}}
+\DeclareMathOperator{\mfilter}{\raisebox{0.65em}{\rotatebox{270}{$>\hspace{-2ex}$\raisebox{0.15pt}{$\circ$}}}}
+\DeclareMathOperator{\ext}{ext}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+
+
+\DeclareSymbolFont{AMSb}{U}{msb}{m}{n}
+\DeclareMathSymbol{\N}{\mathbin}{AMSb}{"4E}
+
+
+\newcommand{\redstar}{*}
+
+
+% Algorithmen
+
+%einheitliche formatierung fuer programmnamen
+\newcommand{\prg}[1]{\emph{#1}}
+
+\DeclareMathOperator{\RecSearch}{FindOptRec}
+\DeclareMathOperator{\myNull}{null}
+\DeclareMathOperator{\FindOpt}{FindOpt}
+\DeclareMathOperator{\Reopt}{ReOpt}
+\DeclareMathOperator{\SearchConf}{SearchConf}
+\DeclareMathOperator{\SearchConfRec}{SearchConfRec}
+\DeclareMathOperator{\ConfList}{ConfList}
+\DeclareMathOperator{\FHBin}{FitchBin}
+\DeclareMathOperator{\2Phase}{TwoPhase}
+\DeclareMathOperator{\Reduce}{Reduce}
+\DeclareMathOperator{\Perm}{Perm}
+
+\DeclareMathOperator{\gc}{\scalebox{-1.5}[1]{$\exists$}}
+\DeclareMathOperator{\ngc}{\scalebox{-1.5}[1]{$\nexists$}}
+
+%\renewcommand{\algorithmiccomment}[1]{//\emph{#1}}
+%\renewcommand{\algorithmicensure}{\textbf{Output:}}
+%\renewcommand{\algorithmicrequire}{\textbf{Given:}}
+%\setcounter{secnumdepth}{3}
+
+\newcommand{\algCaption}[2]{\caption[#2]{\texttt{#1} \hfill #2}}
+\newcommand{\procCaption}[1]{%
+\tcp{\setlength{\baselineskip}{0.66\baselineskip}\vspace{1ex}\hrulefill\vspace*{-1.5ex}}%
+\tcp{\normalfont\textbf{\sffamily Procedure: }#1\vspace*{-1.6ex}}%
+\tcp{\hrulefill}}
+
+\newlength{\laenge}
+
+
+\newcommand{\arrow}[1]{%
+\setlength{\unitlength}{1pt}%
+\settowidth{\laenge}{\mbox{\small\it\sffamily #1}}%
+\begin{picture}(0,12)%
+ \put(0,0){\includegraphics[width=(8pt+\laenge), height=12pt]{graphics/arrow}}%
+ \put(2,2){\mbox{\small\it\sffamily #1}}%
+\end{picture}%
+\hspace{\laenge}\hspace{9pt}%
+}
+
+\newcommand{\invArrow}[1]{%
+\setlength{\unitlength}{1pt}%
+\settowidth{\laenge}{\mbox{\small\it\sffamily #1}}%
+\begin{picture}(0,12)%
+ \put(0,0){\scalebox{-1}[1]{\includegraphics[width=(8pt+\laenge), height=12pt]{graphics/arrow}}}
+ \put(6,2){\mbox{\small\it\sffamily #1}}
+\end{picture}%
+\hspace{\laenge}\hspace{9pt}%
+}
+% bunte boxen
+
+\newcommand{\block}[3]{\fcolorbox{black}{#1}{\makebox[#2ex]{#3}}}
+\newcommand{\A}{\block{cyan}{4}{A}}
+\newcommand{\B}{\block{magenta}{6}{B}}
+\newcommand{\C}{\block{green}{3}{C}}
+\newcommand{\D}{\block{yellow}{6}{D}}
+\newcommand{\E}{\block{red}{1}{E}}
+\newcommand{\F}{\block{blue}{6}{F}}
+\newcommand{\G}{\block{white}{1}{G}}
+\newcommand{\X}{\hspace{2ex}}
+
+\newcommand{\bgrep}{\textsc{BiPACE}\xspace}
+
+\newacronym{dtw}{DTW}{dynamic time warping}
+\newcommand{\cwarp}{\textsc{CeMAPP-DTW}\xspace}
+%\newacronym{cemappdtw}{\cwarp}{\textbf{CE}nter-star \textbf{M}ultiple \textbf{A}lignment by \textbf{P}airwise \textbf{P}artitioned \textbf{D}ynamic \textbf{T}ime \textbf{W}arping}
+\newcommand{\cemappdtw}{\textsc{CeMAPP-DTW}\xspace}
+\newacronym{rcs}{RCS}{row compressed storage}
+\newcommand{\treewarp}{\textsc{CTREEWARP}\xspace}
+\newcommand{\cross}{\textsc{Cross}\xspace}
+\newcommand{\maltcms}{\textsc{Maltcms}\xspace}
+\newcommand{\maltcmsap}{\textsc{Maltcms AP}\xspace}
+\newcommand{\maui}{\textsc{Maui}\xspace}
+\newcommand{\mpaxs}{\textsc{Mpaxs}\xspace}
+\newcommand{\openchrom}{\textsc{OpenChrom}\xspace}
+\newcommand{\xcms}{\textsc{XCMS}\xspace}
+\newcommand{\pyms}{\textsc{PyMS}\xspace}
+\newcommand{\proteus}{\textsc{Proteus}\xspace}
+\newacronym{cwt}{CWT}{continuous wavelet transform}
+%cow
+\newacronym{cow}{COW}{correlation optimized warping}
+%ptw
+\newacronym{ptw}{PTW}{parametric time warping}
+
+%coda
+\newacronym{coda}{CODA}{component detection algorithm}
+
+\newacronym{anova}{ANOVA}{analysis of variance}
+\newacronym{pca}{PCA}{principal components analysis}
+\newacronym{pls}{PLS}{partial least squares analysis}
+
+%bbh
+\newacronym{bbh}{BBH}{bidirectional best-hit}
+
+%bipace
+\newcommand{\bipace}{\textsc{BiPACE}\xspace}
+%\newacronym{bipace}{\bipace}{\textbf{BI}directional best hits \textbf{P}eak \textbf{A}ssignment and \textbf{C}luster \textbf{E}xtension}
+%bipacert
+\newcommand{\bipaceRt}{\textsc{BiPACE RT}\xspace}
+%\newacronym{bipacert}{\bipaceRt}{\bipace with retention time}
+%bipace 2D
+\newcommand{\bipaceTwoD}{\textsc{BiPACE 2D}\xspace}
+%\newacronym{bipacetwod}{\bipaceTwoD}{\bipace with two-dimensional retention time}
+%other methods
+\newcommand{\mspa}{\textsc{mSPA}\xspace}
+\newcommand{\swpa}{\textsc{SWPA}\xspace}
+\newcommand{\swpaSWRE}{\textsc{SWPA-SWRE}\xspace}
+\newcommand{\swpaSWRM}{\textsc{SWPA-SWRM}\xspace}
+\newcommand{\swpaSWRMe}{\textsc{SWPA-SWRMe}\xspace}
+\newcommand{\swpaSWRMeTwo}{\textsc{SWPA-SWRMe2}\xspace}
+\newcommand{\mspaPAS}{\textsc{mSPA-PAS}\xspace}
+\newcommand{\mspaPAD}{\textsc{mSPA-PAD}\xspace}
+\newcommand{\mspaDWPAS}{\textsc{mSPA-DWPAS}\xspace}
+\newcommand{\mspaSWPAD}{\textsc{mSPA-SW-PAD}\xspace}
+\newcommand{\mspaPAM}{\textsc{mSPA-PAM}\xspace}
+%grouping by maximum area
+\newcommand{\gma}{\textsc{GMA}\xspace}
+%\newacronym{gma}{\gma}{\textbf{G}rouping by \textbf{M}aximum \textbf{A}rea}
+%modified grouping by maximum area
+\newcommand{\mgma}{\textsc{MGMA}\xspace}
+%\newacronym{mgma}{\mgma}{\textbf{M}odified \textbf{G}rouping by \textbf{M}aximum \textbf{A}rea}
+\newcommand{\chlamy}{\textsc{chlamy}\xspace}
+%
+% Techniques 
+%
+%chromatography
+%ce
+\newacronym{cec}{CE}{capillary electrophoresis}
+%ims
+\newacronym{ims}{IMS}{ion mobility spectrometry}
+%gc
+\newcommand{\gsc}{GC\xspace}
+%\newacronym{gsc}{\gsc}{gas \chromatography}
+%lc
+\newcommand{\lc}{LC\xspace}
+%\newacronym{lc}{\lc}{liquid \chromatography}
+%ms
+\newcommand{\massspec}{mass \spectrometry\xspace}
+%\newacronym{ms}{MS}{mass \spectrometry}
+%ms/ms
+\newacronym{msms}{MS/MS}{tandem \acrlong{ms}}
+%fid
+\newacronym{fid}{FID}{flame ionization detector}
+%UVD
+\newacronym{uvd}{UVD}{UV ab\-sor\-bance detector}
+%NMR
+\newacronym{nmr}{NMR}{nuclear magnetic resonance}
+%gc-ms
+\newcommand{\gcms}{GC-MS\xspace}
+%\newacronym{gcms}{\gcms}{\acrlong{gsc}-\acrlong{ms}}
+%lc-ms
+\newcommand{\lcms}{LC-MS\xspace}
+%\newacronym{lcms}{\lcms}{\acrlong{lc}-\acrlong{ms}}
+%gc-fid
+\newcommand{\gcfid}{GC-FID\xspace}
+%\newacronym{gcfid}{\gcfid}{\acrlong{gsc}-\acrlong{fid}}
+%comprehensive two-dimensional gas chromatography
+\newcommand{\gcgc}{GC\texttimes GC\xspace}
+%\newacronym{gcgc}{\gcgc}{com\-pre\-hen\-sive two-di\-men\-sion\-al \acrlong{gsc}}
+%comprehensive two-dimensional liquid chromatography
+\newcommand{\lclc}{LC\texttimes LC\xspace}
+%\newacronym{lclc}{\lclc}{com\-pre\-hen\-sive two-di\-men\-sion\-al \acrlong{lc}}
+%comprehensive two-dimensional gas chromatography - mass spectrometry
+\newcommand{\gcgcms}{GC\texttimes GC-MS\xspace}
+%\newacronym{gcgcms}{\gcgcms}{com\-pre\-hen\-sive two-di\-men\-sion\-al \acrlong{gcms}}
+%comprehensive two-dimensional liquid chromatography - mass spectrometry
+\newcommand{\lclcms}{LC\texttimes LC-MS\xspace}
+%\newacronym{lclcms}{\lclcms}{com\-pre\-hen\-sive two-di\-men\-sion\-al \acrlong{lcms}}
+%hplc
+\newacronym{hplc}{HPLC}{high-performance \acrlong{lc}}
+%apci
+\newacronym{apci}{APCI}{atmospheric pressure chemical ionization}
+%ei
+\newacronym{electronionization}{EI}{electron ionization}
+%esi
+\newacronym{electrosprayionization}{ESI}{electrospray ionization}
+%ci
+\newacronym{chemicalionization}{CI}{chemical ionization}
+%maldi
+\newacronym{maldi}{MALDI}{matrix-assisted laser desorption ionization}
+\newacronym{tof}{TOF}{time-of-flight}
+\newacronym{mrm}{MRM}{multiple reaction monitoring}
+\newacronym{fticr}{FT-ICR}{fourier transform ion cyclotron resonance}
+%tms
+\newacronym{tms}{TMS}{trimethylsilyl}
+%hrt
+\newacronym{hrt}{HRT}{high resolution \gls{tof}}
+%RT
+\newacronym{retentiontime}{RT}{retention time}
+\newacronym{retentionindex}{RI}{retention index}
+%
+\newacronym{ac}{AC}{alternating current}
+\newacronym{dc}{DC}{direct current}
+
+%EIC
+\newacronym{eic}{EIC}{extracted ion current}
+%TIC
+\newacronym{tic}{TIC}{total ion current}
+%LOESS
+\newacronym{loess}{LOESS}{\textbf{LO}cal regr\textbf{ESS}ion}
+
+%algorithm names
+\newcommand{\msort}{\textsc{MSort}\xspace}
+\newcommand{\disco}{\textsc{DISCO}\xspace}
+\newcommand{\manual}{\textsc{MANUAL}\xspace}
+\newcommand{\chromaFourD}{\textsc{ChromA4D}\xspace}
+\newcommand{\chroma}{\textsc{ChromA}\xspace}
+\newcommand{\mzmine}{\textsc{MzMine 2}\xspace}
+\newcommand{\guineu}{\textsc{Guineu}\xspace}
+\newcommand{\mzmatch}{\textsc{MzMatch}\xspace}
+\newcommand{\leishmania}{\textit{Leishmania}\xspace}
+\newcommand{\wheat}{\textit{Wheat}\xspace}
+
+%\newacronym{cross}{\cross}{\textbf{C}ommon \textbf{R}untime \textbf{O}bject \textbf{S}upport \textbf{S}ystem}
+%\newacronym{maltcms}{\maltcms}{\textbf{M}odular \textbf{A}pplication \textbf{T}oolkit for \textbf{C}hromatography-\textbf{M}ass \text{S}pectrometry}
+%\newacronym{mpaxs}{\mpaxs}{\textbf{M}altcms \textbf{Pa}rallel E\textbf{x}ecution \textbf{S}ystem}
+%\newacronym{maui}{\maui}{\textbf{Ma}ltcms \textbf{U}ser \textbf{I}nterface}
+%\newacronym{chroma}{\chroma}{\textbf{Chrom}atogram \textbf{A}lignment}
+%\newacronym{chroma4d}{\chromaFourD}{\textbf{Chrom}atogram \textbf{A}lignment for \textbf{4D} \acrshort{gcgcms} data}
+%\newacronym{maltcmsap}{\maltcmsap}{\acrshort{maltcms} for \textbf{A}nalytical \textbf{P}yrolysis}
+%other things
+\newacronym{gui}{GUI}{graphical user interface}
+\newacronym{uri}{URI}{uniform resource identifier}
+\newacronym{ioc}{IoC}{inversion of control}
+\newacronym{pojo}{POJO}{plain old JAVA object}
+\newacronym{xml}{XML}{extensible markup language}
+\newacronym{csv}{CSV}{comma separated value}
+\newacronym{api}{API}{application programming interface}
+\newacronym{drmaa}{DRMAA}{distributed resource management application api}
+\newacronym{rmi}{RMI}{remote method invocation}
+\newacronym{cv}{CV}{controlled vocabulary}
+\newacronym{jaxb}{JAXB}{JAVA architecture for \acrshort{xml} binding}
+\newacronym{cpu}{CPU}{central processing unit}
+\newacronym{nist}{NIST}{National Institute of Standards and Technology of the United States of America}
+\newacronym{gmd}{GMD}{Golm Meta\-bol\-ome Da\-ta\-base}
+\newacronym{srg}{SRG}{seeded region growing}
+\newacronym{astm}{ASTM}{American Society for Testing and Materials}
+\newacronym{rpc}{RPC}{remote procedure calling}
+\newacronym{ide}{IDE}{integrated development environment}
+\newacronym{pvalue}{p-value}{probability value}
+\newacronym{rcp}{RCP}{rich client platform}
