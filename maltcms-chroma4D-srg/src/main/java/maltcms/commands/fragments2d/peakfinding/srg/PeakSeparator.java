@@ -35,10 +35,13 @@ import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.math.functions.IScalarArraySimilarity;
+import maltcms.math.functions.ProductSimilarity;
+import maltcms.math.functions.similarities.ArrayCorr;
+import maltcms.math.functions.similarities.ArrayCos;
+import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import maltcms.tools.ArrayTools;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
@@ -61,7 +64,14 @@ public class PeakSeparator implements IPeakSeparator {
     private IScalarArraySimilarity separationSimilarity;
     private IScalarArraySimilarity similarity;
     private boolean useMeanMsForSeparation;
-    private Array rt1, rt2;
+//    private Array rt1, rt2;
+
+    public PeakSeparator() {
+        separationSimilarity = new ProductSimilarity();
+        separationSimilarity.setArraySimilarities(new ArrayCos());
+        similarity = new ProductSimilarity();
+        similarity.setArraySimilarities(new ArrayCos());
+    }
 
     /**
      * <p>
@@ -76,9 +86,8 @@ public class PeakSeparator implements IPeakSeparator {
             IChromatogram2D chrom,
             Tuple2D<Array, Array> rts) {
 
-        this.rt1 = rts.getFirst();
-        this.rt2 = rts.getSecond();
-
+//        this.rt1 = rts.getFirst();
+//        this.rt2 = rts.getSecond();
         log.info("Separator min dist: {}", this.minDist);
 
         long start = System.currentTimeMillis();
@@ -245,16 +254,8 @@ public class PeakSeparator implements IPeakSeparator {
                     c = similarity.apply(new double[]{0, 0}, new double[]{0, 0}, pa1.
                             getMeanMS(), pa2.getMeanMS());
                 } else {
-//                    int idx1 = slc.mapPoint(pa1.getSeedPoint());
-//                    int idx2 = slc.mapPoint(pa2.getSeedPoint());
-//                    rt(pa1.getSeedPoint()),
-//                            getRT1RT2ForSeed(pa2.getSeedPoint())
                     c = similarity.apply(new double[]{0, 0}, new double[]{0, 0},
                             pa1.getSeedMS(), pa2.getSeedMS());
-                    // log.info("		Score(" + pa1.getSeedPoint().x + ", "
-                    // + pa1.getSeedPoint().y + " - " + pa2.getSeedPoint().x
-                    // + ", " + pa2.getSeedPoint().y + "): {}", c);
-                    // g = getGeodedicDist(pa1, pa2, intensities);
                 }
 
                 g = 0;
@@ -265,6 +266,7 @@ public class PeakSeparator implements IPeakSeparator {
                     minG = g;
                 }
             }
+
         }
         if (log.isDebugEnabled()) {
             log.debug("Min: " + min + " < {} => are peaks separate: {}", this.minDist,
@@ -312,16 +314,21 @@ public class PeakSeparator implements IPeakSeparator {
             maxArg = -1;
             for (PeakArea2D pa : list) {
                 Array ms = chrom.getScanLineImpl().getMassSpectrum(p);
-                if (ms != null) {
+                if (ms == null) {
+                    log.warn("Mass Spectrum for point {} was null!", p);
+                }
+                Array seedMs = pa.getSeedMS();
+                if (seedMs == null) {
+                    log.warn("Seed Mass Spectrum for area {} was null!", pa);
+                }
+                if (ms != null && seedMs != null) {
                     aD = similarity.apply(new double[]{0, 0}, new double[]{0, 0},
-                            pa.getSeedMS(), ms);
+                            seedMs, ms);
                     if (aD > maxD) {
                         maxD = aD;
                         maxArg = c;
                     }
                     c++;
-                } else {
-                    log.warn("Mass Spectrum for point {} was null!", p);
                 }
             }
             if (maxArg >= 0 && !list.isEmpty()) {
