@@ -457,7 +457,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                     cfg = new PropertiesConfiguration(getClass().getClassLoader().getResource("cfg/default.properties"));
                     log.info("Using default.properties from class path at {}", cfg.getPath());
                 } catch (ConfigurationException ex) {
-                    log.warn("Configuration Exception for class path resource " + cfg.getPath() + ":", ex);
+                    log.warn("Configuration Exception for class path resource \"cfg/default.properties\":", ex);
                 }
             }
         }
