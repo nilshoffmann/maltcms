@@ -6,7 +6,6 @@
         <artifactId>maltcms-modules</artifactId>
         <version>1.4.0-SNAPSHOT</version>
     </parent>
-    <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-cv</artifactId>
     <name>Maltcms Controlled Vocabulary</name>
     <description>Controlled Vocabulary Term Resolution for Variable Names.</description>

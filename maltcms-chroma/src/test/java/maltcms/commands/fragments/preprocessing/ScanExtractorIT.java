@@ -56,13 +56,13 @@ import ucar.ma2.Array;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class ScanExtractorTest extends AFragmentCommandTest {
+public class ScanExtractorIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz");
 
-    public ScanExtractorTest() {
+    public ScanExtractorIT() {
         setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
         setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
     }

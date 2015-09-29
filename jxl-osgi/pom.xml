@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>maltcms-modules</artifactId>
-        <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0-SNAPSHOT</version>
-    </parent>
-    <groupId>net.sf.maltcms.net.sf.jexcelapi</groupId>
-    <artifactId>jxl-osgi</artifactId>
-    <version>2.6.12</version>
-    <name>JXL OSGI</name>
-    <description>OSGI Wrapper module for JXL API http://jexcelapi.sourceforge.net/</description>
-    <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/jxl-osgi</url>
-    <distributionManagement>
-        <site>
-            <id>maltcms.sf.net</id>
-            <name>maltcms.sf.net</name>
-            <url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.parent.version}/${project.artifactId}</url>
-        </site>
-    </distributionManagement>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-    <packaging>bundle</packaging>
-    <dependencies>
-        <dependency>
-            <groupId>net.sourceforge.jexcelapi</groupId>
-            <artifactId>jxl</artifactId>
-            <!-- set this to project.version to stay in sync -->
-            <version>2.6.12</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-    </dependencies>
-	
-    <build>
-        <plugins>
-            <plugin> 
-                <groupId>org.apache.felix</groupId> 
-                <artifactId>maven-bundle-plugin</artifactId> 
-                <extensions>true</extensions> 
-                <configuration> 
-                    <instructions> 
-                        <!--<Import-Package>!junit.*;*</Import-Package>-->
-                        <!-- 
-                                state the packages to export, separated by ';' 
-                                if these are not given, dependencies are NOT included 
-                                by bnd
-                        -->
-                        <Export-Package>jxl.*</Export-Package>
-                        <!--
-                                state the url of the license
-                        -->
-                        <Bundle-License>http://www.gnu.org/licenses/lgpl.html</Bundle-License>
-                        <!--
-                                short description of the bundle 
-                        -->
-                        <Bundle-Description>Java Excel API - A Java API to read, write, and modify Excel spreadsheets</Bundle-Description>
-                        <Include-Resource>{maven-resources},@jxl-2.6.12.jar!/**</Include-Resource>
-                    </instructions> 
-                </configuration> 
-                <executions>
-                    <execution>
-                        <id>bundle-manifest</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> 
-        </plugins>
-    </build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>maltcms-modules</artifactId>
+		<groupId>net.sf.maltcms</groupId>
+		<version>1.4.0-SNAPSHOT</version>
+	</parent>
+	<groupId>net.sf.maltcms.net.sf.jexcelapi</groupId>
+	<artifactId>jxl-osgi</artifactId>
+	<version>2.6.12</version>
+	<name>JXL OSGI</name>
+	<description>OSGI Wrapper module for JXL API http://jexcelapi.sourceforge.net/</description>
+	<url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/jxl-osgi</url>
+	<distributionManagement>
+		<site>
+			<id>maltcms.sf.net</id>
+			<name>maltcms.sf.net</name>
+			<url>scp://shell.sourceforge.net/home/project-web/maltcms/htdocs/maven/maltcms/${project.parent.version}/${project.artifactId}</url>
+		</site>
+	</distributionManagement>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<packaging>bundle</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<!-- set this to project.version to stay in sync -->
+			<version>2.6.12</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<!--<Import-Package>!junit.*;*</Import-Package> -->
+						<!-- state the packages to export, separated by ';' if these are not 
+							given, dependencies are NOT included by bnd -->
+						<Export-Package>jxl.*</Export-Package>
+						<!-- state the url of the license -->
+						<Bundle-License>http://www.gnu.org/licenses/lgpl.html</Bundle-License>
+						<!-- short description of the bundle -->
+						<Bundle-Description>Java Excel API - A Java API to read, write,
+							and modify Excel spreadsheets</Bundle-Description>
+						<Include-Resource>{maven-resources},@jxl-2.6.12.jar!/**</Include-Resource>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>none</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 

@@ -32,12 +32,10 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
-import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ResourceNotAvailableException;
 import cross.io.IDataSource;
-import cross.tools.MathTools;
 import cross.tools.StringTools;
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +48,6 @@ import java.util.UUID;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
-import maltcms.io.csv.ParserUtilities;
 import maltcms.io.csv.chromatof.ChromaTOFParser.ColumnName;
 import maltcms.io.csv.chromatof.ChromaTOFParser.Mode;
 import org.apache.commons.configuration.Configuration;
@@ -58,11 +55,7 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.lang.LocaleUtils;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
-import ucar.ma2.ArrayInt;
-import ucar.ma2.MAMath;
 import ucar.nc2.Attribute;
-import ucar.nc2.Dimension;
 
 /**
  *

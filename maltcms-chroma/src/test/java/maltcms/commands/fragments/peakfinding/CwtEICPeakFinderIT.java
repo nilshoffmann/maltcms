@@ -25,21 +25,17 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.preprocessing;
+package maltcms.commands.fragments.peakfinding;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
+import cross.exception.ConstraintViolationException;
 import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
-import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.tools.MaltcmsTools;
-import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -48,53 +44,26 @@ import org.junit.experimental.categories.Category;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
 @Category(IntegrationTest.class)
-public class DenseArrayProducerTest extends AFragmentCommandTest {
-
+public class CwtEICPeakFinderIT extends AFragmentCommandTest {
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
-
-    public DenseArrayProducerTest() {
-        setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
-        setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
-    }
-
+            "/cdf/1D/glucoseA.cdf.gz");
     /**
-     * Test of apply method, of class DenseArrayProducer.
+     *
      */
-    @Test
-    public void testDirectApply() throws IOException {
+    @Test(expected = RuntimeException.class)
+    public void testCwtEicPeakFinder() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
-        commands.add(new DefaultVarLoader());
-        ScanExtractor se = new ScanExtractor();
-        se.setStartScan(1000);
-        se.setEndScan(1500);
-        commands.add(se);
-        DenseArrayProducer dap = new DenseArrayProducer();
-        log.info("DenseArrayProducer: {}", dap);
-        commands.add(dap);
-        commands.add(new PeakCliqueAlignment());
+        CwtEicPeakFinder tpf = new CwtEicPeakFinder();
+        tpf.setIntegratePeaks(true);
+        tpf.setMaxScale(200);
+        tpf.setMinScale(5);
+        tpf.setSaveGraphics(true);
+        tpf.setMassResolution(1.0d);
+        commands.add(tpf);
         IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 
-    /**
-     * Test of apply method, of class DenseArrayProducer.
-     */
-    @Test
-    public void testApply() throws IOException {
-        List<IFragmentCommand> commands = new ArrayList<>();
-        commands.add(new DefaultVarLoader());
-        ScanExtractor se = new ScanExtractor();
-        se.setStartScan(1000);
-        se.setEndScan(1500);
-        commands.add(se);
-        DenseArrayProducer dap = new DenseArrayProducer();
-        log.info("DenseArrayProducer: {}", dap);
-        commands.add(dap);
-        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
-        testWorkflow(w);
-    }
 }

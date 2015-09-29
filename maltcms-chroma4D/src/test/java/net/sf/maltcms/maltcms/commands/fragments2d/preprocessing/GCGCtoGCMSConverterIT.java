@@ -58,7 +58,7 @@ import ucar.ma2.Array;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class GCGCtoGCMSConverterTest extends AFragmentCommandTest {
+public class GCGCtoGCMSConverterIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,

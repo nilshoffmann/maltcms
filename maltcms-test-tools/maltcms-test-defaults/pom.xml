@@ -7,7 +7,6 @@
         <version>1.4.0-SNAPSHOT</version>
         <!--<relativePath>..</relativePath>-->
     </parent>
-    <groupId>net.sf.maltcms.test</groupId>
     <artifactId>maltcms-test-defaults</artifactId>
     <name>Maltcms Test Defaults</name>
     <description>Test utilities for fragment commands and workflows.</description>

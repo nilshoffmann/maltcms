@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
+import maltcms.commands.fragments.peakfinding.TICPeakFinderIT;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
@@ -58,7 +58,7 @@ public class ObiWarplmataExporterTest extends AFragmentCommandTest {
     @Test
     public void testObiWarplmataExporter() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
-        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
+        File outputBase = tf.newFolder(TICPeakFinderIT.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());

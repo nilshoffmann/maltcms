@@ -33,8 +33,9 @@ import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.preprocessing.Data2DNormalizer;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
+import maltcms.commands.fragments2d.preprocessing.MeanVarProducer;
+import maltcms.commands.fragments2d.preprocessing.MeanVarVis;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
@@ -48,24 +49,28 @@ import org.junit.experimental.categories.Category;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class Data2DNormalizerTest extends AFragmentCommandTest {
-
+public class MeanVarVisIT extends AFragmentCommandTest {
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
 
     @Test
-    public void testData2DNormalizer() throws IOException {
+    public void testMeanVarVis() throws IOException {
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
-        Data2DNormalizer d = new Data2DNormalizer();
-        d.setApplyTopHatFilter(true);
-        d.setTopHatFilterWindow(100);
-        d.setApplyMovingAverage(true);
-        d.setMovingAverageWindow(30);
-        d.setApplyMovingMedian(true);
-        d.setMovingMedianWindow(50);
-
-        IWorkflow w = createWorkflow(Arrays.asList((IFragmentCommand) d), testFiles.getFiles());
+        Default2DVarLoader d = new Default2DVarLoader();
+        d.setEstimateModulationTime(false);
+        d.setModulationTime(5.0d);
+        d.setScanRate(100.0);
+        MeanVarProducer e = new MeanVarProducer();
+        MeanVarVis f = new MeanVarVis();
+        f.setDifferentVisualizations(true);
+        IWorkflow w = createWorkflow(
+            Arrays.asList(
+                (IFragmentCommand) d,
+                (IFragmentCommand) e,
+                (IFragmentCommand) f),
+            testFiles.getFiles()
+        );
         testWorkflow(w);
     }
 }

@@ -57,7 +57,7 @@ import ucar.nc2.Dimension;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
+public class NetcdfDataSourceIT implements IntegrationTest {
 
     @Rule
     public SetupLogging sl = new SetupLogging();
@@ -94,7 +94,7 @@ public class NetcdfDataSourceIntegrationTest implements IntegrationTest {
             localProxy2.save();
             testIndirectRemoteRead(localProxy2.getUri());
         } catch (IOException | ResourceNotAvailableException ex) {
-            Logger.getLogger(NetcdfDataSourceIntegrationTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NetcdfDataSourceIT.class.getName()).log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }
     }

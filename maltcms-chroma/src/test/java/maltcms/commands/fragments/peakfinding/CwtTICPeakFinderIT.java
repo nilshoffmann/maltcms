@@ -25,19 +25,20 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
+package maltcms.commands.fragments.peakfinding;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
 import java.io.IOException;
-import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
-import maltcms.commands.fragments2d.preprocessing.MeanVarProducer;
+import java.util.ArrayList;
+import java.util.List;
+import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
+import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -46,27 +47,32 @@ import org.junit.experimental.categories.Category;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
 @Category(IntegrationTest.class)
-public class MeanVarProducerTest extends AFragmentCommandTest {
+public class CwtTICPeakFinderIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz");
 
+    @Before
+    public void initLogging() {
+        setLogLevelFor(CwtTicPeakFinder.class, Level.DEBUG);
+    }
+
+    /**
+     *
+     */
     @Test
-    public void testMeanVarProducer() throws IOException {
-        setLogLevelFor(Default2DVarLoader.class, Level.ALL);
-        Default2DVarLoader d = new Default2DVarLoader();
-        d.setEstimateModulationTime(false);
-        d.setModulationTime(5.0d);
-        d.setScanRate(100.0);
-        MeanVarProducer e = new MeanVarProducer();
-
-        IWorkflow w = createWorkflow(
-                Arrays.asList((IFragmentCommand) d, (IFragmentCommand) e),
-                testFiles.getFiles()
-        );
+    public void testCwtTicPeakFinder() throws IOException {
+        List<IFragmentCommand> commands = new ArrayList<>();
+        CwtTicPeakFinder tpf = new CwtTicPeakFinder();
+        tpf.setIntegratePeaks(true);
+        tpf.setMaxScale(200);
+        tpf.setMinScale(5);
+        tpf.setSaveGraphics(true);
+        commands.add(tpf);
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
+
 }
