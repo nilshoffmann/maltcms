@@ -64,7 +64,7 @@ import org.junit.experimental.categories.Category;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class CemappDtwMziTest extends AFragmentCommandTest {
+public class CemappDtwMziIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,

@@ -308,7 +308,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 + "");
         sb.append("# maltcms is called, while the runtime properties and pipeline are\n");
         sb.append("# located in \n");
-        sb.append("# " + new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath() + "\n");
+        sb.append("# ").append(new File(cs.getWorkflow().getOutputDirectory(), "Factory").getAbsolutePath()).append("\n");
         sb.append("# \n");
         sb.append("# Your report will help improve Maltcms, thank you!\n");
         sb.append("#############################################################################\n");

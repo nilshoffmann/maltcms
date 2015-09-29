@@ -25,18 +25,25 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
+package maltcms.commands.fragments.peakfinding;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
+import java.util.LinkedList;
+import java.util.List;
+import maltcms.commands.filters.array.AArrayFilter;
+import maltcms.commands.filters.array.SavitzkyGolayFilter;
+import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
+import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
+import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import org.apache.log4j.Level;
+import maltcms.test.ZipResourceExtractor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -45,23 +52,37 @@ import org.junit.experimental.categories.Category;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
 @Category(IntegrationTest.class)
-public class Default2DVarLoaderTest extends AFragmentCommandTest {
-
+public class TICPeakFinderIT extends AFragmentCommandTest {
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
-
+            "/cdf/1D/glucoseA.cdf.gz");
+    /**
+     *
+     */
     @Test
-    public void testDefault2DVarLoader() throws IOException {
-        setLogLevelFor(Default2DVarLoader.class, Level.ALL);
-        Default2DVarLoader d2vl = new Default2DVarLoader();
-        d2vl.setEstimateModulationTime(false);
-        d2vl.setModulationTime(5.0d);
-        d2vl.setScanRate(100.0);
-
-        IWorkflow w = createWorkflow(Arrays.asList((IFragmentCommand) d2vl), testFiles.getFiles());
+    public void testTicPeakFinder() throws IOException {
+        List<IFragmentCommand> commands = new ArrayList<>();
+        commands.add(new DefaultVarLoader());
+        commands.add(new DenseArrayProducer());
+        TICPeakFinder tpf = new TICPeakFinder();
+        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
+        sgf.setWindow(12);
+        List<AArrayFilter> filters = new LinkedList<>();
+        filters.add(sgf);
+        tpf.setFilter(filters);
+        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
+        lmbe.setBandwidth(0.3);
+        lmbe.setAccuracy(1.0E-12);
+        lmbe.setRobustnessIterations(2);
+        lmbe.setMinimaWindow(100);
+        tpf.setBaselineEstimator(lmbe);
+        tpf.setSnrWindow(50);
+        tpf.setPeakSeparationWindow(10);
+        tpf.setPeakThreshold(3.0d);
+        commands.add(tpf);
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
+
 }

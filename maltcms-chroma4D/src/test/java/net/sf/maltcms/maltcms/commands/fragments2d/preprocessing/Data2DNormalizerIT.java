@@ -25,25 +25,19 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.peakfinding;
+package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
-import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.preprocessing.Data2DNormalizer;
+import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.test.ZipResourceExtractor;
+import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -52,39 +46,26 @@ import org.junit.experimental.categories.Category;
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 @Category(IntegrationTest.class)
-public class EICPeakFinderTest extends AFragmentCommandTest {
+public class Data2DNormalizerIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz");
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
 
-    /**
-     *
-     */
     @Test
-    public void testEicPeakFinder() throws IOException {
-        List<IFragmentCommand> commands = new ArrayList<>();
-        commands.add(new DefaultVarLoader());
-        commands.add(new DenseArrayProducer());
-        EICPeakFinder tpf = new EICPeakFinder();
-        SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
-        sgf.setWindow(12);
-        List<AArrayFilter> filters = new LinkedList<>();
-        filters.add(sgf);
-        tpf.setFilter(filters);
-        LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
-        lmbe.setBandwidth(0.3);
-        lmbe.setAccuracy(1.0E-12);
-        lmbe.setRobustnessIterations(2);
-        lmbe.setMinimaWindow(100);
-        tpf.setBaselineEstimator(lmbe);
-        tpf.setFilterWindow(50);
-        tpf.setPeakSeparationWindow(10);
-        tpf.setPeakThreshold(3.0d);
-        commands.add(tpf);
-        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
+    public void testData2DNormalizer() throws IOException {
+        setLogLevelFor(Default2DVarLoader.class, Level.ALL);
+        Data2DNormalizer d = new Data2DNormalizer();
+        d.setApplyTopHatFilter(true);
+        d.setTopHatFilterWindow(100);
+        d.setApplyMovingAverage(true);
+        d.setMovingAverageWindow(30);
+        d.setApplyMovingMedian(true);
+        d.setMovingMedianWindow(50);
+
+        IWorkflow w = createWorkflow(Arrays.asList((IFragmentCommand) d), testFiles.getFiles());
         testWorkflow(w);
     }
-
 }

@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
+import maltcms.commands.fragments.peakfinding.TICPeakFinderIT;
 import maltcms.io.csv.CSVReader;
 import maltcms.io.csv.CSVWriter;
 import maltcms.test.AFragmentCommandTest;

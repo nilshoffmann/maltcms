@@ -600,7 +600,7 @@ public class NetcdfDataSourceTest {
                 }
             }
         } catch (IOException | IllegalStateException | ResourceNotAvailableException ex) {
-            Logger.getLogger(NetcdfDataSourceIntegrationTest.class.getName()).
+            Logger.getLogger(NetcdfDataSourceIT.class.getName()).
                     log(Level.SEVERE, null, ex);
             Assert.fail(ex.getLocalizedMessage());
         }

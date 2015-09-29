@@ -21,7 +21,6 @@
         <dependency>
             <groupId>edu.ucar.unidata</groupId>
             <artifactId>netcdf-osgi</artifactId>
-            <version>4.2.35</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -61,7 +60,6 @@
         <dependency>
             <groupId>acs.lbl.gov</groupId>
             <artifactId>colt-osgi</artifactId>
-            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

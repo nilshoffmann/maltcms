@@ -323,9 +323,9 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <includes>
+<!--                        <includes>
                             <include>**/*.class</include>
-                        </includes>
+                        </includes>-->
                         <excludedGroups>cross.test.IntegrationTest</excludedGroups>
                         <argLine>-Xmx2G</argLine>
                         <trimStackTrace>false</trimStackTrace>
@@ -346,7 +346,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <groups>cross.test.IntegrationTest</groups>
+                        <!--<groups>cross.test.IntegrationTest</groups>-->
                         <failIfNoTests>false</failIfNoTests>
                         <trimStackTrace>false</trimStackTrace>
                         <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
@@ -361,9 +361,9 @@
                                 <goal>verify</goal>
                             </goals>
                             <configuration>
-                                <includes>
+<!--                                <includes>
                                     <include>**/*.class</include>
-                                </includes>
+                                </includes>-->
                                 <argLine>-Xmx2G</argLine>
                                 <!--redirectTestOutputToFile -->
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>

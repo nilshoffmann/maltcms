@@ -30,26 +30,25 @@ package maltcms.commands.fragments.alignment;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.Worker2DFactory;
+import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak2DMSFactory;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
-import maltcms.commands.fragments.preprocessing.ScanExtractor;
+import maltcms.math.functions.IArraySimilarity;
+import maltcms.math.functions.IScalarSimilarity;
+import maltcms.math.functions.ProductSimilarity;
+import maltcms.math.functions.similarities.ArrayWeightedCosine2;
+import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.test.ZipResourceExtractor;
-import org.apache.log4j.Level;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -59,37 +58,18 @@ import org.junit.experimental.categories.Category;
  * @author Nils Hoffmann
  */
 @Category(IntegrationTest.class)
-public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
+public class BiPaceIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-        "/cdf/1D/glucoseA.cdf.gz", 
-        "/cdf/1D/glucoseB.cdf.gz", 
-        "/cdf/1D/mannitolA.cdf.gz", 
-        "/cdf/1D/mannitolB.cdf.gz"
-    );
-
-    @Before
-    public void configureLogging() {
-        setLogLevelFor("maltcms", Level.OFF);
-        setLogLevelFor("cross", Level.OFF);
-        setLogLevelFor("net.sf.maltcms", Level.OFF);
-        setLogLevelFor("maltcms.commands.fragments.alignment.PairwiseDistanceCalculator", Level.INFO);
-        setLogLevelFor("maltcms.commands.fragments.alignment.ProgressiveTreeAlignment", Level.INFO);
-    }
-
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
     /**
      *
      */
-    @Ignore
     @Test
-    public void testProgressiveTreeAlignment() throws IOException {
+    public void testBipaceWithTicPeakFinding() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
-        ScanExtractor se = new ScanExtractor();
-        se.setStartScan(1600);
-        se.setEndScan(2100);
-        commands.add(se);
         commands.add(new DenseArrayProducer());
         TICPeakFinder tpf = new TICPeakFinder();
         SavitzkyGolayFilter sgf = new SavitzkyGolayFilter();
@@ -98,20 +78,17 @@ public class ProgressiveTreeAlignmentTest extends AFragmentCommandTest {
         filters.add(sgf);
         tpf.setFilter(filters);
         LoessMinimaBaselineEstimator lmbe = new LoessMinimaBaselineEstimator();
-        lmbe.setMinimaWindow(50);
         lmbe.setBandwidth(0.3);
         lmbe.setAccuracy(1.0E-12);
         lmbe.setRobustnessIterations(2);
+        lmbe.setMinimaWindow(100);
         tpf.setBaselineEstimator(lmbe);
         tpf.setSnrWindow(50);
         tpf.setPeakSeparationWindow(10);
         tpf.setPeakThreshold(3.0d);
         commands.add(tpf);
         commands.add(new PeakCliqueAlignment());
-        commands.add(new PairwiseDistanceCalculator());
-        commands.add(new ProgressiveTreeAlignment());
-        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
+        IWorkflow w = createWorkflow(tf.newFolder("klda äÄas"), commands, testFiles.getFiles());
         testWorkflow(w);
     }
-
 }

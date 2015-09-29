@@ -25,25 +25,31 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
+package maltcms.commands.fragments.preprocessing;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
-import maltcms.commands.fragments2d.preprocessing.ModulationExtractor;
-import maltcms.datastructures.ms.Chromatogram2D;
+import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
+import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import ucar.ma2.Array;
 
 /**
  *
@@ -51,29 +57,26 @@ import org.junit.experimental.categories.Category;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class ModulationExtractorTest extends AFragmentCommandTest {
+public class DefaultVarLoaderIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz");
 
+    public DefaultVarLoaderIT() {
+        setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
+        setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
+    }
+
+    /**
+     * Test of apply method, of class DenseArrayProducer.
+     */
     @Test
-    public void testModulationExtractor() throws IOException {
-        setLogLevelFor(Default2DVarLoader.class, Level.ALL);
-        Default2DVarLoader d2vl = new Default2DVarLoader();
-        d2vl.setEstimateModulationTime(false);
-        d2vl.setModulationTime(5.0d);
-        d2vl.setScanRate(100.0);
-        ModulationExtractor me = new ModulationExtractor();
-        me.setStartModulation(10);
-        me.setEndModulation(50);
-
-        IWorkflow w = createWorkflow(Arrays.asList(
-                (IFragmentCommand) d2vl, (IFragmentCommand) me),
-                testFiles.getFiles());
-        for (IFileFragment f : testWorkflow(w)) {
-            Chromatogram2D chrom2 = new Chromatogram2D(f);
-            Assert.assertEquals(40, chrom2.getNumberOfModulations());
-        }
+    public void testDirectApply() throws IOException {
+        List<IFragmentCommand> commands = new ArrayList<>();
+        DefaultVarLoader dvl = new DefaultVarLoader();
+        commands.add(dvl);
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
+        testWorkflow(w);
     }
 }

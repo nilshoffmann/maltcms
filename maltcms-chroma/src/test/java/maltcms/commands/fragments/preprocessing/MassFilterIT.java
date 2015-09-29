@@ -33,7 +33,6 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +48,6 @@ import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import ucar.ma2.Array;
 
 /**
  *
@@ -57,13 +55,13 @@ import ucar.ma2.Array;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class DefaultVarLoaderTest extends AFragmentCommandTest {
+public class MassFilterIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz");
 
-    public DefaultVarLoaderTest() {
+    public MassFilterIT() {
         setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
         setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
     }
@@ -74,9 +72,35 @@ public class DefaultVarLoaderTest extends AFragmentCommandTest {
     @Test
     public void testDirectApply() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
-        DefaultVarLoader dvl = new DefaultVarLoader();
-        commands.add(dvl);
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
+        commands.add(se);
+        MassFilter mf = new MassFilter();
+        mf.setExcludeMasses(Arrays.asList(new String[]{"73.0","74.0","75.0"}));
         IWorkflow w = createWorkflow(commands, testFiles.getFiles());
-        testWorkflow(w);
+        TupleND<IFileFragment> results;
+        //execute workflow
+        results = testWorkflow(w);
+        //retrieve variables that DenseArrayProducer provides
+        Collection<String> variablesToCheck = Arrays.asList(new String[]{"mass_values"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
+        for (IFileFragment f : results) {
+            for (String variable : variablesToCheck) {
+                log.info("Checking variable: {}", variable);
+                try {
+                    //get structure, no data
+                    IVariableFragment v = f.getChild(variable, true);
+                    //load array explicitly
+                    double[] d = (double[])v.getArray().get1DJavaArray(double.class);
+                    int idx = Arrays.binarySearch(d, 73.0);
+                    Assert.assertTrue(idx<0);
+                    //remove
+                    f.removeChild(v);
+                } catch (Exception e) {
+                    log.warn(e.getLocalizedMessage());
+                    Assert.fail(e.getLocalizedMessage());
+                }
+            }
+        }
     }
 }

@@ -28,18 +28,13 @@
 package maltcms.commands.fragments.preprocessing;
 
 import cross.commands.fragments.IFragmentCommand;
-import cross.datastructures.fragments.IFileFragment;
-import cross.datastructures.fragments.IVariableFragment;
-import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
@@ -55,13 +50,13 @@ import org.junit.experimental.categories.Category;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class MassFilterTest extends AFragmentCommandTest {
+public class DenseArrayProducerIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz");
+            "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");
 
-    public MassFilterTest() {
+    public DenseArrayProducerIT() {
         setLogLevelFor(MaltcmsTools.class, Level.DEBUG);
         setLogLevelFor(NetcdfDataSource.class, Level.DEBUG);
     }
@@ -72,35 +67,34 @@ public class MassFilterTest extends AFragmentCommandTest {
     @Test
     public void testDirectApply() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
+        commands.add(new DefaultVarLoader());
         ScanExtractor se = new ScanExtractor();
         se.setStartScan(1000);
         se.setEndScan(1500);
         commands.add(se);
-        MassFilter mf = new MassFilter();
-        mf.setExcludeMasses(Arrays.asList(new String[]{"73.0","74.0","75.0"}));
+        DenseArrayProducer dap = new DenseArrayProducer();
+        log.info("DenseArrayProducer: {}", dap);
+        commands.add(dap);
+        commands.add(new PeakCliqueAlignment());
         IWorkflow w = createWorkflow(commands, testFiles.getFiles());
-        TupleND<IFileFragment> results;
-        //execute workflow
-        results = testWorkflow(w);
-        //retrieve variables that DenseArrayProducer provides
-        Collection<String> variablesToCheck = Arrays.asList(new String[]{"mass_values"});//AnnotationInspector.getProvidedVariables(DenseArrayProducer.class);
-        for (IFileFragment f : results) {
-            for (String variable : variablesToCheck) {
-                log.info("Checking variable: {}", variable);
-                try {
-                    //get structure, no data
-                    IVariableFragment v = f.getChild(variable, true);
-                    //load array explicitly
-                    double[] d = (double[])v.getArray().get1DJavaArray(double.class);
-                    int idx = Arrays.binarySearch(d, 73.0);
-                    Assert.assertTrue(idx<0);
-                    //remove
-                    f.removeChild(v);
-                } catch (Exception e) {
-                    log.warn(e.getLocalizedMessage());
-                    Assert.fail(e.getLocalizedMessage());
-                }
-            }
-        }
+        testWorkflow(w);
+    }
+
+    /**
+     * Test of apply method, of class DenseArrayProducer.
+     */
+    @Test
+    public void testApply() throws IOException {
+        List<IFragmentCommand> commands = new ArrayList<>();
+        commands.add(new DefaultVarLoader());
+        ScanExtractor se = new ScanExtractor();
+        se.setStartScan(1000);
+        se.setEndScan(1500);
+        commands.add(se);
+        DenseArrayProducer dap = new DenseArrayProducer();
+        log.info("DenseArrayProducer: {}", dap);
+        commands.add(dap);
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
+        testWorkflow(w);
     }
 }

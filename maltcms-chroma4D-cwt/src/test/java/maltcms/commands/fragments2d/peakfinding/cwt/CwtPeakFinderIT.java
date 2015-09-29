@@ -25,20 +25,26 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.commands.fragments.peakfinding;
+package maltcms.commands.fragments2d.peakfinding.cwt;
 
 import cross.commands.fragments.IFragmentCommand;
+import cross.datastructures.fragments.IFileFragment;
+import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import maltcms.io.andims.NetcdfDataSource;
+import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.tools.MaltcmsTools;
+import maltcms.test.ZipResourceExtractor;
 import org.apache.log4j.Level;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -47,32 +53,41 @@ import org.junit.experimental.categories.Category;
  *
  * @author Nils Hoffmann
  */
+@Slf4j
 @Category(IntegrationTest.class)
-public class CwtTICPeakFinderTest extends AFragmentCommandTest {
+public class CwtPeakFinderIT extends AFragmentCommandTest {
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
-            "/cdf/1D/glucoseA.cdf.gz");
+            "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
 
-    @Before
-    public void initLogging() {
-        setLogLevelFor(CwtTicPeakFinder.class, Level.DEBUG);
-    }
-
-    /**
-     *
-     */
     @Test
-    public void testCwtTicPeakFinder() throws IOException {
-        List<IFragmentCommand> commands = new ArrayList<>();
-        CwtTicPeakFinder tpf = new CwtTicPeakFinder();
-        tpf.setIntegratePeaks(true);
-        tpf.setMaxScale(200);
-        tpf.setMinScale(5);
-        tpf.setSaveGraphics(true);
-        commands.add(tpf);
-        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
-        testWorkflow(w);
+    public void testPeakFinder() throws IOException {
+        setLogLevelFor(CwtPeakFinder.class, Level.ALL);
+        Default2DVarLoader d2vl = new Default2DVarLoader();
+//        d2vl.setEstimateModulationTime(true);
+        d2vl.setEstimateModulationTime(false);
+        d2vl.setModulationTime(5.0d);
+        d2vl.setScanRate(100.0);
+        CwtPeakFinder cpf = new CwtPeakFinder();
+        List<IFragmentCommand> l = new LinkedList<>();
+        l.add(d2vl);
+        l.add(cpf);
+        IWorkflow w = createWorkflow(l, testFiles.getFiles());
+        try {
+            TupleND<IFileFragment> results = w.call();
+            w.save();
+        } catch (Exception ex) {
+            Assert.fail(ex.getLocalizedMessage());
+        }
     }
 
+    public static void main(String[] args) {
+        CwtPeakFinderIT test = new CwtPeakFinderIT();
+        try {
+            test.testPeakFinder();
+        } catch (IOException ex) {
+            Logger.getLogger(CwtPeakFinderIT.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+    }
 }

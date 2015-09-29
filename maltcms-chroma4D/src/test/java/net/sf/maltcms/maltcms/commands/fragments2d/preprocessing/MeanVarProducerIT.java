@@ -35,7 +35,6 @@ import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.commands.fragments2d.preprocessing.MeanVarProducer;
-import maltcms.commands.fragments2d.preprocessing.MeanVarVis;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
@@ -49,27 +48,24 @@ import org.junit.experimental.categories.Category;
  */
 @Slf4j
 @Category(IntegrationTest.class)
-public class MeanVarVisTest extends AFragmentCommandTest {
+public class MeanVarProducerIT extends AFragmentCommandTest {
+
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
             "/cdf/2D/090306_37_FAME_Standard_1.cdf.gz");
 
     @Test
-    public void testMeanVarVis() throws IOException {
+    public void testMeanVarProducer() throws IOException {
         setLogLevelFor(Default2DVarLoader.class, Level.ALL);
         Default2DVarLoader d = new Default2DVarLoader();
         d.setEstimateModulationTime(false);
         d.setModulationTime(5.0d);
         d.setScanRate(100.0);
         MeanVarProducer e = new MeanVarProducer();
-        MeanVarVis f = new MeanVarVis();
-        f.setDifferentVisualizations(true);
+
         IWorkflow w = createWorkflow(
-            Arrays.asList(
-                (IFragmentCommand) d,
-                (IFragmentCommand) e,
-                (IFragmentCommand) f),
-            testFiles.getFiles()
+                Arrays.asList((IFragmentCommand) d, (IFragmentCommand) e),
+                testFiles.getFiles()
         );
         testWorkflow(w);
     }

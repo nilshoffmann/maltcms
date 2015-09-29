@@ -71,7 +71,7 @@ import ucar.ma2.Array;
 @BenchmarkOptions(callgc = false, benchmarkRounds = 5, warmupRounds = 3)
 @Category(IntegrationTest.class)
 @Slf4j
-public class ArraySimilarityTiming extends AFragmentCommandTest implements IntegrationTest {
+public class ArraySimilarityTimingIT extends AFragmentCommandTest implements IntegrationTest {
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,

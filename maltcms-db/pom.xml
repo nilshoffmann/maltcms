@@ -39,7 +39,6 @@
             <artifactId>db4o-all</artifactId>
             <groupId>com.db4o</groupId>
             <type>jar</type>
-            <version>8.0.249</version>
         </dependency>
     </dependencies>
     <properties>
