@@ -46,7 +46,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
     private double dist, f1;
     private String toolName;
     private HashSet<EntityGroup<T>> unmatchedToolEnt, unmatchedGroundTruthEnt;
-    private HashMap<EntityGroup<T>, EntityGroupClassificationResult> groundTruthToToolMatchResults;
+    private HashMap<EntityGroup<T>, EntityGroupClassificationResult<T>> groundTruthToToolMatchResults;
 
     /**
      * <p>Constructor for PerformanceMetrics.</p>
@@ -64,7 +64,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
      * @param unmatchedGroundTruth a {@link java.util.HashSet} object.
      * @param gtToClsRes a {@link java.util.HashMap} object.
      */
-    public PerformanceMetrics(String toolName, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup<T>> unmatchedTool, HashSet<EntityGroup<T>> unmatchedGroundTruth, HashMap<EntityGroup<T>, EntityGroupClassificationResult> gtToClsRes) {
+    public PerformanceMetrics(String toolName, int tp, int fp, int tn, int fn, int N, int M, int K, double dist, HashSet<EntityGroup<T>> unmatchedTool, HashSet<EntityGroup<T>> unmatchedGroundTruth, HashMap<EntityGroup<T>, EntityGroupClassificationResult<T>> gtToClsRes) {
         this.toolName = toolName;
         this.tp = tp;
         this.fp = fp;//+unmatchedTool;
@@ -190,7 +190,7 @@ public class PerformanceMetrics<T extends IFeatureVector> implements IPerformanc
      *
      * @return a {@link java.util.Map} object.
      */
-    public Map<EntityGroup<T>, EntityGroupClassificationResult> getGroundTruthToToolMatchResults() {
+    public Map<EntityGroup<T>, EntityGroupClassificationResult<T>> getGroundTruthToToolMatchResults() {
         return this.groundTruthToToolMatchResults;
     }
 

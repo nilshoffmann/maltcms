@@ -107,7 +107,6 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
         List<Entity<T>> l = new ArrayList<>(t.getSecond().size());
         int rowIndex = 0;
         Set<Double> areaSet = new HashSet<>();
-        MultiMap<String, Entity<T>> mm = new MultiMap<>();
         for (TableRow tr : t.getSecond()) {
             if (log.isDebugEnabled()) {
                 log.debug("Row data for row index: " + rowIndex + " = " + tr.toString());
@@ -144,7 +143,8 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
                 }
             }
             if (!areaSet.contains(area)) {
-                Entity e = new Entity(ifc, c, tr.getValueForName(ColumnName.NAME));
+                @SuppressWarnings("unchecked")
+                Entity<T> e = new Entity<>((T)ifc, c, tr.getValueForName(ColumnName.NAME));
                 l.add(e);
                 areaSet.add(area);
             } else {

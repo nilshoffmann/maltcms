@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.test.ExtractClassPathFiles;
 import org.junit.Before;
@@ -404,7 +404,7 @@ public class MzXMLDataSourceTest {
         log.info("Restored shape: {}", Arrays.toString(b.
                 getShape()));
         while (ii1.hasNext() && rii1.hasNext()) {
-            Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
+            Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext(),1.0e-8);
         }
     }
 

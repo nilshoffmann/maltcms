@@ -33,7 +33,6 @@ import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.Fragments;
 import cross.datastructures.workflow.IWorkflow;
 import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;

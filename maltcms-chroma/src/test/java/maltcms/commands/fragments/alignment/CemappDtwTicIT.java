@@ -79,7 +79,7 @@ public class CemappDtwTicIT extends AFragmentCommandTest {
                 1.0d));
         commands.add(new CenterStarAlignment());
         ChromatogramWarp2 cwarp2 = new ChromatogramWarp2();
-        cwarp2.setIndexedVars(new LinkedList<String>());
+        cwarp2.setIndexedVars(new LinkedList<>());
         commands.add(cwarp2);
         IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);

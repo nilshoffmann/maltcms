@@ -33,14 +33,14 @@ package net.sf.maltcms.evaluation.api.classification;
  * @author Nils Hoffmann
  * 
  */
-public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorComparator<IRowIndexNamedPeakFeatureVector> {
+public class PeakRowIndexFeatureVectorComparator<T extends INamedPeakFeatureVector> implements IFeatureVectorComparator<T> {
 
     /* (non-Javadoc)
      * @see maltcms.experimental.eval.IFeatureVectorComparator#isFN(maltcms.datastructures.array.IFeatureVector, maltcms.datastructures.array.IFeatureVector)
      */
     /** {@inheritDoc} */
     @Override
-    public boolean isFN(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+    public boolean isFN(T gt, T test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
@@ -56,7 +56,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
      */
     /** {@inheritDoc} */
     @Override
-    public boolean isFP(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+    public boolean isFP(T gt, T test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
@@ -76,7 +76,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
      */
     /** {@inheritDoc} */
     @Override
-    public boolean isTN(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+    public boolean isTN(T gt, T test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
@@ -93,7 +93,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
      */
     /** {@inheritDoc} */
     @Override
-    public boolean isTP(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+    public boolean isTP(T gt, T test) {
         if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
             final int lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
             final int rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();
@@ -116,7 +116,7 @@ public class PeakRowIndexFeatureVectorComparator implements IFeatureVectorCompar
      * with either x=NaN and y!=NaN, x!=NaN and y==NaN, or x=NaN=y
      */
     @Override
-    public double getSquaredDiff(IRowIndexNamedPeakFeatureVector gt, IRowIndexNamedPeakFeatureVector test) {
+    public double getSquaredDiff(T gt, T test) {
 //        if (gt instanceof IRowIndexNamedPeakFeatureVector && test instanceof IRowIndexNamedPeakFeatureVector) {
 //            double lhsRT = ((IRowIndexNamedPeakFeatureVector) gt).getRowIndex();
 //            double rhsRT = ((IRowIndexNamedPeakFeatureVector) test).getRowIndex();

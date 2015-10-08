@@ -29,7 +29,7 @@ package maltcms.mpaxs;
 
 import java.util.HashSet;
 import java.util.List;
-import junit.framework.Assert;
+import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.mpaxs.api.ConfigurationKeys;
 import net.sf.mpaxs.api.ExecutionType;

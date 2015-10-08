@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -133,7 +133,7 @@ public class NetcdfJavaTest {
             Assert.assertEquals(arr1.getShape()[0], rivf1.read().getShape()[0]);
             Assert.assertEquals(arr1.getShape()[1], rivf1.read().getShape()[1]);
             while (ii1.hasNext() && rii1.hasNext()) {
-                Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext());
+                Assert.assertEquals(ii1.getDoubleNext(), rii1.getDoubleNext(),1.0e-8);
             }
             Assert.assertEquals(rivf1.findAttribute("description").getStringValue(), "two-dimensional array");
 
@@ -151,7 +151,7 @@ public class NetcdfJavaTest {
             IndexIterator rii2 = rivf2.read().getIndexIterator();
             Assert.assertEquals(arr2.getShape()[0], rivf2.read().getShape()[0]);
             while (ii2.hasNext() && rii2.hasNext()) {
-                Assert.assertEquals(ii2.getDoubleNext(), rii2.getDoubleNext());
+                Assert.assertEquals(ii2.getDoubleNext(), rii2.getDoubleNext(),1.0e-8);
             }
 
             Dimension dr4 = readFile.findDimension(dim4.getName());

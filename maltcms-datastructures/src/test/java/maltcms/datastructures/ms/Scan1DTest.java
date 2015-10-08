@@ -225,11 +225,11 @@ public class Scan1DTest {
         for (int i = 0; i < shape1.length; i++) {
             Assert.assertEquals(shape1[i], shape2[i]);
         }
-        junit.framework.Assert.assertEquals(a.getElementType(), b.getElementType());
+        org.junit.Assert.assertEquals(a.getElementType(), b.getElementType());
         IndexIterator itera = a.getIndexIterator();
         IndexIterator iterb = b.getIndexIterator();
         while (itera.hasNext() && iterb.hasNext()) {
-            junit.framework.Assert.assertEquals(itera.getObjectNext(), iterb.getObjectNext());
+            org.junit.Assert.assertEquals(itera.getObjectNext(), iterb.getObjectNext());
         }
     }
 

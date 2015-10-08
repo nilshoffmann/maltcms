@@ -28,7 +28,7 @@
 package maltcms.datastructures.array.tests;
 
 import cross.datastructures.tuple.Tuple2D;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
@@ -145,10 +145,10 @@ public class SparseTest extends TestCase {
 
     public void testToArrays() {
         final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> t1 = this.s1.toArrays();
-        Assert.assertEquals(0.0d, diff(t1.getFirst(), this.index));
-        Assert.assertEquals(0.0d, diff(t1.getSecond(), this.values));
+        Assert.assertEquals(0.0d, diff(t1.getFirst(), this.index),1.0e-8);
+        Assert.assertEquals(0.0d, diff(t1.getSecond(), this.values),1.0e-8);
         final Tuple2D<ArrayDouble.D1, ArrayDouble.D1> t2 = this.s2.toArrays();
-        Assert.assertEquals(0.0d, diff(t2.getFirst(), this.index1));
-        Assert.assertEquals(0.0d, diff(t2.getSecond(), this.values1));
+        Assert.assertEquals(0.0d, diff(t2.getFirst(), this.index1),1.0e-8);
+        Assert.assertEquals(0.0d, diff(t2.getSecond(), this.values1),1.0e-8);
     }
 }
