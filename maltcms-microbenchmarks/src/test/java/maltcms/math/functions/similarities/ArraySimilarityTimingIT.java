@@ -91,7 +91,7 @@ public class ArraySimilarityTimingIT extends AFragmentCommandTest implements Int
             IFragmentCommand dap = new DenseArrayProducer();
             ScanExtractor se = new ScanExtractor();
             se.setStartScan(1000);
-            se.setEndScan(1999);
+            se.setEndScan(1099);
             List<File> files = ecpf.getFiles();
             IWorkflow w = createWorkflow(outputBase, Arrays.asList(se, dap), files);
             TupleND<IFileFragment> t = w.call();

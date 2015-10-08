@@ -42,7 +42,6 @@ import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import lombok.extern.slf4j.Slf4j;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureMap;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureType;
 import maltcms.io.xml.bindings.openms.featurexml.FeatureType.Position;
@@ -253,7 +252,7 @@ public class PeakFactory {
         });
         for (File f : files) {
             FeatureMap.FeatureList fl = getFeatureList(f);
-            IFileFragment frag = joinFeatures(new File(output), f.getName(), fl);
+            joinFeatures(new File(output), f.getName(), fl);
         }
         log.info("Processed " + files.length + " files!");
         System.exit(0);

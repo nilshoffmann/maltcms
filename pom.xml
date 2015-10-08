@@ -167,6 +167,19 @@
             <!-- To use the plugin goals in your POM or parent POM -->
             <plugins>
                 <plugin>
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb2-plugin</artifactId>
+                    <version>0.8.2</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.3.1</version>
@@ -323,7 +336,7 @@
                         </dependency>
                     </dependencies>
                     <configuration>
-<!--                        <includes>
+                        <!--                        <includes>
                             <include>**/*.class</include>
                         </includes>-->
                         <excludedGroups>cross.test.IntegrationTest</excludedGroups>
@@ -361,7 +374,7 @@
                                 <goal>verify</goal>
                             </goals>
                             <configuration>
-<!--                                <includes>
+                                <!--                                <includes>
                                     <include>**/*.class</include>
                                 </includes>-->
                                 <argLine>-Xmx2G</argLine>
@@ -422,7 +435,7 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
                     <extensions>true</extensions>
-                    <version>3.9</version>
+                    <version>3.14</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -850,8 +863,8 @@
         <netbeans.hint.license>maltcms</netbeans.hint.license>
         <!--<maven.test.skip>false</maven.test.skip> -->
         <skipITs>true</skipITs>
-        <project.build.sourceLevel>1.7</project.build.sourceLevel>
-        <project.build.targetLevel>1.7</project.build.targetLevel>
+        <project.build.sourceLevel>1.8</project.build.sourceLevel>
+        <project.build.targetLevel>1.8</project.build.targetLevel>
         <version.cross>1.4.0</version.cross>
         <version.slf4j>1.7.2</version.slf4j>
         <version.junit>4.11</version.junit>

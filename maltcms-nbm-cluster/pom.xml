@@ -59,10 +59,20 @@
                     </plugin>
                 </plugins>
             </build>
-            <properties>
-                <nbm.updatecenter.outputDir>${project.build.directory}</nbm.updatecenter.outputDir>
-            </properties>
         </profile>
     </profiles>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.netbeans.api</groupId>
+                <artifactId>org-openide-util-lookup</artifactId>
+                <version>${version.netbeans}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <properties>
+        <version.netbeans>RELEASE80</version.netbeans>
+        <nbm.updatecenter.outputDir>${project.build.directory}</nbm.updatecenter.outputDir>
+    </properties>
     
 </project>
