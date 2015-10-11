@@ -65,7 +65,7 @@ public class ModulationExtractorIT extends AFragmentCommandTest {
         d2vl.setModulationTime(5.0d);
         d2vl.setScanRate(100.0);
         ModulationExtractor me = new ModulationExtractor();
-        me.setStartModulation(10);
+        me.setStartModulation(0);
         me.setEndModulation(50);
 
         IWorkflow w = createWorkflow(Arrays.asList(
@@ -73,7 +73,7 @@ public class ModulationExtractorIT extends AFragmentCommandTest {
                 testFiles.getFiles());
         for (IFileFragment f : testWorkflow(w)) {
             Chromatogram2D chrom2 = new Chromatogram2D(f);
-            Assert.assertEquals(40, chrom2.getNumberOfModulations());
+            Assert.assertEquals(50, chrom2.getNumberOfModulations());
         }
     }
 }

@@ -61,7 +61,7 @@ import org.junit.experimental.categories.Category;
 public class BiPaceChromaTofIT extends AFragmentCommandTest {
 
     @Rule
-    public ExtractClassPathFiles gcgcMsFiles = new ExtractClassPathFiles(tf, "/csv/chromatof/full/2D/mut_t1_a.csv.gz", "/csv/chromatof/full/2D/mut_t1_b.csv.gz");
+    public ExtractClassPathFiles gcgcMsFiles = new ExtractClassPathFiles(tf, "/csv/chromatof/reduced/2D/mut_t1_a.csv.gz", "/csv/chromatof/reduced/2D/mut_t1_b.csv.gz");
 
     /**
      *
