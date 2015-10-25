@@ -41,11 +41,12 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.ArrayInt;
 
 @Slf4j
-@RequiresVariables(names = {"variable1", "variable2"})
-@RequiresOptionalVariables(names = {"variable3"})
-@ProvidesVariables(names = {"variable2", "variable5"})
+@RequiresVariables(names = {"nil.variable1", "nil.variable2"})
+@RequiresOptionalVariables(names = {"nil.variable3"})
+@ProvidesVariables(names = {"nil.variable2", "nil.variable5"})
 public class FragmentCommandMockB extends AFragmentCommand {
 
     /**
@@ -61,13 +62,19 @@ public class FragmentCommandMockB extends AFragmentCommand {
             IVariableFragment ivf1 = frag.getChild("variable1");
             VariableFragment v4 = new VariableFragment(frag, "variable4");
             v4.setArray(ivf1.getArray());
-            IVariableFragment ivf2 = frag.getChild("variable2");
-            ivf2.getArray();
+            //shadow for variable2 from parent
+            IVariableFragment ivf2 = new VariableFragment(frag, "variable2");
             VariableFragment v5 = new VariableFragment(frag, "variable5");
+            v5.setIndex(ivf2);
+            ArrayInt.D1 indexArray = new ArrayInt.D1(10);
             List<Array> indexedList = new ArrayList<>();
+            int offset = 0;
             for (int i = 0; i < 10; i++) {
+                indexArray.set(i, offset);
                 indexedList.add(new ArrayDouble.D1(20));
+                offset += 20;
             }
+            ivf2.setArray(indexArray);
             v5.setIndexedArray(indexedList);
             frag.save();
         }

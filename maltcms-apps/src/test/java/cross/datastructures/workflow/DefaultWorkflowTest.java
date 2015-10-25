@@ -27,15 +27,19 @@
  */
 package cross.datastructures.workflow;
 
+import cross.Factory;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
+import cross.exception.MappingNotAvailableException;
+import cross.vocabulary.IControlledVocabularyProvider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
@@ -48,7 +52,7 @@ import ucar.ma2.ArrayDouble;
 
 @Slf4j
 public class DefaultWorkflowTest {
-
+    
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     public File inputDirectory;
@@ -56,19 +60,19 @@ public class DefaultWorkflowTest {
     public String[] fileExtensions = new String[]{"cdf", "nc"};
     public boolean checkCommandDependencies = true;
     public DefaultWorkflow dw;
-
+    
     @Before
     public void setUp() throws Exception {
         inputDirectory = folder.newFolder("input");
         outputDirectory = folder.newFolder("output");
         dw = getDefaultWorkflow();
     }
-
+    
     @After
     public void tearDown() throws Exception {
 //       folder.
     }
-
+    
     public List<File> getDefaultTestFiles() {
         File[] files = new File[4];
         for (int i = 0; i < files.length; i++) {
@@ -80,7 +84,7 @@ public class DefaultWorkflowTest {
         }
         return Arrays.asList(files);
     }
-
+    
     public List<IFragmentCommand> getDefaultFragmentCommands() {
         List<IFragmentCommand> cmds = new ArrayList<>();
         cmds.add(new FragmentCommandMockA());
@@ -88,10 +92,10 @@ public class DefaultWorkflowTest {
         cmds.add(new FragmentCommandMockC());
         return cmds;
     }
-
+    
     public CommandPipeline getDefaultCommandSequence(
             List<IFragmentCommand> commands, List<File> inputFiles) {
-
+        
         CommandPipeline cp = new CommandPipeline();
         cp.setCommands(commands);
         List<IFileFragment> files = new ArrayList<>();
@@ -101,23 +105,27 @@ public class DefaultWorkflowTest {
         }
         cp.setInput(new TupleND<>(files));
         cp.setCheckCommandDependencies(checkCommandDependencies);
-
+        
         return cp;
     }
-
+    
     public DefaultWorkflow getDefaultWorkflow() {
         log.info("Building test command sequence");
         CommandPipeline cp = getDefaultCommandSequence(
                 getDefaultFragmentCommands(), getDefaultTestFiles());
         log.info("Creating workflow");
         DefaultWorkflow dw = new DefaultWorkflow();
+        dw.setFactory(Factory.getInstance());
+        dw.setName("testWorkflow");
+        dw.setStartupDate(new Date());
         dw.setExecuteLocal(true);
         dw.setCommandSequence(cp);
+        dw.setOutputDirectory(outputDirectory);
         return dw;
     }
-
+    
     @Test
-    public void testWorkflow() {
+    public void testWorkflow() throws Exception {
         log.info("Testing workflow!");
         try {
             TupleND<IFileFragment> tpl = dw.call();
@@ -125,7 +133,9 @@ public class DefaultWorkflowTest {
                 log.info("Workflow created fragment: {}", ff.getUri());
             }
         } catch (Exception e) {
+            log.error("Caught Exception while testing workflow: ", e);
             fail();
+            throw e;
         }
     }
 }

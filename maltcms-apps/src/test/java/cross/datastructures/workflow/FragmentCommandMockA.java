@@ -37,7 +37,7 @@ import cross.datastructures.tuple.TupleND;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@ProvidesVariables(names = {"variable1", "variable2"})
+@ProvidesVariables(names = {"nil.variable1", "nil.variable2"})
 public class FragmentCommandMockA extends AFragmentCommand {
 
     /**
