@@ -28,7 +28,6 @@
 package maltcms.io.csv.chromatof;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * <p>

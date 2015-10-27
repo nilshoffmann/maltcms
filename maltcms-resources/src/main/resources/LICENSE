@@ -4,7 +4,8 @@
 
 Maltcms ${project.version} is licensed under 
 either the terms of the Lesser Gnu Public License, v3 (L-GPL v3) or under the terms of the 
-Eclipse Public License, v1 (EPL v1), at the licensees choice.
+Eclipse Public License, v1 (EPL v1), at the licensees choice. Please see licenses/LICENSE.maltcms.txt
+for the full license text.
 
 A copy of the license text for the L-GPL v3 license can be found in the licenses/ directory of this
 distribution. The license text for the EPL v1 is available at the same location.

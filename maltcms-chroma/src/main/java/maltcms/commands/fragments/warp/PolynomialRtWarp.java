@@ -58,7 +58,6 @@ import maltcms.io.csv.CSVReader;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
-import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;

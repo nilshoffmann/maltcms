@@ -29,9 +29,7 @@ package maltcms.commands.filters.array;
 
 import java.io.IOException;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 

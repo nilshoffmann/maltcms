@@ -39,8 +39,8 @@ import maltcms.io.csv.chromatof.ChromaTOFParser.ColumnName;
 import maltcms.io.csv.chromatof.ChromaTOFParser.TableColumn;
 import maltcms.test.ZipResourceExtractor;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**

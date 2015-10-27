@@ -27,9 +27,8 @@
  */
 package maltcms.commands.filters;
 
-import org.apache.commons.configuration.Configuration;
-
 import cross.commands.ICommand;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * Transformation base class to perform operations on Double values.

@@ -32,7 +32,6 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.image.BufferedImage;
 import java.util.List;
-import maltcms.ui.charts.AChart;
 import org.jfree.chart.JFreeChart;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;

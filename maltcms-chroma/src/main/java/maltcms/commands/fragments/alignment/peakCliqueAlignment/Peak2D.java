@@ -27,7 +27,6 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import cross.datastructures.cache.SerializableArray;
 import cross.exception.ResourceNotAvailableException;
 import java.io.IOException;
 import java.io.ObjectInputStream;

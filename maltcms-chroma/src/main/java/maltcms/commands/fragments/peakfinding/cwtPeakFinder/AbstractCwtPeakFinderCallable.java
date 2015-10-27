@@ -45,7 +45,6 @@ import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.datastructures.peak.Peak1D;
-import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
 import maltcms.datastructures.peak.PeakType;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.rank.Rank;

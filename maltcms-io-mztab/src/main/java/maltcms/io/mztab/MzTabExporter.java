@@ -10,7 +10,6 @@ import cross.datastructures.pipeline.ResultAwareCommandPipeline;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.PublicMemberGetters;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;

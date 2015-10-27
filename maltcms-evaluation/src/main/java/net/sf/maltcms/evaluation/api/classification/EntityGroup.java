@@ -35,12 +35,10 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import maltcms.datastructures.array.IFeatureVector;
 import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A group of Entity objects which all share the same class label, meaning they

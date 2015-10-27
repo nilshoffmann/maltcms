@@ -27,12 +27,11 @@
  */
 package net.sf.maltcms.evaluation.spi.tasks.maltcms;
 
-import net.sf.maltcms.evaluation.api.tasks.ITaskResult;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import net.sf.maltcms.evaluation.api.tasks.ITaskResult;
 
 /**
  * Created by IntelliJ IDEA. User: nilshoffmann Date: 10.12.11 Time: 11:00 To

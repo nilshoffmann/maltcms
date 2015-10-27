@@ -41,12 +41,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 import ucar.nc2.Dimension;
@@ -56,7 +55,7 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
+
 public class NetcdfDataSourceIT implements IntegrationTest {
 
     @Rule

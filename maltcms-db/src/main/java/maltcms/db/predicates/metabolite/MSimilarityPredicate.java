@@ -27,10 +27,9 @@
  */
 package maltcms.db.predicates.metabolite;
 
-import java.util.List;
-
-import maltcms.datastructures.ms.IMetabolite;
 import cross.datastructures.tuple.Tuple2D;
+import java.util.List;
+import maltcms.datastructures.ms.IMetabolite;
 
 /**
  * <p>MSimilarityPredicate class.</p>

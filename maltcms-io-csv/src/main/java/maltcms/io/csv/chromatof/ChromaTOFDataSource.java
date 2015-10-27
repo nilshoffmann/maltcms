@@ -225,7 +225,7 @@ public class ChromaTOFDataSource implements IDataSource {
         String filename = StringTools.removeFileExt(file.getAbsolutePath());
         filename += ".cdf";
         f.setFile(filename);
-        f.addSourceFile(new FileFragment(f.getUri()));
+        f.addSourceFile(getConvertedPeakList(f));
         log.info("To: {}", filename);
         return Factory.getInstance().getDataSourceFactory().getDataSourceFor(f).write(f);
     }

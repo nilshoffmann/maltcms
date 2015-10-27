@@ -77,4 +77,17 @@
                 <goal>site:stage</goal>
             </goals>
         </action>
+    <action>
+            <actionName>CUSTOM-Clean Install Skip Tests</actionName>
+            <displayName>Clean Install Skip Tests</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+                
+                
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </action>
 </actions>

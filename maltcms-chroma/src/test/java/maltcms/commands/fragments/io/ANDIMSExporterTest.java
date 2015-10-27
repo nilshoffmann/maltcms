@@ -32,11 +32,9 @@ import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.test.ZipResourceExtractor;
 import org.junit.Rule;
 import org.junit.Test;
 

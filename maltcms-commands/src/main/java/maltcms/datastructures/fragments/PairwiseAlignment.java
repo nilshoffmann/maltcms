@@ -66,7 +66,6 @@ import ucar.ma2.ArrayByte;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D0;
 import ucar.ma2.ArrayDouble.D1;
-import ucar.ma2.ArrayInt;
 import ucar.ma2.DataType;
 import ucar.nc2.Dimension;
 

@@ -27,9 +27,9 @@
  */
 package smueller.tools;
 
+import cross.tools.MathTools;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
-import cross.tools.MathTools;
 
 // Reduktion der Daten durch Ueberfuehrung in die PAA Repraesentation
 /**

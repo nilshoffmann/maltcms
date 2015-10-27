@@ -27,8 +27,8 @@
  */
 package maltcms.commands.fragments2d.peakfinding.output;
 
-import maltcms.datastructures.peak.Peak2D;
 import cross.IConfigurable;
+import maltcms.datastructures.peak.Peak2D;
 
 /**
  * Supports a method to identify a peak.

@@ -30,7 +30,6 @@ package maltcms.commands.fragments2d.peakfinding.output;
 import cross.IConfigurable;
 import cross.datastructures.workflow.IWorkflowElement;
 import java.util.List;
-import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
 
 /**

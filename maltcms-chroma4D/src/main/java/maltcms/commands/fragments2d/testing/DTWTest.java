@@ -30,7 +30,6 @@ package maltcms.commands.fragments2d.testing;
 import cross.Factory;
 import java.awt.Point;
 import java.awt.geom.Area;
-import static java.lang.Math.log;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

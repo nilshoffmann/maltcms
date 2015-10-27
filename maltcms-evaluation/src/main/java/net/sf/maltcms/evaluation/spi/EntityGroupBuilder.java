@@ -27,6 +27,10 @@
  */
 package net.sf.maltcms.evaluation.spi;
 
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import cross.datastructures.tuple.Tuple2D;
+import cross.tools.StringTools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,17 +44,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-
-import cross.datastructures.tuple.Tuple2D;
-import cross.tools.StringTools;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.io.csv.CSVReader;
 import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
@@ -65,6 +58,10 @@ import net.sf.maltcms.evaluation.spi.classification.PeakRTFeatureVector;
 import net.sf.maltcms.evaluation.spi.hohenheim.Eval;
 import net.sf.maltcms.evaluation.spi.xcalibur.Chromatogram;
 import net.sf.maltcms.evaluation.spi.xcalibur.Peak;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>EntityGroupBuilder class.</p>

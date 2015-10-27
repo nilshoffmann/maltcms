@@ -27,12 +27,12 @@
  */
 package maltcms.commands.fragments.preprocessing.defaultVarLoader;
 
-import cross.datastructures.fragments.ImmutableFileFragment;
-import cross.datastructures.fragments.VariableFragment;
-import cross.datastructures.fragments.FileFragment;
 import cross.Factory;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.fragments.ImmutableFileFragment;
+import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tools.EvalTools;
 import cross.io.misc.FragmentStringParser;
 import java.io.File;

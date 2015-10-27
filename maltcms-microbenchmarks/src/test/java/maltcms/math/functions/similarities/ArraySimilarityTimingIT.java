@@ -55,7 +55,6 @@ import maltcms.test.ExtractClassPathFiles;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.rules.TestRule;
 import ucar.ma2.Array;
 
@@ -69,7 +68,7 @@ import ucar.ma2.Array;
  */
 @BenchmarkMethodChart(filePrefix = "benchmark-lists")
 @BenchmarkOptions(callgc = false, benchmarkRounds = 5, warmupRounds = 3)
-@Category(IntegrationTest.class)
+
 @Slf4j
 public class ArraySimilarityTimingIT extends AFragmentCommandTest implements IntegrationTest {
 

@@ -106,6 +106,8 @@
                     <finalName>${distributionName}</finalName>
                     <!--<updateOnly>true</updateOnly>-->
                     <attach>false</attach>
+                    <includeSite>true</includeSite>
+                    <siteDirectory>doc/</siteDirectory>
                 </configuration>
             </plugin>
             <!-- Antrun plugin -->

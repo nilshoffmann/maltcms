@@ -3,7 +3,7 @@
 ### Prerequisites for Developing with Maltcms
 
 - [Git](http://git-scm.com) (for source code access)
-- [Java JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+- [Java JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 - [Maven 3](http://maven.apache.org/download.html)
 - Any IDE supporting maven 3 integration and subversion support
     - [NetBeans 8.+](http://netbeans.org/)

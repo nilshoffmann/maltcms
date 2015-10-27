@@ -32,7 +32,6 @@ import cross.applicationContext.DefaultApplicationContextFactory;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.tools.FragmentTools;
 import cross.datastructures.workflow.IWorkflow;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
