@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import maltcms.commands.fragments.peakfinding.TICPeakFinderIT;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.commons.io.FileUtils;

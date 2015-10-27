@@ -1,26 +1,3 @@
-
-<!--
- Copyright (C) 2008-2012 Nils Hoffmann
- Nils.Hoffmann A T CeBiTec.Uni-Bielefeld.DE
-
- This file is part of Cross/Maltcms.
-
- Cross/Maltcms is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- Cross/Maltcms is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public License
- along with Cross/Maltcms.  If not, see &lt;http://www.gnu.org/licenses/>.
-
- $Id$
-
--->
 <assembly
     xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -28,26 +5,23 @@
     <id>bin</id>
     <formats>
         <format>dir</format>
-        <!--        <format>zip</format>-->
-        <!--        <format>tar.gz</format>-->
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
     <includeSiteDirectory>false</includeSiteDirectory>
+    <files>
+        <file>
+            <source>../src/site/markdown/gettingStarted.md</source>
+            <destName>GETTINGSTARTED</destName>
+            <fileMode>0644</fileMode>
+            <outputDirectory>/</outputDirectory>
+        </file>
+    </files>
     <dependencySets>
         <!-- Inclusion of all dependencies -->
         <dependencySet>
             <unpack>false</unpack>
             <useTransitiveDependencies>true</useTransitiveDependencies>
             <excludes>
-                <!--exclude other dependencies for unpacking--> 
-                <!--                <exclude>commons-math:commons-math:jar:1.2</exclude>
-                 <exclude>net.sf.maltcms:maltcms-resources:jar</exclude>
-                <exclude>net.sf.maltcms:maltcms-chroma:jar</exclude>
-                <exclude>net.sf.maltcms:maltcms-chroma4D:jar</exclude>
-                <exclude>net.sf.maltcms:maltcms-chroma4D-srg:jar</exclude>
-                <exclude>net.sf.maltcms:maltcms-chroma4D-cwt:jar</exclude>
-                <exclude>net.sf.maltcms:maltcms-evaluation:jar</exclude>
-                <exclude>net.sf.maltcms:maltcms-spectratyping:jar</exclude>-->
                 <exclude>net.sf.maltcms:*:pom</exclude>
                 <exclude>*:*:pom</exclude>
             </excludes>

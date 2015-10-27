@@ -32,7 +32,6 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.Fragments;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,14 +54,13 @@ import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
+
 public class CemappDtwMziIT extends AFragmentCommandTest {
 
     @Rule

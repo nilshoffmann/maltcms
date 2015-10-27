@@ -7,18 +7,18 @@ configuration can be found below each module's directory in the
 corresponding pom.xml file. 
 
 ## Prerequisites for Maltcms
-- Java JDK 7 (NOT JRE)
+- Java JDK 8 (NOT JRE), as of release version 1.4.0
   http://www.oracle.com/technetwork/java/javase/downloads/index.html
 - Maven 3
   http://maven.apache.org/download.html
 - Any IDE supporting maven 2/3 integration and subversion support
-  NetBeans 7.+
+  NetBeans 8.+
   	http://netbeans.org/
-  Eclipse 3.+ (Indigo) or 4.+
+  Eclipse 4.+
   	http://eclipse.org/
 	(requires additional m2e plugin and 
 	 subclipse/subversive plugins)
-  IntelliJ Idea 10.5
+  IntelliJ Idea 14 CE
   	http://www.jetbrains.com/idea/
 
 The remainder of this README contains task descriptions and the corresponding 

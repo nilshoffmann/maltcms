@@ -47,7 +47,6 @@ import maltcms.commands.filters.array.MinimumFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.ImageTools;
-import maltcms.ui.charts.AChart;
 import maltcms.ui.charts.XYBPlot;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;

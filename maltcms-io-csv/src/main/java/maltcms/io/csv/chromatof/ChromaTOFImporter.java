@@ -188,9 +188,11 @@ public class ChromaTOFImporter {
     }
 
     /**
-     * Creates a non-persistent artificial chromatogram with mass spectra from the given peaks.
-     * Data will be added to the provided IFileFragment instance.
-     * To persist the data, call {@code save()} on the returned file fragment instance.
+     * Creates a non-persistent artificial chromatogram with mass spectra from
+     * the given peaks. Data will be added to the provided IFileFragment
+     * instance. To persist the data, call {@code save()} on the returned file
+     * fragment instance.
+     *
      * @param peaks the peaks to convert to an artifical chromatogram.
      * @param mode the mode, either for 1D data or for 2D data.
      * @param f the file fragment to use.
@@ -226,17 +228,23 @@ public class ChromaTOFImporter {
             tic.setDouble(i, MAMath.sumDouble(intensA));
             originalIndex.set(i, i);
             double satValue = Double.NaN;
-            if (mode == ChromaTOFParser.Mode.RT_2D_FUSED) {
-                String[] rts = tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS).split(",");
-                firstColumnElutionTime.set(i, ParserUtilities.parseDouble(rts[0], locale));
-                secondColumnElutionTime.set(i, ParserUtilities.parseDouble(rts[1], locale));
-                satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
-            } else if (mode == ChromaTOFParser.Mode.RT_2D_SEPARATE) {
-                firstColumnElutionTime.set(i, ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS), locale));
-                secondColumnElutionTime.set(i, ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS), locale));
-                satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
-            } else {
-                satValue = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS), locale);
+            if (null != mode) {
+                switch (mode) {
+                    case RT_2D_FUSED:
+                        String[] rts = tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS).split(",");
+                        firstColumnElutionTime.set(i, ParserUtilities.parseDouble(rts[0], locale));
+                        secondColumnElutionTime.set(i, ParserUtilities.parseDouble(rts[1], locale));
+                        satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
+                        break;
+                    case RT_2D_SEPARATE:
+                        firstColumnElutionTime.set(i, ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.FIRST_DIMENSION_TIME_SECONDS), locale));
+                        secondColumnElutionTime.set(i, ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.SECOND_DIMENSION_TIME_SECONDS), locale));
+                        satValue = firstColumnElutionTime.get(i) + secondColumnElutionTime.get(i);
+                        break;
+                    default:
+                        satValue = ParserUtilities.parseDouble(tr.getValueForName(ChromaTOFParser.ColumnName.RETENTION_TIME_SECONDS), locale);
+                        break;
+                }
             }
             sat.setDouble(i, satValue);
             scanOffset += ms.getFirst().length;

@@ -29,17 +29,12 @@ package maltcms.commands.fragments.alignment;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.Worker2DFactory;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.peakFactory.Peak2DMSFactory;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.math.functions.IArraySimilarity;
@@ -51,13 +46,12 @@ import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Category(IntegrationTest.class)
+
 public class BiPaceChromaTofIT extends AFragmentCommandTest {
 
     @Rule
@@ -69,7 +63,9 @@ public class BiPaceChromaTofIT extends AFragmentCommandTest {
     @Test
     public void testBipaceWithChromaTofInput() throws IOException {
         List<IFragmentCommand> commands = new ArrayList<>();
-        commands.add(new DefaultVarLoader());
+        DefaultVarLoader dvl = new DefaultVarLoader();
+        dvl.setDefaultVariables(Arrays.asList("mass_values","intensity_values","scan_index"));
+        commands.add(dvl);
         commands.add(new DenseArrayProducer());
         PeakCliqueAlignment bipace2D = new PeakCliqueAlignment();
         Peak2DMSFactory p2dms = new Peak2DMSFactory();

@@ -27,11 +27,6 @@
  */
 package cross.datastructures.workflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ucar.ma2.Array;
-import ucar.ma2.ArrayDouble;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresOptionalVariables;
 import cross.annotations.RequiresVariables;
@@ -40,7 +35,11 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
 @Slf4j

@@ -32,29 +32,27 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Assert;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
 import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
+
 public class MassFilterIT extends AFragmentCommandTest {
 
     @Rule

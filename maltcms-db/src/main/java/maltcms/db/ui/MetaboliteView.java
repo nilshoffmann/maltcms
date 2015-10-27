@@ -27,6 +27,7 @@
  */
 package maltcms.db.ui;
 
+import com.db4o.ObjectContainer;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -35,7 +36,6 @@ import java.util.Collections;
 import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -45,10 +45,7 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
 import maltcms.datastructures.ms.Metabolite;
-
-import com.db4o.ObjectContainer;
 
 /**
  * <p>MetaboliteView class.</p>

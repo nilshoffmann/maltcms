@@ -30,7 +30,6 @@ package maltcms.db.predicates.metabolite;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
-
 import maltcms.datastructures.ms.IMetabolite;
 
 /**

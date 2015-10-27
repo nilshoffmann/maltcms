@@ -28,7 +28,6 @@
 package maltcms.commands.fragments2d.peakfinding.picking;
 
 import cross.IConfigurable;
-import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
 import java.util.List;
 import maltcms.datastructures.ms.IChromatogram2D;

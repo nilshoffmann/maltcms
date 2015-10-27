@@ -27,9 +27,6 @@
  */
 package maltcms.io.csv.gcimage;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 /**
  *
  * @author Nils Hoffmann

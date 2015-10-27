@@ -34,8 +34,6 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.pipeline.CommandPipeline;
 import cross.datastructures.tuple.TupleND;
-import cross.exception.MappingNotAvailableException;
-import cross.vocabulary.IControlledVocabularyProvider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

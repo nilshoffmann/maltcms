@@ -30,7 +30,6 @@ package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -43,14 +42,12 @@ import org.apache.log4j.Level;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
 public class ModulationExtractorIT extends AFragmentCommandTest {
 
     @Rule
@@ -66,14 +63,14 @@ public class ModulationExtractorIT extends AFragmentCommandTest {
         d2vl.setScanRate(100.0);
         ModulationExtractor me = new ModulationExtractor();
         me.setStartModulation(0);
-        me.setEndModulation(50);
+        me.setEndModulation(20);
 
         IWorkflow w = createWorkflow(Arrays.asList(
                 (IFragmentCommand) d2vl, (IFragmentCommand) me),
                 testFiles.getFiles());
         for (IFileFragment f : testWorkflow(w)) {
             Chromatogram2D chrom2 = new Chromatogram2D(f);
-            Assert.assertEquals(50, chrom2.getNumberOfModulations());
+            Assert.assertEquals(20, chrom2.getNumberOfModulations());
         }
     }
 }

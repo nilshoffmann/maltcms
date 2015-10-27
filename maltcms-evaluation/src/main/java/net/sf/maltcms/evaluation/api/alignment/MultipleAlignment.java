@@ -27,7 +27,6 @@
  */
 package net.sf.maltcms.evaluation.api.alignment;
 
-import net.sf.maltcms.evaluation.api.alignment.AlignmentColumn;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;

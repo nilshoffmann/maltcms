@@ -27,11 +27,9 @@
  */
 package maltcms.commands.distances.dtwng;
 
-import maltcms.datastructures.array.IFeatureVector;
-
-import org.apache.commons.configuration.Configuration;
-
 import cross.IConfigurable;
+import maltcms.datastructures.array.IFeatureVector;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * <p>Abstract TwoFeatureVectorOperation class.</p>

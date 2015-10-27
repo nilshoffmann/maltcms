@@ -29,7 +29,6 @@ package net.sf.maltcms.maltcms.commands.fragments2d.preprocessing;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
@@ -40,14 +39,13 @@ import maltcms.test.ExtractClassPathFiles;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
+
 public class Data2DNormalizerIT extends AFragmentCommandTest {
 
     @Rule

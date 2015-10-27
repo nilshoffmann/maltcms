@@ -204,7 +204,7 @@ public abstract class AFragmentCommandTest {
                             Array a = var.getArray();
                             Assert.assertNotNull(a);
                         } catch (ResourceNotAvailableException rnae) {
-                            log.warn("Could not find variable {}, annotated as provided by fragment command {}.", cvResolver.translate(variable), command.getClass().getName());
+                            log.warn("Could not find variable {}, annotated as provided by fragment command {}. Please fix!", cvResolver.translate(variable), command.getClass().getName());
 //                            Assert.fail(rnae.getLocalizedMessage());
                         }
                     }

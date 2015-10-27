@@ -27,14 +27,14 @@
  */
 package cross.datastructures.workflow;
 
-import ucar.ma2.ArrayInt;
-import ucar.ma2.ArrayShort;
 import cross.annotations.ProvidesVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import lombok.extern.slf4j.Slf4j;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.ArrayShort;
 
 @Slf4j
 @ProvidesVariables(names = {"nil.variable1", "nil.variable2"})

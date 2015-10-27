@@ -27,15 +27,14 @@
  */
 package maltcms.test;
 
-import java.io.File;
-import lombok.extern.slf4j.Slf4j;
 import cross.test.SetupLogging;
+import java.io.File;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import org.junit.Assert;
 
 /**
  *

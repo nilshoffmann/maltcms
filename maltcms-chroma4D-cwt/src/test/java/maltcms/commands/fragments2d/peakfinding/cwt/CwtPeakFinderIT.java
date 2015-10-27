@@ -31,10 +31,7 @@ import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.IWorkflow;
-import cross.test.IntegrationTest;
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -42,19 +39,17 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import maltcms.test.ZipResourceExtractor;
 import org.apache.log4j.Level;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  *
  * @author Nils Hoffmann
  */
 @Slf4j
-@Category(IntegrationTest.class)
+
 public class CwtPeakFinderIT extends AFragmentCommandTest {
 
     @Rule
