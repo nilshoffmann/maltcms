@@ -4,11 +4,11 @@
 	<parent>
 		<artifactId>maltcms-modules</artifactId>
 		<groupId>net.sf.maltcms</groupId>
-		<version>1.4.0</version>
+		<version>1.4.1-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jfree</groupId>
 	<artifactId>jfreechart-osgi</artifactId>
-	<version>1.4.0</version>
+	<version>1.0.19.1</version>
 	<name>JFreeChart OSGI</name>
 	<description>OSGI Wrapper module for JFreeChart, http://www.jfree.org</description>
 	<url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/jfreechart-osgi</url>
