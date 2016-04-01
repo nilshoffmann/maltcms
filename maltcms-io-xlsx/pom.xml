@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
     <artifactId>maltcms-io-xlsx</artifactId>
     <name>Maltcms IO Provider XLS(X)</name>
@@ -39,12 +39,12 @@
         <dependency>
             <groupId>net.sf.maltcms.net.sf.jexcelapi</groupId>
             <artifactId>jxl-osgi</artifactId>
-            <version>2.6.12</version>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>net.sf.maltcms.org.apache.poi</groupId>
             <artifactId>poi-osgi</artifactId>
-            <version>3.9</version>
+            <version>1.4.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
     <artifactId>maltcms-io-openms-featurexml</artifactId>
     <name>Maltcms IO Provider OpenMS FeatureXML</name>

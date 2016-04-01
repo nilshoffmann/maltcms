@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.4.0</version>
     </parent>
     <artifactId>maltcms-io-mzml</artifactId>
     <name>Maltcms IO Provider MZML</name>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>uk.ac.ebi.jmzml</groupId>
             <artifactId>jmzml-osgi</artifactId>
-            <version>1.4.0-SNAPSHOT</version>
+            <version>1.4.0</version>
             <exclusions>
                 <exclusion>
                     <artifactId>com.springsource.org.apache.commons.io</artifactId>
