@@ -4,11 +4,11 @@
 	<parent>
 		<artifactId>maltcms-modules</artifactId>
 		<groupId>net.sf.maltcms</groupId>
-		<version>1.4.0</version>
+		<version>1.4.1-SNAPSHOT</version>
 	</parent>
 	<groupId>net.sf.maltcms.org.apache.poi</groupId>
 	<artifactId>poi-osgi</artifactId>
-	<version>1.4.0</version>
+	<version>3.9</version>
 	<name>POI OSGI</name>
 	<description>OSGI Wrapper module for Apache POI API http://poi.apache.org/</description>
 	<url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/poi-osgi</url>

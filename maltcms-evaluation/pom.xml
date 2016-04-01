@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>maltcms-modules</artifactId>
 		<groupId>net.sf.maltcms</groupId>
-		<version>1.4.0</version>
+		<version>1.4.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>maltcms-evaluation</artifactId>
 	<name>Maltcms Evaluation</name>
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>net.sf.maltcms.net.sf.jexcelapi</groupId>
 			<artifactId>jxl-osgi</artifactId>
-			<version>1.4.0</version>
+			<version>2.6.12</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
