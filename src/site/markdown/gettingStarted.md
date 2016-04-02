@@ -129,13 +129,13 @@ without change. You may consider to rename them for consistency though.
 
 To execute the standard pipeline for GC- and LC-MS, use 
 
-    >maltcms.sh -c cfg/pipelines/chroma.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+    >maltcms.sh -c cfg/pipelines/chroma.mpl -i INPUTDIR -o OUTPUTDIR -f FILES
 
 ## ChromA4D
 
 To execute the available pipelines for GCxGC-MS, use 
 
-    >maltcms.sh -c cfg/pipelines/chroma4D.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+    >maltcms.sh -c cfg/pipelines/chroma4D.mpl -i INPUTDIR -o OUTPUTDIR -f FILES
 
 If you do not supply any arguments, Maltcms will print all available 
 arguments with a short explanation.
@@ -175,7 +175,7 @@ allocated.
 In order to define custom properties, you need to pass the -c argument
 to Maltcms:
 
-    >maltcms.sh ... -c cfg/pipelines/myCustomPipeline.mpl -i <INPUTDIR> -o <OUTPUTDIR> -f <FILES>
+    >maltcms.sh ... -c cfg/pipelines/myCustomPipeline.mpl -i INPUTDIR -o OUTPUTDIR -f FILES
 
 will use the pipeline configuration 'myCustomPipeline.mpl' below the current
 directory. Please note that from version 1.2.1 onwards, Maltcms pipeline 
@@ -185,9 +185,9 @@ extension is just a convention.
 
 Recommended arguments for Maltcms are:
 
-    -i <INDIR> (e.g. /vol/data)
-    -o <OUTDIR> (e.g. /vol/output)
-    -f <FILES> (e.g. "*.cdf")
+    -i INDIR (e.g. /vol/data)
+    -o OUTDIR (e.g. /vol/output)
+    -f FILES (e.g. "*.cdf")
 
 If no INDIR is given, FILES are resolved against the current working
 directory. If no OUTDIR is given, processing results will be created
@@ -205,7 +205,7 @@ flanked in '"'s.
 
 You can alternatively omit INDIR, if you fully qualify the path before each 
 file provided with -f. Theses files can also have a wildcard expression 
-as their name, e.g. "*.cdf". You can use '-f <FILES>' multiple times to
+as their name, e.g. "*.cdf". You can use '-f FILES' multiple times to
 supply different base directories with different file wildcard expressions
 to Maltcms. If you want to include all files below those base directories
 matching the wildcard, you should also supply the '-r' option.
@@ -234,7 +234,7 @@ To simply use Maltcms in a higher level workflow, you can easily write
 scripts in the Groovy programming language (http://groovy.codehaus.org/).
 These scripts can be executed by calling 
 
-    maltcms.sh -exec path/to/script.groovy <ARGS>
+    maltcms.sh -exec path/to/script.groovy ARGS
 
 from the Maltcms installation base directory, where ARGS are optional
 parameters to your script. An example of such workflows can be found 

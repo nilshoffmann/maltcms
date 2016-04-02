@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maltcms-distributions</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <version>1.4.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>maltcms-osgi-distribution</artifactId>
+    <name>Maltcms Distribution OSGI</name>
+    <description>(Experimental) Creates the Maltcms OSGI Bundle Distribution.</description>
+    <packaging>pom</packaging>
+    <profiles>
+        <profile>
+            <id>osgi</id>
+            <build>
+                <plugins>
+                    <!-- Assembly plugin -->
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>my-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/main/assembly/osgi.xml</descriptor>
+                            </descriptors>
+                            <finalName>${distributionName}</finalName>
+                            <updateOnly>true</updateOnly>
+                            <attach>false</attach>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.ops4j</groupId>
+                        <artifactId>maven-pax-plugin</artifactId>
+
+                        <configuration>
+                            <!-- equinox also works -->
+                            <framework>felix</framework>
+                            <!--<framework>equinox</framework> -->
+                            <provision>
+                                <!-- prevent the following bundle fragments from being started -->
+                                <param>mvn:org.slf4j/slf4j-log4j12/1.7.2@nostart</param>
+                                <param>mvn:org.apache.ant/com.springsource.org.apache.tools.ant.nodep/1.7.1@nostart</param>
+                                <param>mvn:org.apache.xerces/com.springsource.org.apache.xerces/2.8.1@nostart</param>
+                            </provision>
+                        </configuration>
+
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <distributionName>maltcms-${project.version}-osgi</distributionName>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-ap-distribution</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+            <exclusions>
+                <!-- <exclusion> <artifactId>maltcms-io-xlsx</artifactId> <groupId>net.sf.maltcms</groupId> 
+                </exclusion> -->
+                <exclusion>
+                    <artifactId>poi</artifactId>
+                    <groupId>org.apache.poi</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>poi-ooxml</artifactId>
+                    <groupId>org.apache.poi</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>poi-ooxml-schemas</artifactId>
+                    <groupId>org.apache.poi</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jxl</artifactId>
+                    <groupId>net.sourceforge.jexcelapi</groupId>
+                </exclusion>
+                <!-- <exclusion> <artifactId>jxl-osgi</artifactId> <groupId>net.sf.maltcms</groupId> 
+                </exclusion> -->
+                <!-- <exclusion> <artifactId>poi-osgi</artifactId> <groupId>net.sf.maltcms</groupId> 
+                </exclusion> -->
+                <exclusion>
+                    <artifactId>jcommon</artifactId>
+                    <groupId>org.jfree</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jfreechart</artifactId>
+                    <groupId>org.jfree</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>
