@@ -2,18 +2,27 @@
 
 ## Changes for version 1.4.0
 ### Improvements
+* Maltcms is now compiled using Java 8. It also requires Java 8 to run.
+
 * Changed the default array similarity for mass spectra used by the bipace and chroma pipelines to a faster 
   version of ArrayWeightedCos: `ArrayWeightedCos2`.
 * Added improved support for ChromaTOF peak reports in csv / tsv format.
 * Updated module documentation, added many more examples of API usage.
-* Improved JavaDoc documentation.
+* Updated Peak1D and Peak2D to provide builder methods, simplifying creation. 
 * Fixed an issue with `SparseScanLineCache`.
 * Fixed an initialization issue in `AbstractCwtPeakFinderCallable`.
+* Fixed failing tests.
+* Fixed build failures/errors in Eclipse.
+* Updated dependencies and their versions.
+* Improved JavaDoc documentation.
+* Restructured the project layout.
+* Integration Tests now follow the default maven naming convention: all have a name ending with IT.
 
 ### API Changes
 * The APIs of `ChromaTOFPeakParser` and `ChromaTOFPeakImporter` have been simplified.
 
-A list of non-compatible API changes can be found for each module in the module **Project Reports** section, under **Clirr**.
+Due to an incompatibility in the Clirr plugin, no automatic API compatibility checks are available for this 
+release.
 
 ## Changes for version 1.3.2
 ### Improvements
