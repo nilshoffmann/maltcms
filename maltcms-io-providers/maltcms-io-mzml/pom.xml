@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-io-providers</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0</version>
+        <version>1.4.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>maltcms-io-mzml</artifactId>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>uk.ac.ebi.jmzml</groupId>
             <artifactId>jmzml-osgi</artifactId>
-            <version>1.4.0</version>
+            <version>1.4.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>com.springsource.org.apache.commons.io</artifactId>
