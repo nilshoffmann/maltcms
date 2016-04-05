@@ -7,7 +7,7 @@
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-modules</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.0</version>
     <name>Maltcms-Modules</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
@@ -85,7 +85,7 @@
         <developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
         <connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
         <url>https://git.code.sf.net/p/maltcms/code</url>
-        <tag>HEAD</tag>
+        <tag>maltcms-modules-1.4.0</tag>
     </scm>
     <distributionManagement>
         <repository>
