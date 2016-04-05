@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-distributions</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0</version>
+        <version>1.4.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>maltcms-distribution</artifactId>
@@ -358,7 +358,7 @@
             <artifactId>poi-osgi</artifactId>
             <groupId>net.sf.maltcms.org.apache.poi</groupId>
             <type>jar</type>
-            <version>1.4.0</version>
+            <version>1.4.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>poi</artifactId>
@@ -393,7 +393,7 @@
             <artifactId>jxl-osgi</artifactId>
             <groupId>net.sf.maltcms.net.sf.jexcelapi</groupId>
             <type>jar</type>
-            <version>1.4.0</version>
+            <version>1.4.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jxl</artifactId>
