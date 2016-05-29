@@ -93,15 +93,8 @@ public class MSScanVisualizer {
         final String si = factory.getConfiguration().getString(
                 "var.scan_index", "scan_index");
         final Date date = new Date();
-        // String mmin = ArrayFactory.getConfiguration().getString(
-        // "var.mass_range_min", "mass_range_min");
-        // String mmax = ArrayFactory.getConfiguration().getString(
-        // "var.mass_range_max", "mass_range_max");
-        // String scan_index = ArrayFactory.getConfiguration().getString(
-        // "var.scan_index", "scan_index");
-        for (final String str : s) {
-            log.info("Reading input.DataInfo: " + str);
-            final IFileFragment parent = new FragmentStringParser().parse(factory, str);
+        for (final IFileFragment parent : factory.getInputDataFactory().prepareInputData(s)) {
+            log.info("Reading fragment: " + parent);
             //
             final IFileFragment al = new FileFragment(
                     new File(FileTools.getDefaultDirs(date), parent
