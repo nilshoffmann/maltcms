@@ -287,6 +287,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-io-mzxml</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xxindex</artifactId>
+                    <groupId>psidev.psi.tools</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -189,7 +189,6 @@ for details.
         <property name="maxScale" value="100"/>
         <property name="minPercentile" value="5.0d"/>
         <property name="integratePeaks" value="false"/>
-        <property name="integrateRawTic" value="true"/>
         <property name="saveGraphics" value="false"/>
     </bean>
     
