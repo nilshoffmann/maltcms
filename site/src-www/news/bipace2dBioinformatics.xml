@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<content group="news" ident="news/bipace2dBioinformatics" nname="Featured Publication" publish="yes" toRoot="../" lastchanged="$Date by $Author">
-    <column id="content">
-        <h1>Publication: <em>BiPACE 2D</em> in Bioinformatics, 2013</h1>
-        <p>A comparative methodology article of alignment algorithms for 2D GC-MS data has been published in Bioinformatics:
-            <a href="http://bioinformatics.oxfordjournals.org/content/early/2014/01/22/bioinformatics.btt738">BiPACE 2D-graph-based multiple alignment for comprehensive 2D gas chromatography-mass spectrometry</a>.
-        </p>
-    </column>
-</content>
