@@ -692,26 +692,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             // add system configuration, -D options override default options
             cfg.addConfiguration(new SystemConfiguration());
             if (cl.hasOption("c")) {
-                try {
-                    File userConfigLocation = new File(cl.getOptionValue("c"));
-                    if (!userConfigLocation.isFile()) {
-                        throw new ExitVmException("Configuration file '" + userConfigLocation + "' is not a valid file!");
-                    }
-                    if (!userConfigLocation.exists()) {
-                        throw new ExitVmException("Configuration file '" + userConfigLocation + "' does not exist!");
-                    }
-                    if (!userConfigLocation.isAbsolute()) {
-                        // try to add config given by parameter c
-                        userConfigLocation = new File(new File(System.getProperty(
-                                "user.dir")), cl.getOptionValue("c"));
-                    }
-                    cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
-                    cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsoluteFile().toURI().getPath());
-                    //user options override default options
-                    cfg.addConfiguration(new PropertiesConfiguration(cl.getOptionValue("c")));
-                } catch (final ConfigurationException e) {
-                    this.log.error(e.getLocalizedMessage());
-                }
+                handleUserConfiguration(cl, cfg);
             } else if (!cl.hasOption("b") && !cl.hasOption("p")) {
                 throw new ExitVmException("Please supply a configuration file!");
             }
@@ -734,6 +715,41 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             printOptions(cfg);
         }
         return new CompositeConfiguration(Arrays.asList(cfg));
+    }
+
+    private void handleUserConfiguration(final CommandLine cl,
+            final CompositeConfiguration cfg) throws ExitVmException {
+        try {
+            String cfgOptionValue = cl.getOptionValue("c");
+            if (!cfgOptionValue.toLowerCase().endsWith(".mpl")) {
+                cfgOptionValue += ".mpl";
+            }
+            File userConfigLocation = new File(cfgOptionValue);
+            // we want an absolute path in the end to be independent from our current location
+            if (!userConfigLocation.isAbsolute()) {
+                userConfigLocation = checkConfigLocations(cfgOptionValue, 
+                    new File(System.getProperty("user.dir")), 
+                    new File(System.getProperty("user.dir")+File.separator+"cfg"+File.separator+"pipelines"));
+            }
+            cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
+            cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsoluteFile().toURI().getPath());
+            //user options override default options
+            cfg.addConfiguration(new PropertiesConfiguration(userConfigLocation));
+        } catch (final ConfigurationException e) {
+            this.log.error(e.getLocalizedMessage());
+        }
+    }
+    
+    private File checkConfigLocations(String cfgOptionValue, File...baseDirs) {
+        for(File baseDir:baseDirs) {
+            File configFile = new File(baseDir, cfgOptionValue);
+            log.debug("Checking config file location: {}", configFile);
+            if(configFile.isFile() && configFile.exists()) {
+                log.debug("Using configFile: {}", configFile);
+                return configFile;
+            }
+        }
+        throw new ExitVmException("Configuration file '" + cfgOptionValue + "' could not be located!");
     }
 
     /**
@@ -798,6 +814,33 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
      * @param optionValues
      */
     private void handleListServiceProviders(String[] optionValues) {
+        for (String s : optionValues) {
+            Class<?> c;
+            try {
+                c = Class.forName(s);
+                ServiceLoader<?> sl = ServiceLoader.load(c);
+                this.log.info("Service Providers available for Service {}:", s);
+                for (Object o : sl) {
+                    if (o != null) {
+                        this.log.info("{}", o.getClass().getName());
+                    } else {
+                        this.log.info("null");
+                    }
+                }
+                this.log.info(
+                        "Call Maltcms with -s my.service.provider to see available configuration keys and default values!");
+            } catch (ClassNotFoundException e) {
+                log.warn(e.getLocalizedMessage());
+            }
+
+        }
+        System.exit(0);
+    }
+    
+    /**
+     * @param optionValues
+     */
+    private void handleListAvailablePipelines() {
         for (String s : optionValues) {
             Class<?> c;
             try {
