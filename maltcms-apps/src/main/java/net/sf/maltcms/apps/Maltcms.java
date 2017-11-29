@@ -837,32 +837,32 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         System.exit(0);
     }
     
-    /**
-     * @param optionValues
-     */
-    private void handleListAvailablePipelines() {
-        for (String s : optionValues) {
-            Class<?> c;
-            try {
-                c = Class.forName(s);
-                ServiceLoader<?> sl = ServiceLoader.load(c);
-                this.log.info("Service Providers available for Service {}:", s);
-                for (Object o : sl) {
-                    if (o != null) {
-                        this.log.info("{}", o.getClass().getName());
-                    } else {
-                        this.log.info("null");
-                    }
-                }
-                this.log.info(
-                        "Call Maltcms with -s my.service.provider to see available configuration keys and default values!");
-            } catch (ClassNotFoundException e) {
-                log.warn(e.getLocalizedMessage());
-            }
-
-        }
-        System.exit(0);
-    }
+//    /**
+//     * @param optionValues
+//     */
+//    private void handleListAvailablePipelines() {
+//        for (String s : optionValues) {
+//            Class<?> c;
+//            try {
+//                c = Class.forName(s);
+//                ServiceLoader<?> sl = ServiceLoader.load(c);
+//                this.log.info("Service Providers available for Service {}:", s);
+//                for (Object o : sl) {
+//                    if (o != null) {
+//                        this.log.info("{}", o.getClass().getName());
+//                    } else {
+//                        this.log.info("null");
+//                    }
+//                }
+//                this.log.info(
+//                        "Call Maltcms with -s my.service.provider to see available configuration keys and default values!");
+//            } catch (ClassNotFoundException e) {
+//                log.warn(e.getLocalizedMessage());
+//            }
+//
+//        }
+//        System.exit(0);
+//    }
 
     /**
      * Print help on command line options.
