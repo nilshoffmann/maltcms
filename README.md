@@ -1,4 +1,7 @@
 # This is the Maltcms maven3 project
+
+[![Build Status](https://travis-ci.org/nilshoffmann/maltcms.svg?branch=master)](https://travis-ci.org/nilshoffmann/maltcms)
+
 Within this directory, you will find all the submodules, which 
 make up Maltcms. 
 General configuration for all modules can be found within the 
