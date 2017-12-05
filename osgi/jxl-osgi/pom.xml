@@ -4,12 +4,12 @@
     <parent>
         <artifactId>maltcms-osgi</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.4.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>net.sf.maltcms.net.sf.jexcelapi</groupId>
     <artifactId>jxl-osgi</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.0</version>
     <name>JXL OSGI</name>
     <description>OSGI Wrapper module for JXL API http://jexcelapi.sourceforge.net/</description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}/jxl-osgi</url>
