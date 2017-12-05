@@ -87,7 +87,6 @@ public class DTWNew {
                 "maltcms.datastructures.fragments.PairwiseAlignment.normalizeAlignmentValueByMapWeights", true);
         String pipeline = "maltcms.commands.fragments.preprocessing.DefaultVarLoader,maltcms.commands.fragments.preprocessing.DenseArrayProducer";
         cfg.setProperty("pipeline", pipeline);
-        cfg.setProperty("cross.io.IDataSource", Arrays.asList(new String[]{"maltcms.io.andims.NetcdfDataSource"}));
         // cfg.setProperty("alignment.normalizeAlignmentValueByMapWeights",
         // true);
         cfg.setProperty("alignment.save.cumulative.distance.matrix", true);
@@ -102,9 +101,10 @@ public class DTWNew {
         cfg.setProperty("maltcms.commands.distances.ArrayCos.diagonal_weight",
                 1.0);
         // cfg.save(new BufferedOutputStream(System.out));
-        cross.Factory.getInstance().configure(cfg);
+        Factory f = new Factory();
+        f.configure(cfg);
         log.info("Preparing command sequence");
-        ICommandSequence cp = Factory.getInstance().createCommandSequence();
+        ICommandSequence cp = f.createCommandSequence();
 
         log.info("Running commands");
         TupleND<IFileFragment> res = null;

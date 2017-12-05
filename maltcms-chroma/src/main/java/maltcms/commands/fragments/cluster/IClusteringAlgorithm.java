@@ -27,13 +27,12 @@
  */
 package maltcms.commands.fragments.cluster;
 
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import maltcms.datastructures.cluster.BinaryCluster;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
+import maltcms.datastructures.cluster.BinaryCluster;
 
 /**
  * <p>IClusteringAlgorithm interface.</p>

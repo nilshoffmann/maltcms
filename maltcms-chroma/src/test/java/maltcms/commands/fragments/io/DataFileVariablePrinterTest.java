@@ -29,14 +29,13 @@ package maltcms.commands.fragments.io;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 
 /**
  *
@@ -53,11 +52,10 @@ public class DataFileVariablePrinterTest extends AFragmentCommandTest {
      */
     @Test
     public void testDataFileVariablePrinter() throws IOException {
-        File outputBase = tf.newFolder();
         List<IFragmentCommand> commands = new ArrayList<>();
         DataFileVariablePrinter dvl = new DataFileVariablePrinter();
         commands.add(dvl);
-        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
+        IWorkflow w = createWorkflow(commands, ecpf.getFiles());
         testWorkflow(w);
     }
 }

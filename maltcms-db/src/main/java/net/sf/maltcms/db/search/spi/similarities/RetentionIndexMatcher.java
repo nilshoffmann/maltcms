@@ -27,13 +27,13 @@
  */
 package net.sf.maltcms.db.search.spi.similarities;
 
-import java.util.Comparator;
-import java.util.TreeSet;
-import maltcms.datastructures.ms.IMetabolite;
 import cross.datastructures.tuple.Tuple2D;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.datastructures.ms.IMetabolite;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 
 //@ServiceProvider(service = AMetabolitePredicate.class)

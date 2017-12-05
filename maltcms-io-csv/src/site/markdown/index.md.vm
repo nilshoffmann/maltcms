@@ -1,4 +1,0 @@
-<h2>${project.name}</h2>
-
-* [ChromaTOF](./chromatof/index.html) Peak Reports
-* [GC Image](./gcimage/index.html) Blob Reports

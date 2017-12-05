@@ -27,17 +27,11 @@
  */
 package maltcms.mpaxs;
 
-import java.util.HashSet;
 import java.util.List;
-import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.mpaxs.api.ConfigurationKeys;
-import net.sf.mpaxs.api.ExecutionType;
 import net.sf.mpaxs.api.ICompletionService;
-import net.sf.mpaxs.api.Impaxs;
 import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
-import net.sf.mpaxs.spi.concurrent.ComputeServerFactory;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**

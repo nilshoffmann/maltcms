@@ -31,6 +31,7 @@ import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
 import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
+import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.VariableFragment;
@@ -38,6 +39,8 @@ import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.ConstraintViolationException;
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +77,7 @@ import ucar.nc2.Dimension;
     "var.mass_range_min", "var.mass_range_max"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class ModulationExtractor extends AFragmentCommand {
-
+    
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";
     @Configurable(name = "var.modulation_time", value = "modulation_time")
@@ -93,10 +96,10 @@ public class ModulationExtractor extends AFragmentCommand {
     private String massValuesVar = "mass_values";
     @Configurable(name = "var.intensity_values")
     private String intensityValuesVar = "intensity_values";
-    @Configurable(value = "-1", description="The index of the start modulation"
+    @Configurable(value = "-1", description = "The index of the start modulation"
             + " to extract.")
     private int startModulation = -1;
-    @Configurable(value = "-1", description="The index of the last modulation"
+    @Configurable(value = "-1", description = "The index of the last modulation"
             + " to extract.")
     private int endModulation = -1;
 
@@ -145,17 +148,20 @@ public class ModulationExtractor extends AFragmentCommand {
      */
     protected Array get1DArraySubset(Array a, int modulationStart, int modulationEnd, int intraModulationStart, int intraModulationStop, int scansPerModulation) {
         int elementsPerModulation = intraModulationStop - intraModulationStart + 1;
-        int modulations = modulationEnd - modulationStart + 1;
+        log.info("elements per modulation: {}", elementsPerModulation);
+        int modulations = modulationEnd - modulationStart;
+        log.info("number of modulations: {}", modulations);
         int elements = modulations * elementsPerModulation;
-        int copyRange = intraModulationStop - intraModulationStart + 1;
+        log.info("number of total elements: {}", elements);
         Array ret = Array.factory(a.getElementType(), new int[]{elements});
         int targetOffset = 0;
         for (int i = 0; i < modulations; i++) {
             int currentModulation = modulationStart + i;
+            log.info("modulation: {}/{}, offset modulation: {}", new Object[]{(i + 1), modulations, currentModulation});
             try {
-                Array slice = a.section(new int[]{currentModulation * scansPerModulation}, new int[]{copyRange});
-                Array.arraycopy(slice, 0, ret, targetOffset, copyRange);
-                targetOffset += (copyRange);
+                Array slice = a.section(new int[]{(currentModulation * scansPerModulation) + intraModulationStart}, new int[]{elementsPerModulation});
+                Array.arraycopy(slice, 0, ret, targetOffset, elementsPerModulation);
+                targetOffset += (elementsPerModulation);
             } catch (InvalidRangeException ex) {
                 log.warn("InvalidRangeException:", ex);
             }
@@ -234,7 +240,7 @@ public class ModulationExtractor extends AFragmentCommand {
     public String getDescription() {
         return "Allows definition of a start and end modulation period to be extracted from a raw GCxGC-MS chromatogram.";
     }
-
+    
     private Dimension[] adaptDimensions(IVariableFragment source, int[] targetShape) {
         log.info("Adapting dimensions for {} with shape {}", source.getName(), Arrays.toString(targetShape));
         Dimension[] dimsSource = source.getDimensions();
@@ -287,20 +293,22 @@ public class ModulationExtractor extends AFragmentCommand {
                 }
                 iter.setIntCurrent(current - minIndex);
             }
-
+            
             IVariableFragment targetIndex = new VariableFragment(work, scanIndexVar);
             targetIndex.setArray(indexSubset);
             IVariableFragment targetMasses = new VariableFragment(work, massesVar.getName());
+            targetMasses.setIndex(targetIndex);
             targetMasses.setIndexedArray(massSubset);
             targetMasses.setDimensions(adaptDimensions(massesVar, new int[]{massDim}));
             IVariableFragment targetIntensities = new VariableFragment(work, intensVar.getName());
+            targetIntensities.setIndex(targetIndex);
             targetIntensities.setIndexedArray(intensSubset);
             targetIntensities.setDimensions(adaptDimensions(intensVar, new int[]{massDim}));
-
+            
             IVariableFragment ticVar = new VariableFragment(work, totalIntensityVar);
             ticVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(totalIntensityVar).getDimensions()[0].getName(), tic.getShape()[0])});
             ticVar.setArray(tic);
-
+            
             IVariableFragment satVar = new VariableFragment(work, scanAcquisitionTimeVar);
             satVar.setDimensions(new Dimension[]{new Dimension(ff.getChild(scanAcquisitionTimeVar).getDimensions()[0].getName(), tic.getShape()[0])});
             satVar.setArray(sat);
@@ -318,13 +326,14 @@ public class ModulationExtractor extends AFragmentCommand {
         }
         return res;
     }
-
+    
     private List<Array> createIndexedSubset(IVariableFragment indexedVariable, Array indices) {
         List<Array> subset = new ArrayList<Array>();
         List<Array> intensSubset = indexedVariable.getIndexedArray();
         for (int i = 0; i < indices.getShape()[0]; i++) {
             int idx = indices.getInt(i);
-            subset.add(intensSubset.get(idx));
+            log.info("Index offset for scan {}={}", i, idx);
+            subset.add(intensSubset.get(i));
         }
         return subset;
     }

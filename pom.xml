@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-modules</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.2-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
     <name>Maltcms-Modules</name>
     <description>Maltcms, short for "Modular Application Toolkit for Chromatography Mass-Spectrometry" is an application framework mainly suited for developers working in the domain of bioinformatics for metabolomics and proteomics. Its aim is to provide reusable, efficient datastructures, abstracting from the various low-level data-formats like netcdf (ANDIMS), mzXML, mzData and mzML and providing consistent access to data features like mass spectra, chromatograms and metadata. Furthermore, Maltcms provides a platform for the implementation and execution of processing pipelines. New and existing algorithms can be easily implemented or included and executed together with existing processing elements. </description>
     <url>http://maltcms.sourceforge.net/maven/maltcms/${project.version}</url>
@@ -82,7 +85,7 @@
         <developerConnection>scm:git:https://git.code.sf.net/p/maltcms/code</developerConnection>
         <connection>scm:git:git://git.code.sf.net/p/maltcms/code</connection>
         <url>https://git.code.sf.net/p/maltcms/code</url>
-        <tag>HEAD</tag>
+        <tag>maltcms-modules-1.4.0</tag>
     </scm>
     <distributionManagement>
         <repository>
@@ -167,9 +170,22 @@
             <!-- To use the plugin goals in your POM or parent POM -->
             <plugins>
                 <plugin>
+                    <groupId>org.jvnet.jaxb2.maven2</groupId>
+                    <artifactId>maven-jaxb2-plugin</artifactId>
+                    <version>0.13.1</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>2.3.1</version>
+                    <version>2.5.3</version>
                     <configuration>
                         <autoVersionSubmodules>true</autoVersionSubmodules>
                         <preparationGoals>clean install</preparationGoals>
@@ -179,7 +195,7 @@
                         <dependency> 
                             <groupId>org.apache.maven.scm</groupId> 
                             <artifactId>maven-scm-provider-gitexe</artifactId> 
-                            <version>1.8.1</version> 
+                            <version>1.9.5</version> 
                         </dependency>
                         <!--						<dependency>
                                 <groupId>org.apache.maven.scm</groupId>
@@ -191,7 +207,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-plugin</artifactId>
-                    <version>1.5</version>
+                    <version>1.9.5</version>
                     <configuration>
                         <connectionType>developerConnection</connectionType>
                     </configuration>
@@ -199,7 +215,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>2.6</version>
                     <configuration>
                         <skipIfEmpty>true</skipIfEmpty>
                         <archive>
@@ -213,13 +229,13 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>1.5</version>
+                    <version>1.12</version>
                 </plugin>
                 <plugin>
                     <inherited>true</inherited>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <archive>
                             <manifestEntries>
@@ -264,7 +280,7 @@
                         <!-- Default configuration for all reports -->
                         <show>public</show>
                         <links>
-                            <link>http://docs.oracle.com/javase/7/docs/api/</link>
+                            <link>http://docs.oracle.com/javase/8/docs/api/</link>
                             <!-- version 4.1 api not available -->
                             <link>http://www.unidata.ucar.edu/software/thredds/v4.3/netcdf-java/v4.2/javadoc/</link>
                             <link>http://maltcms.sourceforge.net/maven/cross/${version.cross}/cross-main/apidocs/</link>
@@ -288,7 +304,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.2</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <source>${project.build.sourceLevel}</source>
                         <target>${project.build.targetLevel}</target>
@@ -298,7 +314,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.5</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <nonFilteredFileExtensions>
@@ -314,18 +330,18 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.17</version>
+                    <version>2.19.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-junit47</artifactId>
-                            <version>2.17</version>
+                            <version>2.19.1</version>
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <includes>
+                        <!--                        <includes>
                             <include>**/*.class</include>
-                        </includes>
+                        </includes>-->
                         <excludedGroups>cross.test.IntegrationTest</excludedGroups>
                         <argLine>-Xmx2G</argLine>
                         <trimStackTrace>false</trimStackTrace>
@@ -337,16 +353,16 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>2.17</version>
+                    <version>2.19.1</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-junit47</artifactId>
-                            <version>2.17</version>
+                            <version>2.19.1</version>
                         </dependency>
                     </dependencies>
                     <configuration>
-                        <groups>cross.test.IntegrationTest</groups>
+                        <!--<groups>cross.test.IntegrationTest</groups>-->
                         <failIfNoTests>false</failIfNoTests>
                         <trimStackTrace>false</trimStackTrace>
                         <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
@@ -361,9 +377,9 @@
                                 <goal>verify</goal>
                             </goals>
                             <configuration>
-                                <includes>
+                                <!--                                <includes>
                                     <include>**/*.class</include>
-                                </includes>
+                                </includes>-->
                                 <argLine>-Xmx2G</argLine>
                                 <!--redirectTestOutputToFile -->
                                 <redirectTestOutputToFile>true</redirectTestOutputToFile>
@@ -378,12 +394,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>2.6</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.7</version>
+                    <version>1.8</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -422,7 +438,7 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
                     <extensions>true</extensions>
-                    <version>3.9</version>
+                    <version>4.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -445,12 +461,12 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.7</version>
+                <version>3.2.0</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+                        <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
                         <!--<Bundle-Version>${project.version}</Bundle-Version>--> 
                         <!-- Allow each bundle to override these settings by creating a file --> 
                         <!--<_include>src/main/resources/META-INF/MANIFEST.MF</_include>--> 
@@ -469,7 +485,7 @@
             <plugin>
                 <groupId>org.ops4j</groupId>
                 <artifactId>maven-pax-plugin</artifactId>
-                <version>1.5</version>
+                <version>1.6.0</version>
                 <configuration>
                     <provision>
                         <param>--sp=org.w3c.dom;version=1.3.0</param>
@@ -539,7 +555,7 @@
                             <dependency>
                                 <groupId>sun.jdk</groupId>
                                 <artifactId>tools</artifactId>
-                                <version>1.7</version>
+                                <version>1.8</version>
                                 <scope>system</scope>
                                 <systemPath>${java.home}/../lib/tools.jar</systemPath>
                             </dependency>
@@ -567,31 +583,16 @@
         <module>maltcms-experimental</module>
         <module>maltcms-statistics</module>
         <module>maltcms-sralign</module>
-        <module>maltcms-spectratyping</module>
         <module>maltcms-xml-alignment</module>
         <module>maltcms-xml-annotation</module>
         <module>maltcms-resources</module>
-        <module>maltcms-io-netcdf</module>
-        <module>maltcms-io-mzxml</module>
-        <module>maltcms-io-mzdata</module>
-        <module>maltcms-io-mzml</module>
-        <module>maltcms-io-mz5</module>
-        <module>maltcms-io-csv</module>
-        <module>maltcms-io-xlsx</module>
-        <module>maltcms-io-openms-featurexml</module>
-        <module>maltcms-io-mztab</module>
         <module>maltcms-evaluation</module>
-        <module>maltcms-distribution</module>
-        <module>maltcms-ap-distribution</module>
-        <module>maltcms-osgi-distribution</module>
-        <module>maltcms-nbm-cluster</module>
         <module>maltcms-cv</module>
         <module>maltcms-ap</module>
-        <module>jxl-osgi</module>
-        <module>poi-osgi</module>
-        <module>jfreechart-osgi</module>
-        <module>jmzml-osgi</module>
         <module>maltcms-microbenchmarks</module>
+        <module>distributions</module>
+        <module>osgi</module>
+        <module>maltcms-io-providers</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -651,12 +652,6 @@
                 <artifactId>com.springsource.javax.media.jai.core</artifactId>
                 <version>1.1.3</version>
             </dependency>
-            <!--			<dependency>
-                    <artifactId>com.springsource.org.apache.commons.codec</artifactId>
-                    <groupId>org.apache.commons</groupId>
-                    <type>jar</type>
-                    <version>1.3.0</version>
-            </dependency>-->
             <dependency>
                 <artifactId>com.springsource.org.apache.commons.logging</artifactId>
                 <groupId>org.apache.commons</groupId>
@@ -684,17 +679,17 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
-                <version>3.2</version>
+                <version>3.6</version>
             </dependency>
             <dependency>
                 <groupId>commons-cli</groupId>
                 <artifactId>commons-cli</artifactId>
-                <version>1.2</version>
+                <version>1.3.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-csv</artifactId>
-                <version>1.0</version>
+                <version>1.2</version>
             </dependency>
             <dependency>
                 <groupId>acs.lbl.gov</groupId>
@@ -716,11 +711,6 @@
                 <artifactId>jfreechart-osgi</artifactId>
                 <version>1.0.14.1</version>
             </dependency>
-            <!--			<dependency>
-                    <groupId>org.jfree</groupId>
-                    <artifactId>jcommon-osgi</artifactId>
-                    <version>1.0.17</version>
-            </dependency>-->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -730,7 +720,7 @@
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
-                <version>1.8.9</version>
+                <version>2.4.5</version>
             </dependency>
             <dependency>
                 <groupId>com.db4o</groupId>
@@ -740,7 +730,7 @@
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
-                <version>1.3.170</version>
+                <version>1.4.191</version>
             </dependency>
             <dependency>
                 <groupId>edu.ucar.unidata</groupId>
@@ -755,7 +745,13 @@
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
-                <version>2.1.12</version>
+                <version>${version.jaxb}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-core</artifactId>
+                <scope>runtime</scope>
+                <version>${version.jaxb}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -818,15 +814,15 @@
                     </reportSet>
                 </reportSets>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>clirr-maven-plugin</artifactId>
                 <version>${version.clirr.plugin}</version>
                 <configuration>
-                    <!-- Compare the current code against version 1.2 -->
+                     Compare the current code against configured base version 
                     <comparisonVersion>${version.maltcms.base}</comparisonVersion>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -850,16 +846,18 @@
         <netbeans.hint.license>maltcms</netbeans.hint.license>
         <!--<maven.test.skip>false</maven.test.skip> -->
         <skipITs>true</skipITs>
-        <project.build.sourceLevel>1.7</project.build.sourceLevel>
-        <project.build.targetLevel>1.7</project.build.targetLevel>
+        <project.build.sourceLevel>1.8</project.build.sourceLevel>
+        <project.build.targetLevel>1.8</project.build.targetLevel>
+        <additionalparam>-Xdoclint:none</additionalparam>
         <version.cross>1.4.0</version.cross>
-        <version.slf4j>1.7.2</version.slf4j>
-        <version.junit>4.11</version.junit>
-        <version.lombok>1.14.2</version.lombok>
-        <version.lombok.maven>1.14.2.0</version.lombok.maven>
+        <version.jaxb>2.2.11</version.jaxb>
+        <version.slf4j>1.7.14</version.slf4j>
+        <version.junit>4.12</version.junit>
+        <version.lombok>1.16.18</version.lombok>
+        <version.lombok.maven>1.16.18.1</version.lombok.maven>
         <version.maltcms.base>1.3.0</version.maltcms.base>
-        <version.javadoc.plugin>2.10.1</version.javadoc.plugin>
-        <version.clirr.plugin>2.6.1</version.clirr.plugin>
-        <version.projectinfo.plugin>2.6</version.projectinfo.plugin>
+        <version.javadoc.plugin>2.10.4</version.javadoc.plugin>
+        <!--<version.clirr.plugin>2.7</version.clirr.plugin>-->
+        <version.projectinfo.plugin>2.8.1</version.projectinfo.plugin>
     </properties>
 </project>

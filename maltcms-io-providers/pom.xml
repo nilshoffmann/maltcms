@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.sf.maltcms</groupId>
+        <artifactId>maltcms-modules</artifactId>
+        <version>1.4.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>maltcms-io-providers</artifactId>
+    <name>Maltcms IO Providers</name>
+    <packaging>pom</packaging>
+    <modules>
+        <module>maltcms-io-csv</module>
+        <module>maltcms-io-mz5</module>
+        <module>maltcms-io-mzdata</module>
+        <module>maltcms-io-mzml</module>
+        <module>maltcms-io-mztab</module>
+        <module>maltcms-io-mzxml</module>
+        <module>maltcms-io-netcdf</module>
+        <module>maltcms-io-openms-featurexml</module>
+        <module>maltcms-io-xlsx</module>
+    </modules>
+</project>

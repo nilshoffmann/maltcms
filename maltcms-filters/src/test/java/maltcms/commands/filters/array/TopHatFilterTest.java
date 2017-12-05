@@ -27,14 +27,9 @@
  */
 package maltcms.commands.filters.array;
 
-import cross.datastructures.fragments.ImmutableFileFragment;
-import java.io.File;
 import java.io.IOException;
-import junit.framework.Assert;
-import maltcms.test.ZipResourceExtractor;
-import org.junit.Rule;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
@@ -44,19 +39,12 @@ import ucar.ma2.MAMath;
  */
 public class TopHatFilterTest {
 
-    @Rule
-    public TemporaryFolder tf = new TemporaryFolder();
-
     /**
      * Test of apply method, of class SavitzkyGolayFilter.
      */
     @Test
     public void testApply() throws IOException {
-        File outputFolder = tf.newFolder(
-                "cdf");
-        File outputFile = ZipResourceExtractor.extract("/cdf/1D/glucoseA.cdf.gz", outputFolder);
-        ImmutableFileFragment ff = new ImmutableFileFragment(outputFile);
-        Array tic = ff.getChild("total_intensity").getArray();
+        Array tic = Array.factory(TestArray.TIC);
         double ticSum = MAMath.sumDouble(tic);
         Assert.assertEquals(1.881895164E9, ticSum, 0.0d);
         TopHatFilter filter = new TopHatFilter();

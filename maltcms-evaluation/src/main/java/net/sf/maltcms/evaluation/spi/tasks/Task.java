@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
 import net.sf.maltcms.evaluation.api.tasks.IPostProcessor;
 import net.sf.maltcms.evaluation.api.tasks.ITask;

@@ -45,10 +45,7 @@ import maltcms.tools.ImageTools;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.Plot;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.ui.RectangleInsets;
 
 /**

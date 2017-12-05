@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>maltcms-distributions</artifactId>
+        <groupId>net.sf.maltcms</groupId>
+        <version>1.4.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>maltcms-ap-distribution</artifactId>
+    <name>Maltcms Analytical Pyrolysis Distribution Binary</name>
+    <description>Creates the Maltcms Binary Distribution for Analytical Pyrolysis.</description>
+    <packaging>pom</packaging>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/assemble</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-spring-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/META-INF</directory>
+                                    <targetPath>classes/META-INF</targetPath>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Jar plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-cp-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration combine.self="override">
+                            <includes>
+                                <include>META-INF/*</include>
+                            </includes>
+                            <skipIfEmpty>false</skipIfEmpty>
+                            <archive>
+                                <!--<index>true</index>-->
+                                <manifest>
+                                    <useUniqueVersions>false</useUniqueVersions>
+                                    <mainClass>net.sf.maltcms.apps.Maltcms</mainClass>
+                                    <addClasspath>true</addClasspath>
+                                    <classpathPrefix>lib</classpathPrefix>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                    <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                                </manifest>
+                                
+                            </archive>
+                            <finalName>maltcms</finalName>
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Assembly plugin -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>my-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/install.xml</descriptor>
+                    </descriptors>
+                    <finalName>${distributionName}</finalName>
+                    <attach>false</attach>
+                </configuration>
+            </plugin>
+            <!-- Antrun plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>set-file-perms</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <echo message="Correcting file permissions in ${project.build.directory}/${distributionName}-bin/${distributionName}" />
+                                <copy file="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms-ap.sh" toFile="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms-ap.command" />
+                                <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/" perm="ugo+rx" />
+                                <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin" perm="ugo+rx" />
+                                <copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${distributionName}-bin/${distributionName}/" />
+                                <zip destfile="${project.build.directory}/${distributionName}-bin.zip">
+                                    <zipfileset dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/" prefix="${distributionName}/bin" filemode="755">
+                                        <include name="*.sh" />
+                                        <include name="*.command" />
+                                    </zipfileset>    
+                                    <zipfileset dir="${project.build.directory}/${distributionName}-bin/${distributionName}/" prefix="${distributionName}">
+                                        <include name="**" />
+                                        <exclude name="bin/*.sh" />
+                                        <exclude name="bin/*.command" />
+                                    </zipfileset>    
+                                    
+                                </zip>
+                                <attachartifact file="${project.build.directory}/${distributionName}-bin.zip" type="zip" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- disable reports -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <generateReports>false</generateReports>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+    
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-distribution</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>maltcms-ap</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+    </dependencies>
+    <properties>
+        <distributionName>maltcms-ap-distribution-${project.version}</distributionName>
+    </properties>
+</project>

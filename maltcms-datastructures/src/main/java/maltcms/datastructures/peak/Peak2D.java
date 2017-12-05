@@ -55,9 +55,14 @@ import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
 
 /**
- * Dataholder for all important information about a peak.
+ * Peak2D models a standard 2D chromatographic peak.
+ *
+ * Peak2D objects can be compared using <code>equals</code>. Each peak
+ * additionally has a random unique id, that can be retrieved using
+ * <code>getUniqueId()</code>.
  *
  * @author Mathias Wilhelm
+ * @author Nils Hoffmann
  *
  */
 @Slf4j

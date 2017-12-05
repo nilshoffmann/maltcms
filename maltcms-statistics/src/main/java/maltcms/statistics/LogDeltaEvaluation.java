@@ -55,13 +55,13 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYBarDataset;
 
-@Slf4j
 /**
  * <p>LogDeltaEvaluation class.</p>
  *
  * @author Nils Hoffmann
  * 
  */
+@Slf4j
 public class LogDeltaEvaluation implements IWorkflowElement {
 
     private IWorkflow workflow;
@@ -79,7 +79,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         final String groupFileLocation = Factory.getInstance().getConfiguration().
                 getString("groupFileLocation", "");
         if (groupFileLocation.isEmpty()) {
-            this.log.warn("No group file given!");
+            log.warn("No group file given!");
             return;
         }
         // Read group information
@@ -96,7 +96,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
         final HashMap<String, List<IFileFragment>> classToFiles = new HashMap<>();
         for (Vector<String> line : v.getFirst()) {
             if (line.size() > 1 && !line.isEmpty()) {
-                this.log.debug("line: {}", line);
+                log.debug("line: {}", line);
                 if (fileToShortFile.keySet().contains(
                         StringTools.removeFileExt(line.get(0)))) {
                     fileToClass.put(fileToShortFile.get(line.get(0)),
@@ -136,7 +136,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
                                         getAreaIntensity();
                                 cc1++;
                             } catch (NullPointerException e) {
-                                this.log.info("NULLPOINTER in c1: " + c1 + "-"
+                                log.info("NULLPOINTER in c1: " + c1 + "-"
                                         + c2);
                             }
                         }
@@ -146,7 +146,7 @@ public class LogDeltaEvaluation implements IWorkflowElement {
                                         getAreaIntensity();
                                 cc2++;
                             } catch (NullPointerException e) {
-                                this.log.info("NULLPOINTER in c2: " + c1 + "-"
+                                log.info("NULLPOINTER in c2: " + c1 + "-"
                                         + c2);
                             }
                         }

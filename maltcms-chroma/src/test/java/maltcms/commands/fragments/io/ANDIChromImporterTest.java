@@ -29,44 +29,32 @@ package maltcms.commands.fragments.io;
 
 import cross.commands.fragments.IFragmentCommand;
 import cross.datastructures.workflow.IWorkflow;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
-import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
-import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
+import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
  * @author Nils Hoffmann
  */
 public class ANDIChromImporterTest extends AFragmentCommandTest {
-
+    @Rule
+    public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,
+        "/cdf/1D/ap/Ap 601.CDF.gz"
+    );
     /**
      *
      */
     @Test
     public void testANDIChromImporter() throws IOException {
-        File dataFolder = tf.newFolder("chromaTestData");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/ap/Ap 601.CDF.gz", dataFolder);
-        File outputBase = tf.newFolder(ANDIChromImporter.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         ANDIChromImporter importer = new ANDIChromImporter();
         commands.add(importer);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(commands, testFiles.getFiles());
         testWorkflow(w);
     }
 }

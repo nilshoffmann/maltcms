@@ -56,6 +56,8 @@ maltcms.sh -exec gmdb.MetaboliteParser nameOfDBFileToCreate.db4o [nameOfFirstMSP
     to browse the Metabolites. We recommend to append the suffix ".db4o" to
     the database files in order to distinguish them more easily from
     ordinary files.
+
+    In case of errors, please check that the supplied msp file contains only numbers in US-English locale, e.g. with a ',' as a decimal separator. 
 	
 * For Developers
 

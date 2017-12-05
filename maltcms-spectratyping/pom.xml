@@ -4,9 +4,8 @@
     <parent>
         <artifactId>maltcms-modules</artifactId>
         <groupId>net.sf.maltcms</groupId>
-        <version>1.3.2-SNAPSHOT</version>
+        <version>1.4.0-SNAPSHOT</version>
     </parent>
-    <groupId>net.sf.maltcms</groupId>
     <artifactId>maltcms-spectratyping</artifactId>
     <name>Maltcms Spectratyping</name>
     <description>(Experimental) Pipeline for Spectratyping.</description>

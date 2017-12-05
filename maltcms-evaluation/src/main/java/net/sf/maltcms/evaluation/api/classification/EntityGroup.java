@@ -29,6 +29,7 @@ package net.sf.maltcms.evaluation.api.classification;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -47,20 +48,20 @@ import org.slf4j.LoggerFactory;
  * 
  */
 
-public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityGroup>, Serializable {
+public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityGroup<T>>, Serializable {
     
     private static final Logger log = LoggerFactory.getLogger(ClassificationPerformanceTest.class);
         
     private final HashMap<Category, Entity<T>> categoryToEntityMap;
-
+    
     /**
      * <p>Constructor for EntityGroup.</p>
      *
      * @param e a {@link net.sf.maltcms.evaluation.api.classification.Entity} object.
      */
-    public EntityGroup(Entity<T>... e) {
+    public EntityGroup(Collection<Entity<T>> entities) {
         categoryToEntityMap = new HashMap<>();
-        for (Entity<T> ent : e) {
+        for (Entity<T> ent : entities) {
             categoryToEntityMap.put(ent.getCategory(), ent);
         }
     }
@@ -76,7 +77,7 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
         for (Category cat : c) {
             entities.add(getEntityForCategory(cat));
         }
-        EntityGroup<T> eg = new EntityGroup<>(entities.toArray(new Entity[c.length]));
+        EntityGroup<T> eg = new EntityGroup<T>(entities);
         return eg;
     }
 
@@ -146,7 +147,8 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
     }
 
     /** {@inheritDoc} */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -162,7 +164,8 @@ public class EntityGroup<T extends IFeatureVector> implements Comparable<EntityG
     }
 
     /** {@inheritDoc} */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public int compareTo(EntityGroup o) {
         if (equals(o)) {
             return 0;

@@ -27,7 +27,6 @@
  */
 package maltcms.commands.fragments2d.peakfinding.picking;
 
-import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -37,7 +36,6 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.quadTree.QuadTree;

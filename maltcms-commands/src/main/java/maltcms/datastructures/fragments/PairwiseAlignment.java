@@ -60,7 +60,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
-import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.jdom.Element;
 import ucar.ma2.ArrayByte;
@@ -105,7 +104,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
     @Configurable(name = "var.alignment.pairwise_distance")
     private String pairwiseDistanceVariableName = "pairwise_distance";
     @Configurable(name = "var.minimizing_array_comp")
-    private String arrayComparatorVariableName = "array_comp";
+    private String arrayComparatorVariableName = "minimizing_array_comp";
     @Configurable(name = "alignment.algorithm.distance")
     private String arrayDistanceClassName = "maltcms.commands.distances.ArrayLp";
     private IWorkflow iw;
@@ -155,7 +154,7 @@ public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
         this.pairwiseDistanceVariableName = cfg.getString(
                 "var.alignment.pairwise_distance", "pairwise_distance");
         this.arrayComparatorVariableName = cfg.getString(
-                "var.minimizing_array_comp", "array_comp");
+                "var.minimizing_array_comp", "minimizing_array_comp");
         this.arrayDistanceClassName = cfg.getString(
                 "alignment.algorithm.distance",
                 "maltcms.commands.distances.ArrayLp");

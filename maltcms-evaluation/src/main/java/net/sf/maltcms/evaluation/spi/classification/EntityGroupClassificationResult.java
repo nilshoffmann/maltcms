@@ -27,6 +27,7 @@
  */
 package net.sf.maltcms.evaluation.spi.classification;
 
+import maltcms.datastructures.array.IFeatureVector;
 import net.sf.maltcms.evaluation.api.classification.EntityGroup;
 
 /**
@@ -35,10 +36,10 @@ import net.sf.maltcms.evaluation.api.classification.EntityGroup;
  * @author Nils Hoffmann
  * 
  */
-public class EntityGroupClassificationResult implements Comparable<EntityGroupClassificationResult> {
+public class EntityGroupClassificationResult<T extends IFeatureVector> implements Comparable<EntityGroupClassificationResult> {
 
-    private final EntityGroup toolEntityGroup;
-    private final EntityGroup groundTruthEntityGroup;
+    private final EntityGroup<T> toolEntityGroup;
+    private final EntityGroup<T> groundTruthEntityGroup;
     private final int tp, tn, fp, fn;
     private final double dist;
 
@@ -53,7 +54,7 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
      * @param fn a int.
      * @param dist a double.
      */
-    public EntityGroupClassificationResult(EntityGroup toolEntityGroup, EntityGroup groundTruthEntityGroup, int tp, int tn, int fp, int fn, double dist) {
+    public EntityGroupClassificationResult(EntityGroup<T> toolEntityGroup, EntityGroup<T> groundTruthEntityGroup, int tp, int tn, int fp, int fn, double dist) {
         this.toolEntityGroup = toolEntityGroup;
         this.groundTruthEntityGroup = groundTruthEntityGroup;
         this.tp = tp;
@@ -86,7 +87,7 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
      *
      * @return a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
      */
-    public EntityGroup getGroundTruthEntityGroup() {
+    public EntityGroup<T> getGroundTruthEntityGroup() {
         return groundTruthEntityGroup;
     }
 
@@ -95,7 +96,7 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
      *
      * @return a {@link net.sf.maltcms.evaluation.api.classification.EntityGroup} object.
      */
-    public EntityGroup getToolEntityGroup() {
+    public EntityGroup<T> getToolEntityGroup() {
         return toolEntityGroup;
     }
 
@@ -133,7 +134,8 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
     }
 
     /** {@inheritDoc} */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public int compareTo(EntityGroupClassificationResult o) throws IllegalArgumentException {
         final int WORSE = -1;
         final int BETTER = 1;
@@ -171,7 +173,8 @@ public class EntityGroupClassificationResult implements Comparable<EntityGroupCl
     }
 
     /** {@inheritDoc} */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

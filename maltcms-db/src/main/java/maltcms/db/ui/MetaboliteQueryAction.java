@@ -27,18 +27,15 @@
  */
 package maltcms.db.ui;
 
+import com.db4o.query.Predicate;
 import java.awt.event.ActionEvent;
-
 import javax.swing.Icon;
 import javax.swing.JTextField;
-
+import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.IAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MAggregatePredicate;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
-
-import com.db4o.query.Predicate;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>MetaboliteQueryAction class.</p>

@@ -72,7 +72,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
     
     private final EntityGroupList<T> groundTruth;
     private final int numberOfGroundTruthEntities;
-    private final IFeatureVectorComparator ifvc;
+    private final IFeatureVectorComparator<T> ifvc;
     private final ChromaTOFPeakListEntityTable<T> peakTable;
 
     /**
@@ -82,7 +82,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
      * @param groundTruth a {@link net.sf.maltcms.evaluation.api.classification.EntityGroupList} object.
      * @param ifvc a {@link net.sf.maltcms.evaluation.api.classification.IFeatureVectorComparator} object.
      */
-    public PairwiseClassificationPerformanceTest(ChromaTOFPeakListEntityTable<T> peakTable, EntityGroupList<T> groundTruth, IFeatureVectorComparator ifvc) {
+    public PairwiseClassificationPerformanceTest(ChromaTOFPeakListEntityTable<T> peakTable, EntityGroupList<T> groundTruth, IFeatureVectorComparator<T> ifvc) {
         this.peakTable = peakTable;
         this.groundTruth = groundTruth;
         int nent = 0;
@@ -145,7 +145,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         File[] files = FileUtils.listFiles(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/data/mSPA_Dataset_I/"), new String[]{"csv"}, false).toArray(new File[0]);
         ChromaTOFPeakListEntityTable<INamedPeakFeatureVector> t = new ChromaTOFPeakListEntityTable<>(files);
         List<EntityGroup<INamedPeakFeatureVector>> ref = egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/mSPA/groundTruth/mSPA_Dataset_I/reference-alignment.txt"), t);
-        EntityGroupList referenceGroups = new EntityGroupList(ref.get(0).getCategories().toArray(new Category[0]));
+        EntityGroupList<INamedPeakFeatureVector> referenceGroups = new EntityGroupList<>(ref.get(0).getCategories().toArray(new Category[0]));
         referenceGroups.addAll(ref);
         Map<String, List<EntityGroup<INamedPeakFeatureVector>>> tools = new LinkedHashMap<>();
         ///home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/chlamy_Dataset_I/mspa/b1cf508f-fd7a-37b8-bb13-848ca9f2b0f0/PAM/1
@@ -156,7 +156,7 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
         tools.put("Guineu", egb.buildCSVPeak2DAssociationGroups(new File("/home/hoffmann/Uni/projects/ChromA4DPaper/evaluation2/results/mSPA_Dataset_I_short/guineu/0e029001-7d61-3b29-8d0e-20f05c413ded/multiple-alignment.csv"), t));
         for (String key : tools.keySet()) {
             log.info("Tool: " + key);
-            EntityGroupList toolGroups = new EntityGroupList(tools.get(key).get(0).getCategories().toArray(new Category[0]));
+            EntityGroupList<INamedPeakFeatureVector> toolGroups = new EntityGroupList<>(tools.get(key).get(0).getCategories().toArray(new Category[0]));
             toolGroups.addAll(tools.get(key));
 //		Category c1 = new Category("c1");
 //		Category c2 = new Category("c2");
@@ -246,8 +246,8 @@ public class PairwiseClassificationPerformanceTest<T extends INamedPeakFeatureVe
                 DescriptiveStatistics ds = new DescriptiveStatistics(values);
                 log.info(var.toString() + ": totalValue=" + ds.getSum() + "; min=" + ds.getMin() + "; max=" + ds.getMax() + "; mean=" + ds.getMean() + "+/-" + ds.getStandardDeviation());
             }
-            ClassificationPerformanceTest<INamedPeakFeatureVector> rpt = new ClassificationPerformanceTest<>(referenceGroups, new PeakRowIndexFeatureVectorComparator());
-            PerformanceMetrics rpm = rpt.performTest("testTool", toolGroups);
+            ClassificationPerformanceTest<INamedPeakFeatureVector> rpt = new ClassificationPerformanceTest<>(referenceGroups, new PeakRowIndexFeatureVectorComparator<INamedPeakFeatureVector>());
+            PerformanceMetrics<INamedPeakFeatureVector> rpm = rpt.performTest("testTool", toolGroups);
             MultiMap<PerformanceMetrics.Vars, Number> metricsMap2 = new MultiMap<>();
             metricsMap2.put(TP, rpm.getTp());
             metricsMap2.put(FP, rpm.getFp());

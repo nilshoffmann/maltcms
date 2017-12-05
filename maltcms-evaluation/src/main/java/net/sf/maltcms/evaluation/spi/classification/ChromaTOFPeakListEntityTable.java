@@ -41,9 +41,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.io.csv.chromatof.ChromaTOFParser;
+import maltcms.io.csv.chromatof.ChromaTOFParser.ColumnName;
+import maltcms.io.csv.chromatof.ChromaTOFParser.TableColumn;
 import maltcms.io.csv.chromatof.TableRow;
 import net.sf.maltcms.evaluation.api.classification.Category;
 import net.sf.maltcms.evaluation.api.classification.Entity;
@@ -57,6 +58,7 @@ import ucar.ma2.MAMath;
  * ChromaTOFPeakListEntityTable class.</p>
  *
  * @author Nils Hoffmann
+ * @param <T> the entity {@link maltcms.datastructures.array.IFeatureVector} type.
  *
  */
 public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
@@ -74,7 +76,7 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
     public ChromaTOFPeakListEntityTable(File... peakLists) {
         for (File f : peakLists) {
             ChromaTOFParser parser = ChromaTOFParser.create(f, true, Locale.US);
-            Tuple2D<LinkedHashSet<String>, List<TableRow>> t = parser.parseReport(parser, f, true);
+            Tuple2D<LinkedHashSet<TableColumn>, List<TableRow>> t = ChromaTOFParser.parseReport(parser, f, true);
             Category c = new Category(StringTools.removeFileExt(f.getName()));
             peakTableMap.put(c, buildEntities(c, t, parser));
         }
@@ -98,23 +100,22 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
      * @param c a {@link net.sf.maltcms.evaluation.api.classification.Category}
      * object.
      * @param t a {@link cross.datastructures.tuple.Tuple2D} object.
-     * @param locale a {@link ChromaTOFParser} object.
+     * @param parser a {@link ChromaTOFParser} object.
      * @return a {@link java.util.List} object.
      */
-    public final List<Entity<T>> buildEntities(Category c, Tuple2D<LinkedHashSet<String>, List<TableRow>> t, ChromaTOFParser parser) {
+    public final List<Entity<T>> buildEntities(Category c, Tuple2D<LinkedHashSet<TableColumn>, List<TableRow>> t, ChromaTOFParser parser) {
         List<Entity<T>> l = new ArrayList<>(t.getSecond().size());
         int rowIndex = 0;
         Set<Double> areaSet = new HashSet<>();
-        MultiMap<String, Entity<T>> mm = new MultiMap<>();
         for (TableRow tr : t.getSecond()) {
             if (log.isDebugEnabled()) {
                 log.debug("Row data for row index: " + rowIndex + " = " + tr.toString());
             }
             IFeatureVector ifc = null;
             double area = Double.NaN;
-            if (tr.containsKey("R.T._(S)")) {
+            if (!tr.getColumnForName(ColumnName.RETENTION_TIME_SECONDS).equals(TableColumn.NIL)) {
                 //fused RT mode
-                String rt = tr.get("R.T._(S)");
+                String rt = tr.getValueForName(ColumnName.RETENTION_TIME_SECONDS);
 //				log.info("Fused RT");
                 //log.info("Retention Time: "+rt);
                 if (rt.contains(",")) {//2D mode
@@ -122,27 +123,28 @@ public class ChromaTOFPeakListEntityTable<T extends IFeatureVector> {
                     String[] rts = rt.split(",");
                     double rt1 = parser.parseDouble(rts[0].trim());
                     double rt2 = parser.parseDouble(rts[1].trim());
-                    area = parser.parseDouble(tr.get("AREA"));
-                    ifc = new Peak2DFeatureVector(tr.get("NAME"), rowIndex, rt1, rt2, area);
+                    area = parser.parseDouble(tr.getValueForName(ColumnName.AREA));
+                    ifc = new Peak2DFeatureVector(tr.getValueForName(ColumnName.NAME), rowIndex, rt1, rt2, area);
 
                 } else {
                     double rtv = parser.parseDouble(rt.trim());
-                    area = parser.parseDouble(tr.get("AREA"));
-                    ifc = new Peak1DFeatureVector(tr.get("NAME"), rowIndex, rtv, area);
+                    area = parser.parseDouble(tr.getValueForName(ColumnName.AREA));
+                    ifc = new Peak1DFeatureVector(tr.getValueForName(ColumnName.NAME), rowIndex, rtv, area);
                 }
             } else {
-                if (tr.containsKey("1ST_DIMENSION_TIME_(S)") && tr.containsKey("2ND_DIMENSION_TIME_(S)")) {
+                if (!tr.getColumnForName(ColumnName.FIRST_DIMENSION_TIME_SECONDS).equals(TableColumn.NIL) && !tr.getColumnForName(ColumnName.SECOND_DIMENSION_TIME_SECONDS).equals(TableColumn.NIL)) {
 //					log.info("Separate RT 2D chromatogram peak data detected");
-                    double rt1 = parser.parseDouble(tr.get("1ST_DIMENSION_TIME_(S)"));
-                    double rt2 = parser.parseDouble(tr.get("2ND_DIMENSION_TIME_(S)"));
-                    area = parser.parseDouble(tr.get("AREA"));
-                    ifc = new Peak2DFeatureVector(tr.get("NAME"), rowIndex, rt1, rt2, area);
+                    double rt1 = parser.parseDouble(tr.getValueForName(ColumnName.FIRST_DIMENSION_TIME_SECONDS));
+                    double rt2 = parser.parseDouble(tr.getValueForName(ColumnName.SECOND_DIMENSION_TIME_SECONDS));
+                    area = parser.parseDouble(tr.getValueForName(ColumnName.AREA));
+                    ifc = new Peak2DFeatureVector(tr.getValueForName(ColumnName.NAME), rowIndex, rt1, rt2, area);
                 } else {
                     log.info("Skipping unparseable row!");
                 }
             }
             if (!areaSet.contains(area)) {
-                Entity e = new Entity(ifc, c, tr.get("NAME"));
+                @SuppressWarnings("unchecked")
+                Entity<T> e = new Entity<>((T)ifc, c, tr.getValueForName(ColumnName.NAME));
                 l.add(e);
                 areaSet.add(area);
             } else {

@@ -45,7 +45,6 @@ import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.datastructures.peak.Peak1D;
-import maltcms.datastructures.peak.Peak1D.Peak1DBuilder;
 import maltcms.datastructures.peak.PeakType;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.rank.Rank;
@@ -101,15 +100,13 @@ public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFind
         for (Ridge ridge : r) {
             log.debug("Processing Ridge " + (index + 1) + " "
                     + r.size());
-            Peak1D p = null;
-            Peak1DBuilder builder = Peak1D.builder1D();
-            builder.
+            Peak1D p = Peak1D.builder1D().
                 startIndex(ridge.getGlobalScanIndex()).
                 apexIndex(ridge.getGlobalScanIndex()).
                 stopIndex(ridge.getGlobalScanIndex()).
                 file(f.getName()).
                 apexIntensity(tic.getDouble(tidx.set(ridge.getGlobalScanIndex()))).
-                apexTime(sat.getDouble(sidx.set(ridge.getGlobalScanIndex())));
+                apexTime(sat.getDouble(sidx.set(ridge.getGlobalScanIndex()))).build();
                         
             int[] scaleBounds = mhwf.getContinuousWaveletTransform().
                     getBoundsForWavelet(p.getApexIndex(), ridge.
@@ -119,15 +116,13 @@ public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFind
             for (int i = scaleBounds[0]; i <= scaleBounds[1]; i++) {
                 area += tic.getDouble(i);
             }
-            builder.
-                startIndex(scaleBounds[0]).
-                stopIndex(scaleBounds[1]).
-                snr(Double.NaN).
-                area(area).
-                startTime(sat.getDouble(scaleBounds[0])).
-                stopTime(sat.getDouble(scaleBounds[1])).
-                peakType(peakType);
-            p = builder.build();
+            p.setStartIndex(scaleBounds[0]);
+            p.setStopIndex(scaleBounds[1]);
+            p.setSnr(Double.NaN);
+            p.setArea(area);
+            p.setStartTime(sat.getDouble(scaleBounds[0]));
+            p.setStopTime(sat.getDouble(scaleBounds[1]));
+            p.setPeakType(peakType);
             peaks.add(p);
             index++;
         }

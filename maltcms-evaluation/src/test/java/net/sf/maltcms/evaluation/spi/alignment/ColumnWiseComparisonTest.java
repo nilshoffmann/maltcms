@@ -27,9 +27,9 @@
  */
 package net.sf.maltcms.evaluation.spi.alignment;
 
-import net.sf.maltcms.evaluation.api.alignment.AlignmentColumn;
 import net.sf.maltcms.evaluation.api.Category;
 import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
+import net.sf.maltcms.evaluation.api.alignment.AlignmentColumn;
 import net.sf.maltcms.evaluation.api.alignment.AlignmentColumnComparator;
 import net.sf.maltcms.evaluation.api.alignment.MultipleAlignment;
 import org.junit.*;

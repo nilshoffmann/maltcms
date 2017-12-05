@@ -47,7 +47,7 @@ public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
      * @return a {@link maltcms.datastructures.ms.IScan2D} object.
      */
     public IScan2D getScan2D(int globalScan, int localScan);
-
+    
     /**
      * <p>getNumberOfModulations.</p>
      *
@@ -99,6 +99,15 @@ public interface IChromatogram2D extends IChromatogram, IScan2DProvider {
      */
     public Point getPointFor(double scan_acquisition_time);
 
+//    /**
+//     * <p>getPointFor.</p>
+//     *
+//     * @param firstColumnTime a double.
+//     * @param secondColumnTime a double.
+//     * @return a {@link java.awt.Point} object.
+//     */
+//    public Point getPointFor(double firstColumnTime, double secondColumnTime);
+//    
     /**
      * <p>subsetByMsLevel.</p>
      *

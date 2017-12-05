@@ -27,8 +27,6 @@
  */
 package maltcms.commands.fragments2d.peakfinding;
 
-import maltcms.commands.fragments2d.peakfinding.srg.PeakSeparator;
-import maltcms.commands.fragments2d.peakfinding.comparator.PeakComparator;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
@@ -60,6 +58,7 @@ import java.util.List;
 import java.util.Vector;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments2d.peakfinding.comparator.PeakComparator;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakIntegration;
 import maltcms.commands.fragments2d.peakfinding.output.PeakExporter;
@@ -69,12 +68,12 @@ import maltcms.commands.fragments2d.peakfinding.picking.SimplePeakPicking;
 import maltcms.commands.fragments2d.peakfinding.srg.IPeakSeparator;
 import maltcms.commands.fragments2d.peakfinding.srg.IRegionGrowing;
 import maltcms.commands.fragments2d.peakfinding.srg.OneByOneRegionGrowing;
+import maltcms.commands.fragments2d.peakfinding.srg.PeakSeparator;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.ms.IScan2D;
 import maltcms.datastructures.peak.Peak2D;
-import maltcms.datastructures.peak.Peak2D.Peak2DBuilder;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ArrayTools2;

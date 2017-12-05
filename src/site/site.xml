@@ -85,7 +85,7 @@
                 <!--<item name="Data Access" href="./documentation/development/dataAccess.html"/>-->
                 <!--<item name="Parallel Processing" href="./documentation/development/parallelProcessing.html"/>-->
                 <item name="Custom Workflow Elements" href="./documentation/development/customWorkflowElements.html"/>
-                <item name="Java API" href="./apidocs/index.html" />
+                <!--<item name="Java API" href="./apidocs/index.html" />-->
             </item>
             <item name="Modules" href="modules.html" />
             <item name="Wiki" href="http://sourceforge.net/p/maltcms/wiki/Home/"/>

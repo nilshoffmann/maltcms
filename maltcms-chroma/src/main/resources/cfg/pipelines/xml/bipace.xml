@@ -126,6 +126,8 @@ for details.
     <bean id="linCorrSimilarity" class="maltcms.math.functions.similarities.ArrayCorr" scope="prototype"/>
     <bean id="rankCorrSimilarity" class="maltcms.math.functions.similarities.ArrayRankCorr" scope="prototype"/>
     <bean id="weightedCosineSimilarity" class="maltcms.math.functions.similarities.ArrayWeightedCosine" scope="prototype"/>
+    <!-- this is an improved and much faster version, experimental, use with caution -->
+    <bean id="weightedCosineSimilarity2" class="maltcms.math.functions.similarities.ArrayWeightedCosine2" scope="prototype"/>
     
     <!-- time penalized functions -->
     <bean id="timePenalizedProductSimilarity" class="maltcms.math.functions.ProductSimilarity" scope="prototype">
@@ -136,7 +138,7 @@ for details.
         </property>
         <property name="arraySimilarities">
             <array>
-                <ref bean="weightedCosineSimilarity"/>
+                <ref bean="weightedCosineSimilarity2"/>
             </array>
         </property>
     </bean>

@@ -29,7 +29,6 @@ package maltcms.db.predicates.metabolite;
 
 import java.lang.reflect.InvocationTargetException;
 import lombok.extern.slf4j.Slf4j;
-
 import maltcms.datastructures.ms.IMetabolite;
 
 /**

@@ -29,7 +29,7 @@ package maltcms.datastructures.alignment;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.TestCase;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.datastructures.ms.IAnchor;

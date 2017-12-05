@@ -29,11 +29,7 @@ package net.sf.maltcms.evaluation.spi.caap;
 
 import maltcms.io.xml.bindings.openms.featurexml.FeatureMap.FeatureList;
 import net.sf.maltcms.evaluation.api.ClassificationPerformanceTest;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertNotNull;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -32,20 +32,14 @@ import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import maltcms.commands.filters.array.AArrayFilter;
-import maltcms.commands.filters.array.SavitzkyGolayFilter;
-import maltcms.commands.fragments.peakfinding.TICPeakFinder;
-import maltcms.commands.fragments.peakfinding.TICPeakFinderTest;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
+import maltcms.commands.fragments.peakfinding.TICPeakFinderIT;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.test.AFragmentCommandTest;
-import maltcms.test.ZipResourceExtractor;
+import maltcms.test.ExtractClassPathFiles;
+import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -53,22 +47,22 @@ import static org.junit.Assert.*;
  */
 public class ObiWarplmataExporterTest extends AFragmentCommandTest {
 
+    @Rule
+    public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
+            "/cdf/1D/glucoseA.cdf.gz");
     /**
      *
      */
     @Test
     public void testObiWarplmataExporter() throws IOException {
         File dataFolder = tf.newFolder("chromaTest Data ö");
-        File inputFile1 = ZipResourceExtractor.extract(
-                "/cdf/1D/glucoseA.cdf.gz", dataFolder);
-        File outputBase = tf.newFolder(TICPeakFinderTest.class.getName());
+        File outputBase = tf.newFolder(TICPeakFinderIT.class.getName());
         List<IFragmentCommand> commands = new ArrayList<>();
         commands.add(new DefaultVarLoader());
         commands.add(new DenseArrayProducer());
         ObiWarplmataExporter exporter = new ObiWarplmataExporter();
         commands.add(exporter);
-        IWorkflow w = createWorkflow(outputBase, commands, Arrays.asList(
-                inputFile1));
+        IWorkflow w = createWorkflow(outputBase, commands, ecpf.getFiles());
         testWorkflow(w);
     }
 }
