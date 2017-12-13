@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/nilshoffmann/maltcms.svg?branch=master)](https://travis-ci.org/nilshoffmann/maltcms)
 [![Release Version](https://img.shields.io/github/release/nilshoffmann/maltcms.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/nilshoffmann/maltcms/total.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
+[![License](https://img.shields.io/badge/license-LGPL--3.0-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+[![License](https://img.shields.io/badge/license-EPL--1.0-blue.svg)](https://www.eclipse.org/legal/epl-v10.html)
 
 [:blue_book: Documentation](http://nilshoffmann.github.io/maltcms/)
 
