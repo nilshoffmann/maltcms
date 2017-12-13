@@ -4,6 +4,8 @@
 [![Release Version](https://img.shields.io/github/release/nilshoffmann/maltcms.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/nilshoffmann/maltcms/total.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
 
+[:blue_book: Documentation](http://nilshoffmann.github.io/maltcms/)
+
 Within this directory, you will find all the submodules, which 
 make up Maltcms. 
 General configuration for all modules can be found within the 
