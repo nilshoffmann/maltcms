@@ -1,5 +1,7 @@
 # This is the Maltcms maven3 project
 
+**This project is currently inactive.**
+
 [![Build Status](https://travis-ci.org/nilshoffmann/maltcms.svg?branch=master)](https://travis-ci.org/nilshoffmann/maltcms)
 [![Release Version](https://img.shields.io/github/release/nilshoffmann/maltcms.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/nilshoffmann/maltcms/total.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
