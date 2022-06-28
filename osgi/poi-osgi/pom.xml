@@ -29,7 +29,7 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
             <!-- set this to project.version to stay in sync -->
-            <version>3.17</version>
+            <version>4.1.1</version>
             <!--<scope>provided</scope> -->
         </dependency>
         <dependency>
