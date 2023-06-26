@@ -40,7 +40,7 @@ import cross.tools.StringTools;
 import java.io.File;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.csv.CSVWriter;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * Writes StatsMap objects to CSV Files.

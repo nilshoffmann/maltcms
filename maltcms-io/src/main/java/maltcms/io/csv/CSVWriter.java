@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.jdom.Element;
+import org.jdom2.Element;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayChar.StringIterator;

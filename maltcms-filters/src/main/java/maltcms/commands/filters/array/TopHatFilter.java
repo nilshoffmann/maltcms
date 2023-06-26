@@ -33,6 +33,7 @@ import lombok.Data;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
+import ucar.ma2.DataType;
 
 /**
  * <p>TopHatFilter class.</p>

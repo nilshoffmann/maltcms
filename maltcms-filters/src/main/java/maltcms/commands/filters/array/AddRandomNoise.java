@@ -76,7 +76,7 @@ public class AddRandomNoise extends AArrayFilter {
     @Override
     public Array apply(final Array a) {
         final Array b = super.apply(a);
-        final IndexIterator ii = b.getIndexIteratorFast();
+        final IndexIterator ii = b.getIndexIterator();
         while (ii.hasNext()) {
             final double v = ii.getDoubleNext();
             ii.setDoubleCurrent(v + (this.stddev * this.rg.nextGaussian())

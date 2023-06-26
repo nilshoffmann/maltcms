@@ -77,7 +77,7 @@ public class MinimumFilter extends AArrayFilter {
     @Override
     public Array apply(final Array a) {
         Array arr = super.apply(a);
-        final IndexIterator ii = arr.getIndexIteratorFast();
+        final IndexIterator ii = arr.getIndexIterator();
         while (ii.hasNext()) {
             ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
         }

@@ -62,7 +62,7 @@ public class SqrtFilter extends AArrayFilter {
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
-        final IndexIterator ii = arr.getIndexIteratorFast();
+        final IndexIterator ii = arr.getIndexIterator();
         while (ii.hasNext()) {
             ii.setDoubleCurrent(this.aef.apply(ii.getDoubleNext()));
         }

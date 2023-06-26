@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-distributions</artifactId>
-        <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0</version>
+        <groupId>com.github.nilshoffmann</groupId>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>maltcms-distribution</artifactId>
@@ -163,14 +163,14 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <!-- disable reports -->
+<!--            <plugin>
+                 disable reports 
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
                     <generateReports>false</generateReports>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
     
@@ -351,7 +351,7 @@
         </dependency>
         <dependency>
             <artifactId>cross-main</artifactId>
-            <groupId>net.sf.maltcms</groupId>
+            <groupId>com.github.nilshoffmann</groupId>
             <type>jar</type>
             <exclusions>
                 <exclusion>
@@ -381,7 +381,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <artifactId>jfreechart-osgi</artifactId>
+            <artifactId>jfreechart</artifactId>
             <groupId>org.jfree</groupId>
             <type>jar</type>
             <exclusions>

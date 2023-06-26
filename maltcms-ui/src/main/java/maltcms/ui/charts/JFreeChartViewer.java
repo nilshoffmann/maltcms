@@ -72,7 +72,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.panel.CrosshairOverlay;
-import org.jfree.ui.TextAnchor;
+import org.jfree.chart.ui.TextAnchor;
 import ucar.ma2.Array;
 
 /**

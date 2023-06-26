@@ -29,7 +29,7 @@ package maltcms.datastructures.peak.annotations;
 
 import java.io.Serializable;
 import lombok.Data;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import maltcms.datastructures.ms.IMetabolite;
 
 /**

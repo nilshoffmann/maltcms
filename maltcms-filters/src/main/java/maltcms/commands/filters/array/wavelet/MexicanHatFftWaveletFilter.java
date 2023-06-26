@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.AArrayFilter;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
+import ucar.ma2.DataType;
 
 /**
  * Implementation of MexicanHatWavelet CWT Filter on top of AArrayFilter.

@@ -43,7 +43,7 @@ import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
 import maltcms.ui.charts.GradientPaintScale;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
@@ -389,7 +389,7 @@ public class CwtChartFactory {
         for (JFreeChart jfc : l) {
             File image = new File(outputDirectory, prefix + "_" + i + ".png");
             try {
-                ChartUtilities.saveChartAsPNG(image, jfc, 1024, 768, null,
+                ChartUtils.saveChartAsPNG(image, jfc, 1024, 768, null,
                         true, 0);
             } catch (IOException e) {
    

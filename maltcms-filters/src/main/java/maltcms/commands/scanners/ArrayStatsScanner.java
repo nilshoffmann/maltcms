@@ -82,7 +82,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
             long cnt = 0;
             double min = 0.0d, max = 0.0d;
             double mean = 0.0d;
-            IndexIterator iter = arr.getIndexIteratorFast();
+            IndexIterator iter = arr.getIndexIterator();
 
             min = Double.POSITIVE_INFINITY;
             max = Double.NEGATIVE_INFINITY;
@@ -114,7 +114,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
             mean = mean / (cnt);
             double variance = 0.0d;
             double skew = 0.0d;
-            iter = arr.getIndexIteratorFast();
+            iter = arr.getIndexIterator();
             while (iter.hasNext()) {// second loop for variance
                 final double d = (iter.getDoubleNext());
                 if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {// FIXME
@@ -157,8 +157,7 @@ public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
         }
         globalmean = globalmean / globalcnt;
         for (final Array arr : t) {
-            IndexIterator iter = arr.getIndexIteratorFast();
-            iter = arr.getIndexIteratorFast();
+            IndexIterator iter = arr.getIndexIterator();
             while (iter.hasNext()) {// second loop for variance
                 final double d = (iter.getDoubleNext());
                 if (this.ignorePositiveInfinity || this.ignoreNegativeInfinity) {// FIXME

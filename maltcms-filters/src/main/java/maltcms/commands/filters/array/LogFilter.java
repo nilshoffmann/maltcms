@@ -93,7 +93,7 @@ public class LogFilter extends AArrayFilter {
     @Override
     public Array apply(final Array a) {
         final Array arr = super.apply(a);
-        final IndexIterator ii = arr.getIndexIteratorFast();
+        final IndexIterator ii = arr.getIndexIterator();
         double next = 0.0d;
         while (ii.hasNext()) {
             next = ii.getDoubleNext();

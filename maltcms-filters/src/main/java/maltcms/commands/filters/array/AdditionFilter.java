@@ -80,7 +80,7 @@ public class AdditionFilter extends AArrayFilter {
     @Override
     public Array apply(final Array a) {
         final Array b = super.apply(a);
-        final IndexIterator ii = b.getIndexIteratorFast();
+        final IndexIterator ii = b.getIndexIterator();
         double next = 0.0d;
         while (ii.hasNext()) {
             next = ii.getDoubleNext();

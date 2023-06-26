@@ -501,17 +501,17 @@ public final class Sparse extends Array {
     }
 
     @Override
-    Array createView(Index index) {
+    protected Array createView(Index index) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    void copyFrom1DJavaArray(IndexIterator ii, Object o) {
+    protected void copyFrom1DJavaArray(IndexIterator ii, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    void copyTo1DJavaArray(IndexIterator ii, Object o) {
+    protected void copyTo1DJavaArray(IndexIterator ii, Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

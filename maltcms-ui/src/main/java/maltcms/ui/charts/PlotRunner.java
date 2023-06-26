@@ -46,7 +46,7 @@ import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.Plot;
-import org.jfree.ui.RectangleInsets;
+import org.jfree.chart.ui.RectangleInsets;
 
 /**
  * Callable which returns a JFreeChart object. Chart is saved to file, if
@@ -114,7 +114,7 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
         final Font rf = new Font(this.fontFamily, Font.PLAIN, 12);
         final Font sf = new Font(this.fontFamily, Font.PLAIN, 10);
         // color of outside of chart
-        sct.setWallPaint(Color.WHITE);
+        //sct.setWallPaint(Color.WHITE);
         sct.setDomainGridlinePaint(Color.LIGHT_GRAY);
         // background of chart???
         sct.setChartBackgroundPaint(Color.WHITE);
