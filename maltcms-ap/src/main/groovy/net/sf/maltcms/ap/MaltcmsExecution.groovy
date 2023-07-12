@@ -65,6 +65,8 @@ class MaltcmsExecution {
             File apParameters = new File(System.getProperty("user.dir"),"ap-parameters.properties")
             File maltcmsDir = new File(System.getProperty("maltcms.home"))
             def commandLine = ["java"]
+            commandLine << "--add-opens=java.base/java.util=ALL-UNNAMED"
+            commandLine << "--add-opens=java.base/java.lang=ALL-UNNAMED"
             def argsList = arguments.split(" ")
             argsList.each{ arg ->
                 commandLine << arg

@@ -28,7 +28,7 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import java.io.Serializable;
-import lombok.experimental.Value;
+import lombok.Value;
 
 /**
  * <p>PairwiseSimilarityResult class.</p>

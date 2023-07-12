@@ -33,7 +33,8 @@ import jxl.read.biff.BiffException;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.io.xlsx.bridge.impl.jexcelapi.JXLWorkbook;
 import maltcms.io.xlsx.bridge.impl.poi.POIWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.EncryptedDocumentException;
+//import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  * <p>WorkbookBridge class.</p>
@@ -66,8 +67,8 @@ public class WorkbookBridge {
                     return new POIWorkbook(iisp);
                 } catch (IOException ex) {
                     log.warn("IOException: ", ex);
-                } catch (InvalidFormatException ex) {
-                    log.warn("InvalidFormatException: ", ex);
+                } catch (EncryptedDocumentException ex) {
+                    log.warn("EncryptedDocumentException: ", ex);
                 } catch (java.lang.NoClassDefFoundError ex) {
                     log.warn("Could not find implementation for POI: ", ex);
                 }

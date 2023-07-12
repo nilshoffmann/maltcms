@@ -32,7 +32,7 @@ import lombok.Data;
 import maltcms.io.xlsx.bridge.IInputStreamProvider;
 import maltcms.io.xlsx.bridge.ISheet;
 import maltcms.io.xlsx.bridge.IWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
@@ -54,7 +54,7 @@ public class POIWorkbook implements IWorkbook {
      * @throws java.io.IOException if any.
      * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException if any.
      */
-    public POIWorkbook(IInputStreamProvider provider) throws IOException, InvalidFormatException {
+    public POIWorkbook(IInputStreamProvider provider) throws IOException, EncryptedDocumentException {
         try {
             workbook = WorkbookFactory.create(provider.openStream());
         } finally {

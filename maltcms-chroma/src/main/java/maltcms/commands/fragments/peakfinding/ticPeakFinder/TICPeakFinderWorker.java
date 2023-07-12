@@ -49,7 +49,7 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;

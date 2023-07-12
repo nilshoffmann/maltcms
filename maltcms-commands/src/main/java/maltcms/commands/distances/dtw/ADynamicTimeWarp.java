@@ -62,7 +62,7 @@ import maltcms.datastructures.ms.IAnchor;
 import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;

@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-nbm-cluster</artifactId>
-        <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0</version>
+        <groupId>com.github.nilshoffmann</groupId>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -21,12 +21,16 @@
             <groupId>com.db4o</groupId>
             <artifactId>db4o-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
@@ -49,6 +53,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>

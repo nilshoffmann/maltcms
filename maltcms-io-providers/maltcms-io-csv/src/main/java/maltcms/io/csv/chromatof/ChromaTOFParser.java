@@ -613,6 +613,7 @@ public class ChromaTOFParser {
      * @deprecated use {@link #parseHeader(java.io.File, boolean, java.lang.String, java.lang.String)
      * }
      */
+    @Deprecated
     public LinkedHashSet<ChromaTOFParser.TableColumn> getHeader(File f, boolean normalizeColumnNames, String fieldSeparator, String quotationCharacter) {
         return parseHeader(f, normalizeColumnNames, fieldSeparator, quotationCharacter);
     }

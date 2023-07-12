@@ -74,7 +74,7 @@ import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.annotations.XYAnnotation;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.ui.TextAnchor;
+import org.jfree.chart.ui.TextAnchor;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.Index;

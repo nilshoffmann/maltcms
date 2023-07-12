@@ -102,10 +102,10 @@ public class GcImageBlobImporter {
         int index = 0;
         for (CSVRecord record : records) {
             Logger.getLogger(GcImageBlobImporter.class.getName()).log(Level.INFO, record.toString());
-            double rt1 = ParserUtilities.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_I), locale);
+            double rt1 = ParserUtilities.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_I.originalName()), locale);
             //convert from minutes to seconds
             rt1 *= 60;
-            double rt2 = ParserUtilities.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_II), locale);
+            double rt2 = ParserUtilities.parseDouble(record.get(GcImageBlobParser.ColumnName.RETENTION_II.originalName()), locale);
             peaks.add(create2DPeak(index, chromatogram, record, rt1, rt2));
             index++;
         }
@@ -114,8 +114,8 @@ public class GcImageBlobImporter {
 
     public Peak2D create2DPeak(int index, IChromatogram chromatogram, CSVRecord tr, double rt1, double rt2) {
         log.debug("Adding peak at rt1: " + rt1 + " ; rt2: " + rt2);
-        double volume = ParserUtilities.parseDouble(tr.get(GcImageBlobParser.ColumnName.VOLUME), locale);
-        double value = ParserUtilities.parseDouble(tr.get(GcImageBlobParser.ColumnName.PEAK_VALUE), locale);
+        double volume = ParserUtilities.parseDouble(tr.get(GcImageBlobParser.ColumnName.VOLUME.originalName()), locale);
+        double value = ParserUtilities.parseDouble(tr.get(GcImageBlobParser.ColumnName.PEAK_VALUE.originalName()), locale);
         Peak2D peak2d = Peak2D.builder2D().
             firstRetTime(rt1).
             secondRetTime(rt2).
@@ -123,7 +123,7 @@ public class GcImageBlobImporter {
             area(volume).
             apexIntensity(value).
             index(index).
-            name(tr.get(GcImageBlobParser.ColumnName.COMPOUND_NAME)).
+            name(tr.get(GcImageBlobParser.ColumnName.COMPOUND_NAME.originalName())).
             peakType(PeakType.TIC_FILTERED).
             apexIndex(chromatogram.getIndexFor(rt1 + rt2)).
         build();

@@ -163,6 +163,16 @@
             <artifactId>maltcms-distribution</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>maltcms-evaluation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>maltcms-spectratyping</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

@@ -91,14 +91,14 @@ public class GcImageBlobParserTest {
             long counter = 1;
             for (CSVRecord r : records) {
                 log.info("Record " + r);
-                String blobId = r.get(ColumnName.BLOBID);
+                String blobId = r.get(ColumnName.BLOBID.originalName());
                 Assert.assertEquals(counter + "", blobId);
-                Assert.assertEquals("Group " + counter, r.get(ColumnName.GROUP_NAME));
-                Assert.assertEquals("", r.get(ColumnName.INCLUSION));
+                Assert.assertEquals("Group " + counter, r.get(ColumnName.GROUP_NAME.originalName()));
+                Assert.assertEquals("", r.get(ColumnName.INCLUSION.originalName()));
                 if (counter <= 10) {
                     Assert.assertEquals(
                             secondColumnRts[((int) counter) - 1],
-                            ParserUtilities.parseDouble(r.get(ColumnName.RETENTION_II), locale),
+                            ParserUtilities.parseDouble(r.get(ColumnName.RETENTION_II.originalName()), locale),
                             0.0d
                     );
                 }

@@ -40,7 +40,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.NotImplementedException;
 import maltcms.datastructures.IFileFragmentModifier;
 import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
+import org.jdom2.Element;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D2;

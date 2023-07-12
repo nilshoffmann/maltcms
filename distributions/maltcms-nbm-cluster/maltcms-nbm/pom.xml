@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-nbm-cluster</artifactId>
-        <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0</version>
+        <groupId>com.github.nilshoffmann</groupId>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -222,11 +222,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-spectratyping</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-xml-alignment</artifactId>
@@ -308,7 +308,7 @@
             <artifactId>maltcms-io-openms-featurexml</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-evaluation</artifactId>
             <version>${project.version}</version>
@@ -322,7 +322,7 @@
                     <groupId>net.sf.maltcms</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-cv</artifactId>
@@ -346,7 +346,7 @@
         </dependency>
         <dependency>
             <artifactId>cross-test</artifactId>
-            <groupId>net.sf.maltcms</groupId>
+            <groupId>com.github.nilshoffmann</groupId>
             <type>jar</type>
             <exclusions>
                 <exclusion>
@@ -355,14 +355,19 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
+                <version>4.7</version>
                 <configuration>
                     <useOSGiDependencies>false</useOSGiDependencies>
                     <author>Nils Hoffmann</author>
@@ -384,6 +389,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
         <pluginManagement>

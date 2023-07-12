@@ -17,24 +17,27 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms.test</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-test-data</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms.test</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-test-defaults</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <type>jar</type>
+            <version>2.3.3</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>

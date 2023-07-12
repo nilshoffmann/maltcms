@@ -31,7 +31,7 @@
             </exclusions>-->
         </dependency>
         <dependency>
-            <groupId>com.github.nilshoffmann</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-test-data</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>

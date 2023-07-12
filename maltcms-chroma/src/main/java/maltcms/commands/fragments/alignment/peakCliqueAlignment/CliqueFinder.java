@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import lombok.experimental.Value;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-distributions</artifactId>
-        <groupId>net.sf.maltcms</groupId>
-        <version>1.4.0</version>
+        <groupId>com.github.nilshoffmann</groupId>
+        <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>maltcms-nbm-cluster</artifactId>
@@ -26,16 +26,19 @@
                 <pluginManagement>
                     <plugins>
                         <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
+                            <groupId>org.apache.netbeans.utilities</groupId>
                             <artifactId>nbm-maven-plugin</artifactId>
                             <extensions>true</extensions>
+                            <version>4.8</version>
                         </plugin>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-jar-plugin</artifactId>
+                            <version>3.3.0</version>
                             <configuration>
-                                <!-- to have the jar plugin pickup the nbm generated manifest -->
-                                <useDefaultManifestFile>true</useDefaultManifestFile>
+                                <archive>
+                                    <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                                </archive>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -63,6 +66,13 @@
             </build>
         </profile>
     </profiles>
+    <modules>
+        <module>maltcms-nbm</module>
+        <module>jfreechart-nbm</module>
+        <module>jai-nbm</module>
+        <module>groovy-nbm</module>
+        <module>db4o-nbm</module>
+    </modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -73,7 +83,7 @@
         </dependencies>
     </dependencyManagement>
     <properties>
-        <version.netbeans>RELEASE80</version.netbeans>
+        <version.netbeans>RELEASE180</version.netbeans>
         <nbm.updatecenter.outputDir>${project.build.directory}</nbm.updatecenter.outputDir>
     </properties>
     

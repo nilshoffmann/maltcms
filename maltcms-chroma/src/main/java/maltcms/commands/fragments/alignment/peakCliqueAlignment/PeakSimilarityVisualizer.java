@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.io.csv.CSVWriter;
 import maltcms.tools.ImageTools;
-import org.jdom.Element;
+import org.jdom2.Element;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;

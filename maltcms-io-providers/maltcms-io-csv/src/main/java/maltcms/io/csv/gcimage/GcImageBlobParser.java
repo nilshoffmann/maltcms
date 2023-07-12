@@ -89,6 +89,10 @@ public class GcImageBlobParser {
         public String toString() {
             return originalName;
         }
+        
+        public String originalName() {
+            return originalName;
+        }
 
         public static ColumnName fromString(String name) {
             switch (name) {

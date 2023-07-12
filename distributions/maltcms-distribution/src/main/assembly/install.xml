@@ -22,7 +22,7 @@
             <unpack>false</unpack>
             <useTransitiveDependencies>true</useTransitiveDependencies>
             <excludes>
-                <exclude>net.sf.maltcms:*:pom</exclude>
+                <exclude>com.github.nilshoffmann:*:pom</exclude>
                 <exclude>*:*:pom</exclude>
             </excludes>
             <outputFileNameMapping>${artifact.artifactId}-${artifact.baseVersion}.${artifact.extension}</outputFileNameMapping>
@@ -36,7 +36,7 @@
             <useTransitiveDependencies>false</useTransitiveDependencies>
             <unpack>true</unpack>
             <includes>
-                <include>net.sf.maltcms:maltcms-resources:jar</include>
+                <include>com.github.nilshoffmann:maltcms-resources:jar</include>
             </includes>
             <unpackOptions>
                 <excludes>
@@ -62,8 +62,8 @@
             <useProjectArtifact>true</useProjectArtifact>
             <unpack>true</unpack>
             <includes>
-                <include>net.sf.maltcms:cross-main:jar</include>
-                <include>net.sf.maltcms:maltcms-*:jar</include>
+                <include>com.github.nilshoffmann:cross-main:jar</include>
+                <include>com.github.nilshoffmann:maltcms-*:jar</include>
                 <!--                <include>net.sf.maltcms:maltcms-chroma:jar</include>
 <include>net.sf.maltcms:maltcms-chroma4D:jar</include>
 <include>net.sf.maltcms:maltcms-chroma4D-srg:jar</include>

@@ -13,5 +13,6 @@
     <modules>
         <module>maltcms-distribution</module>
         <module>maltcms-ap-distribution</module>
+        <module>maltcms-nbm-cluster</module>
     </modules>
 </project>

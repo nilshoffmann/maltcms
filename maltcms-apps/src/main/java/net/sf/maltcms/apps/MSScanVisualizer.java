@@ -131,8 +131,8 @@ public class MSScanVisualizer {
                     xysc.addSeries(xs);
                 }
                 XYLineAndShapeRenderer dir = new XYLineAndShapeRenderer();
-                dir.setShapesVisible(false);
-                dir.setLinesVisible(true);
+                dir.setDefaultShapesFilled(false);
+                dir.setDefaultLinesVisible(true);
                 XYPlot p = new XYPlot(xysc, new NumberAxis("m/z"),
                         new NumberAxis("rel. intensity"), dir);
                 p.setDomainCrosshairVisible(false);
@@ -173,8 +173,8 @@ public class MSScanVisualizer {
                 }
                 for (int i = 0; i < intens2.size(); i++) {
                     dir = new XYLineAndShapeRenderer();
-                    dir.setShapesVisible(false);
-                    dir.setLinesVisible(true);
+                    dir.setDefaultShapesVisible(false);
+                    dir.setDefaultLinesVisible(true);
                     final XYSeriesCollection xysc2 = new XYSeriesCollection();
                     xysc2.setAutoWidth(false);
                     xysc2.addSeries(xysc.getSeries(i));

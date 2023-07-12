@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-OpenIDE-Module-Localizing-Bundle: com/db4o/nbm/Bundle.properties
+OpenIDE-Module-Localizing-BOpenIDE-Module: Lib DB4Oundle: com/db4o/nbm/Bundle.properties

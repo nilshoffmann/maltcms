@@ -762,7 +762,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         final Font rf = new Font("Lucida Sans", Font.PLAIN, 14);
         final Font sf = new Font("Lucida Sans", Font.PLAIN, 12);
         // color of outside of chart
-        sct.setWallPaint(Color.WHITE);
+        sct.setChartBackgroundPaint(Color.WHITE);
         sct.setDomainGridlinePaint(Color.LIGHT_GRAY);
         // background of chart???
         sct.setChartBackgroundPaint(Color.WHITE);

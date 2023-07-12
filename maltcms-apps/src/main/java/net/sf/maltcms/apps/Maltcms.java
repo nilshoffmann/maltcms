@@ -629,7 +629,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("anchors.use", "true");
                 cmdLineCfg.setProperty("anchors.location",
                         cl.getOptionValues("a"));
-                log.info("Using anchors from location: {}", cl.getOptionValues("a"));
+                log.info("Using anchors from location: {}", (java.lang.Object[])cl.getOptionValues("a"));
             }
             if (cl.hasOption("e")) {
                 initClassLoader(cl.getOptionValues("e"));

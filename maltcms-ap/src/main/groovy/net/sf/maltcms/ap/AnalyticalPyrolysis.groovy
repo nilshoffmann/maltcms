@@ -54,9 +54,9 @@ import java.awt.Toolkit
 
 def osName = System.properties['os.name'].toLowerCase()
 def laf = "system"
-if(osName.contains("linux")) {
-    laf ="nimbus"
-}
+//if(osName.contains("linux")) {
+//    laf ="nimbus"
+//}
 
 UserProperties userProps = new UserProperties()
 APProperties props = new APProperties(wdir:new File(System.getProperty("ap.home")))

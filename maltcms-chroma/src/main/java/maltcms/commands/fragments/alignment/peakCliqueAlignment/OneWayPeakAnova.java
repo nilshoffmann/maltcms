@@ -52,7 +52,7 @@ import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.stat.inference.OneWayAnova;
 import org.apache.commons.math.stat.inference.TestUtils;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;

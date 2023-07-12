@@ -61,7 +61,7 @@ import org.apache.commons.math3.analysis.UnivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
-import org.jdom.Element;
+import org.jdom2.Element;
 import ucar.ma2.ArrayByte;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D0;

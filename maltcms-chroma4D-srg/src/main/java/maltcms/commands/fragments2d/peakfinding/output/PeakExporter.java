@@ -57,7 +57,7 @@ import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.io.csv.CSVWriter;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
