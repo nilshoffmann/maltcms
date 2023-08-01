@@ -663,7 +663,7 @@ public class MZ5DataSource implements IDataSource {
                         a = v.read(l);
                         // if read with ranges is valid: keep ranges as before
                         f.setRange(r);
-                    } catch (final InvalidRangeException e) {
+                    } catch (final InvalidRangeException | NullPointerException e) {
                         log.warn("Defined range list {} is invalid for variable {}, falling back to default range defined in file!", new Object[]{l, f.getName()});
                         a = v.read();
                         // replace ranges with valid ranges from file

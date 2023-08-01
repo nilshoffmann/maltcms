@@ -10,6 +10,19 @@
     <name>Maltcms ChromA4D SRG</name>
     <description>Seeded MS-based Region Growing for Peak Integration in 2D Chromatography.</description>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.mpl</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.csv</include>
+                    <include>**/README</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <!-- include to run integration tests -->
             <plugin>
@@ -93,7 +106,7 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-chroma4D-cwt</artifactId>
             <version>${project.version}</version>

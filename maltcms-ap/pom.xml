@@ -46,6 +46,19 @@
                     </include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.bat</include>
+                    <include>**/*.sh</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.mpl</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.csv</include>
+                    <include>**/README</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>

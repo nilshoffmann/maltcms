@@ -10,6 +10,21 @@
     <artifactId>maltcms-io-mzml</artifactId>
     <name>Maltcms IO Provider MZML</name>
     <description>Datasource Implementation for MzML.</description>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.mpl</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.csv</include>
+                    <include>**/README</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -25,8 +40,17 @@
                     <artifactId>com.springsource.org.apache.commons.io</artifactId>
                     <groupId>org.apache.commons</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-xjc</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>psidev.psi.tools</groupId>
+            <artifactId>xxindex</artifactId>
+            <version>0.23</version>
+        </dependency> 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-test-data</artifactId>

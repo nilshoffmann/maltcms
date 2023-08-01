@@ -28,7 +28,7 @@
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
 import com.carrotsearch.hppc.LongObjectMap;
-import com.carrotsearch.hppc.ObjectObjectOpenHashMap;
+import com.carrotsearch.hppc.ObjectObjectHashMap;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.DefaultWorkflowResult;
@@ -89,7 +89,7 @@ public class CliqueFinder {
         HashMap<IBipacePeak, Clique<IBipacePeak>> peakToClique = new HashMap<>();
         Set<IBipacePeak> incompatiblePeaks = new LinkedHashSet<>();
         Set<IBipacePeak> unassignedPeaks = new LinkedHashSet<>();
-        ObjectObjectOpenHashMap<UUID, IBipacePeak> peakRepository = new ObjectObjectOpenHashMap<>();
+        ObjectObjectHashMap<UUID, IBipacePeak> peakRepository = new ObjectObjectHashMap<>();
         for (String key : fragmentToPeaks.keySet()) {
             for (IBipacePeak p : fragmentToPeaks.get(key)) {
                 peakRepository.put(p.getUniqueId(), p);

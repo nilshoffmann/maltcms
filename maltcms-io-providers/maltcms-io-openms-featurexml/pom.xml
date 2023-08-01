@@ -12,6 +12,15 @@
     <description>XML Binding Parser for OpenMS FeatureXML Format.</description>
     <packaging>jar</packaging>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xsd</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>

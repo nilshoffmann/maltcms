@@ -11,6 +11,19 @@
     <description>Continuous Wavelet Transform based Peakfinding for 2D Chromatography.</description>
     <packaging>jar</packaging>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.mpl</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.csv</include>
+                    <include>**/README</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <!-- include to run integration tests -->
             <plugin>

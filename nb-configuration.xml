@@ -31,5 +31,6 @@
         <netbeans.hint.license>maltcms</netbeans.hint.license>
         <netbeans.hint.licensePath>${project.basedir}/src/main/resources/licenses/license-maltcms.txt</netbeans.hint.licensePath>
         <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
+        <netbeans.hint.jdkPlatform>JDK_17.0.1.fx-zulu</netbeans.hint.jdkPlatform>
     </properties>
 </project-shared-configuration>

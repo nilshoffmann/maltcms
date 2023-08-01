@@ -27,9 +27,9 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import com.carrotsearch.hppc.IntObjectMap;
-import com.carrotsearch.hppc.IntObjectOpenHashMap;
+import com.carrotsearch.hppc.IntObjectHashMap;
 import com.carrotsearch.hppc.LongObjectMap;
+import com.carrotsearch.hppc.IntObjectMap;
 import com.carrotsearch.hppc.cursors.IntObjectCursor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class Clique<T extends IBipacePeak> {
     private static long CLIQUEID = -1;
     private long id = -1;
     private double cliqueMean = 0, cliqueVar = 0;
-    private IntObjectMap<T> clique = new IntObjectOpenHashMap<>();
+    private IntObjectMap<T> clique = new IntObjectHashMap<>();
     private IBipacePeak centroid = null;
     private double minBbhFraction = 1.0d;
     private int maxBBHErrors = 0;
@@ -154,10 +154,10 @@ public class Clique<T extends IBipacePeak> {
      * @return
      */
     private boolean handleConflictingPeak(LongObjectMap<PeakEdge> edgeMap, T p) {
-        Collection<T> currentPeaks = new ArrayList<>();
-        T[] t = clique.values().toArray(IBipacePeak.class);
+        Collection<IBipacePeak> currentPeaks = new ArrayList<>();
+        IBipacePeak[] t = clique.values().toArray(IBipacePeak.class);
         currentPeaks.addAll(Arrays.asList(t));
-        T q = clique.get(p.getAssociationId());
+        IBipacePeak q = clique.get(p.getAssociationId());
         currentPeaks.remove(q);
         // calculate bbh scores for both peaks
         int bbh1 = getBBHCount(edgeMap, q, currentPeaks);
@@ -266,7 +266,7 @@ public class Clique<T extends IBipacePeak> {
      * @param p
      * @return
      */
-    private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, T p) {
+    private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, IBipacePeak p) {
 //		return getBBHCount(edgeMap, p, clique);
         int bidiHits = 0;
         // check and count bidi best hit
@@ -282,10 +282,10 @@ public class Clique<T extends IBipacePeak> {
         return bidiHits;
     }
 
-    private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, T p, Collection<T> c) {
+    private int getBBHCount(LongObjectMap<PeakEdge> edgeMap, IBipacePeak p, Collection<IBipacePeak> c) {
         int bidiHits = 0;
         // check and count bidi best hit
-        for (T t : c) {
+        for (IBipacePeak t : c) {
             if (!p.isBidiBestHitFor(edgeMap, t)) {
 //				log.debug(
 //						"Peak q: {} in clique is not a bidirectional best hit for peak p: {}",
@@ -304,7 +304,7 @@ public class Clique<T extends IBipacePeak> {
      * @param p a T object.
      * @return a boolean.
      */
-    public boolean removePeak(LongObjectMap<PeakEdge> edgeMap, T p) {
+    public boolean removePeak(LongObjectMap<PeakEdge> edgeMap, IBipacePeak p) {
         if (clique.containsKey(p.getAssociationId())) {
             if (clique.get(p.getAssociationId()).equals(p)) {
                 clique.remove(p.getAssociationId());
@@ -539,14 +539,10 @@ public class Clique<T extends IBipacePeak> {
      * @return a {@link java.util.List} object.
      */
     public List<T> getPeakList() {
-        List<T> peaks = Arrays.asList(this.clique.values().toArray(IBipacePeak.class));
-        Collections.sort(peaks, new Comparator<T>() {
-            @Override
-            public int compare(T o1, T o2) {
-                return o1.getAssociation().compareTo(o2.getAssociation());
-            }
-        });
-        return peaks;
+        IBipacePeak[] peaksArray = this.clique.values().toArray(IBipacePeak.class);
+        List<IBipacePeak> peaks = Arrays.asList(peaksArray);
+        Collections.sort(peaks, (IBipacePeak o1, IBipacePeak o2) -> o1.getAssociation().compareTo(o2.getAssociation()));
+        return (List<T>)peaks;
     }
 
     /**

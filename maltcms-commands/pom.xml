@@ -45,8 +45,6 @@
         <dependency>
             <groupId>com.carrotsearch</groupId>
             <artifactId>hppc</artifactId>
-            <version>0.5.3</version>
-            <type>jar</type>
         </dependency>
     </dependencies>   
     <properties>

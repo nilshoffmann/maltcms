@@ -54,7 +54,7 @@
             <version>${version.cross}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.mpaxs</groupId>
+            <groupId>com.github.nilshoffmann</groupId>
             <artifactId>mpaxs-nbm</artifactId>
             <version>${version.cross}</version>
         </dependency>
@@ -72,10 +72,9 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>${version.netbeans}</version>
         </dependency>
         <dependency>
-            <groupId>net.sf.maltcms</groupId>
+            <groupId>com.github.nilshoffmann</groupId>
             <artifactId>cross-nbm</artifactId>
             <version>${version.cross}</version>
             <exclusions>
@@ -359,6 +358,17 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!-- nbm plugin complains about missing classes, the following imports fix this -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>1.6.7</version>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>6.5.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -367,7 +377,6 @@
                 <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
-                <version>4.7</version>
                 <configuration>
                     <useOSGiDependencies>false</useOSGiDependencies>
                     <author>Nils Hoffmann</author>
@@ -377,6 +386,7 @@
                         <publicPackage>net.sf.maltcms.*</publicPackage>
                     </publicPackages>
                     <defaultCluster>maltcms</defaultCluster>
+                    <verifyRuntime>false</verifyRuntime>
                 </configuration>
             </plugin>
 

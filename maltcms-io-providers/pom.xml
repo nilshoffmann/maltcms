@@ -12,7 +12,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>maltcms-io-csv</module>
-        <module>maltcms-io-mz5</module>
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
         <module>maltcms-io-mztab</module>

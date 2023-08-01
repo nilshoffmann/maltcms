@@ -345,6 +345,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.11.0</version>
                     <configuration>
+                        <compilerVersion>${project.build.sourceLevel}</compilerVersion>
                         <source>${project.build.sourceLevel}</source>
                         <target>${project.build.targetLevel}</target>
                         <encoding>${project.build.sourceEncoding}</encoding>
@@ -491,6 +492,7 @@
                     <groupId>org.apache.netbeans.utilities</groupId>
                     <artifactId>nbm-maven-plugin</artifactId>
                     <version>4.8</version>
+                    <extensions>true</extensions>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -736,6 +738,11 @@
                 <artifactId>colt</artifactId>
                 <version>1.2.0</version>
             </dependency>
+            <dependency>
+                <groupId>com.carrotsearch</groupId>
+                <artifactId>hppc</artifactId>
+                <version>0.8.1</version>
+            </dependency>
             <!--            <dependency>
                 <groupId>org.apache.batik</groupId>
                 <artifactId>com.springsource.org.apache.batik.dom.svg</artifactId>
@@ -924,8 +931,8 @@
         <netbeans.hint.license>maltcms</netbeans.hint.license>
         <!--<maven.test.skip>false</maven.test.skip> -->
         <skipITs>true</skipITs>
-        <project.build.sourceLevel>20</project.build.sourceLevel>
-        <project.build.targetLevel>20</project.build.targetLevel>
+        <project.build.sourceLevel>17</project.build.sourceLevel>
+        <project.build.targetLevel>17</project.build.targetLevel>
         <additionalparam>-Xdoclint:none</additionalparam>
         <version.cross>2.0.0-SNAPSHOT</version.cross>
         <!--<version.jaxb>2.3.1</version.jaxb>-->

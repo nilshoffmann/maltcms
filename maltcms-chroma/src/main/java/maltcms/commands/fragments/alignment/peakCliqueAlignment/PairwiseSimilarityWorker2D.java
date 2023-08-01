@@ -27,7 +27,7 @@
  */
 package maltcms.commands.fragments.alignment.peakCliqueAlignment;
 
-import com.carrotsearch.hppc.LongObjectOpenHashMap;
+import com.carrotsearch.hppc.LongObjectHashMap;
 import com.carrotsearch.hppc.cursors.LongObjectCursor;
 import cross.datastructures.tools.EvalTools;
 import java.io.File;
@@ -68,7 +68,7 @@ public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimila
         EvalTools.notNull(lhsPeaks, this);
         EvalTools.notNull(rhsPeaks, this);
         IScalarArraySimilarity sim = similarityFunction.copy();
-        LongObjectOpenHashMap<PeakEdge> edgeMap = new LongObjectOpenHashMap<>();
+        LongObjectHashMap<PeakEdge> edgeMap = new LongObjectHashMap<>();
         for (final IBipacePeak p1 : lhsPeaks) {
             final Peak2D p12d = (Peak2D) p1;
             final double rt1p1 = p12d.getFirstColumnElutionTime();

@@ -10,6 +10,19 @@
     <name>Maltcms ChromA</name>
     <description>Algorithms and Commands mainly for 1D Chromatography.</description>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.mpl</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.csv</include>
+                    <include>**/README</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <!-- include to run integration tests -->
             <plugin>
@@ -52,11 +65,11 @@
             <artifactId>maltcms-ui</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>colt</groupId>
             <artifactId>colt</artifactId>
-            <!--<version>1.2.0</version>-->
-        </dependency>
+            <version>1.2.0</version>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-filters</artifactId>
@@ -117,12 +130,12 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.2</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.carrotsearch</groupId>
             <artifactId>hppc</artifactId>
             <version>0.6.1</version>
             <type>jar</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-cv</artifactId>

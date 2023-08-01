@@ -27,7 +27,7 @@
  */
 package maltcms.math.functions.similarities;
 
-import com.carrotsearch.hppc.ObjectDoubleOpenHashMap;
+import com.carrotsearch.hppc.ObjectObjectHashMap;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.tools.ArrayTools;
@@ -46,13 +46,13 @@ import ucar.ma2.Array;
 @NotThreadSafe
 public class ArrayBhattacharryya implements IArraySimilarity {
 
-    private transient final ObjectDoubleOpenHashMap<Array> cache;
+    private transient final ObjectObjectHashMap<Array, Double> cache;
 
     /**
      * <p>Constructor for ArrayBhattacharryya.</p>
      */
     public ArrayBhattacharryya() {
-        cache = new ObjectDoubleOpenHashMap<>();
+        cache = new ObjectObjectHashMap<>();
     }
 
     private double getSum(Array a) {

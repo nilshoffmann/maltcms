@@ -28,7 +28,7 @@
 package maltcms.commands.fragments.alignment;
 
 import com.carrotsearch.hppc.LongObjectMap;
-import com.carrotsearch.hppc.LongObjectOpenHashMap;
+import com.carrotsearch.hppc.LongObjectHashMap;
 import cross.Factory;
 import cross.annotations.Configurable;
 import cross.annotations.ProvidesVariables;
@@ -700,7 +700,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
      * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectOpenHashMap} object.
      */
     public void saveSimilarityMatrix(final TupleND<IFileFragment> al,
-            final HashMap<String, List<IBipacePeak>> fragmentToPeaks, final LongObjectOpenHashMap<PeakEdge> edgeMap) {
+            final HashMap<String, List<IBipacePeak>> fragmentToPeaks, final LongObjectHashMap<PeakEdge> edgeMap) {
         for (final IFileFragment iff1 : al) {
             for (final IFileFragment iff2 : al) {
                 final List<IBipacePeak> lhsPeaks = fragmentToPeaks.get(iff1.getName());
@@ -777,7 +777,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
         int n = getTotalNumberOfPeaks(fragmentToPeaks);
         log.info("Searching for bidirectional best hits");
         final long startT = System.currentTimeMillis();
-        final LongObjectMap<PeakEdge> peakEdgeMap = new LongObjectOpenHashMap<>();
+        final LongObjectMap<PeakEdge> peakEdgeMap = new LongObjectHashMap<>();
         final int unmatchedPeaks = calculatePeakSimilarities(t, nameToFragment, fragmentToPeaks, n, peakEdgeMap);
         log.info("Found bidi best hits in {} milliseconds",
                 System.currentTimeMillis() - startT);
