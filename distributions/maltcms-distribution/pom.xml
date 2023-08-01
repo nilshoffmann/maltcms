@@ -304,11 +304,11 @@
             <artifactId>maltcms-io-mzml</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-io-mz5</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-io-csv</artifactId>
@@ -364,7 +364,7 @@
             <artifactId>poi</artifactId>
             <groupId>org.apache.poi</groupId>
             <type>jar</type>
-            <version>3.17</version>
+            <version>5.2.3</version>
             <exclusions>
                 <exclusion>
                     <artifactId>poi</artifactId>

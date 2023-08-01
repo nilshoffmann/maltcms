@@ -187,6 +187,13 @@ fi
 JVMARGS+=("-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties")
 JVMARGS+=("-Djava.util.logging.config.file=$MALTCMSUSRDIR/cfg/logging.properties")
 JVMARGS+=("-Dmaltcms.home=$MALTCMSUSRDIR")
+JVMARGS+=("--add-opens=java.base/java.net=ALL-UNNAMED")
+JVMARGS+=("--add-opens=java.base/java.lang.ref=ALL-UNNAMED")
+JVMARGS+=("--add-opens=java.base/java.lang=ALL-UNNAMED")
+JVMARGS+=("--add-opens=java.base/java.security=ALL-UNNAMED")
+JVMARGS+=("--add-opens=java.base/java.util=ALL-UNNAMED")
+JVMARGS+=("--add-opens=java.base/java.nio=ALL-UNNAMED")
+JVMARGS+=("--add-opens=java.base/sun.reflect.annotation=ALL-UNNAMED")
 
 # For Darwin, add options to specify how the application appears in the dock
 if $darwin; then

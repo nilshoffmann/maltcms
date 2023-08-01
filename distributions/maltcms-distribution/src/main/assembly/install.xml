@@ -63,8 +63,8 @@
             <unpack>true</unpack>
             <includes>
                 <include>com.github.nilshoffmann:cross-main:jar</include>
-                <!--<include>com.github.nilshoffmann:maltcms-*:jar</include>-->
-                <include>net.sf.maltcms:maltcms-chroma:jar</include>
+                <include>com.github.nilshoffmann:maltcms-*:jar</include>
+<!--                <include>net.sf.maltcms:maltcms-chroma:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D-srg:jar</include>
                 <include>net.sf.maltcms:maltcms-chroma4D-cwt:jar</include>
@@ -72,7 +72,7 @@
                 <include>net.sf.maltcms:maltcms-spectratyping:jar</include>
                 <include>net.sf.maltcms:maltcms-cv:jar</include>
                 <include>net.sf.maltcms:maltcms-io-mzml:jar</include>
-                <include>net.sf.maltcms:maltcms-resources:jar</include>
+                <include>net.sf.maltcms:maltcms-resources:jar</include>-->
             </includes>
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
