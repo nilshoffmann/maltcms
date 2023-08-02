@@ -142,14 +142,6 @@
         </repository>
         <repository>
             <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <id>artifactory-snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://lifstools.jfrog.io/artifactory/libs-snapshot</url>
-        </repository>
-        <repository>
-            <snapshots>
                 <enabled>false</enabled>
             </snapshots>
             <id>ebi-releases</id>
