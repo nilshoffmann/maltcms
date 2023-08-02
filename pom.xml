@@ -388,8 +388,8 @@
                         <trimStackTrace>false</trimStackTrace>
                         <!-- redirectTestOutputToFile -->
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <forkCount>2</forkCount>
-                        <reuseForks>true</reuseForks>
+<!--                        <forkCount>2</forkCount>
+                        <reuseForks>true</reuseForks>-->
                     </configuration>
                 </plugin>
                 <plugin>
@@ -407,8 +407,8 @@
                         <failIfNoTests>false</failIfNoTests>
                         <trimStackTrace>false</trimStackTrace>
                         <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-                        <forkCount>1</forkCount>
-                        <reuseForks>false</reuseForks>
+<!--                        <forkCount>1</forkCount>
+                        <reuseForks>false</reuseForks>-->
                         <argLine>
                             -Xmx2G
                             --add-opens java.base/java.lang=ALL-UNNAMED
