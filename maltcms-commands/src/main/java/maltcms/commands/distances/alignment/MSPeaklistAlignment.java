@@ -25,18 +25,19 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.experimental.operations;
+package maltcms.commands.distances.alignment;
 
 import cross.annotations.Configurable;
 import cross.annotations.RequiresVariables;
 import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+//import javax.swing.JFrame;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
 import maltcms.datastructures.array.IFeatureVector;
-import maltcms.experimental.ui.ImagePanel;
+//import maltcms.experimental.ui.ImagePanel;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
 
@@ -170,7 +171,7 @@ public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
                         intens1[i - 1], intens2[j - 1], trace);
             }
         }
-        printMatrix(amat, masses1, masses2);
+//        printMatrix(amat, masses1, masses2);
         return amat[masses1.length][masses2.length];
     }
 

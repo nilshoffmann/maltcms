@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.experimental.operations;
+package maltcms.commands.distances.alignment;
 
 import lombok.extern.slf4j.Slf4j;
 

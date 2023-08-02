@@ -25,7 +25,7 @@
  * FOR A PARTICULAR PURPOSE. Please consult the relevant license documentation
  * for details.
  */
-package maltcms.experimental.ui;
+package maltcms.commands.distances.alignment;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
