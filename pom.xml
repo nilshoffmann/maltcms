@@ -4,7 +4,7 @@
         <maven>3.7</maven>
     </prerequisites>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.nilshoffmann</groupId>
+    <groupId>io.github.nilshoffmann</groupId>
     <artifactId>maltcms-modules</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0-SNAPSHOT</version>
@@ -634,7 +634,6 @@
         <module>maltcms-io-providers</module>
         <module>maltcms-ui</module>
         <module>maltcms-db</module>
-        <module>maltcms-experimental</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -651,7 +650,7 @@
                 <scope>provided</scope>
             </dependency>-->
             <dependency>
-                <groupId>com.github.nilshoffmann</groupId>
+                <groupId>io.github.nilshoffmann</groupId>
                 <artifactId>cross-main</artifactId>
                 <version>${version.cross}</version>
                 <exclusions>
@@ -670,7 +669,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>com.github.nilshoffmann</groupId>
+                <groupId>io.github.nilshoffmann</groupId>
                 <artifactId>cross-test</artifactId>
                 <version>${version.cross}</version>
                 <exclusions>
@@ -717,6 +716,16 @@
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${version.slf4j}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.20.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-1.2-api</artifactId>
+                <version>2.17.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -806,7 +815,7 @@
                 <version>4.2.35</version>
             </dependency>-->
             <!--            <dependency>
-                <groupId>com.github.nilshoffmann</groupId>
+                <groupId>io.github.nilshoffmann</groupId>
                 <artifactId>cross-main</artifactId>
                 <version>${version.cross}</version>
             </dependency>-->
@@ -847,7 +856,7 @@
                 <artifactId>cross-osgi</artifactId>
         </dependency>-->
         <dependency>
-            <groupId>com.github.nilshoffmann</groupId>
+            <groupId>io.github.nilshoffmann</groupId>
             <artifactId>cross-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -934,7 +943,7 @@
         <project.build.sourceLevel>17</project.build.sourceLevel>
         <project.build.targetLevel>17</project.build.targetLevel>
         <additionalparam>-Xdoclint:none</additionalparam>
-        <version.cross>2.0.0-SNAPSHOT</version.cross>
+        <version.cross>2.0.0</version.cross>
         <!--<version.jaxb>2.3.1</version.jaxb>-->
         <version.slf4j>2.0.7</version.slf4j>
         <version.junit>4.13.1</version.junit>

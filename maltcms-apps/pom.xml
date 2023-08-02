@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-modules</artifactId>
-        <groupId>com.github.nilshoffmann</groupId>
+        <groupId>io.github.nilshoffmann</groupId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-apps</artifactId>
@@ -33,6 +33,14 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-db</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>

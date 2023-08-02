@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-nbm-cluster</artifactId>
-        <groupId>com.github.nilshoffmann</groupId>
+        <groupId>io.github.nilshoffmann</groupId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -20,17 +20,17 @@
     </profiles>
     <dependencies>
         <dependency>
-            <groupId>com.db4o</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>db4o-nbm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>javax.jai</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jai-nbm</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jfree</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>jfreechart-nbm</artifactId>
             <version>${project.version}</version>
             <exclusions>
@@ -49,17 +49,17 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.apache</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>apache-commons-nbm</artifactId>
             <version>${version.cross}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.nilshoffmann</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>mpaxs-nbm</artifactId>
             <version>${version.cross}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>slf4j-nbm</artifactId>
             <version>${version.cross}</version>
             <exclusions>
@@ -74,7 +74,7 @@
             <artifactId>org-openide-util-lookup</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.nilshoffmann</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>cross-nbm</artifactId>
             <version>${version.cross}</version>
             <exclusions>
@@ -339,13 +339,14 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>ucar</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>netcdf-nbm</artifactId>
             <version>${version.cross}</version>
         </dependency>
         <dependency>
             <artifactId>cross-test</artifactId>
-            <groupId>com.github.nilshoffmann</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${version.cross}</version>
             <type>jar</type>
             <exclusions>
                 <exclusion>

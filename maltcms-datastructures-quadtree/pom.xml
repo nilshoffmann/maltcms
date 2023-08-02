@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-modules</artifactId>
-        <groupId>com.github.nilshoffmann</groupId>
+        <groupId>io.github.nilshoffmann</groupId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-datastructures-quadtree</artifactId>

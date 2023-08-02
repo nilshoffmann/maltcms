@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maltcms-io-providers</artifactId>
-        <groupId>com.github.nilshoffmann</groupId>
+        <groupId>io.github.nilshoffmann</groupId>
         <version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -42,8 +42,17 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>mzxml-parser</artifactId>
+            <!-- 1.3.9 is corrupt, do not use -->
             <version>1.3.8</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>
