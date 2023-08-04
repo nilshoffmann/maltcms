@@ -202,11 +202,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-experimental</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-statistics</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -328,7 +323,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.groovy</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>groovy-nbm</artifactId>
             <version>${project.version}</version>
             <exclusions>
