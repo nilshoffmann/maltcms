@@ -2,7 +2,7 @@
 
 **This project is currently inactive.**
 
-[![Build Status](https://travis-ci.org/nilshoffmann/maltcms.svg?branch=master)](https://travis-ci.org/nilshoffmann/maltcms)
+[![Java CI with Maven](https://github.com/nilshoffmann/maltcms/actions/workflows/maven.yml/badge.svg)](https://github.com/nilshoffmann/maltcms/actions/workflows/maven.yml)
 [![Release Version](https://img.shields.io/github/release/nilshoffmann/maltcms.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/nilshoffmann/maltcms/total.svg)](https://github.com/nilshoffmann/maltcms/releases/latest)
 [![License](https://img.shields.io/badge/license-LGPL--3.0-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
