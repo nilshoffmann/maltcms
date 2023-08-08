@@ -388,8 +388,8 @@
                         <trimStackTrace>false</trimStackTrace>
                         <!-- redirectTestOutputToFile -->
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <!--                        <forkCount>2</forkCount>
-                        <reuseForks>true</reuseForks>-->
+                        <forkCount>2</forkCount>
+                        <reuseForks>true</reuseForks>
                     </configuration>
                 </plugin>
                 <plugin>
