@@ -10,7 +10,7 @@
     <includeSiteDirectory>false</includeSiteDirectory>
     <files>
         <file>
-            <source>../../docs/documentation/gettingStarted.md</source>
+            <source>../../docs/gettingStarted.md</source>
             <destName>GETTINGSTARTED</destName>
             <fileMode>0644</fileMode>
             <outputDirectory>/</outputDirectory>
