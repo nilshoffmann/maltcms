@@ -9,14 +9,6 @@
     <artifactId>maltcms-statistics</artifactId>
     <name>Maltcms Statistics</name>
     <description>(Experimental) Implementation of Log-Delta Evaluation for Metabolite Abundances.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

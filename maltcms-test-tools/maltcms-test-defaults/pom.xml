@@ -10,13 +10,5 @@
     <artifactId>maltcms-test-defaults</artifactId>
     <name>Maltcms Test Defaults</name>
     <description>Test utilities for fragment commands and workflows.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <packaging>jar</packaging>
 </project>

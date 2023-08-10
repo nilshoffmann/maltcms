@@ -10,14 +10,6 @@
     <artifactId>maltcms-io-mztab</artifactId>
     <name>Maltcms IO Provider mzTab</name>
     <description>(Highly Experimental) Support for mzTab Creation and Export.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>

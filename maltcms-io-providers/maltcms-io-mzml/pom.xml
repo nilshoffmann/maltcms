@@ -11,12 +11,6 @@
     <name>Maltcms IO Provider MZML</name>
     <description>Datasource Implementation for MzML.</description>
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

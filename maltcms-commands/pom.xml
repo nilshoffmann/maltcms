@@ -9,14 +9,6 @@
     <artifactId>maltcms-commands</artifactId>
     <name>Maltcms Commands</name>
     <description>Similarities for Feature Vectors and Time Series thereof, such as Cosine and Dynamic Time Warping.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>

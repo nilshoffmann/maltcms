@@ -9,14 +9,6 @@
     <artifactId>maltcms-db</artifactId>
     <name>Maltcms DB</name>
     <description>Utilities for Metabolite DB Creation and Search/Identification.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

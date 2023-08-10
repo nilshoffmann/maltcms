@@ -9,14 +9,6 @@
     <artifactId>maltcms-sralign</artifactId>
     <name>Maltcms Symbolic Rep Alignment</name>
     <description>(Deprecated) Implementation of Sub-Sampled 1D Time Series Alignment.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>edu.ucar</groupId>

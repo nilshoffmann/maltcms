@@ -10,14 +10,6 @@
     <artifactId>maltcms-io-mzxml</artifactId>
     <name>Maltcms IO Provider MZXML</name>
     <description>(Deprecated) Datasource Implementation for mzXML.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

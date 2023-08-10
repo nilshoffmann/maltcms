@@ -10,14 +10,6 @@
     <artifactId>maltcms-io-xlsx</artifactId>
     <name>Maltcms IO Provider XLS(X)</name>
     <description>Datasource Implementation for MS XLS(X).</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

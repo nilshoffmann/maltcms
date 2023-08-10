@@ -9,14 +9,6 @@
     <artifactId>maltcms-io</artifactId>
     <name>Maltcms IO</name>
     <description>IO Utilities for CSV and Color Ramps.</description>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>  
-        </plugins>
-    </build>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>

@@ -24,11 +24,7 @@
                 </includes>
             </resource>
         </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-            </plugin>          
+        <plugins>       
             <!-- include to run integration tests -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>

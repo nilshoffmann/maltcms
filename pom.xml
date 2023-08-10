@@ -634,7 +634,7 @@
         <module>maltcms-xml-annotation</module>
         <module>maltcms-resources</module>
         <module>maltcms-cv</module>
-        <module>maltcms-ap</module>
+        <!--<module>maltcms-ap</module>-->
         <module>maltcms-microbenchmarks</module>
         <module>distributions</module>
         <module>maltcms-io-providers</module>
@@ -842,8 +842,8 @@
         <version.junit>4.13.1</version.junit>
         <version.lombok>1.18.28</version.lombok>
         <version.groovy>4.0.13</version.groovy>
-        <version.lombok.maven>1.18.20.0</version.lombok.maven>
-        <version.maltcms.base>1.3.0</version.maltcms.base>
+        <!--<version.lombok.maven>1.18.20.0</version.lombok.maven>-->
+        <version.maltcms.base>1.4.0</version.maltcms.base>
         <version.javadoc.plugin>3.5.0</version.javadoc.plugin>
         <version.projectinfo.plugin>3.4.2</version.projectinfo.plugin>
     </properties>
