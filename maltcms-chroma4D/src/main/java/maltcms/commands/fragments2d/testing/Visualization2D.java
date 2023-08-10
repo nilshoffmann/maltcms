@@ -36,13 +36,14 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.MinimumFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.ImageTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
@@ -52,9 +53,11 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 public class Visualization2D {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Visualization2D.class);
 
     private int currentrasterline = -1;
     private boolean holdHorizontalI = false;

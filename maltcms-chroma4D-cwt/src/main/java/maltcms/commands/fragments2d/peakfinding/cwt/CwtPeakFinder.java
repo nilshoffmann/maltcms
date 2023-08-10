@@ -36,10 +36,11 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.io.File;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Detects peaks within the 1D TIC of a 2D chromatogram and selects peaks that
@@ -50,10 +51,11 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @RequiresVariables(names = {"var.modulation_time", "var.scan_rate"})
 @ProvidesVariables(names = {"var.peak_index_list"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class CwtPeakFinder extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CwtPeakFinder.class);
 
     @Configurable(value = "5", description = "The minimum required scale for a ridge.")
     private int minScale = 5;

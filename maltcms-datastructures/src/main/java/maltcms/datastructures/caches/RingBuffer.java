@@ -28,7 +28,8 @@
 package maltcms.datastructures.caches;
 
 import java.util.LinkedList;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Implementation of a RingBuffer datastructure e.g. for caches with fixed
@@ -38,8 +39,10 @@ import lombok.extern.slf4j.Slf4j;
  * @param <T> the element type
  *
  */
-@Slf4j
+
 public class RingBuffer<T> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RingBuffer.class);
 
     private final LinkedList<T> buffer;
     private int capacity = 0;

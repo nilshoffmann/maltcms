@@ -27,7 +27,9 @@
  */
 package maltcms.commands.distances.alignment;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
+
 
 /**
  * Implementation of the Edit-Distance on Strings.
@@ -35,8 +37,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class EditDistance {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(EditDistance.class);
 
     /**
      * Calculates the Edit-Distance on Strings a and b.

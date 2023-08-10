@@ -55,10 +55,11 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.xml.mzML.MZMLValidator;
 import maltcms.io.xml.mzML.MZMLValidator.ValidationResult;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import static ucar.ma2.DataType.DOUBLE;
@@ -101,9 +102,11 @@ import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class MZMLExporterWorker implements Callable<URI>, Serializable {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZMLExporterWorker.class);
 
     @Configurable(description = "The input file URI to read from. May be remote.")
     private URI inputFile;
@@ -219,7 +222,7 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
             MZMLValidator validator = new MZMLValidator();
             ValidationResult result = validator.validateMzML(f);
             if (!result.isValid()) {
-                log.warn("Validation of mzML file {} failed:", f, result.getException());
+                log.warn("Validation of mzML file {} failed:", f, result.exception());
                 throw new ConstraintViolationException("MzML file " + f.getAbsolutePath() + " is invalid!");
             }
         }

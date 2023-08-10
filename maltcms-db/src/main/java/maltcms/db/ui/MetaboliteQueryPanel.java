@@ -37,7 +37,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>MetaboliteQueryPanel class.</p>
@@ -45,8 +46,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MetaboliteQueryPanel extends JPanel implements KeyListener {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MetaboliteQueryPanel.class);
 
     /**
      *

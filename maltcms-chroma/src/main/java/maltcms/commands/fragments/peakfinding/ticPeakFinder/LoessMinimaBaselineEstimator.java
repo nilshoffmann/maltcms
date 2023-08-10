@@ -31,11 +31,12 @@ import cross.annotations.Configurable;
 import cross.exception.ConstraintViolationException;
 import java.util.ArrayList;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.analysis.interpolation.LoessInterpolator;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Estimates a baseline from an array of function values using local minima to
@@ -44,11 +45,13 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IBaselineEstimator.class)
 public class LoessMinimaBaselineEstimator implements IBaselineEstimator {
     
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(LoessMinimaBaselineEstimator.class);
+
     @Configurable
     private double bandwidth = LoessInterpolator.DEFAULT_BANDWIDTH;
     @Configurable

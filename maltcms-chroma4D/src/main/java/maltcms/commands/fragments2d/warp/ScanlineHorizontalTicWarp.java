@@ -35,9 +35,10 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.tools.StringTools;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.tools.ArrayTools2;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -48,10 +49,12 @@ import ucar.ma2.Array;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineHorizontalTicWarp extends ADynamicTimeWarp {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanlineHorizontalTicWarp.class);
 
     @Configurable(name = "scale", description = "Whether scan line intensity arrays should be scaled using sqrt.", value = "true")
     private boolean scale = true;

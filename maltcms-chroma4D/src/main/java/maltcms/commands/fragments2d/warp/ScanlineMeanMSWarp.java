@@ -37,13 +37,14 @@ import cross.exception.ResourceNotAvailableException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.ArrayTools2;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -53,7 +54,7 @@ import ucar.ma2.Array;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.second_column_scan_index",
     "var.total_intensity", "var.mass_values", "var.intensity_values",
@@ -61,6 +62,8 @@ import ucar.ma2.Array;
     "var.modulation_time", "var.scan_rate"})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineMeanMSWarp extends ADynamicTimeWarp {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanlineMeanMSWarp.class);
 
     @Configurable(name = "var.meanms_1d_horizontal",
             value = "meanms_1d_horizontal")

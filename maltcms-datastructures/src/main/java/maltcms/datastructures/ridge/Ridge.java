@@ -39,7 +39,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>Ridge class.</p>
@@ -47,8 +48,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class Ridge implements Comparable<Ridge> {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Ridge.class);
 
     private List<Tuple2D<Point2D, Double>> ridgePoints;
 

@@ -28,8 +28,9 @@
 package maltcms.db.predicates.metabolite;
 
 import java.lang.reflect.InvocationTargetException;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MStringMatchPredicate class.</p>
@@ -37,8 +38,10 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MStringMatchPredicate extends MetabolitePredicate {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MStringMatchPredicate.class);
 
     /**
      *

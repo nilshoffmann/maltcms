@@ -34,11 +34,12 @@ import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -49,10 +50,12 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = PairwiseFeatureSequenceSimilarity.class)
 public class MZIDynamicTimeWarp extends ADynamicTimeWarp {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZIDynamicTimeWarp.class);
 
     @Configurable
     private int numberOfEICsToSelect = 0;

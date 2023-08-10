@@ -6,7 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Created by IntelliJ IDEA. User: tholzman Date: Nov 16, 2009 Time: 3:30:12 PM
@@ -16,8 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 //Iterates through long strings within a file that begin with one
 //pattern and end with another.  Useful for cutting out "<scan>...</scan>"
 //etc.
-@Slf4j
+
 public class EndPatternStringIterator implements Iterator {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(EndPatternStringIterator.class);
 
     private static XMLInputFactory inputfactory = XMLInputFactory.newInstance();
 

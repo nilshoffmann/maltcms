@@ -31,10 +31,11 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Predicate;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MetabolitePredicate;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MetaboliteQueryDB class.</p>
@@ -42,8 +43,10 @@ import maltcms.db.predicates.metabolite.MetabolitePredicate;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MetaboliteQueryDB extends QueryDB<IMetabolite> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MetaboliteQueryDB.class);
 
     /**
      * <p>Constructor for MetaboliteQueryDB.</p>

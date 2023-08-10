@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.PropertyConfigurator;
@@ -58,6 +57,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -67,8 +68,9 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
 public abstract class AFragmentCommandTest {
+    
+    private static Logger log = LoggerFactory.getLogger(AFragmentCommandTest.class);
 
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();

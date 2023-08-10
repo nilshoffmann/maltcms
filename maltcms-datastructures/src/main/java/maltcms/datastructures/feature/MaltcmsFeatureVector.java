@@ -32,8 +32,9 @@ import cross.datastructures.fragments.IVariableFragment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IFeatureVector;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.InvalidRangeException;
 
@@ -44,8 +45,10 @@ import ucar.ma2.InvalidRangeException;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MaltcmsFeatureVector implements IFeatureVector {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MaltcmsFeatureVector.class);
 
     /**
      *

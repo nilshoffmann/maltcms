@@ -40,7 +40,7 @@ import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.feature.DefaultFeatureVector;
 import ucar.ma2.Array;
 
@@ -52,7 +52,7 @@ import ucar.ma2.Array;
  * @since 1.3.2
  */
 @Data
-@Slf4j
+
 public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
 
     /**

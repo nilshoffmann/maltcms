@@ -50,7 +50,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
 import lombok.Builder;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
@@ -72,6 +72,7 @@ import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -85,10 +86,10 @@ import ucar.ma2.Index;
  *
  * @since 1.3.2
  */
-@Builder
 @Data
-@Slf4j
 public class TICPeakFinderWorker implements Callable<PeakFinderWorkerResult>, Serializable {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TICPeakFinderWorker.class);
 
     private final File outputDirectory;
     private final URI inputUri;

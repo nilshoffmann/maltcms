@@ -35,14 +35,13 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import lombok.Data;
 import org.xml.sax.SAXException;
 
 /**
  * Validates a given mzML file against the indexed or plain mzML 1.1.0 schema.
  *
  * @author Nils Hoffmann
- * 
+ *
  * @since 1.3.2
  */
 public class MZMLValidator {
@@ -95,12 +94,10 @@ public class MZMLValidator {
     /**
      * A Validation result.
      */
-    @Data
-    public class ValidationResult {
-
-        private final Throwable exception;
-        private final File sourceFile;
-        private final URL schemaLocation;
+    public record ValidationResult(
+            Throwable exception,
+            File sourceFile,
+            URL schemaLocation) {
 
         /**
          * Returns true if the <code>sourceFile</code> passed validation against

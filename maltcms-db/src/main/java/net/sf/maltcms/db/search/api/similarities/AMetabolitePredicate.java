@@ -39,12 +39,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.IScan;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import net.sf.maltcms.db.search.api.IMatchPredicate;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -53,8 +54,10 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public abstract class AMetabolitePredicate extends Predicate<IMetabolite> implements IMatchPredicate<IMetabolite> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AMetabolitePredicate.class);
 
     private double scoreThreshold;
     private int maxHits = 1;

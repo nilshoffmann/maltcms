@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.datastructures.fragments.PairwiseDistances;
 import maltcms.io.csv.CSVWriter;
@@ -66,6 +66,8 @@ import maltcms.tools.MaltcmsTools;
 import net.sf.maltcms.apps.Maltcms;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import smueller.alignment.OneAffineAlignment;
 import smueller.datastructure.AlignmentOutput;
 import smueller.datastructure.BreakPoints;
@@ -82,15 +84,17 @@ import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
 
 /**
- * <p>SymbolicRepresentationAlignment class.</p>
+ * <p>
+ * SymbolicRepresentationAlignment class.</p>
  *
  * @author Soeren Mueller
- * 
+ *
  */
-@Slf4j
 @RequiresVariables(names = {"var.total_intensity"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class SymbolicRepresentationAlignment extends AFragmentCommand {
+
+    private static final Logger log = LoggerFactory.getLogger(SymbolicRepresentationAlignment.class);
 
     private static int alphabetgr; // mindestgr. 3, max 10
     private static Array[] intensearrays;
@@ -106,7 +110,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     private static String location;
 
     /**
-     * <p>Getter for the field <code>al</code>.</p>
+     * <p>
+     * Getter for the field <code>al</code>.</p>
      *
      * @return a {@link smueller.alignment.OneAffineAlignment} object.
      */
@@ -115,7 +120,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>alphabetgr</code>.</p>
+     * <p>
+     * Getter for the field <code>alphabetgr</code>.</p>
      *
      * @return a int.
      */
@@ -124,7 +130,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>bpois</code>.</p>
+     * <p>
+     * Getter for the field <code>bpois</code>.</p>
      *
      * @return a {@link smueller.datastructure.BreakPoints} object.
      */
@@ -133,7 +140,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>distmatrix</code>.</p>
+     * <p>
+     * Getter for the field <code>distmatrix</code>.</p>
      *
      * @return a {@link smueller.datastructure.DistanceMatrix} object.
      */
@@ -142,7 +150,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>fenstergr</code>.</p>
+     * <p>
+     * Getter for the field <code>fenstergr</code>.</p>
      *
      * @return a int.
      */
@@ -151,7 +160,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>gapinit</code>.</p>
+     * <p>
+     * Getter for the field <code>gapinit</code>.</p>
      *
      * @return a double.
      */
@@ -160,7 +170,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>sorti</code>.</p>
+     * <p>
+     * Getter for the field <code>sorti</code>.</p>
      *
      * @return a {@link smueller.datastructure.SortedJavArrays} object.
      */
@@ -169,7 +180,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>Getter for the field <code>stand</code>.</p>
+     * <p>
+     * Getter for the field <code>stand</code>.</p>
      *
      * @return a {@link smueller.tools.Standardizer} object.
      */
@@ -178,7 +190,8 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>main.</p>
+     * <p>
+     * main.</p>
      *
      * @param args an array of {@link java.lang.String} objects.
      */
@@ -212,7 +225,9 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     private boolean pairsWithFirst = false;
     private String minArrayComp;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final int size = t.getSize();
@@ -232,12 +247,12 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
                     .put(
                             f,
                             DimensionReduce
-                            .paa(
-                                    SymbolicRepresentationAlignment.stand
-                                    .cleanbaseline(SymbolicRepresentationAlignment.stand
-                                            .scale(SymbolicRepresentationAlignment.stand
-                                                    .logData(SymbolicRepresentationAlignment.intensearrays[i]))),
-                                    SymbolicRepresentationAlignment.fenstergr));
+                                    .paa(
+                                            SymbolicRepresentationAlignment.stand
+                                                    .cleanbaseline(SymbolicRepresentationAlignment.stand
+                                                            .scale(SymbolicRepresentationAlignment.stand
+                                                                    .logData(SymbolicRepresentationAlignment.intensearrays[i]))),
+                                            SymbolicRepresentationAlignment.fenstergr));
             median[i] = SymbolicRepresentationAlignment.stand.getMedian();
             if (i < 1) {
                 minmax[i] = SymbolicRepresentationAlignment.stand.getMin();
@@ -291,14 +306,14 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
             SymbolicRepresentationAlignment.al.computeMatrix("-"
                     + SymbolConvert.symbolic(
                             SymbolicRepresentationAlignment.hm
-                            .get(F.getFirst()),
+                                    .get(F.getFirst()),
                             SymbolicRepresentationAlignment.bpois.getCommon())
-                    .toString().replaceAll(" ", ""), "-"
+                            .toString().replaceAll(" ", ""), "-"
                     + SymbolConvert.symbolic(
                             SymbolicRepresentationAlignment.hm.get(F
                                     .getSecond()),
                             SymbolicRepresentationAlignment.bpois.getCommon())
-                    .toString().replaceAll(" ", ""));
+                            .toString().replaceAll(" ", ""));
             SymbolicRepresentationAlignment.al.createAlignments(
                     SymbolicRepresentationAlignment.al.getSeq1(),
                     SymbolicRepresentationAlignment.al.getSeq2());
@@ -311,7 +326,7 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
                         SymbolicRepresentationAlignment.al.getAllalignments(),
                         SymbolicRepresentationAlignment.al.getMatrix(),
                         SymbolicRepresentationAlignment.format, ndm
-                        .getDistmat(),
+                                .getDistmat(),
                         SymbolicRepresentationAlignment.location, fr,
                         SymbolicRepresentationAlignment.al, aoriglen, boriglen,
                         getWorkflow());
@@ -355,7 +370,9 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         return t;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         SymbolicRepresentationAlignment.fenstergr = cfg.getInt(
@@ -522,7 +539,9 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
         drawAlignedTICS(t, alignments);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Calculates alignment on symbolic representation of time series, using affine gap costs.";
@@ -533,7 +552,9 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;
@@ -571,9 +592,11 @@ public class SymbolicRepresentationAlignment extends AFragmentCommand {
     }
 
     /**
-     * <p>saveToCSV.</p>
+     * <p>
+     * saveToCSV.</p>
      *
-     * @param pwdist a {@link cross.datastructures.fragments.IFileFragment} object.
+     * @param pwdist a {@link cross.datastructures.fragments.IFileFragment}
+     * object.
      * @param distances a {@link ucar.ma2.ArrayDouble.D2} object.
      * @param names a {@link ucar.ma2.ArrayChar.D2} object.
      */

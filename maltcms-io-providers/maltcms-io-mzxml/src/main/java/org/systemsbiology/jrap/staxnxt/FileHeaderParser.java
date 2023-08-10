@@ -24,16 +24,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+
+
 public class FileHeaderParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(EndPatternStringIterator.class);
 
     String inputMZXMLfile;
     MZXMLFileInfo info;
@@ -108,14 +109,14 @@ public class FileHeaderParser {
                 try {
                     xmlSR.close();
                 } catch (XMLStreamException ex) {
-                    Logger.getLogger(FileHeaderParser.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("", ex);
                 }
             }
             if (fIN != null) {
                 try {
                     fIN.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(FileHeaderParser.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("", ex);
                 }
             }
         }
@@ -257,14 +258,14 @@ public class FileHeaderParser {
                 try {
                     xmlSR.close();
                 } catch (XMLStreamException ex) {
-                    Logger.getLogger(FileHeaderParser.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("", ex);
                 }
             }
             if (fIN != null) {
                 try {
                     fIN.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(FileHeaderParser.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("", ex);
                 }
             }
         }

@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.MovingAverageFilter;
 import maltcms.commands.fragments2d.peakfinding.SeededRegionGrowing;
@@ -59,6 +59,7 @@ import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -68,10 +69,12 @@ import ucar.ma2.ArrayDouble;
  * @author Mathias Wilhelm
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IPeakIntegration.class)
 public class PeakIntegration implements IPeakIntegration {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakIntegration.class);
 
     @Configurable(value = "1")
     private int k = 1;

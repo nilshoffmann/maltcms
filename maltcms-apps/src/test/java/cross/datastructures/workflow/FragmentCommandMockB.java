@@ -37,16 +37,19 @@ import cross.datastructures.fragments.VariableFragment;
 import cross.datastructures.tuple.TupleND;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
-@Slf4j
+
 @RequiresVariables(names = {"nil.variable1", "nil.variable2"})
 @RequiresOptionalVariables(names = {"nil.variable3"})
 @ProvidesVariables(names = {"nil.variable2", "nil.variable5"})
 public class FragmentCommandMockB extends AFragmentCommand {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(FragmentCommandMockB.class);
 
     /**
      *

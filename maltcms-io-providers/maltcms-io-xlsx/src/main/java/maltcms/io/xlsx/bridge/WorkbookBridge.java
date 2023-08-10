@@ -30,10 +30,12 @@ package maltcms.io.xlsx.bridge;
 import java.io.IOException;
 import java.net.URI;
 import jxl.read.biff.BiffException;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.xlsx.bridge.impl.jexcelapi.JXLWorkbook;
 import maltcms.io.xlsx.bridge.impl.poi.POIWorkbook;
 import org.apache.poi.EncryptedDocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
@@ -42,9 +44,11 @@ import org.apache.poi.EncryptedDocumentException;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
-public class WorkbookBridge {
 
+public class WorkbookBridge {
+    
+    private static final Logger log = LoggerFactory.getLogger(WorkbookBridge.class);
+    
     public enum IMPL {
 
         POI, JEXCELAPI

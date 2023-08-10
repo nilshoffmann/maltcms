@@ -10,6 +10,14 @@
     <artifactId>maltcms-io-mztab</artifactId>
     <name>Maltcms IO Provider mzTab</name>
     <description>(Highly Experimental) Support for mzTab Creation and Export.</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+            </plugin>  
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.pride</groupId>
@@ -29,41 +37,8 @@
         </dependency>
     </dependencies>
     <packaging>jar</packaging>
-    <repositories>
-        <repository>
-            <id>ebi-repo</id>
-            <name>The EBI Maven 2 repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <!-- EBI SNAPSHOT repo -->
-        <repository>
-            <id>nexus-ebi-snapshot-repo</id>
-            <name>The EBI internal snapshot repository</name>
-            <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-            </snapshots>
-        </repository>
-
-        <!-- Compomics Genesis Maven 2 repository -->
-        <repository>
-            <id>genesis-maven2-repository</id>
-            <name>Genesis maven2 repository</name>
-            <url>http://genesis.UGent.be/maven2</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmztab.version>3.0.2</jmztab.version>
+        <jmztab.version>3.0.9</jmztab.version>
     </properties>
 </project>

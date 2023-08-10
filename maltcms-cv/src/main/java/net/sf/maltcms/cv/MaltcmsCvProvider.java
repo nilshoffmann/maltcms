@@ -37,10 +37,11 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MaltcmsCvProvider class.</p>
@@ -48,10 +49,12 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = IControlledVocabularyProvider.class)
 public final class MaltcmsCvProvider implements IControlledVocabularyProvider {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MaltcmsCvProvider.class);
+    
     private PropertiesConfiguration pc;
     private Set<String> deprecatedVariables;
 

@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.Peak2DClique;
 import maltcms.io.csv.CSVReader;
 import maltcms.io.csv.CSVWriter;
@@ -55,6 +55,8 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYBarDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>LogDeltaEvaluation class.</p>
@@ -62,9 +64,11 @@ import org.jfree.data.xy.XYBarDataset;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
-public class LogDeltaEvaluation implements IWorkflowElement {
 
+public class LogDeltaEvaluation implements IWorkflowElement {
+    
+    private static final Logger log = LoggerFactory.getLogger(LogDeltaEvaluation.class);
+    
     private IWorkflow workflow;
     private boolean logNaturalis = true;
     private List<Peak2DClique> peakCliques;

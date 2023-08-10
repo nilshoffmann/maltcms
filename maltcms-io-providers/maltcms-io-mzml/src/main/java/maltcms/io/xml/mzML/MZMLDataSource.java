@@ -54,11 +54,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-import lombok.extern.slf4j.Slf4j;
+import maltcms.commands.fragments.io.MZMLExporter;
+
 import maltcms.io.andims.NetcdfDataSource;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -81,7 +83,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
-@Slf4j
+
 /**
  * <p>MZMLDataSource class.</p>
  *
@@ -90,6 +92,8 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
  */
 @ServiceProvider(service = IDataSource.class)
 public class MZMLDataSource implements IDataSource {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZMLDataSource.class);
 
     private final String[] fileEnding = new String[]{"mzml", "mzml.xml"};
     @Configurable(name = "var.mass_values", value = "mass_values")

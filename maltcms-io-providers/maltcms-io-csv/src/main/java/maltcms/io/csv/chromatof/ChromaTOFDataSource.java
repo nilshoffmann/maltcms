@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.csv.chromatof.ChromaTOFParser.ColumnName;
 import maltcms.io.csv.chromatof.ChromaTOFParser.Mode;
@@ -54,6 +54,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.lang.LocaleUtils;
 import org.openide.util.lookup.ServiceProvider;
+import static org.slf4j.LoggerFactory.getLogger;
 import ucar.ma2.Array;
 import ucar.nc2.Attribute;
 
@@ -61,10 +62,12 @@ import ucar.nc2.Attribute;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IDataSource.class)
 public class ChromaTOFDataSource implements IDataSource {
+    
+    private static final org.slf4j.Logger log = getLogger(ChromaTOFDataSource.class);
 
     private Locale locale = Locale.US;
     private String[] supportedFormats = {"csv", "txt", "tsv"};

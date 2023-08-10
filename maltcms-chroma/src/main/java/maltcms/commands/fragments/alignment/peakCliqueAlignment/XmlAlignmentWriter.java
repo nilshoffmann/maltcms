@@ -33,10 +33,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.peak.IPeak;
 import maltcms.io.xml.bindings.alignment.Alignment;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>XmlAlignmentWriter class.</p>
@@ -45,8 +46,10 @@ import maltcms.io.xml.bindings.alignment.Alignment;
  * 
  * @since 1.3.2
  */
-@Slf4j
+
 public class XmlAlignmentWriter {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(XmlAlignmentWriter.class);
 
     /**
      * <p>saveToXMLAlignment.</p>

@@ -31,11 +31,12 @@ import com.db4o.query.Predicate;
 import java.awt.event.ActionEvent;
 import javax.swing.Icon;
 import javax.swing.JTextField;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.IAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MAggregatePredicate;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MetaboliteQueryAction class.</p>
@@ -43,8 +44,10 @@ import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MetaboliteQueryAction extends javax.swing.AbstractAction {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MetaboliteQueryAction.class);
 
     /**
      *

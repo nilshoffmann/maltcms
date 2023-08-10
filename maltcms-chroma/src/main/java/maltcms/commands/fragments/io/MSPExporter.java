@@ -34,7 +34,8 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.exception.NotImplementedException;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>MSPExporter class.</p>
@@ -43,9 +44,11 @@ import lombok.extern.slf4j.Slf4j;
  * 
  */
 @RequiresOptionalVariables(names = {"var.tic_peaks"})
-@Slf4j
+
 @Data
 public class MSPExporter extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MSPExporter.class);
 
     /** {@inheritDoc} */
     @Override

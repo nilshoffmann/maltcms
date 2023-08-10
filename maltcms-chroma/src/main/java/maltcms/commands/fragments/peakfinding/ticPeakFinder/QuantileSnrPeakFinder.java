@@ -33,13 +33,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.TopHatFilter;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -48,9 +49,11 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class QuantileSnrPeakFinder implements IPeakFinder {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(QuantileSnrPeakFinder.class);
 
     @Configurable
     private List<AArrayFilter> filter = Arrays.asList(

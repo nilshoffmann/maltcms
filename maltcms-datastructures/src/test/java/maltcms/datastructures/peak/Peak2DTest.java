@@ -38,7 +38,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.Peak2D.Peak2DBuilder;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
@@ -46,14 +46,17 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class Peak2DTest {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Peak2DTest.class);
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();

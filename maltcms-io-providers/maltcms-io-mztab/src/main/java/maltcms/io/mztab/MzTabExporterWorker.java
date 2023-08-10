@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Callable;
-import lombok.Data;
+import org.slf4j.LoggerFactory;
 import uk.ac.ebi.pride.jmztab.model.MZTabDescription;
 import uk.ac.ebi.pride.jmztab.model.MZTabFile;
 import uk.ac.ebi.pride.jmztab.model.Metadata;
@@ -21,13 +21,9 @@ import uk.ac.ebi.pride.jmztab.model.Software;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class MzTabExporterWorker implements Callable<URI>, Serializable {
-
-    private final List<URI> inputFileFragments;
-    private final URI outputFileFragment;
-    private final String mzTabId;
-    private final List<String> softwareSettings;
+public record MzTabExporterWorker(List<URI> inputFileFragments, URI outputFileFragment, String mzTabId, List<String> softwareSettings) implements Callable<URI>, Serializable {
+            
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MzTabExporterWorker.class);
 
     /** {@inheritDoc} */
     @Override

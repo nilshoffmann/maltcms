@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.Chromatogram1D;
 import maltcms.datastructures.ms.IChromatogram1D;
 import maltcms.datastructures.peak.Peak2D;
@@ -60,6 +60,7 @@ import maltcms.io.csv.gcimage.GcImageBlobImporter;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.LocaleUtils;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
 
@@ -74,10 +75,11 @@ import ucar.ma2.IndexIterator;
     "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
     "var.scan_index"})
 @ProvidesVariables(names = {"var.peak_index_list"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class GcImagePeak2DImporter extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GcImagePeak2DImporter.class);
 
     @Configurable(description="The locale to use for parsing of numbers.")
     private String localeString = Locale.US.toString();

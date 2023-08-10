@@ -29,7 +29,8 @@ package smueller.alignment;
 
 import cross.datastructures.fragments.IFileFragment;
 import java.util.Vector;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Alignment class.</p>
@@ -37,9 +38,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Soeren Mueller
  * 
  */
-@Slf4j
-public class Alignment {
 
+public class Alignment {
+    
+    private static final Logger log = LoggerFactory.getLogger(Alignment.class);    
     /**
      *
      *

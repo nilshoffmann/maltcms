@@ -35,8 +35,9 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.io.IOException;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Prints available variables for provided file fragments.
@@ -44,10 +45,12 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class DataFileVariablePrinter extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DataFileVariablePrinter.class);
 
     private final String description = "Prints available variables for provided file fragments";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILEIO;

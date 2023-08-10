@@ -34,13 +34,14 @@ import java.awt.geom.Area;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IArrayD2Double;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
-@Slf4j
+
 /**
  * <p>PartitionCalculator class.</p>
  *
@@ -49,6 +50,8 @@ import ucar.ma2.ArrayDouble;
  */
 @Data
 public class PartitionCalculator implements Callable<Integer>, IConfigurable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PartitionCalculator.class);
 
     /**
      *

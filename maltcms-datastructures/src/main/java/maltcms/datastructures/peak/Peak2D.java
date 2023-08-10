@@ -44,10 +44,11 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -65,10 +66,12 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 @EqualsAndHashCode(callSuper = true, exclude = {"peakArea"})
 @Data
 public class Peak2D extends Peak1D implements Serializable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Peak2D.class);
 
     public static class Peak2DBuilder {
 
@@ -283,7 +286,6 @@ public class Peak2D extends Peak1D implements Serializable {
      * @param uniqueId
      *
      */
-//    @Builder(builderMethodName = "builder2D")
     public Peak2D(int index, int startIndex, int apexIndex, int stopIndex, double apexIntensity, double area, double normalizedArea, String[] normalizationMethods, double startTime, double stopTime, double apexTime, double baselineStartTime, double baselineStopTime, double baselineStartValue, double baselineStopValue, double mw, double[] extractedIonCurrent, double snr, String file, PeakType peakType, String name, List<PeakAnnotation> peakAnnotations, PeakArea2D peakArea, double firstRetTime, double secondRetTime, UUID uniqueId) {
         super(index, startIndex, apexIndex, stopIndex, apexIntensity, area, normalizedArea, normalizationMethods, startTime, stopTime, apexTime, baselineStartTime, baselineStopTime, baselineStartValue, baselineStopValue, mw, extractedIonCurrent, snr, file, peakType, name, peakAnnotations, uniqueId);
         this.peakArea = peakArea;

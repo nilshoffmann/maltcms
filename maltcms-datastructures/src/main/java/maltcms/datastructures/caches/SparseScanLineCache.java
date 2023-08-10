@@ -38,19 +38,17 @@ import cross.exception.NotImplementedException;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.awt.Point;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
-import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
@@ -67,9 +65,11 @@ import ucar.nc2.Dimension;
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
-@Slf4j
+
 public class SparseScanLineCache implements IScanLine {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SparseScanLineCache.class);
+    
     private String intensityValuesVar = "intensity_values";
     private String scanIndexVar = "scan_index";
     private String massValuesVar = "mass_values";

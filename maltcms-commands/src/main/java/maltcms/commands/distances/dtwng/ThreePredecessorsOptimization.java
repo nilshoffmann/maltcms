@@ -42,11 +42,12 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.tools.PathTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.DataType;
@@ -59,8 +60,9 @@ import ucar.nc2.Dimension;
  * 
  */
 @Data
-@Slf4j
 public class ThreePredecessorsOptimization implements IOptimizationFunction {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ThreePredecessorsOptimization.class);
 
     private boolean minimize = true;
     private double[] weights = new double[]{1.0, 1.0, 1.0};

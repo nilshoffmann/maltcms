@@ -32,9 +32,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
+import org.slf4j.LoggerFactory;
 
 //@ServiceProvider(service = AMetabolitePredicate.class)
 /**
@@ -43,8 +44,10 @@ import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class RetentionIndexMatcher extends AMetabolitePredicate {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RetentionIndexMatcher.class);
 
     private AMetabolitePredicate delegate = new Cosine();
     private double retentionIndex = Double.NaN;

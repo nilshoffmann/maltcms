@@ -30,9 +30,10 @@ package maltcms.commands.filters.array;
 import cross.tools.MathTools;
 import java.util.Arrays;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -46,9 +47,11 @@ import ucar.ma2.InvalidRangeException;
  * 
  */
 @Data
-@Slf4j
+
 @ServiceProvider(service = AArrayFilter.class)
 public class MedianBaselineFilter extends AArrayFilter {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MedianBaselineFilter.class);
 
     private int scans = 0;
     private int channels = 0;

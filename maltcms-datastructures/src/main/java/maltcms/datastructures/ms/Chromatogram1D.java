@@ -44,9 +44,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
@@ -56,8 +57,10 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class Chromatogram1D implements IChromatogram1D {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Chromatogram1D.class);
 
     private IFileFragment parent;
     private final String scanAcquisitionTimeUnit = "seconds";

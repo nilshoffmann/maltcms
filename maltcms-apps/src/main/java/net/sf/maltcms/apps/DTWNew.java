@@ -39,11 +39,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.alignment.EditDistance;
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.commands.distances.dtwng.AlignmentFactory;
@@ -58,6 +57,7 @@ import maltcms.math.functions.DtwTimePenalizedPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.math.functions.similarities.GaussianDifferenceSimilarity;
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -66,8 +66,10 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class DTWNew {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DTWNew.class);
 
     /**
      * <p>main.</p>

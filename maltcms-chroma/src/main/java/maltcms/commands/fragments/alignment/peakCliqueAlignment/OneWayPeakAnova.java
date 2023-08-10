@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Vector;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.CSVReader;
 import maltcms.tools.ArrayTools;
 import maltcms.ui.charts.PlotRunner;
@@ -60,6 +60,7 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYBarDataset;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>OneWayPeakAnova class.</p>
@@ -68,8 +69,9 @@ import org.jfree.data.xy.XYBarDataset;
  * 
  * @since 1.3.2
  */
-@Slf4j
 public class OneWayPeakAnova implements IWorkflowElement {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(OneWayPeakAnova.class);
 
     private IWorkflow workflow;
 

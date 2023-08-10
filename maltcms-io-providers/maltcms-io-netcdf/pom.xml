@@ -12,6 +12,10 @@
     <description>Datasource Implementation for NetCDF, ANDI-MS, and ANDI-CHROM.</description>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+            </plugin>  
             <!-- include to run integration tests -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -23,7 +27,7 @@
             <groupId>commons-httpclient</groupId> 
             <artifactId>commons-httpclient</artifactId> 
             <version>3.1</version>
-<!--            <exclusions>
+            <!--            <exclusions>
                 <exclusion>
                     <artifactId>com.springsource.org.apache.commons.codec</artifactId>
                     <groupId>org.apache.commons</groupId>

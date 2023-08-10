@@ -34,8 +34,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IAnchor;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a pairset for anything implementing
@@ -45,10 +46,12 @@ import maltcms.datastructures.ms.IAnchor;
  * @param <T>
  * 
  */
-@Slf4j
+
 public class DefaultPairSet<T extends IAnchor> implements
         Iterable<Tuple2D<T, T>> {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DefaultPairSet.class);
+    
     List<Tuple2D<T, T>> al = new ArrayList<>();
     @Configurable
     private int minScansBetweenAnchors = 1;

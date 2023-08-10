@@ -26,7 +26,8 @@ import java.util.Map;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * dhmay 20091021: -Incorporating Vagisha's changes to close files, merging in
@@ -34,8 +35,10 @@ import lombok.extern.slf4j.Slf4j;
  * probably don't need to be displayed every time
  *
  */
-@Slf4j
+
 public class IndexParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(IndexParser.class);
 
     String inputMZXMLfilename;
     Map<Integer, Long> offsetMap = new HashMap<>(10000);

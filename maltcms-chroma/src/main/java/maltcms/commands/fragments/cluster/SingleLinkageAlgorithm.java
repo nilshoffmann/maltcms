@@ -28,9 +28,10 @@
 package maltcms.commands.fragments.cluster;
 
 import cross.commands.fragments.AFragmentCommand;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.cluster.BinaryCluster;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements SingleLinkage clustering.
@@ -38,9 +39,10 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
 @ServiceProvider(service = AFragmentCommand.class)
 public class SingleLinkageAlgorithm extends ClusteringAlgorithm {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SingleLinkageAlgorithm.class);
 
     /** {@inheritDoc} */
     @Override

@@ -39,14 +39,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.Callable;
 import javax.swing.JFrame;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ImageTools;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.Plot;
 import org.jfree.chart.ui.RectangleInsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Callable which returns a JFreeChart object. Chart is saved to file, if
@@ -55,9 +56,9 @@ import org.jfree.chart.ui.RectangleInsets;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
-@Data
 public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
+    
+    private static Logger log = LoggerFactory.getLogger(PlotRunner.class);
 
     private Plot plot = null;
     private String title = "";
@@ -196,6 +197,16 @@ public class PlotRunner implements Callable<JFreeChart>, IConfigurable {
 //        log.debug("Filename: " + this.file.getAbsolutePath());
 //        return this.file;
 //    }
+    
+    /**
+     * <p>Getter for the field <code>file</code>.</p>
+     *
+     * @return the file
+     */
+    public File getFile() {
+        return this.file;
+    }
+    
     /**
      * <p>Getter for the field <code>filename</code>.</p>
      *

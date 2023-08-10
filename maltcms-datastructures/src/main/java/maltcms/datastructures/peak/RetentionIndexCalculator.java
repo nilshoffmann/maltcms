@@ -28,8 +28,9 @@
 package maltcms.datastructures.peak;
 
 import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>RetentionIndexCalculator class.</p>
@@ -39,9 +40,11 @@ import maltcms.tools.ArrayTools;
  * {@link net.sf.maltcms.db.search.api.ri.RetentionIndexCalculator}
  * 
  */
-@Slf4j
+
 @Deprecated
 public class RetentionIndexCalculator {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RetentionIndexCalculator.class);
 
     private final double[] riRTs;
     private final int[] nCarbAtoms;

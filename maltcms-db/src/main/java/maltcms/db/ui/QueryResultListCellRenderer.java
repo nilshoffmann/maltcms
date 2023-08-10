@@ -32,8 +32,9 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>QueryResultListCellRenderer class.</p>
@@ -41,8 +42,10 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class QueryResultListCellRenderer extends JLabel implements ListCellRenderer {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(QueryResultListCellRenderer.class);
 
     /**
      *

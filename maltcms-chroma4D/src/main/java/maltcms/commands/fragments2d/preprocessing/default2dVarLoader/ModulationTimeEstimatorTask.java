@@ -40,8 +40,9 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.scanners.ArrayStatsScanner;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -56,10 +57,12 @@ import ucar.ma2.Range;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class ModulationTimeEstimatorTask implements Callable<Double>,
         Serializable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ModulationTimeEstimatorTask.class);
 
     private URI input;
     private int numberOfScans = 5000;

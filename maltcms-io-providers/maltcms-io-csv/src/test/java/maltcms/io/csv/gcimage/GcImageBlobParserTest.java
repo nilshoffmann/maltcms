@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.io.csv.ParserUtilities;
@@ -47,14 +47,17 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import static org.slf4j.LoggerFactory.getLogger;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class GcImageBlobParserTest {
+    
+    private static final org.slf4j.Logger log = getLogger(GcImageBlobParserTest.class);
 
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();

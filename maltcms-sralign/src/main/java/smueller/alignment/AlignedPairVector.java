@@ -29,7 +29,8 @@ package smueller.alignment;
 
 // Speichert alignierte Paare und deren Position, zusammen bilden die Objekte in
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // einem OAV ein Alignment
 /**
@@ -38,8 +39,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Soeren Mueller
  * 
  */
-@Slf4j
+
 public class AlignedPairVector implements Cloneable {
+    
+    private static final Logger log = LoggerFactory.getLogger(AlignedPairVector.class);    
 
     private char a = ' ';
     private char b = ' ';

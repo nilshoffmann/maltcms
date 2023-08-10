@@ -39,8 +39,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MetaboliteViewModel class.</p>
@@ -48,8 +49,10 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MetaboliteViewModel extends AbstractTableModel {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MetaboliteViewModel.class);
 
     public final String COMMENTS = "Comments";
     public final String DATE = "Date";

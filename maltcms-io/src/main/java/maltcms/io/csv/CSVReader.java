@@ -28,7 +28,8 @@
 package maltcms.io.csv;
 
 import cross.datastructures.tuple.Tuple2D;
-import java.awt.BorderLayout;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.EAST;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import static java.util.Arrays.sort;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Vector;
@@ -46,9 +47,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
+import static javax.swing.SwingUtilities.invokeLater;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 import javax.swing.table.DefaultTableModel;
-import lombok.extern.slf4j.Slf4j;
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 /**
  * Configurable Reader for CSV-like files.
@@ -56,8 +59,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class CSVReader {
+    
+    private static final org.slf4j.Logger log = getLogger(CSVReader.class);
 
     /**
      * <p>main.</p>
@@ -65,34 +70,31 @@ public class CSVReader {
      * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(final String[] args) {
-        final JFrame jf = new JFrame();
-        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        final JTabbedPane jtp = new JTabbedPane();
+        final var jf = new JFrame();
+        jf.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        final var jtp = new JTabbedPane();
         jf.add(jtp);
         for (final String s : args) {
-            final CSVReader cr = new CSVReader();
-            final Tuple2D<Vector<Vector<String>>, Vector<String>> t = cr
+            final var cr = new CSVReader();
+            final var t = cr
                     .read(s);
-            final HashMap<String, Vector<String>> hm = cr.getColumns(t);
-            final DefaultTableModel dtm = new DefaultTableModel();
-            final String[] keys = hm.keySet().toArray(new String[]{});
-            Arrays.sort(keys);
+            final var hm = cr.getColumns(t);
+            final var dtm = new DefaultTableModel();
+            final var keys = hm.keySet().toArray(new String[]{});
+            sort(keys);
             for (final String key : keys) {
                 dtm.addColumn(key, hm.get(key));
             }
-            final JPanel jp = new JPanel();
-            final JTable jt = new JTable(dtm);
-            jp.add(new JScrollPane(jt), BorderLayout.CENTER);
-            final JList jl = new JList(cr.getSkippedLines());
-            jp.add(new JScrollPane(jl), BorderLayout.EAST);
+            final var jp = new JPanel();
+            final var jt = new JTable(dtm);
+            jp.add(new JScrollPane(jt), CENTER);
+            final var jl = new JList(cr.getSkippedLines());
+            jp.add(new JScrollPane(jl), EAST);
             jtp.addTab(s, jp);
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                jf.setVisible(true);
-                jf.pack();
-            }
+        invokeLater(() -> {
+            jf.setVisible(true);
+            jf.pack();
         });
     }
     private String fieldSeparator = "\t";
@@ -107,8 +109,8 @@ public class CSVReader {
      * @return
      */
     private Vector<String> addColumns(final String line) {
-        final Vector<String> lv = new Vector<>();
-        this.log.debug("Adding columns of " + line);
+        final var lv = new Vector<String>();
+        log.debug("Adding columns of " + line);
         for (final String s : split(line, this.fieldSeparator)) {
             lv.add(s);
         }
@@ -122,8 +124,8 @@ public class CSVReader {
      * @param line a {@link java.lang.String} object.
      */
     public void addLine(final Vector<Vector<String>> rows, final String line) {
-        this.log.debug("Adding line " + line);
-        final Vector<String> lv = addColumns(line);
+        log.debug("Adding line " + line);
+        final var lv = addColumns(line);
         rows.add(lv);
     }
 
@@ -135,24 +137,24 @@ public class CSVReader {
      */
     public HashMap<String, Vector<String>> getColumns(
             final Tuple2D<Vector<Vector<String>>, Vector<String>> t) {
-        final int columns = t.getFirst().size();
-        Vector<String> headers = t.getSecond();
+        final var columns = t.getFirst().size();
+        var headers = t.getSecond();
         if ((headers == null) || headers.isEmpty()) {
-            this.log.debug("Headers empty, generating default ones");
+            log.debug("Headers empty, generating default ones");
             headers = new Vector<>(columns);
-            for (int i = 0; i < columns; i++) {
+            for (var i = 0; i < columns; i++) {
                 headers.add("" + i);
             }
         }
         final HashMap<String, Vector<String>> hm = new LinkedHashMap<>();
-        int column = 0;
-        int rows = 0;
+        var column = 0;
+        var rows = 0;
         // proceed row-wise
         for (final Vector<String> v : t.getFirst()) {
-            this.log.debug("Converting row {}", rows++);
+            log.debug("Converting row {}", rows++);
             // process strings in row
             for (final String s : v) {
-                this.log.debug(s);
+                log.debug(s);
                 Vector<String> colv = null;
                 if (!hm.containsKey(headers.get(column))) {
                     colv = new Vector<>();
@@ -166,7 +168,7 @@ public class CSVReader {
             }
             column = 0;
         }
-        this.log.debug(hm.toString());
+        log.debug(hm.toString());
         return hm;
     }
 
@@ -239,24 +241,24 @@ public class CSVReader {
             int cnt;
             int skipped;
             int comment1;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(
+            try (var br = new BufferedReader(new InputStreamReader(
                     is))) {
-                String line = "";
+                var line = "";
                 rows = new Vector<>();
                 headers = new Vector<>();
                 this.skippedLines.clear();
                 cnt = 0;
-                int content = 0;
+                var content = 0;
                 skipped = 0;
                 comment1 = 0;
                 while ((line = br.readLine()) != null) {
-                    this.log.debug("Parsing row: {}", cnt);
+                    log.debug("Parsing row: {}", cnt);
                     if (line.trim().isEmpty()) {
-                        this.log.debug("Skipping empty line!");
+                        log.debug("Skipping empty line!");
                     } else {
                         if (line.startsWith(this.comment)) {
                             if (this.skipCommentLines) {
-                                this.log.debug("Skipping comment row: {} = {}", cnt,
+                                log.debug("Skipping comment row: {} = {}", cnt,
                                         line);
                                 // skip to next line
                                 comment1++;
@@ -264,14 +266,14 @@ public class CSVReader {
                                 continue;
                             } else {
                                 // Add row if comments should not be skipped
-                                this.log.debug("Adding row: {}", cnt);
+                                log.debug("Adding row: {}", cnt);
                                 addLine(rows, line);
                                 cnt++;// increase counter only on added lines
                             }
                         } else {
                             // Skip row
                             if (line.startsWith(this.skip)) {
-                                this.log.debug("Skipping row: {} = {}", cnt, line);
+                                log.debug("Skipping row: {} = {}", cnt, line);
                                 this.skippedLines.add(line);
                                 skipped++;
                                 cnt++;
@@ -280,12 +282,12 @@ public class CSVReader {
                             // we haven't seen any content yet, so suspect the next line
                             // to contain column labels
                             if (this.firstLineHeaders && (content == 0)) {
-                                this.log.debug("Adding headers: {}", cnt);
+                                log.debug("Adding headers: {}", cnt);
                                 headers = addColumns(line);
                                 cnt++;
                                 this.firstLineHeaders = false;
                             } else {// add content row
-                                this.log.debug("Adding row: {}", cnt);
+                                log.debug("Adding row: {}", cnt);
                                 addLine(rows, line);
                                 content++;
                                 cnt++;
@@ -294,19 +296,19 @@ public class CSVReader {
                     }
                 }
             }
-            this.log.debug("Read {} lines, skipped {}, comments {}",
+            log.debug("Read {} lines, skipped {}, comments {}",
                     new Object[]{cnt, skipped, comment1});
             return new Tuple2D<>(rows,
                     headers);
         } catch (final ArrayIndexOutOfBoundsException aie) {
-            this.log.error("Can not parse input, check file syntax!");
+            log.error("Can not parse input, check file syntax!");
         } catch (final FileNotFoundException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         } catch (final IOException e) {
-            this.log.error(e.getLocalizedMessage());
+            log.error(e.getLocalizedMessage());
         }
         return new Tuple2D<>(
-                new Vector<Vector<String>>(), new Vector<String>());
+                new Vector<>(), new Vector<>());
     }
 
     /**
@@ -317,26 +319,26 @@ public class CSVReader {
      */
     public Tuple2D<Vector<Vector<String>>, Vector<String>> read(final String url) {
         if (new File(url).exists()) {
-            this.log.info("Reading from file {}", url);
+            log.info("Reading from file {}", url);
             FileInputStream fis;
             try {
                 fis = new FileInputStream(url);
                 return read(fis);
             } catch (final FileNotFoundException e) {
-                this.log.error(e.getLocalizedMessage());
+                log.error(e.getLocalizedMessage());
             }
         } else {
-            final InputStream is = this.getClass().getClassLoader()
+            final var is = this.getClass().getClassLoader()
                     .getResourceAsStream(url);
             if (is != null) {
                 return read(is);
             } else {
-                this.log.warn("Could not retrieve resource as stream: {}", url);
+                log.warn("Could not retrieve resource as stream: {}", url);
             }
         }
 
         return new Tuple2D<>(
-                new Vector<Vector<String>>(), new Vector<String>());
+                new Vector<>(), new Vector<>());
     }
 
     /**

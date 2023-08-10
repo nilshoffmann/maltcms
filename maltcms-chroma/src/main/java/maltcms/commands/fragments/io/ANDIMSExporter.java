@@ -47,8 +47,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.nc2.Attribute;
@@ -60,10 +61,12 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ANDIMSExporter extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ANDIMSExporter.class);
 
     private boolean skipAggregatedVariables = true;
 

@@ -27,7 +27,9 @@
  */
 package smueller.datastructure;
 
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import smueller.SymbolicRepresentationAlignment;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
@@ -39,9 +41,10 @@ import ucar.ma2.IndexIterator;
  * @author Soeren Mueller
  * 
  */
-@Slf4j
-public class ReBuild {
 
+public class ReBuild {
+    
+    private static final Logger log = LoggerFactory.getLogger(ReBuild.class);  
     /**
      * <p>addbaseclean.</p>
      *

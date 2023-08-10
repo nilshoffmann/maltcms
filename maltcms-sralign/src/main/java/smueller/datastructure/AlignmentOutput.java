@@ -40,9 +40,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Vector;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.ArrayFactory;
 import maltcms.datastructures.fragments.PairwiseAlignment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import smueller.SymbolicRepresentationAlignment;
 import smueller.alignment.Alignment;
 import smueller.alignment.OptimalAlignmentVector;
@@ -56,8 +58,10 @@ import ucar.ma2.Array;
  * @author Soeren Mueller
  * 
  */
-@Slf4j
+
 public class AlignmentOutput {
+    
+    private static final Logger log = LoggerFactory.getLogger(AlignmentOutput.class);  
 
     private FileWriter outputStream = null;
     private FileWriter outputStream2 = null;

@@ -45,17 +45,20 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.Lookup;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class FragmentCommandDocGenerator {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(FragmentCommandDocGenerator.class);
 
     public void generateDocuments(Configuration cfg) {
         File outputDir = new File(cfg.getString("output.basedir", "."), "documentation/commands/");

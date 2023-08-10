@@ -43,7 +43,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.datastructures.ms.ProfileChromatogram1D;
@@ -56,6 +56,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -69,9 +71,11 @@ import ucar.ma2.Array;
 @BenchmarkMethodChart(filePrefix = "benchmark-lists")
 @BenchmarkOptions(callgc = false, benchmarkRounds = 5, warmupRounds = 3)
 
-@Slf4j
-public class ArraySimilarityTimingIT extends AFragmentCommandTest implements IntegrationTest {
 
+public class ArraySimilarityTimingIT extends AFragmentCommandTest implements IntegrationTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(ArraySimilarityTimingIT.class);
+    
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
             "/cdf/1D/glucoseA.cdf.gz", "/cdf/1D/glucoseB.cdf.gz");

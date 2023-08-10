@@ -28,7 +28,9 @@
 package smueller.tools;
 
 import cross.tools.MathTools;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import smueller.SymbolicRepresentationAlignment;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
@@ -40,9 +42,11 @@ import ucar.ma2.IndexIterator;
  * @author Soeren Mueller
  * 
  */
-@Slf4j
-public class Standardizer {
 
+public class Standardizer {
+    
+    private static final Logger log = LoggerFactory.getLogger(Standardizer.class);
+    
     private double median;
     private double min;
     private double max;

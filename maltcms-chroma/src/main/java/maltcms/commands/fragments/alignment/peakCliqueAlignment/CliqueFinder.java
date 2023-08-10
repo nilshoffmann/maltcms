@@ -49,7 +49,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>CliqueFinder class.</p>
@@ -58,9 +59,10 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * @since 1.3.2
  */
-@Slf4j
 @Value
 public class CliqueFinder {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CliqueFinder.class);
 
     private final boolean saveIncompatiblePeaks;
     private final boolean saveUnassignedPeaks;

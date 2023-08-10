@@ -28,7 +28,6 @@
 package maltcms.io.xlsx.bridge.impl.poi;
 
 import java.util.Iterator;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.ICell;
 import maltcms.io.xlsx.bridge.IRow;
 import org.apache.poi.ss.usermodel.Row;
@@ -39,10 +38,7 @@ import org.apache.poi.ss.usermodel.Row;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class POIRow implements IRow {
-
-    private final Row row;
+public record POIRow(Row row) implements IRow {
 
     /** {@inheritDoc} */
     @Override

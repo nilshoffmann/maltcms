@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.chromatof.ChromaTOFParser.ColumnName;
 import maltcms.io.csv.chromatof.ChromaTOFParser.TableColumn;
 import maltcms.test.ZipResourceExtractor;
@@ -47,7 +47,7 @@ import org.junit.rules.TemporaryFolder;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class ChromaTOFParserTest {
 
     @Rule

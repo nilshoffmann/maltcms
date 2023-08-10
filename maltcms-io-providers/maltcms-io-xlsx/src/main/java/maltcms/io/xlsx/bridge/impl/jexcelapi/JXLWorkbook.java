@@ -30,9 +30,9 @@ package maltcms.io.xlsx.bridge.impl.jexcelapi;
 import java.io.IOException;
 import java.util.Locale;
 import jxl.Sheet;
+import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.IInputStreamProvider;
 import maltcms.io.xlsx.bridge.ISheet;
 import maltcms.io.xlsx.bridge.IWorkbook;
@@ -43,7 +43,6 @@ import maltcms.io.xlsx.bridge.IWorkbook;
  * @author Nils Hoffmann
  * 
  */
-@Data
 public class JXLWorkbook implements IWorkbook {
 
     private final jxl.Workbook workbook;
@@ -70,5 +69,9 @@ public class JXLWorkbook implements IWorkbook {
     public ISheet getSheet(String name) {
         Sheet sheet = workbook.getSheet(name);
         return new JXLSheet(sheet);
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
     }
 }

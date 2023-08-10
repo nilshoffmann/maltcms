@@ -34,10 +34,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.Plot;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is an extension of the normal {@link maltcms.ui.charts.PlotRunner} and will generate
@@ -47,8 +49,10 @@ import org.jfree.chart.plot.Plot;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 public class EPlotRunner extends PlotRunner {
+    
+    private static Logger log = LoggerFactory.getLogger(EPlotRunner.class);
 
     private JFreeChart chart = null;
 

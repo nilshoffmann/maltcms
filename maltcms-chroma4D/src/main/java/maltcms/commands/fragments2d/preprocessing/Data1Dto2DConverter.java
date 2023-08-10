@@ -54,8 +54,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
@@ -69,10 +70,12 @@ import ucar.nc2.Variable;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class Data1Dto2DConverter extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Data1Dto2DConverter.class);
 
     private final String description = "Joins a number of sequentially acquired chromatograms into a two-dimensional chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;

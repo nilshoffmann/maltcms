@@ -48,12 +48,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.ArrayFactory;
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.tools.ArrayTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 
 /**
@@ -62,8 +63,10 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class DTW implements IAlignment, Serializable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DTW.class);
 
     /**
      *

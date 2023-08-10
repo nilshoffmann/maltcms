@@ -38,9 +38,10 @@ import cross.datastructures.workflow.WorkflowSlot;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.DataType;
@@ -56,10 +57,11 @@ import ucar.nc2.Dimension;
  */
 @RequiresVariables(names = {"var.peak_area"})
 @ProvidesVariables(names = {"var.peak_area_normalized"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class PeakAreaNormalizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakAreaNormalizer.class);
 
     @Configurable(description="A list of IPeakNormalizers to apply to the peaks"
             + " created by an upstream command.")

@@ -31,10 +31,13 @@ import java.util.zip.Inflater;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+
+
 public class ScanAndHeaderParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanAndHeaderParser.class);
 
     public ScanHeader tmpScanHeader;
     public Scan tmpScan;

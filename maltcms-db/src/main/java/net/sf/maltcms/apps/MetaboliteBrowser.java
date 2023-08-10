@@ -57,10 +57,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.db.ui.MetaboliteQueryPanel;
 import maltcms.db.ui.MetaboliteView;
 import maltcms.db.ui.MetaboliteViewModel;
+import maltcms.db.ui.QueryResultListCellRenderer;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MetaboliteBrowser class.</p>
@@ -68,8 +70,10 @@ import maltcms.db.ui.MetaboliteViewModel;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public final class MetaboliteBrowser extends JFrame {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(QueryResultListCellRenderer.class);
 
     private HashMap<Integer, JCheckBoxMenuItem> selectTableHeaders = new HashMap<>();
     private MetaboliteViewModel mvm;

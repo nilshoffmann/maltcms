@@ -39,7 +39,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import java.io.File;
 import java.util.ArrayList;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
@@ -58,7 +58,7 @@ import ucar.ma2.ArrayInt;
  */
 @ProvidesVariables(names = {"var.scan_acquisition_time", "var.total_intensity", "var.mass_values", "var.intensity_values"})
 @RequiresVariables(names = {"var.ordinate_values", "var.actual_sampling_interval", "var.actual_delay_time"})
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ANDIChromImporter extends AFragmentCommand {

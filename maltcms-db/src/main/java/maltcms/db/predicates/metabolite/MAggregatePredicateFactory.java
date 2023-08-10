@@ -32,8 +32,9 @@ import cross.datastructures.tools.EvalTools;
 import cross.tools.PublicMemberGetters;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MAggregatePredicateFactory class.</p>
@@ -41,9 +42,11 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MAggregatePredicateFactory implements
         IAggregatePredicateFactory<IMetabolite> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MAggregatePredicateFactory.class);
 
     private Predicate<IMetabolite> defaultPredicate = null;
 

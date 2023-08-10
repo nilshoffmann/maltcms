@@ -47,7 +47,7 @@ import cross.tools.StringTools;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.DtwRecurrence;
 import maltcms.commands.distances.IRecurrence;
 import maltcms.commands.distances.PairwiseFeatureSimilarity;
@@ -62,6 +62,7 @@ import org.apache.commons.math3.analysis.interpolation.SplineInterpolator;
 import org.apache.commons.math3.analysis.interpolation.UnivariateInterpolator;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.jdom2.Element;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayByte;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D0;
@@ -75,10 +76,12 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ProvidesVariables(names = {"var.minimizing_array_comp"})
 public class PairwiseAlignment implements IFileFragmentProvider, IConfigurable,
         IWorkflowElement {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PairwiseAlignment.class);
 
     private IFileFragment ff;
     @Configurable(name = "alignment.save.pairwise.distance.matrix")

@@ -31,9 +31,10 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 
 import maltcms.datastructures.ridge.Ridge;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>RankSorter class.</p>
@@ -41,8 +42,10 @@ import maltcms.datastructures.ridge.Ridge;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class RankSorter {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RankSorter.class);
 
     private LinkedHashSet<String> features = new LinkedHashSet<>();
 

@@ -57,7 +57,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.TreeSet;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.SqrtFilter;
 import maltcms.commands.filters.array.TopHatFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
@@ -68,6 +68,7 @@ import maltcms.datastructures.ms.IChromatogram1D;
 import maltcms.datastructures.ms.IScan1D;
 import maltcms.datastructures.ms.RetentionInfo;
 import maltcms.io.csv.CSVWriter;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayBoolean;
 import ucar.ma2.ArrayChar;
@@ -91,8 +92,10 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MaltcmsTools {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MaltcmsTools.class);
 
     private enum RoundMode {
 

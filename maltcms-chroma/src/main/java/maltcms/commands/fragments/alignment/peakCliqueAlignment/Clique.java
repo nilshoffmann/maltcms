@@ -35,23 +35,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.IPeak;
 import maltcms.tools.ArrayTools;
 import org.jfree.data.statistics.BoxAndWhiskerCalculator;
 import org.jfree.data.statistics.BoxAndWhiskerItem;
+import org.slf4j.LoggerFactory;
 
 /**
- * <p>Clique class.</p>
+ * <p>
+ * Clique class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  * @since 1.3.2
  */
-@Slf4j
 public class Clique<T extends IBipacePeak> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Clique.class);
 
     private static long CLIQUEID = -1;
     private long id = -1;
@@ -64,14 +66,16 @@ public class Clique<T extends IBipacePeak> {
     private int bidiHits = 0;
 
     /**
-     * <p>Constructor for Clique.</p>
+     * <p>
+     * Constructor for Clique.</p>
      */
     public Clique() {
         this.id = ++CLIQUEID;
     }
 
     /**
-     * <p>getID.</p>
+     * <p>
+     * getID.</p>
      *
      * @return a long.
      */
@@ -80,7 +84,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>addPeak.</p>
+     * <p>
+     * addPeak.</p>
      *
      * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
      * @param p a T object.
@@ -105,7 +110,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>size.</p>
+     * <p>
+     * size.</p>
      *
      * @return a int.
      */
@@ -129,7 +135,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>addPeak2.</p>
+     * <p>
+     * addPeak2.</p>
      *
      * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
      * @param p a T object.
@@ -298,7 +305,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>removePeak.</p>
+     * <p>
+     * removePeak.</p>
      *
      * @param edgeMap a {@link com.carrotsearch.hppc.LongObjectMap} object.
      * @param p a T object.
@@ -324,7 +332,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>clear.</p>
+     * <p>
+     * clear.</p>
      */
     public void clear() {
         cliqueMean = 0;
@@ -335,7 +344,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getBBHs.</p>
+     * <p>
+     * getBBHs.</p>
      *
      * @return a int.
      */
@@ -344,7 +354,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getExpectedBBHs.</p>
+     * <p>
+     * getExpectedBBHs.</p>
      *
      * @return a int.
      */
@@ -353,7 +364,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getExpectedBBHs.</p>
+     * <p>
+     * getExpectedBBHs.</p>
      *
      * @param groupSize a int.
      * @return a int.
@@ -363,7 +375,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>createRTBoxAndWhisker.</p>
+     * <p>
+     * createRTBoxAndWhisker.</p>
      *
      * @return a {@link org.jfree.data.statistics.BoxAndWhiskerItem} object.
      */
@@ -377,7 +390,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>createApexTicBoxAndWhisker.</p>
+     * <p>
+     * createApexTicBoxAndWhisker.</p>
      *
      * @return a {@link org.jfree.data.statistics.BoxAndWhiskerItem} object.
      */
@@ -415,7 +429,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getRTDistanceToCentroid.</p>
+     * <p>
+     * getRTDistanceToCentroid.</p>
      *
      * @param p a {@link maltcms.datastructures.peak.IPeak} object.
      * @return a double.
@@ -426,7 +441,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getRatioOfRTDistanceToCentroidAndCliqueVariance.</p>
+     * <p>
+     * getRatioOfRTDistanceToCentroidAndCliqueVariance.</p>
      *
      * @param p a {@link maltcms.datastructures.peak.IPeak} object.
      * @return a double.
@@ -485,7 +501,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getCliqueRTVariance.</p>
+     * <p>
+     * getCliqueRTVariance.</p>
      *
      * @return a double.
      */
@@ -494,7 +511,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getCliqueRTMean.</p>
+     * <p>
+     * getCliqueRTMean.</p>
      *
      * @return a double.
      */
@@ -503,7 +521,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getCliqueCentroid.</p>
+     * <p>
+     * getCliqueCentroid.</p>
      *
      * @return a {@link maltcms.datastructures.peak.IPeak} object.
      */
@@ -511,7 +530,9 @@ public class Clique<T extends IBipacePeak> {
         return this.centroid;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -534,7 +555,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>getPeakList.</p>
+     * <p>
+     * getPeakList.</p>
      *
      * @return a {@link java.util.List} object.
      */
@@ -542,11 +564,12 @@ public class Clique<T extends IBipacePeak> {
         IBipacePeak[] peaksArray = this.clique.values().toArray(IBipacePeak.class);
         List<IBipacePeak> peaks = Arrays.asList(peaksArray);
         Collections.sort(peaks, (IBipacePeak o1, IBipacePeak o2) -> o1.getAssociation().compareTo(o2.getAssociation()));
-        return (List<T>)peaks;
+        return (List<T>) peaks;
     }
 
     /**
-     * <p>getSimilarityForPeaks.</p>
+     * <p>
+     * getSimilarityForPeaks.</p>
      *
      * @param a a int.
      * @param b a int.
@@ -557,7 +580,9 @@ public class Clique<T extends IBipacePeak> {
         return this.clique.get(a).getSimilarity(peakEdgeMap, this.clique.get(b));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         int hash = 5;
@@ -565,7 +590,9 @@ public class Clique<T extends IBipacePeak> {
         return hash;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -582,7 +609,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>Getter for the field <code>cliqueMean</code>.</p>
+     * <p>
+     * Getter for the field <code>cliqueMean</code>.</p>
      *
      * @return a double.
      */
@@ -591,7 +619,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>Getter for the field <code>cliqueVar</code>.</p>
+     * <p>
+     * Getter for the field <code>cliqueVar</code>.</p>
      *
      * @return a double.
      */
@@ -600,7 +629,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>Getter for the field <code>maxBBHErrors</code>.</p>
+     * <p>
+     * Getter for the field <code>maxBBHErrors</code>.</p>
      *
      * @return a int.
      */
@@ -609,7 +639,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>Setter for the field <code>maxBBHErrors</code>.</p>
+     * <p>
+     * Setter for the field <code>maxBBHErrors</code>.</p>
      *
      * @param maxBBHErrors a int.
      */
@@ -618,7 +649,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>Setter for the field <code>minBbhFraction</code>.</p>
+     * <p>
+     * Setter for the field <code>minBbhFraction</code>.</p>
      *
      * @param fraction a double.
      */
@@ -630,7 +662,8 @@ public class Clique<T extends IBipacePeak> {
     }
 
     /**
-     * <p>Getter for the field <code>minBbhFraction</code>.</p>
+     * <p>
+     * Getter for the field <code>minBbhFraction</code>.</p>
      *
      * @return a double.
      */

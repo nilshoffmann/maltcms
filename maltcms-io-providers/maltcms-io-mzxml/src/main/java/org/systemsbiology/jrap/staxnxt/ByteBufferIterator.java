@@ -7,14 +7,17 @@ import java.nio.channels.FileChannel;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>ByteBufferIterator class.</p>
  *
  */
-@Slf4j
+
 public class ByteBufferIterator implements Iterator {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ByteBufferIterator.class);
 
     private int INITIAL_BUFFERSIZE = 10000;
     private int bufferSize = INITIAL_BUFFERSIZE;

@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.annotations.PeakAnnotation;
@@ -47,6 +47,7 @@ import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.tools.ArrayTools2;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
@@ -57,10 +58,12 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IPeakIdentification.class)
 public class PeakIdentification implements IPeakIdentification {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakIdentification.class);
 
     private MetaboliteQueryDB mqdb;
     @Configurable(value = "false")
@@ -123,12 +126,12 @@ public class PeakIdentification implements IPeakIdentification {
                     log.info("Received {} hits from ObjectSet!",
                             osRes.size());
                     for (Tuple2D<Double, IMetabolite> t : ms.getMatches()) {
-                        PeakAnnotation pa = PeakAnnotation.builder().
-                                score(t.getFirst()).
-                                metabolite(t.getSecond()).
-                                database(dbf).
-                                similarityFunction(similarity.toString()).
-                                build();
+                        PeakAnnotation pa = new PeakAnnotation(
+                                t.getFirst(),
+                                dbf,
+                                similarity.toString(),
+                                t.getSecond()
+                        );
                         hits.add(pa);
                     }
                     qc.terminate();

@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.preprocessing.ScanExtractor;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.xml.mzML.MZMLDataSource;
@@ -53,14 +53,16 @@ import org.apache.log4j.Level;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
 public class MZMLExporterTest extends AFragmentCommandTest {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZMLExporterTest.class);
 
     @Rule
     public ExtractClassPathFiles ecpf = new ExtractClassPathFiles(tf,
@@ -72,7 +74,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
         setLogLevelFor(MZMLExporter.class, Level.INFO);
         setLogLevelFor(MZMLExporterWorker.class, Level.INFO);
     }
-    
+
     /**
      * Test of empty scan behaviour.
      */
@@ -80,7 +82,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
     public void testEmptyScan() {
         FileFragment tf = new FileFragment();
         Array massValues = Array.factory(MathTools.seq(50.0d, 550.0d, 1.0d));
-        
+
     }
 
     /**
@@ -134,9 +136,9 @@ public class MZMLExporterTest extends AFragmentCommandTest {
                 Array a1 = v1.getArray();
                 Assert.assertNotNull(a1);
                 //intensity values must be converted to 32 bit float in mzml
-                if(variable.equals("intensity_values")) {
+                if (variable.equals("intensity_values")) {
                     Assert.assertEquals("Checking variable " + variable, float.class, a.getElementType());
-                }else{
+                } else {
                     Assert.assertEquals("Checking variable " + variable, a1.getElementType(), a.getElementType());
                     ArrayTools.checkFullArrayEquality(a, a1);
                 }

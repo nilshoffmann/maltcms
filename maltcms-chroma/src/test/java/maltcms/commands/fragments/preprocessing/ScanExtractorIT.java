@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
@@ -46,15 +46,18 @@ import org.apache.log4j.Level;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 
 public class ScanExtractorIT extends AFragmentCommandTest {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanExtractorIT.class);
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,

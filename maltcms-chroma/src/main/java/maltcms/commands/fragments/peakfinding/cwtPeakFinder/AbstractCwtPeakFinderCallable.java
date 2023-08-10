@@ -39,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.fragments.peakfinding.io.Peak1DUtilities;
@@ -49,6 +49,7 @@ import maltcms.datastructures.peak.PeakType;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.datastructures.rank.Rank;
 import maltcms.datastructures.ridge.Ridge;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -60,8 +61,9 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  */
 @Data
-@Slf4j
 public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFinderWorkerResult>, Serializable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AbstractCwtPeakFinderCallable.class);
 
     @Configurable
     private int minScale = 5;

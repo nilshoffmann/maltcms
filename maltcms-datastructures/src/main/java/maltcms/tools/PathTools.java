@@ -53,10 +53,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IArrayD2Double;
 import maltcms.io.csv.CSVWriter;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayByte;
 import ucar.ma2.ArrayDouble;
@@ -71,8 +72,10 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class PathTools implements IConfigurable {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PathTools.class);
 
     public enum Direction {
 

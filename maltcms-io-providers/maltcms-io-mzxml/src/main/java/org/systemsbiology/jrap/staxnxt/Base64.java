@@ -2,7 +2,8 @@ package org.systemsbiology.jrap.staxnxt;
 
 import java.awt.HeadlessException;
 import java.io.IOException;
-import lombok.extern.slf4j.Slf4j;
+import maltcms.io.xml.mzXML.MZXMLStaxDataSource;
+import org.slf4j.LoggerFactory;
 
 /**
  * Encodes and decodes to and from Base64 notation.
@@ -33,8 +34,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author rob@iharder.net
  * @version 1.4
  */
-@Slf4j
 public final class Base64 {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Base64.class);
 
     /**
      * Specify encoding (value is <tt>true</tt>).
@@ -360,30 +362,30 @@ public final class Base64 {
         // significant bytes passed in the array.
         // We have to shift left 24 in order to flush out the 1's that appear
         // when Java treats a value as negative that is cast from a byte to an int.
-        int inBuff = (numSigBytes > 0 ? ((source[ srcOffset] << 24) >>> 8) : 0)
-                | (numSigBytes > 1 ? ((source[ srcOffset + 1] << 24) >>> 16) : 0)
-                | (numSigBytes > 2 ? ((source[ srcOffset + 2] << 24) >>> 24) : 0);
+        int inBuff = (numSigBytes > 0 ? ((source[srcOffset] << 24) >>> 8) : 0)
+                | (numSigBytes > 1 ? ((source[srcOffset + 1] << 24) >>> 16) : 0)
+                | (numSigBytes > 2 ? ((source[srcOffset + 2] << 24) >>> 24) : 0);
 
         switch (numSigBytes) {
             case 3:
-                destination[ destOffset] = ALPHABET[ (inBuff >>> 18)];
-                destination[ destOffset + 1] = ALPHABET[ (inBuff >>> 12) & 0x3f];
-                destination[ destOffset + 2] = ALPHABET[ (inBuff >>> 6) & 0x3f];
-                destination[ destOffset + 3] = ALPHABET[ (inBuff) & 0x3f];
+                destination[destOffset] = ALPHABET[(inBuff >>> 18)];
+                destination[destOffset + 1] = ALPHABET[(inBuff >>> 12) & 0x3f];
+                destination[destOffset + 2] = ALPHABET[(inBuff >>> 6) & 0x3f];
+                destination[destOffset + 3] = ALPHABET[(inBuff) & 0x3f];
                 return destination;
 
             case 2:
-                destination[ destOffset] = ALPHABET[ (inBuff >>> 18)];
-                destination[ destOffset + 1] = ALPHABET[ (inBuff >>> 12) & 0x3f];
-                destination[ destOffset + 2] = ALPHABET[ (inBuff >>> 6) & 0x3f];
-                destination[ destOffset + 3] = EQUALS_SIGN;
+                destination[destOffset] = ALPHABET[(inBuff >>> 18)];
+                destination[destOffset + 1] = ALPHABET[(inBuff >>> 12) & 0x3f];
+                destination[destOffset + 2] = ALPHABET[(inBuff >>> 6) & 0x3f];
+                destination[destOffset + 3] = EQUALS_SIGN;
                 return destination;
 
             case 1:
-                destination[ destOffset] = ALPHABET[ (inBuff >>> 18)];
-                destination[ destOffset + 1] = ALPHABET[ (inBuff >>> 12) & 0x3f];
-                destination[ destOffset + 2] = EQUALS_SIGN;
-                destination[ destOffset + 3] = EQUALS_SIGN;
+                destination[destOffset] = ALPHABET[(inBuff >>> 18)];
+                destination[destOffset + 1] = ALPHABET[(inBuff >>> 12) & 0x3f];
+                destination[destOffset + 2] = EQUALS_SIGN;
+                destination[destOffset + 3] = EQUALS_SIGN;
                 return destination;
 
             default:
@@ -592,7 +594,7 @@ public final class Base64 {
                     data = temp;
                 }   // end if: resize array
 
-                data[ nextIndex++] = (byte) b;
+                data[nextIndex++] = (byte) b;
 
             }   // end while: each byte
 
@@ -774,27 +776,27 @@ public final class Base64 {
      */
     private static int decode4to3(byte[] source, int srcOffset, byte[] destination, int destOffset) {
         // Example: Dk==
-        if (source[ srcOffset + 2] == EQUALS_SIGN) {
+        if (source[srcOffset + 2] == EQUALS_SIGN) {
             // Two ways to do the same thing. Don't know which way I like best.
             //int outBuff =   ( ( DECODABET[ source[ srcOffset    ] ] << 24 ) >>>  6 )
             //              | ( ( DECODABET[ source[ srcOffset + 1] ] << 24 ) >>> 12 );
-            int outBuff = ((DECODABET[ source[ srcOffset]] & 0xFF) << 18)
-                    | ((DECODABET[ source[ srcOffset + 1]] & 0xFF) << 12);
+            int outBuff = ((DECODABET[source[srcOffset]] & 0xFF) << 18)
+                    | ((DECODABET[source[srcOffset + 1]] & 0xFF) << 12);
 
-            destination[ destOffset] = (byte) (outBuff >>> 16);
+            destination[destOffset] = (byte) (outBuff >>> 16);
             return 1;
         } // Example: DkL=
-        else if (source[ srcOffset + 3] == EQUALS_SIGN) {
+        else if (source[srcOffset + 3] == EQUALS_SIGN) {
             // Two ways to do the same thing. Don't know which way I like best.
             //int outBuff =   ( ( DECODABET[ source[ srcOffset     ] ] << 24 ) >>>  6 )
             //              | ( ( DECODABET[ source[ srcOffset + 1 ] ] << 24 ) >>> 12 )
             //              | ( ( DECODABET[ source[ srcOffset + 2 ] ] << 24 ) >>> 18 );
-            int outBuff = ((DECODABET[ source[ srcOffset]] & 0xFF) << 18)
-                    | ((DECODABET[ source[ srcOffset + 1]] & 0xFF) << 12)
-                    | ((DECODABET[ source[ srcOffset + 2]] & 0xFF) << 6);
+            int outBuff = ((DECODABET[source[srcOffset]] & 0xFF) << 18)
+                    | ((DECODABET[source[srcOffset + 1]] & 0xFF) << 12)
+                    | ((DECODABET[source[srcOffset + 2]] & 0xFF) << 6);
 
-            destination[ destOffset] = (byte) (outBuff >>> 16);
-            destination[ destOffset + 1] = (byte) (outBuff >>> 8);
+            destination[destOffset] = (byte) (outBuff >>> 16);
+            destination[destOffset + 1] = (byte) (outBuff >>> 8);
             return 2;
         } // Example: DkLE
         else {
@@ -804,21 +806,21 @@ public final class Base64 {
                 //              | ( ( DECODABET[ source[ srcOffset + 1 ] ] << 24 ) >>> 12 )
                 //              | ( ( DECODABET[ source[ srcOffset + 2 ] ] << 24 ) >>> 18 )
                 //              | ( ( DECODABET[ source[ srcOffset + 3 ] ] << 24 ) >>> 24 );
-                int outBuff = ((DECODABET[ source[ srcOffset]] & 0xFF) << 18)
-                        | ((DECODABET[ source[ srcOffset + 1]] & 0xFF) << 12)
-                        | ((DECODABET[ source[ srcOffset + 2]] & 0xFF) << 6)
-                        | ((DECODABET[ source[ srcOffset + 3]] & 0xFF));
+                int outBuff = ((DECODABET[source[srcOffset]] & 0xFF) << 18)
+                        | ((DECODABET[source[srcOffset + 1]] & 0xFF) << 12)
+                        | ((DECODABET[source[srcOffset + 2]] & 0xFF) << 6)
+                        | ((DECODABET[source[srcOffset + 3]] & 0xFF));
 
-                destination[ destOffset] = (byte) (outBuff >> 16);
-                destination[ destOffset + 1] = (byte) (outBuff >> 8);
-                destination[ destOffset + 2] = (byte) (outBuff);
+                destination[destOffset] = (byte) (outBuff >> 16);
+                destination[destOffset + 1] = (byte) (outBuff >> 8);
+                destination[destOffset + 2] = (byte) (outBuff);
 
                 return 3;
             } catch (Exception e) {
-                log.info("" + source[srcOffset] + ": " + (DECODABET[ source[ srcOffset]]));
-                log.info("" + source[srcOffset + 1] + ": " + (DECODABET[ source[ srcOffset + 1]]));
-                log.info("" + source[srcOffset + 2] + ": " + (DECODABET[ source[ srcOffset + 2]]));
-                log.info("" + source[srcOffset + 3] + ": " + (DECODABET[ source[ srcOffset + 3]]));
+                log.info("" + source[srcOffset] + ": " + (DECODABET[source[srcOffset]]));
+                log.info("" + source[srcOffset + 1] + ": " + (DECODABET[source[srcOffset + 1]]));
+                log.info("" + source[srcOffset + 2] + ": " + (DECODABET[source[srcOffset + 2]]));
+                log.info("" + source[srcOffset + 3] + ": " + (DECODABET[source[srcOffset + 3]]));
                 return -1;
             }   //e nd catch
         }
@@ -906,12 +908,12 @@ public final class Base64 {
         byte sbiDecode = 0;
         for (i = off; i < off + len; i++) {
             sbiCrop = (byte) (source[i] & 0x7f); // Only the low seven bits
-            sbiDecode = DECODABET[ sbiCrop];
+            sbiDecode = DECODABET[sbiCrop];
 
             if (sbiDecode >= WHITE_SPACE_ENC) // White space, Equals sign or better
             {
                 if (sbiDecode >= EQUALS_SIGN_ENC) {
-                    b4[ b4Posn++] = sbiCrop;
+                    b4[b4Posn++] = sbiCrop;
                     if (b4Posn > 3) {
                         outBuffPosn += decode4to3(b4, 0, outBuff, outBuffPosn);
                         b4Posn = 0;
@@ -937,7 +939,8 @@ public final class Base64 {
     }   // end decode
 
     /**
-     * <p>decode.</p>
+     * <p>
+     * decode.</p>
      *
      * @param source an array of byte.
      * @param off a int.
@@ -955,12 +958,12 @@ public final class Base64 {
         byte sbiDecode = 0;
         for (i = off; i < off + len; i++) {
             sbiCrop = (byte) (source[i] & 0x7f); // Only the low seven bits
-            sbiDecode = DECODABET[ sbiCrop];
+            sbiDecode = DECODABET[sbiCrop];
 
             if (sbiDecode >= WHITE_SPACE_ENC) // White space, Equals sign or better
             {
                 if (sbiDecode >= EQUALS_SIGN_ENC) {
-                    b4[ b4Posn++] = sbiCrop;
+                    b4[b4Posn++] = sbiCrop;
                     if (b4Posn > 3) {
                         outBuffPosn += decode4to3(b4, 0, outBuff, outBuffPosn);
                         b4Posn = 0;
@@ -1098,7 +1101,7 @@ public final class Base64 {
                         int b = 0;
                         do {
                             b = in.read();
-                        } while (b >= 0 && DECODABET[ b & 0x7f] <= WHITE_SPACE_ENC);
+                        } while (b >= 0 && DECODABET[b & 0x7f] <= WHITE_SPACE_ENC);
 
                         if (b < 0) {
                             break; // Reads a -1 if end of stream
@@ -1137,7 +1140,7 @@ public final class Base64 {
                     // but throwing an extra "if" seems
                     // just as wasteful.
 
-                    int b = buffer[ position++];
+                    int b = buffer[position++];
 
                     if (position >= bufferLength) {
                         position = -1;
@@ -1264,7 +1267,7 @@ public final class Base64 {
         @Override
         public void write(int theByte) throws java.io.IOException {
             if (encode) {
-                buffer[ position++] = (byte) theByte;
+                buffer[position++] = (byte) theByte;
                 if (position >= bufferLength) // Enough to encode.
                 {
                     out.write(Base64.encode3to4(buffer, bufferLength));
@@ -1281,15 +1284,15 @@ public final class Base64 {
             // Else, Decoding
             else {
                 // Meaningful Base64 character?
-                if (DECODABET[ theByte & 0x7f] > WHITE_SPACE_ENC) {
-                    buffer[ position++] = (byte) theByte;
+                if (DECODABET[theByte & 0x7f] > WHITE_SPACE_ENC) {
+                    buffer[position++] = (byte) theByte;
                     if (position >= bufferLength) // Enough to output.
                     {
                         out.write(Base64.decode4to3(buffer));
                         position = 0;
                     }   // end if: enough to output
                 } // end if: meaningful base64 character
-                else if (DECODABET[ theByte & 0x7f] != WHITE_SPACE_ENC) {
+                else if (DECODABET[theByte & 0x7f] != WHITE_SPACE_ENC) {
                     throw new java.io.IOException("Invalid character in Base64 data.");
                 }   // end else: not white space either
             }   // end else: decoding
@@ -1307,7 +1310,7 @@ public final class Base64 {
         @Override
         public void write(byte[] theBytes, int off, int len) throws java.io.IOException {
             for (int i = 0; i < len; i++) {
-                write(theBytes[ off + i]);
+                write(theBytes[off + i]);
             }   // end for: each byte written
 
         }   // end write

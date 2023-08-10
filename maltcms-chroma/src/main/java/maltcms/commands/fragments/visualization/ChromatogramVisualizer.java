@@ -47,7 +47,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AdditionFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.io.csv.ColorRampReader;
@@ -58,6 +58,7 @@ import maltcms.ui.charts.HeatMapChart;
 import maltcms.ui.charts.PlotRunner;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -74,10 +75,11 @@ import ucar.ma2.MAMath.MinMax;
  */
 @RequiresVariables(names = {"var.scan_acquisition_time", "var.mass_values",
     "var.binned_intensity_values", "var.binned_scan_index"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ChromatogramVisualizer extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ChromatogramVisualizer.class);
 
     private final String description = "Creates two-dimensional heat map plots of chromatograms.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

@@ -50,10 +50,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.CSVReader;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -72,10 +73,12 @@ import ucar.ma2.IndexIterator;
 @RequiresOptionalVariables(names = {"var.scan_acquisition_time"})
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_scans"})
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class CSVAnchorReader extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CSVAnchorReader.class);
 
     /** {@inheritDoc} */
     @Override

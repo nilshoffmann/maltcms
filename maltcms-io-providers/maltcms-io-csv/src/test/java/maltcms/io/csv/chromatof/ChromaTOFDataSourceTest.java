@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.ExtractClassPathFiles;
 import org.apache.commons.lang.LocaleUtils;
@@ -59,6 +59,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import static org.slf4j.LoggerFactory.getLogger;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -70,8 +71,10 @@ import ucar.nc2.Dimension;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class ChromaTOFDataSourceTest {
+    
+    private static final org.slf4j.Logger log = getLogger(ChromaTOFDataSourceTest.class);
 
     @Rule
     public SetupLogging sl = new SetupLogging();

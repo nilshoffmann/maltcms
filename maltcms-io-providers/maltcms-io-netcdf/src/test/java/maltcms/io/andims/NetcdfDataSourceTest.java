@@ -50,13 +50,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.test.ExtractClassPathFiles;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -68,9 +69,11 @@ import ucar.nc2.Dimension;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
-public class NetcdfDataSourceTest {
 
+public class NetcdfDataSourceTest {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(NetcdfDataSourceTest.class);
+    
     @Rule
     public SetupLogging sl = new SetupLogging();
     @Rule

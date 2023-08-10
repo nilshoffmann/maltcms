@@ -59,7 +59,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AdditionFilter;
 import maltcms.commands.filters.array.NormalizationFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
@@ -76,6 +76,7 @@ import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.ui.TextAnchor;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -91,13 +92,15 @@ import ucar.ma2.MAMath.MinMax;
  */
 //"var.pairwise_distance_matrix"
 //var.pairwise_distance_alignment_names
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 @RequiresVariables(names = {"var.total_intensity",
     "var.scan_acquisition_time", "var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
 @RequiresOptionalVariables(names = {"var.anchors.retention_index_names", "var.anchors.retention_scans"})
 public class PairwiseAlignmentVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PairwiseAlignmentVisualizer.class);
 
     private final String description = "Creates different plots for pairwise alignments of chromatograms.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

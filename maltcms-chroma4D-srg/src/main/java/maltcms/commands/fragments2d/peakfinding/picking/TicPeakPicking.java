@@ -35,12 +35,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.quadTree.QuadTree;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Uses 2d peaks from variable tic_peaks, as provided by CWTPeakFinder.
@@ -49,10 +50,12 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @since 1.3.2
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IPeakPicking.class)
 public class TicPeakPicking implements IPeakPicking {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TicPeakPicking.class);
 
     private QuadTree<Peak2D> quadTree;
 

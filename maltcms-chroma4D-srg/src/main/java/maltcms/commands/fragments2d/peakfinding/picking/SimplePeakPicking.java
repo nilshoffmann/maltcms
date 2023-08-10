@@ -34,10 +34,11 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IChromatogram2D;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
@@ -49,10 +50,12 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IPeakPicking.class)
 public class SimplePeakPicking implements IPeakPicking {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SimplePeakPicking.class);
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";

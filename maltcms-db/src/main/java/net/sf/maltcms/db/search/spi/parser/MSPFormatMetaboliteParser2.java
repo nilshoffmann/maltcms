@@ -47,9 +47,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.Metabolite;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 
@@ -59,8 +60,10 @@ import ucar.ma2.ArrayInt;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MSPFormatMetaboliteParser2 {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MSPFormatMetaboliteParser2.class);
 
     private ArrayDouble.D1 masses = null;
     private ArrayInt.D1 intensities = null;

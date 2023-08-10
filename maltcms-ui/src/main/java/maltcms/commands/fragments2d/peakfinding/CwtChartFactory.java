@@ -35,7 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.quadTree.QuadTree;
 import maltcms.datastructures.ridge.IRidgeCost;
 import maltcms.datastructures.ridge.Ridge;
@@ -52,6 +52,8 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYBlockRenderer;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 
 /**
@@ -60,8 +62,10 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class CwtChartFactory {
+        
+    private static Logger log = LoggerFactory.getLogger(CwtChartFactory.class);
 
     /**
      * <p>createColorHeatmap.</p>

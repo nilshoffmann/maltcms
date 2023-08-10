@@ -39,8 +39,6 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  *
  */
-@Builder
-@Data
 public class PeakAnnotation implements Serializable, Comparable {
 
     private final double score;
@@ -48,6 +46,41 @@ public class PeakAnnotation implements Serializable, Comparable {
     private final String similarityFunction;
     private final IMetabolite metabolite;
 
+    public PeakAnnotation(double score, String database, String similarityFunction, IMetabolite metabolite) {
+        this.score = score;
+        this.database = database;
+        this.similarityFunction = similarityFunction;
+        this.metabolite = metabolite;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public String getSimilarityFunction() {
+        return similarityFunction;
+    }
+
+    public IMetabolite getMetabolite() {
+        return metabolite;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("PeakAnnotation{");
+        sb.append("score=").append(score);
+        sb.append(", database=").append(database);
+        sb.append(", similarityFunction=").append(similarityFunction);
+        sb.append(", metabolite=").append(metabolite);
+        sb.append('}');
+        return sb.toString();
+    }
+    
     /**
      * {@inheritDoc}
      */

@@ -34,11 +34,12 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 //import javax.swing.JFrame;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.dtwng.TwoFeatureVectorOperation;
 import maltcms.datastructures.array.IFeatureVector;
 //import maltcms.experimental.ui.ImagePanel;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -49,8 +50,9 @@ import ucar.ma2.Array;
  */
 @Data
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
-@Slf4j
 public class MSPeaklistAlignment extends TwoFeatureVectorOperation {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MSPeaklistAlignment.class);
 
     @Configurable(name = "var.mass_values")
     private String mass_values = "mass_values";

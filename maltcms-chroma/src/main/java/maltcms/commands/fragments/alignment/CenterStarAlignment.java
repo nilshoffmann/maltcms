@@ -55,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.warp.ChromatogramWarp;
 import maltcms.datastructures.alignment.AlignmentFactory;
 import maltcms.datastructures.peak.IPeak;
@@ -64,6 +64,7 @@ import maltcms.io.xml.bindings.alignment.Alignment;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -74,7 +75,7 @@ import ucar.ma2.Index;
  * Implementation of the center star approximation for multiple alignment.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
 @RequiresVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
@@ -82,9 +83,10 @@ import ucar.ma2.Index;
     "var.multiple_alignment_names", "var.multiple_alignment_type",
     "var.multiple_alignment_creator"})
 @Data
-@Slf4j
 @ServiceProvider(service = AFragmentCommand.class)
 public class CenterStarAlignment extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CenterStarAlignment.class);
 
     @Configurable(name = "var.pairwise_distance_matrix",
             value = "pairwise_distance_matrix")
@@ -104,14 +106,16 @@ public class CenterStarAlignment extends AFragmentCommand {
     @Configurable(name = "var.multiple_alignment_creator")
     private String multipleAlignmentCreatorVariableName = "multiple_alignment_creator";
     private boolean minimizeDist;
-    @Configurable(value = "false", description=
-            "If true, align all chromatograms to the first one. "
+    @Configurable(value = "false", description
+            = "If true, align all chromatograms to the first one. "
             + "If false, select reference automatically from pairwise similarities provided by upstream command.")
     private boolean alignToFirst = false;
-    @Configurable(description="Base name (without file extension) of the chromatogram to use as the center to align to. Overrides automatic selection.")
+    @Configurable(description = "Base name (without file extension) of the chromatogram to use as the center to align to. Overrides automatic selection.")
     private String centerSequence = "";
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return getClass().getName();
@@ -122,7 +126,9 @@ public class CenterStarAlignment extends AFragmentCommand {
      *
      * @see cross.commands.ICommand#apply(java.lang.Object)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TupleND<IFileFragment> apply(final TupleND<IFileFragment> t) {
         final IFileFragment pwd = MaltcmsTools.getPairwiseDistanceFragment(t);
@@ -157,7 +163,7 @@ public class CenterStarAlignment extends AFragmentCommand {
                 getAlignmentsFromFragment(pwd);
         final List<IFileFragment> warpedFiles = saveAlignment(this.getClass(),
                 t, alignments, Factory.getInstance().getConfiguration().
-                getString("var.total_intensity", "total_intensity"),
+                        getString("var.total_intensity", "total_intensity"),
                 centerSeq);
 
         log.info("Saving alignment files!");
@@ -168,7 +174,9 @@ public class CenterStarAlignment extends AFragmentCommand {
         return new TupleND<>(warpedFiles);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration cfg) {
         this.pairwiseDistanceMatrixVariableName = cfg.getString(
@@ -316,7 +324,9 @@ public class CenterStarAlignment extends AFragmentCommand {
         return centerSeq;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDescription() {
         return "Creates a multiple alignment by selecting a reference chromatogram based on highest overall similarity or lowest overall distance of reference to other chromatograms.";
@@ -331,7 +341,9 @@ public class CenterStarAlignment extends AFragmentCommand {
      *
      * @see cross.datastructures.workflow.IWorkflowElement#getWorkflowSlot()
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WorkflowSlot getWorkflowSlot() {
         return WorkflowSlot.ALIGNMENT;

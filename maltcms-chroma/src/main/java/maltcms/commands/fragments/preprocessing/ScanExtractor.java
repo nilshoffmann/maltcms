@@ -42,9 +42,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
@@ -62,11 +63,13 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ProvidesVariables(names = {"var.scan_index", "var.scan_acquisition_time", "var.mass_values", "var.intensity_values", "var.total_intensity"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class ScanExtractor extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanExtractor.class);
 
     private final String description = "Allows definition of a start and end modulation period to be extracted from a raw chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;

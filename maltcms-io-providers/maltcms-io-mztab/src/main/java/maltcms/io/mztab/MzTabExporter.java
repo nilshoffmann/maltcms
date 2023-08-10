@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import net.sf.mpaxs.api.ICompletionService;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MzTabExporter class.</p>
@@ -30,8 +30,6 @@ import net.sf.mpaxs.api.ICompletionService;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
-@Data
 @RequiresVariables(names = {"var.peak_signal_to_noise",
     "var.peak_detection_channel",
     "var.peak_type",
@@ -43,10 +41,12 @@ import net.sf.mpaxs.api.ICompletionService;
     "var.peak_area_percent",
     "var.peak_area_normalization_methods"})
 public class MzTabExporter extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MzTabExporter.class);
 
     private String description = "Exports peak data to mzTab format.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;
-
+    
     /** {@inheritDoc} */
     @Override
     public TupleND<IFileFragment> apply(TupleND<IFileFragment> in) {
@@ -89,6 +89,16 @@ public class MzTabExporter extends AFragmentCommand {
             }
         }
         return parameters;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
+    }
+
+    @Override
+    public WorkflowSlot getWorkflowSlot() {
+        return this.workflowSlot;
     }
 
 }

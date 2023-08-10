@@ -33,9 +33,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import cross.IConfigurable;
 import cross.datastructures.fragments.IFileFragment;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
+
 /**
  * <p>ChromatogramFactory class.</p>
  *

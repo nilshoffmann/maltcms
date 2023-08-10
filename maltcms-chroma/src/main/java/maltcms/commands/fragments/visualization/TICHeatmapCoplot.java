@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.TreeMap;
 import javax.imageio.ImageIO;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ArrayTools;
@@ -72,6 +72,7 @@ import org.jfree.data.xy.DefaultXYZDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYZDataset;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -88,10 +89,11 @@ import ucar.ma2.IndexIterator;
 @RequiresOptionalVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICHeatmapCoplot extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TICHeatmapCoplot.class);
 
     private final String description = "Generates a stacked heatmap plot of TICs (bird's eye view) with shared time axis and a coplot with a shared intensity axis (overlay)";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

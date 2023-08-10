@@ -27,15 +27,19 @@
  */
 package org.systemsbiology.jrap.staxnxt;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
+
 
 /**
  * A demo program which uses the MSXMLParser to read in scans from a file you
  * specify on the command line.
  *
  */
-@Slf4j
+
 public class TestParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TestParser.class);
 
     /**
      * <p>main.</p>

@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments2d.preprocessing.Default2DVarLoader;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
@@ -48,7 +48,7 @@ import org.junit.Test;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 
 public class CwtPeakFinderIT extends AFragmentCommandTest {
 

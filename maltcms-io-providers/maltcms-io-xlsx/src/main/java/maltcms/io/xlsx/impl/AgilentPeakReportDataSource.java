@@ -51,8 +51,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.WeakHashMap;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.xlsx.IXLSDataSource;
 import maltcms.io.xlsx.bridge.ICell;
 import maltcms.io.xlsx.bridge.IInputStreamProvider;
@@ -65,10 +64,16 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.OldExcelFormatException;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.DataType;
 import static ucar.ma2.DataType.DOUBLE;
+import static ucar.ma2.DataType.FLOAT;
+import static ucar.ma2.DataType.INT;
+import static ucar.ma2.DataType.LONG;
+import static ucar.ma2.DataType.STRING;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 
@@ -78,10 +83,12 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = IXLSDataSource.class)
 public final class AgilentPeakReportDataSource implements IXLSDataSource {
-
+        
+    private static final Logger log = LoggerFactory.getLogger(AgilentPeakReportDataSource.class);
+    
     private final String[] reportFileEnding = new String[]{"xls", "xlsx"};
     private final String[] fileEnding = new String[]{"d"};
     private HashMap<String, Mapping> varnameToMapping = new HashMap<>();
@@ -102,7 +109,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
     }
 
     private int getNumberOfPeaks(IWorkbook workbook, Mapping mapping) {
-        ISheet s = workbook.getSheet(mapping.getSheetName());
+        ISheet s = workbook.getSheet(mapping.sheetName());
         IRow header = null;
         int nrows = Integer.parseInt(s.getRow(1).getCell(1).stringValue());
         return nrows;
@@ -110,11 +117,11 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
 
     private Array getSheetData(IWorkbook workbook, Mapping mapping) {
         LinkedHashMap<String, List<Object>> data = new LinkedHashMap<>();
-        ISheet s = workbook.getSheet(mapping.getSheetName());
+        ISheet s = workbook.getSheet(mapping.sheetName());
         IRow header = null;
         int nrows = getNumberOfPeaks(workbook, mapping);
 //		int ncols = Integer.parseInt(s.getRow(2).getCell(2).getStringCellValue());
-        Array a = Array.factory(mapping.getDataType(), new int[]{nrows});
+        Array a = Array.factory(mapping.dataType(), new int[]{nrows});
         int colIdx = -1;
         int rowIdx = 0;
         for (IRow row : s) {
@@ -122,9 +129,9 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
                 header = s.getRow(0);
                 int cnt = 0;
                 for (ICell c : header) {
-                    if (c.stringValue().equals(mapping.getColumnName())) {
+                    if (c.stringValue().equals(mapping.columnName())) {
                         colIdx = cnt;
-                        log.debug("Found {} at index {}!", mapping.getColumnName(), colIdx);
+                        log.debug("Found {} at index {}!", mapping.columnName(), colIdx);
                         break;
                     }
                     cnt++;
@@ -132,7 +139,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
             } else {
                 if (colIdx > -1) {
                     ICell c = row.getCell(colIdx);
-                    switch (mapping.getDataType()) {
+                    switch (mapping.dataType()) {
                         case DOUBLE:
                             a.setDouble(rowIdx, c.doubleValue());
                             break;
@@ -149,7 +156,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
                             a.setObject(rowIdx, c.stringValue());
                             break;
                         default:
-                            throw new ConstraintViolationException("Unmatched case: " + mapping.getDataType());
+                            throw new ConstraintViolationException("Unmatched case: " + mapping.dataType());
 
                     }
                     rowIdx++;
@@ -159,11 +166,14 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         return a;
     }
 
-    @Data
     private class AgilentDReportInputStreamProvider implements IInputStreamProvider {
 
         private final URI sourceDirectory;
         private FileInputStream fileInputStream;
+
+        public AgilentDReportInputStreamProvider(URI sourceDirectory) {
+            this.sourceDirectory = sourceDirectory;
+        }
 
         @Override
         public InputStream openStream() {
@@ -264,13 +274,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         return 0;
     }
 
-    @Data
-    public class Mapping {
-
-        private final String sheetName;
-        private final String columnName;
-        private final DataType dataType;
-    }
+    public record Mapping(String sheetName, String columnName, DataType dataType) {}
 
     /**
      * <p>dimensions.</p>

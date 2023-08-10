@@ -62,7 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.ms.IAnchor;
@@ -73,6 +73,7 @@ import maltcms.tools.MaltcmsTools;
 import maltcms.tools.PathTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -86,12 +87,14 @@ import ucar.ma2.MAMath.MinMax;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 @RequiresVariables(names = {"var.total_intensity", "var.pairwise_distance_matrix", "var.pairwise_distance_alignment_names"})
 @RequiresOptionalVariables(names = {"var.anchors.retention_index_names", "var.anchors.retention_scans"})
 public class PairwiseAlignmentMatrixVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PairwiseAlignmentMatrixVisualizer.class);
 
     private final String description = "Creates a plot of the pairwise distance and alignment matrices created during alignment.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

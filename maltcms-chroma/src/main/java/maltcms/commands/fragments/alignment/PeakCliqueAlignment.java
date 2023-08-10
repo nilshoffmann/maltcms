@@ -69,7 +69,7 @@ import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.BBHResult;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.Clique;
 import maltcms.commands.fragments.alignment.peakCliqueAlignment.CliqueFinder;
@@ -97,6 +97,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -119,10 +120,12 @@ import ucar.ma2.Index;
 @ProvidesVariables(names = {"var.anchors.retention_index_names",
     "var.anchors.retention_times", "var.anchors.retention_indices",
     "var.anchors.retention_scans"})
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class PeakCliqueAlignment extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakCliqueAlignment.class);
 
     /**
       * The name of the variable containing tic peak indices, pointing to the corresponding scan 

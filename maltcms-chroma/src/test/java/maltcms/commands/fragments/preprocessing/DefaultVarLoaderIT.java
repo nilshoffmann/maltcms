@@ -32,7 +32,7 @@ import cross.datastructures.workflow.IWorkflow;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
 import maltcms.test.ExtractClassPathFiles;
@@ -45,7 +45,7 @@ import org.junit.Test;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 
 public class DefaultVarLoaderIT extends AFragmentCommandTest {
 

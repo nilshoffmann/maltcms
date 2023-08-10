@@ -31,20 +31,25 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * <p>CopyFilesOnFailure class.</p>
+ * <p>
+ * CopyFilesOnFailure class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
-@Slf4j
 public class CopyFilesOnFailure {
 
+    private static Logger log = LoggerFactory.getLogger(CopyFilesOnFailure.class);
+
     /**
-     * <p>copyToInspectionDir.</p>
+     * <p>
+     * copyToInspectionDir.</p>
      *
      * @param outputDir a {@link java.io.File} object.
      * @param t a {@link java.lang.Throwable} object.

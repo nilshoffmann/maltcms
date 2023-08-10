@@ -41,10 +41,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -53,10 +54,12 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = IDataSource.class)
 public class MZXMLDataSource implements IDataSource {
-
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZXMLDataSource.class);
+    
     private final List<IDataSource> ds = new ArrayList<>();
     private final WeakHashMap<IFileFragment, IDataSource> fragmentToValidReaderMap = new WeakHashMap<>();
 

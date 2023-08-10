@@ -29,13 +29,15 @@ package maltcms.ui.charts;
 
 import cross.datastructures.tuple.Tuple2DI;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.ui.renderer.LineVectorRenderer;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.VectorRenderer;
 import org.jfree.data.xy.VectorSeries;
 import org.jfree.data.xy.VectorSeriesCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 
@@ -45,8 +47,10 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class AlignmentMapChart extends AChart<XYPlot> {
+    
+    private static Logger log = LoggerFactory.getLogger(AlignmentMapChart.class);
 
     private List<Tuple2DI> map = null;
     private int height = 100;

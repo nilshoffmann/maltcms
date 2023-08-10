@@ -28,7 +28,8 @@
 package maltcms.datastructures.caches;
 
 import cross.datastructures.fragments.IFileFragment;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This Factory creates all {@link maltcms.datastructures.caches.IScanLine} caches. Each IScanLine instance is
@@ -40,8 +41,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 public class ScanLineCacheFactory {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanLineCacheFactory.class);
 
 //    private static Map<String, IScanLine> scanlinecaches = null;
 //	private static boolean useSparseSLC = true;

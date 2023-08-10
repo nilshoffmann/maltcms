@@ -57,12 +57,13 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.xml.mzData.MzData.SpectrumList.Spectrum;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -71,7 +72,7 @@ import ucar.ma2.MAMath;
 import ucar.ma2.Range;
 import ucar.nc2.Dimension;
 
-@Slf4j
+
 /**
  * <p>MZDataDataSource class.</p>
  *
@@ -80,6 +81,8 @@ import ucar.nc2.Dimension;
  */
 @ServiceProvider(service = IDataSource.class)
 public class MZDataDataSource implements IDataSource {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZDataDataSource.class);
 
     private final String[] fileEnding = new String[]{"mzdata", "mzdata.xml"};
     private String mass_values = "mass_values";

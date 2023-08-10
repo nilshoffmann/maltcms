@@ -30,7 +30,7 @@ package net.sf.maltcms.db.search.spi.similarities;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.Collections;
 import java.util.Comparator;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
@@ -38,6 +38,7 @@ import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -50,9 +51,11 @@ import ucar.ma2.MAMath.MinMax;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class CosineWithMassBonus extends AMetabolitePredicate {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CosineWithMassBonus.class);
 
     boolean toggle = true;
     private IArraySimilarity iadc = new ArrayCos();

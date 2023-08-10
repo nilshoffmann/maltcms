@@ -33,7 +33,6 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tools.FileTools;
 import cross.datastructures.tools.FragmentTools;
-import cross.io.misc.FragmentStringParser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -43,7 +42,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.NormalizationFilter;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -55,6 +54,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 
@@ -65,8 +65,10 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 public class MSScanVisualizer {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MSScanVisualizer.class);
 
     /**
      * <p>

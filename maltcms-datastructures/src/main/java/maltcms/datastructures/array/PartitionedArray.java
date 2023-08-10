@@ -35,10 +35,11 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.tools.ArrayTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt;
@@ -51,9 +52,11 @@ import ucar.ma2.ArrayInt.D1;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class PartitionedArray implements IArrayD2Double {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PartitionedArray.class);
+    
     /**
      * <p>copyLayout.</p>
      *

@@ -47,7 +47,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.alignment.AnchorPairSet;
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.datastructures.warp.MZIWarpInput;
@@ -55,6 +55,7 @@ import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -70,10 +71,12 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class PathWarp extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PathWarp.class);
 
     private final String description = "Warps binned mass spectra according to a given alignment map. Merges aligned mass spectra to mean mass spectra.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.WARPING;

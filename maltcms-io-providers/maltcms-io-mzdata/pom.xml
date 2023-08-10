@@ -10,6 +10,14 @@
     <artifactId>maltcms-io-mzdata</artifactId>
     <name>Maltcms IO Provider MZDATA</name>
     <description>(Deprecated) Datasource Implementation for mzData.</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+            </plugin>  
+        </plugins>
+    </build>    
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

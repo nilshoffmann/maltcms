@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
@@ -56,6 +56,7 @@ import maltcms.datastructures.ridge.Ridge;
 import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.math.stat.descriptive.rank.Percentile;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -68,8 +69,9 @@ import ucar.ma2.Index;
  *
  */
 @Data
-@Slf4j
 public class CwtEicPeakFinderCallable extends AbstractCwtPeakFinderCallable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CwtEicPeakFinderCallable.class);
 
     @Configurable
     private double massResolution;

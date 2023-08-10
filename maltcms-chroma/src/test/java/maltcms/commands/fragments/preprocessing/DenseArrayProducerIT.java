@@ -32,7 +32,7 @@ import cross.datastructures.workflow.IWorkflow;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.AFragmentCommandTest;
@@ -41,14 +41,17 @@ import maltcms.tools.MaltcmsTools;
 import org.apache.log4j.Level;
 import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 
 public class DenseArrayProducerIT extends AFragmentCommandTest {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DenseArrayProducerIT.class);
 
     @Rule
     public ExtractClassPathFiles testFiles = new ExtractClassPathFiles(tf,

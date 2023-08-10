@@ -42,7 +42,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.dtwng.AlignmentFactory;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
 import maltcms.commands.distances.dtwng.IAlignment;
@@ -56,6 +56,7 @@ import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.ImageTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -71,8 +72,10 @@ import ucar.ma2.Array;
 @RequiresOptionalVariables(names = {""})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 //@ServiceProvider(service = AFragmentCommand.class)
-@Slf4j
+
 public class Alignment2D extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Alignment2D.class);
 
     @Configurable(name = "var.maxms_1d_horizontal",
             value = "maxms_1d_horizontal")

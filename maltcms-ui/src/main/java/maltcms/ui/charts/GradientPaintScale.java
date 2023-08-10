@@ -42,10 +42,12 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ImageTools;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.renderer.PaintScale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>GradientPaintScale class.</p>
@@ -53,10 +55,12 @@ import org.jfree.chart.renderer.PaintScale;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class GradientPaintScale implements PaintScale, IConfigurable,
         Serializable {
 
+    private static Logger log = LoggerFactory.getLogger(GradientPaintScale.class);
+    
     /**
      *
      */

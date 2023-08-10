@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.CSVReader;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FileUtils;
@@ -56,6 +56,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
 
@@ -66,10 +67,12 @@ import ucar.nc2.Dimension;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakListImporter extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TICPeakListImporter.class);
 
     private final String description = "Imports tic peak data from tab "
             + "separated value (tsv) files with column header";

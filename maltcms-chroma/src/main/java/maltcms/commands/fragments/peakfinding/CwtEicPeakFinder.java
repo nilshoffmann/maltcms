@@ -39,12 +39,13 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.peakfinding.cwtPeakFinder.CwtEicPeakFinderCallable;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -53,11 +54,13 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values", "var.scan_index"})
 public class CwtEicPeakFinder extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CwtEicPeakFinder.class);
 
     private final String description = "Finds EIC peaks using  Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;

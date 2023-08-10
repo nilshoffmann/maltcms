@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.MinimumFilter;
 import maltcms.commands.scanners.ArrayStatsScanner;
@@ -55,6 +55,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.LookupPaintScale;
 import org.jfree.chart.title.PaintScaleLegend;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
@@ -69,9 +70,11 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 public class Default2DTWVisualizer implements IVisualization {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Default2DTWVisualizer.class);
 
     @Configurable(name = "var.peak_index_list", value = "peak_index_list")
     private String peakListVar = "peak_index_list";

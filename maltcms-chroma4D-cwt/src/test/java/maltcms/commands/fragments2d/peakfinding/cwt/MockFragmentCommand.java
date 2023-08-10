@@ -31,14 +31,17 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class MockFragmentCommand extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MockFragmentCommand.class);
 
     @Override
     public String getDescription() {

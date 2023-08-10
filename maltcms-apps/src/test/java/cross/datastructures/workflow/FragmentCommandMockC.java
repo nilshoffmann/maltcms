@@ -32,12 +32,15 @@ import cross.annotations.RequiresVariables;
 import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+
+
 @RequiresVariables(names = {"nil.variable2", "nil.variable5"})
 @RequiresOptionalVariables(names = {"nil.variable4"})
 public class FragmentCommandMockC extends AFragmentCommand {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(FragmentCommandMockC.class);
 
     /**
      *

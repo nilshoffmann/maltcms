@@ -37,7 +37,7 @@ import cross.datastructures.workflow.DefaultWorkflowResult;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.io.File;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.MaltcmsTools;
 import maltcms.ui.charts.PlotRunner;
 import org.apache.commons.configuration.Configuration;
@@ -47,6 +47,7 @@ import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.XYIntervalSeries;
 import org.jfree.data.xy.XYIntervalSeriesCollection;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -60,10 +61,12 @@ import ucar.ma2.MAMath.MinMax;
  *
  */
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values"})
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class MZIDistributionVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZIDistributionVisualizer.class);
 
     private final String description = "Creates plot of distribution of nominal mass values versus intensity values in a chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

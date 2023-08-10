@@ -42,7 +42,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
 import maltcms.ui.charts.AChart;
@@ -51,6 +51,7 @@ import maltcms.ui.charts.PlotRunner;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
@@ -62,7 +63,7 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.total_intensity", "var.scan_rate",
     "var.modulation_time", "var.second_column_scan_index",
@@ -72,6 +73,8 @@ import ucar.ma2.IndexIterator;
     "var.meanms_1d_vertical_index"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class Chromatogram2DVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Chromatogram2DVisualizer.class);
 
     private final String description = "2D chromatogram visualization";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

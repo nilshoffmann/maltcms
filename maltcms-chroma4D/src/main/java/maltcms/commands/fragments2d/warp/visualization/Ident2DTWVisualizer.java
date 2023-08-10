@@ -32,7 +32,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -43,7 +43,7 @@ import ucar.ma2.ArrayDouble;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 public class Ident2DTWVisualizer extends Default2DTWVisualizer {
 

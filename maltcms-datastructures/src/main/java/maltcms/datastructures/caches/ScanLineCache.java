@@ -38,10 +38,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
@@ -61,8 +62,10 @@ import ucar.ma2.Range;
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
-@Slf4j
+
 public class ScanLineCache implements IScanLine {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanLineCache.class);
 
     private String intensityValuesVar = "intensity_values";
     private String scanIndexVar = "scan_index";

@@ -46,10 +46,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.slf4j.LoggerFactory;
 import org.systemsbiology.jrap.staxnxt.MSXMLParser;
 import org.systemsbiology.jrap.staxnxt.Scan;
 import org.systemsbiology.jrap.staxnxt.ScanHeader;
@@ -66,10 +67,11 @@ import ucar.nc2.Dimension;
  * Implements {@link cross.io.IDataSource} for mzXML Files.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
-@Slf4j
 public class MZXMLStaxDataSource implements IDataSource {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZXMLStaxDataSource.class);
 
     private final String[] fileEnding = new String[]{"mzxml", "mzxml.xml"};
     private String mass_values = "mass_values";
@@ -122,13 +124,17 @@ public class MZXMLStaxDataSource implements IDataSource {
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configurationChanged(final ConfigurationEvent arg0) {
-        
+
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void configure(final Configuration configuration) {
         this.mass_values = configuration.getString("var.mass_values",
@@ -152,7 +158,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>convertScanIntensity.</p>
+     * <p>
+     * convertScanIntensity.</p>
      *
      * @param offset a int.
      * @param s a {@link org.systemsbiology.jrap.staxnxt.Scan} object.
@@ -171,7 +178,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>convertScanMZ.</p>
+     * <p>
+     * convertScanMZ.</p>
      *
      * @param offset a int.
      * @param s a {@link org.systemsbiology.jrap.staxnxt.Scan} object.
@@ -196,7 +204,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getIntensityValuesVarName.</p>
+     * <p>
+     * getIntensityValuesVarName.</p>
      *
      * @return the intensity_values
      */
@@ -205,7 +214,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getMassRangeMax.</p>
+     * <p>
+     * getMassRangeMax.</p>
      *
      * @return the mass_range_max
      */
@@ -214,7 +224,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getMassRangeMin.</p>
+     * <p>
+     * getMassRangeMin.</p>
      *
      * @return the mass_range_min
      */
@@ -223,7 +234,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getMassValuesVarName.</p>
+     * <p>
+     * getMassValuesVarName.</p>
      *
      * @return the mass_values
      */
@@ -250,7 +262,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getScanAcquisitionTimeVarName.</p>
+     * <p>
+     * getScanAcquisitionTimeVarName.</p>
      *
      * @return the scan_acquisition_time
      */
@@ -259,7 +272,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getScanIndexVarName.</p>
+     * <p>
+     * getScanIndexVarName.</p>
      *
      * @return the scan_index
      */
@@ -285,7 +299,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getSourceFilesVarName.</p>
+     * <p>
+     * getSourceFilesVarName.</p>
      *
      * @return the source_files
      */
@@ -294,7 +309,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>getTotalIntensityVarName.</p>
+     * <p>
+     * getTotalIntensityVarName.</p>
      *
      * @return the total_intensity
      */
@@ -311,7 +327,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     /**
      * Read min and max_mass_range to determine bin sizes.
      *
-     * @param var a {@link cross.datastructures.fragments.IVariableFragment} object.
+     * @param var a {@link cross.datastructures.fragments.IVariableFragment}
+     * object.
      * @param mp a {@link org.systemsbiology.jrap.staxnxt.MSXMLParser} object.
      * @return a Tuple2D<Array,Array> with mass_range_min as first and
      * mass_range_max as second array
@@ -385,14 +402,17 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>prepareMZXMLOutput.</p>
+     * <p>
+     * prepareMZXMLOutput.</p>
      */
     protected void prepareMZXMLOutput() {
         // MZXMLFileInfo mfi = new MZXMLFileInfo();
         // mfi.
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ArrayList<Array> readAll(final IFileFragment f) throws IOException,
             ResourceNotAvailableException {
@@ -405,7 +425,9 @@ public class MZXMLStaxDataSource implements IDataSource {
         return ral;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ArrayList<Array> readIndexed(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -633,7 +655,9 @@ public class MZXMLStaxDataSource implements IDataSource {
         return a;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ArrayList<IVariableFragment> readStructure(final IFileFragment f)
             throws IOException {
@@ -659,7 +683,9 @@ public class MZXMLStaxDataSource implements IDataSource {
      * @seecross.io.IDataSource#readStructure(cross.datastructures.fragments.
      * IVariableFragment)
      */
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public IVariableFragment readStructure(final IVariableFragment f)
             throws IOException, ResourceNotAvailableException {
@@ -737,7 +763,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setIntensityValuesVarName.</p>
+     * <p>
+     * setIntensityValuesVarName.</p>
      *
      * @param intensity_values the intensity_values to set
      */
@@ -746,7 +773,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setMassRangeMax.</p>
+     * <p>
+     * setMassRangeMax.</p>
      *
      * @param mass_range_max the mass_range_max to set
      */
@@ -755,7 +783,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setMassRangeMin.</p>
+     * <p>
+     * setMassRangeMin.</p>
      *
      * @param mass_range_min the mass_range_min to set
      */
@@ -764,7 +793,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setMassValuesVarName.</p>
+     * <p>
+     * setMassValuesVarName.</p>
      *
      * @param mass_values the mass_values to set
      */
@@ -773,7 +803,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setScanAcquisitionTimeVarName.</p>
+     * <p>
+     * setScanAcquisitionTimeVarName.</p>
      *
      * @param scan_acquisition_time the scan_acquisition_time to set
      */
@@ -782,7 +813,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setScanIndexVarName.</p>
+     * <p>
+     * setScanIndexVarName.</p>
      *
      * @param scan_index the scan_index to set
      */
@@ -791,7 +823,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setSourceFilesVarName.</p>
+     * <p>
+     * setSourceFilesVarName.</p>
      *
      * @param source_files the source_files to set
      */
@@ -800,7 +833,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>setTotalIntensityVarName.</p>
+     * <p>
+     * setTotalIntensityVarName.</p>
      *
      * @param total_intensity the total_intensity to set
      */
@@ -809,7 +843,8 @@ public class MZXMLStaxDataSource implements IDataSource {
     }
 
     /**
-     * <p>structureWrite.</p>
+     * <p>
+     * structureWrite.</p>
      *
      * @param f a {@link cross.datastructures.fragments.IFileFragment} object.
      * @param a a {@link java.util.ArrayList} object.
@@ -820,14 +855,17 @@ public class MZXMLStaxDataSource implements IDataSource {
         return write(f);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> supportedFormats() {
         return Arrays.asList(this.fileEnding);
     }
 
     /**
-     * <p>toScan.</p>
+     * <p>
+     * toScan.</p>
      *
      * @param num a int.
      * @param mz a {@link ucar.ma2.Array} object.
@@ -851,7 +889,9 @@ public class MZXMLStaxDataSource implements IDataSource {
         return s;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean write(final IFileFragment f) {
         EvalTools.notNull(this.ndf, this);

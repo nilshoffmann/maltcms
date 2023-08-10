@@ -45,11 +45,12 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.peak.annotations.PeakAnnotation;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.ArrayTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -71,8 +72,10 @@ import ucar.nc2.Dimension;
  */
 @Data
 @EqualsAndHashCode(exclude = "uniqueId")
-@Slf4j
+
 public class Peak1D implements Serializable, IFeatureVector, Iterable<Peak1D> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Peak1D.class);
 
     private int startIndex = -1;
     private int apexIndex = -1;

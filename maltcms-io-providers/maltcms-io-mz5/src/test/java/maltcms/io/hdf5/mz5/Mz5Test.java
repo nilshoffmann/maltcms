@@ -39,7 +39,7 @@ import cross.test.SetupLogging;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.test.ExtractClassPathFiles;
 import org.junit.Assert;
@@ -47,14 +47,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import static org.slf4j.LoggerFactory.getLogger;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class Mz5Test {
+    
+    private static final org.slf4j.Logger log = getLogger(MZ5DataSource.class);
 
     @Rule
     public SetupLogging sl = new SetupLogging();

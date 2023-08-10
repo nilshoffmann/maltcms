@@ -29,8 +29,9 @@ package maltcms.db.predicates.metabolite;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of a combined Predicate for IMetabolite instances. An
@@ -42,8 +43,10 @@ import maltcms.datastructures.ms.IMetabolite;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MAggregatePredicate extends MetabolitePredicate {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MAggregatePredicate.class);
 
     /**
      *

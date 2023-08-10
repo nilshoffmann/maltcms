@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.ChromatogramFactory;
 import maltcms.datastructures.ms.IChromatogram1D;
 import maltcms.datastructures.ms.IMetabolite;
@@ -57,6 +57,7 @@ import maltcms.io.csv.CSVWriter;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -70,8 +71,9 @@ import ucar.ma2.Array;
 @RequiresOptionalVariables(names = {"var.tic_peaks", "var.peak_index_list", "var.eic_peaks"})
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Slf4j
 public class EIMSDBMetaboliteAssignment extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(EIMSDBMetaboliteAssignment.class);
 
     private List<String> dblocation;
     private double threshold = 0.9;

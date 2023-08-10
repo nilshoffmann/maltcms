@@ -49,7 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.Metabolite2D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
@@ -59,6 +59,7 @@ import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.jdom2.Element;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -70,10 +71,12 @@ import ucar.ma2.MAMath;
  * @author Mathias Wilhelm
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IPeakExporter.class)
 public class PeakExporter implements IPeakExporter {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakExporter.class);
 
     private IWorkflow workflow;
     // @SuppressWarnings("unchecked")

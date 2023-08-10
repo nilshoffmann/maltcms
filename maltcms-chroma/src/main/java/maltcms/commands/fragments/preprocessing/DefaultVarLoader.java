@@ -38,10 +38,11 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.preprocessing.defaultVarLoader.DefaultVarLoaderWorker;
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Load variables defined by the option default.variables.
@@ -54,10 +55,11 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class DefaultVarLoader extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DefaultVarLoader.class);
 
     private final String description = "Loads default and additional variables as defined in the configuration.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;

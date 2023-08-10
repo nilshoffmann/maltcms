@@ -29,7 +29,6 @@ package maltcms.io.xlsx.bridge.impl.jexcelapi;
 
 import java.util.Iterator;
 import jxl.Cell;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.ICell;
 import maltcms.io.xlsx.bridge.IRow;
 
@@ -39,10 +38,7 @@ import maltcms.io.xlsx.bridge.IRow;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class JXLRow implements IRow {
-
-    private final Cell[] row;
+public record JXLRow(Cell[] row) implements IRow {
 
     /** {@inheritDoc} */
     @Override

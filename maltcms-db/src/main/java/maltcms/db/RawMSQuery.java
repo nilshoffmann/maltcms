@@ -37,11 +37,12 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.MSimilarityPredicate;
 import maltcms.db.predicates.metabolite.MetaboliteSimilarity;
 import maltcms.tools.ArrayTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
@@ -52,8 +53,10 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RawMSQuery.class);
 
     private QueryDB<IMetabolite> mqdb;
     private String dbloc;

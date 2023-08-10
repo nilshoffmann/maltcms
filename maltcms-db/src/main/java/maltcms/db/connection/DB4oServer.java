@@ -29,7 +29,8 @@ package maltcms.db.connection;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>DB4oServer class.</p>
@@ -37,8 +38,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class DB4oServer implements Runnable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DB4oServer.class);
 
     private String address, port;
     private boolean shutdown = false;

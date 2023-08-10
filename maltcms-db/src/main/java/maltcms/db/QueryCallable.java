@@ -34,9 +34,10 @@ import com.db4o.query.Predicate;
 import java.io.File;
 import java.net.URL;
 import java.util.concurrent.Callable;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
 
-@Slf4j
+
+
 /**
  * <p>QueryCallable class.</p>
  *
@@ -44,6 +45,8 @@ import lombok.extern.slf4j.Slf4j;
  * 
  */
 public class QueryCallable<T> implements Callable<ObjectSet<T>> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(QueryCallable.class);
 
     protected Predicate<T> llap;
     protected ObjectSet<T> los;

@@ -48,11 +48,12 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -63,7 +64,7 @@ import ucar.ma2.ArrayInt;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ProvidesVariables(names = {"var.mass_values", "var.intensity_values",
     "var.total_intensity"})
@@ -72,6 +73,8 @@ import ucar.ma2.ArrayInt;
 @RequiresOptionalVariables(names = {"var.excluded_masses"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class MassFilter extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MassFilter.class);
 
     private final String description = "Removes defined masses and associated intensities from chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;

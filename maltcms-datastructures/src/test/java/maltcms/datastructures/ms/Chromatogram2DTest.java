@@ -35,20 +35,23 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.caches.SparseScanLineCache;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class Chromatogram2DTest {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Chromatogram2DTest.class);
 
     /**
      *

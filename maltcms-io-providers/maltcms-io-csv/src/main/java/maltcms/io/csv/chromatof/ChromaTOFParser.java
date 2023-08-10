@@ -42,8 +42,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.ParserUtilities;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * <p>
@@ -53,8 +54,9 @@ import maltcms.io.csv.ParserUtilities;
  *
  */
 @Value
-@Slf4j
 public class ChromaTOFParser {
+    
+    private static final org.slf4j.Logger log = getLogger(ChromaTOFParser.class);
 
     public static String FIELD_SEPARATOR_TAB = "\t";
     public static String FIELD_SEPARATOR_COMMA = ",";

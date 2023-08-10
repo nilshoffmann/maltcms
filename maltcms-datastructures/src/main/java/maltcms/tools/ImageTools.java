@@ -28,7 +28,6 @@
 package maltcms.tools;
 
 import cross.Factory;
-import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.Tuple2D;
 import cross.datastructures.workflow.DefaultWorkflowResult;
@@ -70,13 +69,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.io.csv.ColorRampReader;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.encoders.EncoderUtil;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -92,8 +92,10 @@ import ucar.ma2.Sparse;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ImageTools {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ImageTools.class);
 
     /**
      * Adds all peaks to an image. If one of the colors are <code>null</code>,

@@ -60,7 +60,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -73,6 +73,8 @@ import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.entity.XYItemEntity;
 import org.jfree.chart.panel.CrosshairOverlay;
 import org.jfree.chart.ui.TextAnchor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -81,9 +83,11 @@ import ucar.ma2.Array;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class JFreeChartViewer extends JFrame {
 
+    private static Logger log = LoggerFactory.getLogger(JFreeChartViewer.class);
+    
     /**
      *
      */

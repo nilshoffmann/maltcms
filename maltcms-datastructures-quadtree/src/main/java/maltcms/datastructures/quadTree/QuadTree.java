@@ -39,7 +39,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>QuadTree class.</p>
@@ -48,9 +50,11 @@ import lombok.extern.slf4j.Slf4j;
  * @param <T> the type of elements stored in the quad tree.
  * 
  */
-@Slf4j
-public class QuadTree<T> {
 
+public class QuadTree<T> {
+    
+    private static final Logger log = LoggerFactory.getLogger(QuadTree.class);
+    
     private QuadTreeNode<T> root;
     private final double x, y, width, height;
     private final int capacity;

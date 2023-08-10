@@ -36,11 +36,12 @@ import cross.datastructures.workflow.IWorkflow;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.alignment.PeakCliqueAlignment;
 import maltcms.commands.fragments.peakfinding.TICPeakFinder;
 import maltcms.commands.fragments.preprocessing.DefaultVarLoader;
 import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>MyWorkflow class.</p>
@@ -48,8 +49,9 @@ import maltcms.commands.fragments.preprocessing.DenseArrayProducer;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
 public class MyWorkflow {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MyWorkflow.class);
 
     /**
      * <p>createWorkflow.</p>

@@ -45,12 +45,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.datastructures.ms.Chromatogram2D;
 import maltcms.tools.ArrayTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -82,10 +83,12 @@ import ucar.ma2.ArrayInt;
     "var.modulation_time",
     "var.scan_rate"}
 )
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class GCGCToGCMSConverter extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GCGCToGCMSConverter.class);
 
     @Configurable(value = "5", description = "The signal-to-noise threshold."
             + "Intensities below this value will be set to 0.")

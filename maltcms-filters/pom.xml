@@ -9,6 +9,14 @@
     <artifactId>maltcms-filters</artifactId>
     <name>Maltcms Filters</name>
     <description>Implementations of Filters for Array Data.</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+            </plugin>  
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>

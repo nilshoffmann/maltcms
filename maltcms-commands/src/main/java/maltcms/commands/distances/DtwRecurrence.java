@@ -31,10 +31,11 @@ import cross.annotations.Configurable;
 import cross.exception.ConstraintViolationException;
 import cross.tools.MathTools;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IArrayD2Double;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayByte;
 
 /**
@@ -44,11 +45,13 @@ import ucar.ma2.ArrayByte;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IRecurrence.class)
 public class DtwRecurrence implements IRecurrence {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DtwRecurrence.class);
+    
     @Configurable(name = "alignment.algorithm.compressionweight")
     private double comp_weight = 1.0d;
     @Configurable(name = "alignment.algorithm.expansionweight")

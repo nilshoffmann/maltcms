@@ -38,7 +38,8 @@ import cross.datastructures.tuple.TupleND;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.InvalidRangeException;
@@ -51,8 +52,10 @@ import ucar.ma2.Range;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class FileCopy {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(FileCopy.class);
 
     /**
      * <p>main.</p>

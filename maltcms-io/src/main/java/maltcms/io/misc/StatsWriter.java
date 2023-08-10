@@ -38,9 +38,10 @@ import cross.datastructures.workflow.IWorkflowElement;
 import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import java.io.File;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.CSVWriter;
 import org.jdom2.Element;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Writes StatsMap objects to CSV Files.
@@ -48,8 +49,10 @@ import org.jdom2.Element;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class StatsWriter implements IWorkflowElement {
+    
+    private static final org.slf4j.Logger log = getLogger(StatsWriter.class);
 
     private IWorkflow iwf;
 

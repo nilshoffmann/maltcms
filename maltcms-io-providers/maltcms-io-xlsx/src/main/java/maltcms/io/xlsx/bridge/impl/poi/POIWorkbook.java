@@ -28,7 +28,6 @@
 package maltcms.io.xlsx.bridge.impl.poi;
 
 import java.io.IOException;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.IInputStreamProvider;
 import maltcms.io.xlsx.bridge.ISheet;
 import maltcms.io.xlsx.bridge.IWorkbook;
@@ -37,22 +36,25 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
- * <p>POIWorkbook class.</p>
+ * <p>
+ * POIWorkbook class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
-@Data
 public class POIWorkbook implements IWorkbook {
 
     private final Workbook workbook;
 
     /**
-     * <p>Constructor for POIWorkbook.</p>
+     * <p>
+     * Constructor for POIWorkbook.</p>
      *
-     * @param provider a {@link maltcms.io.xlsx.bridge.IInputStreamProvider} object.
+     * @param provider a {@link maltcms.io.xlsx.bridge.IInputStreamProvider}
+     * object.
      * @throws java.io.IOException if any.
-     * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException if any.
+     * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException if
+     * any.
      */
     public POIWorkbook(IInputStreamProvider provider) throws IOException, EncryptedDocumentException {
         try {
@@ -62,9 +64,15 @@ public class POIWorkbook implements IWorkbook {
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ISheet getSheet(String name) {
         return new POISheet(workbook.getSheet(name));
+    }
+
+    public Workbook getWorkbook() {
+        return workbook;
     }
 }

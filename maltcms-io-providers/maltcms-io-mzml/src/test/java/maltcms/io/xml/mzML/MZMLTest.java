@@ -37,13 +37,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.test.ExtractClassPathFiles;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.LoggerFactory;
 import uk.ac.ebi.jmzml.model.mzml.MzML;
 import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
@@ -52,8 +53,10 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class MZMLTest {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZMLTest.class);    
 
     @Rule
     public SetupLogging sl = new SetupLogging();

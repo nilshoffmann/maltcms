@@ -36,8 +36,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.math.functions.IScalarArraySimilarity;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>PairwiseSimilarityWorker2D class.</p>
@@ -46,9 +47,10 @@ import maltcms.math.functions.IScalarArraySimilarity;
  * 
  */
 @Value
-@Slf4j
 public final class PairwiseSimilarityWorker2D implements Callable<PairwiseSimilarityResult>, Serializable {
-
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PairwiseSimilarityWorker2D.class);
+    
     private final String name;
     private final String lhsName;
     private final String rhsName;

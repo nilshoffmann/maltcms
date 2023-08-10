@@ -39,7 +39,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.PriorityQueue;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.ArrayDouble.D2;
 import ucar.ma2.ArrayInt.D1;
 
@@ -49,9 +50,11 @@ import ucar.ma2.ArrayInt.D1;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class TiledArray implements IArrayD2Double {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TiledArray.class);
+    
     /**
      *
      */

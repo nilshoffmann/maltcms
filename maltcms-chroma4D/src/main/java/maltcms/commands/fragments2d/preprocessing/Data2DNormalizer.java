@@ -40,13 +40,14 @@ import cross.tools.StringTools;
 import java.awt.image.RenderedImage;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.MovingAverageFilter;
 import maltcms.commands.filters.array.MovingMedianFilter;
 import maltcms.commands.filters.array.TopHatFilter;
 import maltcms.tools.ImageTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -58,12 +59,14 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 @Data
 @ProvidesVariables(names = {
     "var.total_intensity_filtered"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class Data2DNormalizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Data2DNormalizer.class);
 
     @Configurable(name = "var.total_intensity")
     private String totalIntensityVar = "total_intensity";

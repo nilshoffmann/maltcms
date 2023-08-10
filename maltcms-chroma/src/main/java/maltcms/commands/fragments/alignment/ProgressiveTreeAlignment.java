@@ -35,7 +35,7 @@ import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.cluster.IClusteringAlgorithm;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
@@ -49,7 +49,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @RequiresVariables(names = {"var.pairwise_distance_matrix"})
 @Data
-@Slf4j
+
 @ServiceProvider(service = AFragmentCommand.class)
 public class ProgressiveTreeAlignment extends AFragmentCommand {
 

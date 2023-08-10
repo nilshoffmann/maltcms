@@ -30,10 +30,11 @@ package net.sf.maltcms.db.search.spi.similarities;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.Collections;
 import java.util.Comparator;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import net.sf.maltcms.db.search.api.similarities.AMetabolitePredicate;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -44,9 +45,11 @@ import ucar.ma2.ArrayInt;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = AMetabolitePredicate.class)
 public class SteinAndScott extends AMetabolitePredicate {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SteinAndScott.class);
 
     boolean toggle = true;
     private AMDISMSSimilarity iadc = new AMDISMSSimilarity();

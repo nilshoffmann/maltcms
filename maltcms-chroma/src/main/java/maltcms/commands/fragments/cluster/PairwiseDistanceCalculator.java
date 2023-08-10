@@ -46,7 +46,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.AWorkerFactory;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.MziDtwWorkerFactory;
 import maltcms.commands.fragments.cluster.pairwiseDistanceCalculator.PairwiseDistanceResult;
@@ -56,6 +56,7 @@ import maltcms.io.csv.CSVWriter;
 import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;
@@ -69,10 +70,11 @@ import ucar.ma2.MAMath.MinMax;
  */
 @ProvidesVariables(names = {"var.minimizing_array_comp",
     "var.pairwise_distance_matrix", "var.pairwise_distance_names"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class PairwiseDistanceCalculator extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PairwiseDistanceCalculator.class);
 
     @Configurable(description="If true, assumes that the comparison function "
             + "between mass spectra behaves like a cost function "

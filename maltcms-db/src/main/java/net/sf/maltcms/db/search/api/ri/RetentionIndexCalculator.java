@@ -34,10 +34,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.datastructures.ms.IScan1D;
 import maltcms.tools.ArrayTools;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>RetentionIndexCalculator class.</p>
@@ -45,8 +46,10 @@ import maltcms.tools.ArrayTools;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class RetentionIndexCalculator {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RetentionIndexCalculator.class);
 
     private final double[] riRTs;
     private final int[] nCarbAtoms;

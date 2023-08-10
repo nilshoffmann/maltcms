@@ -12,24 +12,83 @@
     <bannerLeft>
         <name>Maltcms</name>
         <src>images/ChromA4DSurface.png</src>
-        <href>http://maltcms.sf.net</href>
+        <href>https://nilshoffmann.github.io/maltcms/</href>
     </bannerLeft>
     <skin>
-        <groupId>lt.velykis.maven.skins</groupId>
+        <groupId>io.github.devacfr.maven.skins</groupId>
         <artifactId>reflow-maven-skin</artifactId>
-        <version>1.1.1</version>
+        <version>2.3.3</version>
     </skin>
+    <!--    <custom>
+        <reflowSkin>
+            <theme>bootswatch-sandstone</theme>
+            <highlightJs>true</highlightJs>
+            <brand>
+                <name>My Project</name>
+                <href>https://github.com/devacfr/reflow-maven-skin</href>
+            </brand>
+            <slogan>Super interesting project doing good things.</slogan>
+            <titleTemplate>%2$s | %1$s</titleTemplate>
+            <toc>top</toc>
+            <navbar filterMenu="Download|reports" />
+            <bottomNav>
+                <column>Main|Download</column>
+                <column>Documentation</column>
+                <column>reports|modules</column>
+            </bottomNav>
+            <bottomDescription>
+                This is a very good project doing interesting and valuable things.
+            </bottomDescription>
+            <pages>
+                <index project="project-id">
+                    <shortTitle>Welcome</shortTitle>
+                    <breadcrumbs>false</breadcrumbs>
+                    <toc>false</toc>
+                    <sections>
+                        <carousel />
+                        <body />
+                        <sidebar />
+                        <thumbs>2</thumbs>
+                        <columns>3</columns>
+                    </sections>
+                </index>
+                <developer-info>
+                     inherit of parent value 
+                    <navbar filterMenu="inherit" cssClass="navbar-dark bg-dark " />
+                    <toc>sidebar</toc>
+                </developer-info>
+                <overview>
+                    <toc>false</toc>
+                    <sections>
+                        <thumbs>3</thumbs>
+                        <body />
+                    </sections>
+                </overview>
+                <documentation type="doc">
+                    <menu name="Documentation" selectFirstOnExpand="false">
+                        <item name="Overview" href="overview.html"/>
+                        <item name="Installation">
+                            <item name="Standalone Installation" href="standalone-installation.html"/>
+                            <item name="Linux And Mac Options" href="linux-mac-options.html"/>
+                            <item name="Windows Options" href="windows-options.html"/>
+                        </item>
+                        <item name="Develop" href="develop.html"/>
+                    </menu>
+                </documentation>
+            </pages>
+        </reflowSkin>
+    </custom>-->
     <custom>
         <reflowSkin>
-            <theme>bootswatch-spacelab</theme>
+            <theme>bootswatch-sandstone</theme>
             <highlightJs>true</highlightJs>
             <brand>
                 <name>Maltcms</name>
-                <href>http://sf.net/p/maltcms</href>
+                <href>https://github.com/nilshoffmann/maltcms</href>
             </brand>
             <slogan><![CDATA[The Modular Application Toolkit for Chromatography-Mass Spectrometry]]></slogan>
             <titleTemplate>%2$s | %1$s</titleTemplate>
-            <toc>sidebar</toc>
+            <toc>top</toc>
             <banner>false</banner>
             <topNav>Maltcms</topNav>
             <bottomNav>
@@ -40,17 +99,32 @@
                 Maltcms is the Modular Application Toolkit for Chromatography-Mass Spectrometry.
             </bottomDescription>
             <pages>
-                <index project="maltcms-modules">
+                <index  type="page" project="maltcms-modules">
                     <shortTitle>Welcome</shortTitle>
-                    <breadcrumbs>false</breadcrumbs>
+                    <breadcrumbs>true</breadcrumbs>
                     <markPageHeader>false</markPageHeader>
                     <toc>false</toc>
                     <sections>
+                        <carousel />
+                        <thumbs>1</thumbs>
                         <body />
-                        <columns>2</columns>
-                        <columns>2</columns>
+                        <columns>1</columns>
+                        <sidebar />
                     </sections>
                 </index>
+                <developer-info>
+                    <!--inherit of parent value--> 
+                    <navbar filterMenu="inherit" cssClass="navbar-dark bg-dark " />
+                    <toc>sidebar</toc>
+                </developer-info>
+                <overview>
+                    <toc>false</toc>
+                    <sections>
+                        <thumbs>1</thumbs>
+                        <body />
+                        <columns>1</columns>
+                    </sections>
+                </overview>
                 <modules>
                     <toc>sidebar</toc>
                 </modules>
@@ -60,14 +134,14 @@
             </pages>
         </reflowSkin>
     </custom>
-    <publishDate position="right"/>
+    <!--    <publishDate position="right"/>
     <version position="right" />
     <body>
         <breadcrumbs>
             <item name="Home" href="./index.html" />
         </breadcrumbs>
         <links>
-            <item name="Maltcms@sf.net" href="http://maltcms.sf.net" />
+            <item name="GitHub" href="https://github.com/nilshoffmann/maltcms" />
         </links>
 
         <menu name="Maltcms">
@@ -82,15 +156,15 @@
             </item>
             <item name="Development" href="./documentation/development/index.html" collapse="true">
                 <item name="Maven" href="./documentation/development/maven.html"/>
-                <!--<item name="Data Access" href="./documentation/development/dataAccess.html"/>-->
-                <!--<item name="Parallel Processing" href="./documentation/development/parallelProcessing.html"/>-->
+                <item name="Data Access" href="./documentation/development/dataAccess.html"/>
+                <item name="Parallel Processing" href="./documentation/development/parallelProcessing.html"/>
                 <item name="Custom Workflow Elements" href="./documentation/development/customWorkflowElements.html"/>
-                <!--<item name="Java API" href="./apidocs/index.html" />-->
+                <item name="Java API" href="./apidocs/index.html" />
             </item>
             <item name="Modules" href="modules.html" />
             <item name="Wiki" href="http://sourceforge.net/p/maltcms/wiki/Home/"/>
-            <item name="Support" href="https://sourceforge.net/projects/maltcms/support"/>
+            <item name="Support" href="https://github.com/nilshoffmann/maltcms"/>
         </menu>
         <menu ref="reports" inherit="bottom"/>
-    </body>
+    </body>-->
 </project>

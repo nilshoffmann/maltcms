@@ -31,10 +31,11 @@ import cross.datastructures.tuple.Tuple2D;
 import java.util.ArrayList;
 import org.junit.Assert;
 import junit.framework.TestCase;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.datastructures.ms.IRetentionInfo;
 import maltcms.datastructures.ms.RetentionInfo;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test for {@link maltcms.datastructures.alignment.AnchorPairSet}.
@@ -42,8 +43,10 @@ import maltcms.datastructures.ms.RetentionInfo;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 public class AnchorPairSetTest extends TestCase {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AnchorPairSetTest.class);
 
     protected ArrayList<IAnchor> al1 = new ArrayList<>();
     protected ArrayList<IAnchor> al2 = new ArrayList<>();

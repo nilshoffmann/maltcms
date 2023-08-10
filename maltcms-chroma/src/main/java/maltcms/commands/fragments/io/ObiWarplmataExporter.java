@@ -40,9 +40,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.CSVWriter;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
@@ -55,10 +56,12 @@ import ucar.ma2.IndexIterator;
 @RequiresVariables(names = {"var.binned_mass_values",
     "var.binned_intensity_values", "var.binned_scan_index",
     "var.scan_acquisition_time"})
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ObiWarplmataExporter extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ObiWarplmataExporter.class);
 
     private final String description = "Creates compatible lmata matrix files for use with Obi-Warp (http://obi-warp.sourceforge.net/)";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;

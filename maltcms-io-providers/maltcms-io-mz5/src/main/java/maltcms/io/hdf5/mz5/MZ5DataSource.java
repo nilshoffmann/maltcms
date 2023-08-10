@@ -44,10 +44,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import static org.slf4j.LoggerFactory.getLogger;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import static ucar.ma2.DataType.INT;
@@ -68,9 +69,11 @@ import ucar.nc2.Variable;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = IDataSource.class)
 public class MZ5DataSource implements IDataSource {
+    
+    private static final org.slf4j.Logger log = getLogger(MZ5DataSource.class);
 
     private final String[] fileEnding = new String[]{"mz5.gz", "mz5"};
     private boolean updateAttributes = false;

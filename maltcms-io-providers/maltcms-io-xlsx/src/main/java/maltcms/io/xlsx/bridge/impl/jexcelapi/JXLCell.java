@@ -30,7 +30,6 @@ package maltcms.io.xlsx.bridge.impl.jexcelapi;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.NumberCell;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.ICell;
 
 /**
@@ -39,10 +38,7 @@ import maltcms.io.xlsx.bridge.ICell;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class JXLCell implements ICell {
-
-    private final Cell cell;
+public record JXLCell(Cell cell) implements ICell {
 
     /** {@inheritDoc} */
     @Override

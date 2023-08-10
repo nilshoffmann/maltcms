@@ -35,8 +35,9 @@ import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import java.io.File;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 
@@ -44,12 +45,14 @@ import ucar.ma2.IndexIterator;
  * Scans a number of arrays for statistics, such as mean and variance, storing
  * results for each array in a HashMap indexed by Elements of
  *
- * @link{cross.Vars} .
+ * @see cross.Vars
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ArrayStatsScanner implements ICommand<Array[], StatsMap[]> {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ArrayStatsScanner.class);
 
     private StatsMap gsm = null;
     private IFileFragment ff = new FileFragment(new File("default-stats.cdf"));

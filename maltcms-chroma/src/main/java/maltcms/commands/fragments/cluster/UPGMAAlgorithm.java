@@ -31,10 +31,11 @@ import cross.commands.fragments.AFragmentCommand;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.tuple.TupleND;
 import java.util.Iterator;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.datastructures.cluster.BinaryCluster;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements UPGMA Algorithm by ? (cite ...) FIXME add citation
@@ -42,9 +43,11 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = AFragmentCommand.class)
 public class UPGMAAlgorithm extends ClusteringAlgorithm {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(UPGMAAlgorithm.class);
 
     /**
      * <p>main.</p>

@@ -44,7 +44,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Worker implementation to load default and additional variables for an
@@ -58,9 +59,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class DefaultVarLoaderWorker implements Callable<File>, Serializable {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DefaultVarLoaderWorker.class);
 
     private URI fileToLoad;
     private URI fileToSave;

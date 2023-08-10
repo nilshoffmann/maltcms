@@ -41,7 +41,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IChromatogram;
 import maltcms.datastructures.ms.IChromatogram1D;
 import maltcms.datastructures.ms.IScan1D;
@@ -50,6 +50,7 @@ import maltcms.datastructures.peak.PeakType;
 import maltcms.io.csv.ParserUtilities;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import static org.slf4j.LoggerFactory.getLogger;
 import org.springframework.util.Assert;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
@@ -62,9 +63,11 @@ import ucar.nc2.Dimension;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 @Value
 public class GcImageBlobImporter {
+    
+    private static final org.slf4j.Logger log = getLogger(GcImageBlobImporter.class);
 
     private final String quotationCharacter;
     private final Locale locale;

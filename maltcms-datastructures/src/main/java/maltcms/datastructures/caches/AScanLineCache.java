@@ -30,8 +30,9 @@ package maltcms.datastructures.caches;
 import cross.annotations.RequiresVariables;
 import cross.datastructures.fragments.IFileFragment;
 import java.awt.Point;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -46,8 +47,10 @@ import ucar.ma2.IndexIterator;
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
     "var.modulation_time", "var.scan_rate"})
-@Slf4j
+
 public abstract class AScanLineCache implements IScanLine {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AScanLineCache.class);
 
     /** {@inheritDoc} */
     @Override

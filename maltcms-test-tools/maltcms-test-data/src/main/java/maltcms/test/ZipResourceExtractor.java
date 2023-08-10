@@ -36,25 +36,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import lombok.Cleanup;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * <p>ZipResourceExtractor class.</p>
+ * <p>
+ * ZipResourceExtractor class.</p>
  *
  * @author Nils Hoffmann
- * 
+ *
  */
-@Slf4j
 public class ZipResourceExtractor {
 
+    private static final Logger log = LoggerFactory.getLogger(ZipResourceExtractor.class);
+
     /**
-     * <p>extract.</p>
+     * <p>
+     * extract.</p>
      *
      * @param resourcePath a {@link java.lang.String} object.
      * @param destDir a {@link java.io.File} object.
@@ -70,58 +71,69 @@ public class ZipResourceExtractor {
             throw new NullPointerException(
                     "Could not retrieve resource for path: " + resourcePath);
         }
-        File outputFile = null;
-        try {
-            @Cleanup
-            InputStream resourceInputStream = resourceURL.openStream();
-            @Cleanup
-            InputStream in = null;
-            @Cleanup
-            OutputStream out = null;
-            try {
-                String outname = new File(resourceURL.getPath()).getName();
-                outname = outname.replaceAll("%20", " ");
-                log.info(outname);
-                if (resourcePath.endsWith("zip")) {
-                    outname = outname.substring(0, outname.lastIndexOf(
-                            "."));
-                    return extractZipArchive(resourceInputStream, destDir);
-                } else if (resourcePath.endsWith("gz")) {
-                    in = new GZIPInputStream(new BufferedInputStream(
-                            resourceInputStream));
+        String outname = new File(resourceURL.getPath()).getName();
+        outname = outname.replaceAll("%20", " ");
+        log.info(outname);
+        try (InputStream resourceInputStream = resourceURL.openStream()) {
+            if (resourcePath.endsWith("zip")) {
+                outname = outname.substring(0, outname.lastIndexOf(
+                        "."));
+                return extractZipArchive(resourceInputStream, destDir);
+            } else {
+                if (resourcePath.endsWith("gz")) {
+                    try (GZIPInputStream in = new GZIPInputStream(new BufferedInputStream(
+                            resourceInputStream))) {
+                        outname = outname.substring(0, outname.lastIndexOf(
+                                "."));
+                        File outputFile = new File(destDir, outname);
+                        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+                            copyInToOut(in, bos);
+                            return outputFile;
+                        } catch (FileNotFoundException ex) {
+                            log.error(ex.getLocalizedMessage(), ex);
+                        } catch (IOException ex) {
+                            log.error(ex.getLocalizedMessage(), ex);
+                        }
 
-                    outname = outname.substring(0, outname.lastIndexOf(
-                            "."));
+                    } catch (IOException ex) {
+                        log.error(ex.getLocalizedMessage(), ex);
+                    }
                 } else {
-                    in = new BufferedInputStream(resourceInputStream);
+                    try (BufferedInputStream bin = new BufferedInputStream(resourceInputStream)) {
+                        File outputFile = new File(destDir, outname);
+                        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+                            copyInToOut(bin, bos);
+                            return outputFile;
+                        } catch (FileNotFoundException ex) {
+                            log.error(ex.getLocalizedMessage(), ex);
+                        } catch (IOException ex) {
+                            log.error(ex.getLocalizedMessage(), ex);
+                        }
+                    } catch (IOException ex) {
+                        log.error(ex.getLocalizedMessage(), ex);
+                    }
+
                 }
-                outputFile = new File(destDir, outname);
-                out = new BufferedOutputStream(new FileOutputStream(outputFile));
-                // Transfer bytes from in to out
-                byte[] buf = new byte[1024];
-                int len;
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                in.close();
-                out.close();
-            } catch (FileNotFoundException e) {
-   
-                log.warn(e.getLocalizedMessage());
-            } catch (IOException e) {
-   
-                log.warn(e.getLocalizedMessage());
             }
         } catch (IOException ex) {
-            Logger.getLogger(ZipResourceExtractor.class.getName()).
-                    log(Level.SEVERE, null, ex);
+            log.error(ex.getLocalizedMessage(), ex);
         }
+        throw new NullPointerException(
+                "Could not copy resource for path: " + resourcePath + " to output: " + outname);
+    }
 
-        return outputFile;
+    private static void copyInToOut(InputStream in, OutputStream out) throws IOException {
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
     }
 
     /**
-     * <p>extractZipArchive.</p>
+     * <p>
+     * extractZipArchive.</p>
      *
      * @param istream a {@link java.io.InputStream} object.
      * @param outputDir a {@link java.io.File} object.
@@ -144,13 +156,11 @@ public class ZipResourceExtractor {
                             outDir = outFile;
                         }
                     } else {
-                        try (FileOutputStream fos = new FileOutputStream(outFile)) {
-                            BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length);
+                        try (FileOutputStream fos = new FileOutputStream(outFile); BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length)) {
                             while ((size = zis.read(buffer, 0, buffer.length)) != -1) {
                                 bos.write(buffer, 0, size);
                             }
                             bos.flush();
-                            bos.close();
                         }
                     }
                 }
@@ -158,7 +168,6 @@ public class ZipResourceExtractor {
                     outDir = outputDir;
                 }
             }
-            istream.close();
             return outDir;
         } catch (IOException e) {
             throw new RuntimeException(e);

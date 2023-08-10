@@ -32,7 +32,8 @@ import java.awt.Point;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>ContinuityArgmaxNodeBuilder class.</p>
@@ -40,8 +41,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ContinuityArgmaxNodeBuilder extends NodeBuilder {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ContinuityArgmaxNodeBuilder.class);
 
     // private final double[] penaltyLookupTable;
     private final double scale = 1.0;

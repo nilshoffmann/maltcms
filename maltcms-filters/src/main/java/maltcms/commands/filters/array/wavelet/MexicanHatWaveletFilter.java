@@ -28,7 +28,7 @@
 package maltcms.commands.filters.array.wavelet;
 
 import cross.annotations.Configurable;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import org.apache.commons.configuration.Configuration;
 import ucar.ma2.Array;
@@ -40,7 +40,7 @@ import ucar.ma2.DataType;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MexicanHatWaveletFilter extends AArrayFilter {
 
     @Configurable(value = "1", type = double.class)

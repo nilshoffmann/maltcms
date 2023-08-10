@@ -31,9 +31,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 
 /**
@@ -42,8 +43,10 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ImagePanel extends JPanel {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ImagePanel.class);
 
     /**
      *

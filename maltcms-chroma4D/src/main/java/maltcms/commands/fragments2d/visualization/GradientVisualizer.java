@@ -41,7 +41,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.io.csv.ColorRampReader;
@@ -52,6 +52,7 @@ import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -63,7 +64,7 @@ import ucar.ma2.Index;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.total_intensity", "var.scan_rate",
     "var.modulation_time", "var.second_column_scan_index",
@@ -72,6 +73,8 @@ import ucar.ma2.Index;
     "var.scan_rate"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class GradientVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GradientVisualizer.class);
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";

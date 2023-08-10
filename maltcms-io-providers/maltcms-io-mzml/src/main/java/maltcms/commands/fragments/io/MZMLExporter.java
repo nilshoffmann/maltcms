@@ -34,9 +34,10 @@ import cross.datastructures.tuple.TupleND;
 import cross.datastructures.workflow.WorkflowSlot;
 import java.net.URI;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Exports chromatographic and mass spectrometric data from the common data
@@ -47,10 +48,12 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class MZMLExporter extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZMLExporter.class);
 
     private final String description = "Exports chromatographic and mass spectrometry data to mzML format.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.FILECONVERSION;

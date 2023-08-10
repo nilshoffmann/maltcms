@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.DtwRecurrence;
 import maltcms.commands.distances.PairwiseFeatureSimilarity;
 import maltcms.commands.scanners.ArrayStatsScanner;
@@ -67,6 +67,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.statistics.HistogramDataset;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayByte;
 import ucar.ma2.ArrayDouble;
@@ -78,9 +79,11 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ADynamicTimeWarp.class);
 
 //    @Configurable(name = "alignment.algorithm.windowsize")
 //    protected transient double maxdeviation = 1.0d;

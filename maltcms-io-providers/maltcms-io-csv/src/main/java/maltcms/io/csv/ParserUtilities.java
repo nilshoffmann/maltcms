@@ -39,15 +39,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TreeMap;
-import lombok.extern.slf4j.Slf4j;
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 /**
  * Generic utility methods for csv parsing and numeric conversion.
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class ParserUtilities {
+    
+    private static final org.slf4j.Logger log = getLogger(ParserUtilities.class);
 
     /**
      * Parse a numeric string using the specified locale. When a ParseException

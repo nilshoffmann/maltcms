@@ -27,7 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * A generic utility class for reading an MSXML file in a random access fashion
@@ -64,8 +65,10 @@ import lombok.extern.slf4j.Slf4j;
  * IOExceptions. This keeps the parser compatible with previous code.
  *
  */
-@Slf4j
+
 public final class MSXMLParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MSXMLParser.class);
 
     /**
      * The file we are in charge of reading

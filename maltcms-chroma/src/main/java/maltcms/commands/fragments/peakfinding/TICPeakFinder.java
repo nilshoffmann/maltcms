@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
@@ -53,13 +53,13 @@ import maltcms.commands.fragments.peakfinding.ticPeakFinder.IBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.LoessMinimaBaselineEstimator;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorker;
-import maltcms.commands.fragments.peakfinding.ticPeakFinder.TICPeakFinderWorker.TICPeakFinderWorkerBuilder;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationConverter;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Find Peaks based on TIC, estimates a local baseline and, based on a given
@@ -74,10 +74,11 @@ import org.openide.util.lookup.ServiceProvider;
     "var.peak_retention_time", "var.peak_start_time",
     "var.peak_end_time", "var.peak_area", "var.baseline_start_time",
     "var.baseline_stop_time", "var.baseline_start_value", "var.baseline_stop_value"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class TICPeakFinder extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(TICPeakFinder.class);
 
     @Configurable(description="The minimal local signal-to-noise threshold "
             + "required for a peak to be reported.")
@@ -143,28 +144,27 @@ public class TICPeakFinder extends AFragmentCommand {
             for (IPeakNormalizer normalizer : peakNormalizers) {
                 peakNormalizerCopy.add((IPeakNormalizer) normalizer.copy());
             }
-            TICPeakFinderWorkerBuilder builder = TICPeakFinderWorker.builder();
-            TICPeakFinderWorker tpf = builder
-                .outputDirectory(getWorkflow().getOutputDirectory(this))
-               .inputUri(f.getUri())
-               .integratePeaks(integratePeaks)
-               .integrateTICPeaks(integrateTICPeaks)
-               .integrateRawTic(integrateRawTic)
-               .saveGraphics(saveGraphics)
-               .removeOverlappingPeaks(removeOverlappingPeaks)
-               .subtractBaseline(subtractBaseline)
-               .peakThreshold(peakThreshold)
-               .peakSeparationWindow(peakSeparationWindow)
-               .snrWindow(snrWindow)
-               .baselineEstimator((IBaselineEstimator)baselineEstimator.copy())
-               .filter(BatchFilter.copy(filter))
-               .peakNormalizers(peakNormalizerCopy)
-               .ticVarName(ticVarName)
-               .satVarName(satVarName)
-               .ticPeakVarName(ticPeakVarName)
-               .ticFilteredVarName(ticFilteredVarName)
-               .properties(ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration()))
-               .build();
+            TICPeakFinderWorker tpf = new TICPeakFinderWorker(
+                    getWorkflow().getOutputDirectory(this), 
+                    f.getUri(), 
+                    integratePeaks, 
+                    integrateTICPeaks, 
+                    integrateRawTic, 
+                    saveGraphics, 
+                    removeOverlappingPeaks, 
+                    subtractBaseline, 
+                    peakThreshold, 
+                    peakSeparationWindow, 
+                    snrWindow, 
+                    (IBaselineEstimator)baselineEstimator.copy(), 
+                    BatchFilter.copy(filter), 
+                    peakNormalizerCopy, 
+                    ticVarName, 
+                    satVarName, 
+                    ticPeakVarName, 
+                    ticFilteredVarName, 
+                    ConfigurationConverter.getProperties(Factory.getInstance().getConfiguration())
+            );
             completionService.submit(tpf);
             getWorkflow().append(getProgress().nextStep());
         }

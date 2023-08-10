@@ -31,9 +31,10 @@ import cross.datastructures.tuple.Tuple2D;
 import cross.exception.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.datastructures.ms.RetentionInfo;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a set of matched pairs of anchors.
@@ -41,9 +42,11 @@ import maltcms.datastructures.ms.RetentionInfo;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class AnchorPairSet extends DefaultPairSet<IAnchor> {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(AnchorPairSet.class);
+    
     /**
      * <p>Constructor for AnchorPairSet.</p>
      *

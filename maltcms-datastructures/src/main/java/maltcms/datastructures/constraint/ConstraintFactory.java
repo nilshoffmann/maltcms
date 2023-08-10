@@ -34,8 +34,9 @@ import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.alignment.AnchorPairSet;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -44,8 +45,10 @@ import maltcms.datastructures.alignment.AnchorPairSet;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ConstraintFactory {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ConstraintFactory.class);
 
     private static final ConstraintFactory cf = new ConstraintFactory();
 

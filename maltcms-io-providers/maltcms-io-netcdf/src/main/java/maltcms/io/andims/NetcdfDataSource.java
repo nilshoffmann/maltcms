@@ -46,10 +46,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
@@ -69,9 +71,11 @@ import ucar.nc2.dataset.NetcdfDataset;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = IDataSource.class)
 public class NetcdfDataSource implements IDataSource {
+    
+    private static final Logger log = LoggerFactory.getLogger(NetcdfDataSource.class);
 
     private static int minCachedFiles = 5;
     private static int maxCachedFiles = 10;

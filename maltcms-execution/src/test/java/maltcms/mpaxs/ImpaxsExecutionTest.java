@@ -28,20 +28,23 @@
 package maltcms.mpaxs;
 
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import net.sf.mpaxs.api.ICompletionService;
 import net.sf.mpaxs.spi.concurrent.CompletionServiceFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 /**
  * Test cases for impaxs integration
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class ImpaxsExecutionTest {
     
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ImpaxsExecutionTest.class);
+
     @Test
     public void testRemoteRmiExecution() throws Exception {
 //        Impaxs impxs = null;

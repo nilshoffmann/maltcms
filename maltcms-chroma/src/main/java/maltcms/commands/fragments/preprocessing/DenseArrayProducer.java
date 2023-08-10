@@ -38,12 +38,13 @@ import cross.datastructures.workflow.WorkflowSlot;
 import java.io.File;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.DenseArrayProducerWorker;
 import maltcms.commands.fragments.preprocessing.denseArrayProducer.MinMaxMassFinderWorker;
 import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * Creates bins of fixed size (currently 1) from a given set of spectra with
@@ -57,10 +58,11 @@ import org.openide.util.lookup.ServiceProvider;
     "var.binned_intensity_values", "var.binned_scan_index"})
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.scan_acquisition_time", "var.total_intensity"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class DenseArrayProducer extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DenseArrayProducer.class);
 
     private final String description = "Creates a binned representation of a chromatogram.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.GENERAL_PREPROCESSING;

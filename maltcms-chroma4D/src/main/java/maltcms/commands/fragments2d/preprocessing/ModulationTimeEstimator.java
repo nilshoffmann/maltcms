@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ImageTools;
@@ -56,6 +56,7 @@ import maltcms.ui.charts.PlotRunner;
 import maltcms.ui.charts.XYChart;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -75,11 +76,13 @@ import ucar.ma2.InvalidRangeException;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 //@ServiceProvider(service=AFragmentCommand.class)
 @Deprecated
 public class ModulationTimeEstimator extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ModulationTimeEstimator.class);
 
     private String tic_var = "total_intensity";
     private String mass_var = "mass_values";

@@ -44,7 +44,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.Peak1D;
 import maltcms.datastructures.peak.Peak2D;
 import maltcms.datastructures.peak.PeakType;
@@ -61,7 +61,7 @@ import ucar.nc2.Dimension;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 @Value
 public class ChromaTOFImporter {
 

@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.SavitzkyGolayFilter;
 import maltcms.commands.fragments.cluster.PairwiseDistanceCalculator;
@@ -59,7 +59,7 @@ import org.junit.Test;
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 
 public class CemappDtwMziIT extends AFragmentCommandTest {
 

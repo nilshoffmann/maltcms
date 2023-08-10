@@ -68,7 +68,7 @@ import javax.imageio.ImageIO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.FirstDerivativeFilter;
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.commands.filters.array.wavelet.MexicanHatWaveletFilter;
@@ -106,6 +106,7 @@ import org.jfree.chart.title.PaintScaleLegend;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.DefaultXYZDataset;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -125,8 +126,10 @@ import ucar.ma2.MAMath.MinMax;
 @Data
 @ToString(exclude = {"ridgeTree"})
 @EqualsAndHashCode(exclude = {"ridgeTree"})
-@Slf4j
+
 public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CwtRunnable.class);
 
     /**
      *

@@ -50,12 +50,13 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.andims.NetcdfDataSource;
 import maltcms.io.csv.CSVReader;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.openide.util.lookup.ServiceProvider;
+import static org.slf4j.LoggerFactory.getLogger;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -78,9 +79,11 @@ import ucar.nc2.NetcdfFileWriteable;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @ServiceProvider(service = IDataSource.class)
 public class FsaTxtDataSource implements IDataSource {
+    
+    private static final org.slf4j.Logger log = getLogger(FsaTxtDataSource.class);
 
     private final String[] fileEnding = new String[]{"fsa"};
     private List<String> scanDimensionVars = Collections.emptyList();

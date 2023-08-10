@@ -38,12 +38,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.ui.charts.AChart;
 import maltcms.ui.charts.PlotRunner;
 import maltcms.ui.charts.XYChart;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.IndexIterator;
@@ -55,8 +56,10 @@ import ucar.ma2.IndexIterator;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 public class ArrayTools {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ArrayTools.class);
 
     /**
      * Visualization of the sorted standard deviation.

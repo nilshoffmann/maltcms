@@ -32,7 +32,7 @@ import cross.exception.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.LogarithmicAxis;
@@ -48,6 +48,8 @@ import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.ui.TextAnchor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
@@ -60,8 +62,10 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class XYChart extends AChart<XYPlot> {
+    
+    private static Logger log = LoggerFactory.getLogger(XYChart.class);
 
     private final String xaxis, yaxis;
     private final List<String> labels = new ArrayList<>();

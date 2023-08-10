@@ -40,11 +40,12 @@ import java.util.List;
 import java.util.Map;
 import javax.media.jai.JAI;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.MinMaxNormalizationFilter;
 import maltcms.io.csv.CSVWriter;
 import maltcms.tools.ImageTools;
 import org.jdom2.Element;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
@@ -55,9 +56,11 @@ import ucar.ma2.MAMath.MinMax;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class PeakSimilarityVisualizer implements IWorkflowElement {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakSimilarityVisualizer.class);
 
     private IWorkflow workflow;
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

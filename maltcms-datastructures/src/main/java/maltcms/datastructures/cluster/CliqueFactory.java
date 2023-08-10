@@ -29,8 +29,9 @@ package maltcms.datastructures.cluster;
 
 import java.util.Comparator;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.peak.Peak1D;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -41,8 +42,10 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class CliqueFactory {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CliqueFactory.class);
 
     /**
      * <p>createPeakClique.</p>

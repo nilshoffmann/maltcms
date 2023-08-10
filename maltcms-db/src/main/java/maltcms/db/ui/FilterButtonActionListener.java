@@ -32,11 +32,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.JTextField;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IMetabolite;
 import maltcms.db.predicates.metabolite.IAggregatePredicateFactory;
 import maltcms.db.predicates.metabolite.MAggregatePredicate;
 import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>FilterButtonActionListener class.</p>
@@ -44,8 +45,10 @@ import maltcms.db.predicates.metabolite.MAggregatePredicateFactory;
  * @author Rolf Hilker
  * 
  */
-@Slf4j
+
 public class FilterButtonActionListener implements ActionListener {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(FilterButtonActionListener.class);
 
     private IAggregatePredicateFactory af = null;
 

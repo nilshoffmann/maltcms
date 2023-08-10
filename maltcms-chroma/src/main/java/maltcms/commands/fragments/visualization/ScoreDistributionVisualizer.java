@@ -43,9 +43,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -55,10 +56,11 @@ import ucar.ma2.Array;
  * 
  */
 @RequiresVariables(names = {"var.pairwise_distance"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class ScoreDistributionVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScoreDistributionVisualizer.class);
 
     private final String description = "Generates a histogram plot of score distributions from variable pairwise_distance";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

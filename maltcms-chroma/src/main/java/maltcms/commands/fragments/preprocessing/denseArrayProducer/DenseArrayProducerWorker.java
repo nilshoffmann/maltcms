@@ -44,10 +44,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.DataType;
@@ -60,9 +61,11 @@ import ucar.ma2.MAVector;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class DenseArrayProducerWorker implements Callable<File>, Serializable {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DenseArrayProducerWorker.class);
 
     private String massValues = "mass_values";
     private String intensityValues = "intensity_values";

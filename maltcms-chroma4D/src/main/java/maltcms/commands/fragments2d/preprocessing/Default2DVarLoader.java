@@ -47,13 +47,14 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments2d.preprocessing.default2dVarLoader.ModulationTimeEstimatorTask;
 import maltcms.commands.scanners.ArrayStatsScanner;
 import maltcms.tools.ArrayTools;
 import net.sf.mpaxs.api.ICompletionService;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -75,10 +76,12 @@ import ucar.nc2.Dimension;
     "var.second_column_scan_index", "var.total_intensity_1d",
     "var.scan_acquisition_time", "var.scan_acquisition_time_1d",
     "var.total_intensity_2d", "var.first_column_elution_time", "var.second_column_elution_time"})
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class Default2DVarLoader extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Default2DVarLoader.class);
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensityVar = "total_intensity";

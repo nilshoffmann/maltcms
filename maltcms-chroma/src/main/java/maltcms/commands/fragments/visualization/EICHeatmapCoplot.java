@@ -44,7 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.tools.ImageTools;
 import maltcms.tools.MaltcmsTools;
@@ -53,6 +53,7 @@ import maltcms.ui.charts.PlotRunner;
 import maltcms.ui.charts.XYChart;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -64,10 +65,11 @@ import ucar.ma2.Index;
  * 
  */
 @RequiresVariables(names = {"var.total_intensity", "var.scan_acquisition_time"})
-@Slf4j
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class EICHeatmapCoplot extends TICHeatmapCoplot {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(EICHeatmapCoplot.class);
 
     private final String description = "Generates a stacked heatmap plot of EICs (bird's eye view) with shared time axis";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

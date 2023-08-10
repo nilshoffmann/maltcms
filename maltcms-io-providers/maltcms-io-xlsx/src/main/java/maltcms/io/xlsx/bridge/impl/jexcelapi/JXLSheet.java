@@ -29,7 +29,6 @@ package maltcms.io.xlsx.bridge.impl.jexcelapi;
 
 import java.util.Iterator;
 import jxl.Sheet;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.IRow;
 import maltcms.io.xlsx.bridge.ISheet;
 
@@ -39,10 +38,7 @@ import maltcms.io.xlsx.bridge.ISheet;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class JXLSheet implements ISheet {
-
-    private final Sheet sheet;
+public record JXLSheet(Sheet sheet) implements ISheet {
 
     /** {@inheritDoc} */
     @Override

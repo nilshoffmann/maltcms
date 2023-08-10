@@ -39,18 +39,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.After;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 
-@Slf4j
+
 public class DefaultWorkflowTest {
-    
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DefaultWorkflowTest.class);
+
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     public File inputDirectory;

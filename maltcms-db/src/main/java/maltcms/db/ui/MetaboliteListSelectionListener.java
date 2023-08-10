@@ -47,7 +47,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.MultiplicationFilter;
 import maltcms.datastructures.ms.IMetabolite;
 import org.jfree.chart.ChartPanel;
@@ -57,6 +57,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.MAMath;
@@ -67,9 +68,11 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class MetaboliteListSelectionListener implements ListSelectionListener,
         WindowListener, MouseListener {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MetaboliteListSelectionListener.class);
 
     /**
      *

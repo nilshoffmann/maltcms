@@ -34,10 +34,11 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.math.MathException;
 import org.apache.commons.math.analysis.interpolation.LoessInterpolator;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 
@@ -47,8 +48,10 @@ import ucar.ma2.ArrayInt;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class PeakFinderUtils {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakFinderUtils.class);
 
     /**
      * <p>isAboveThreshold.</p>

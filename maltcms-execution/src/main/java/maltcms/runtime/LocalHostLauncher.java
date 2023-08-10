@@ -67,13 +67,14 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>LocalHostLauncher class.</p>
@@ -81,11 +82,13 @@ import org.slf4j.Logger;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Deprecated
 public class LocalHostLauncher implements Thread.UncaughtExceptionHandler,
         IListener<IEvent<IWorkflowResult>>, Runnable, PropertyChangeListener,
         HyperlinkListener {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(LocalHostLauncher.class);
 
     protected enum State {
 

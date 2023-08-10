@@ -28,7 +28,6 @@
 package maltcms.io.xlsx.bridge.impl.poi;
 
 import java.util.Iterator;
-import lombok.Data;
 import maltcms.io.xlsx.bridge.IRow;
 import maltcms.io.xlsx.bridge.ISheet;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -39,10 +38,7 @@ import org.apache.poi.ss.usermodel.Sheet;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class POISheet implements ISheet {
-
-    private final Sheet sheet;
+public record POISheet(Sheet sheet) implements ISheet {
 
     /** {@inheritDoc} */
     @Override

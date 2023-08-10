@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AArrayFilter;
 import maltcms.commands.filters.array.BatchFilter;
 import maltcms.commands.filters.array.FirstDerivativeFilter;
@@ -66,6 +66,7 @@ import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.math.ArgumentOutsideDomainException;
 import org.apache.commons.math.analysis.polynomials.PolynomialSplineFunction;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -78,13 +79,15 @@ import ucar.ma2.InvalidRangeException;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {
     "var.scan_acquisition_time", "var.mass_values", "var.intensity_values",
     "var.scan_index"})
 @ProvidesVariables(names = {})
 public class EICPeakFinder extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(EICPeakFinder.class);
 
     private final String description = "Finds peaks within on mass channels.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;

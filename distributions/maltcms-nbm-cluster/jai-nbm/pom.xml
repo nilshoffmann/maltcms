@@ -35,7 +35,6 @@
                 <groupId>org.apache.netbeans.utilities</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
-                <version>4.7</version>
                 <configuration>
                     <useOSGiDependencies>false</useOSGiDependencies>
                     <author>Nils Hoffmann</author>

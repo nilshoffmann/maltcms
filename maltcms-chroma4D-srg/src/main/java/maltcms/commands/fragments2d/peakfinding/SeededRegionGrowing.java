@@ -57,7 +57,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments2d.peakfinding.comparator.PeakComparator;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakExporter;
 import maltcms.commands.fragments2d.peakfinding.output.IPeakIntegration;
@@ -87,6 +87,7 @@ import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayInt;
 import ucar.ma2.Index;
@@ -98,7 +99,7 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  *
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.total_intensity", "var.scan_rate",
     "var.modulation_time", "var.second_column_scan_index",
@@ -109,6 +110,8 @@ import ucar.ma2.IndexIterator;
     "var.boundary_peak_index", "var.peak_mass_intensity"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class SeededRegionGrowing extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SeededRegionGrowing.class);
 
     @Configurable(name = "var.total_intensity", value = "total_intensity",
             type = String.class)

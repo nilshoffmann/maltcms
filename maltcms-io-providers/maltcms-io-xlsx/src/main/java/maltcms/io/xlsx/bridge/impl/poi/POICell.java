@@ -27,7 +27,6 @@
  */
 package maltcms.io.xlsx.bridge.impl.poi;
 
-import lombok.Data;
 import maltcms.io.xlsx.bridge.ICell;
 import org.apache.poi.ss.usermodel.Cell;
 
@@ -37,10 +36,7 @@ import org.apache.poi.ss.usermodel.Cell;
  * @author Nils Hoffmann
  * 
  */
-@Data
-public class POICell implements ICell {
-
-    private final Cell cell;
+public record POICell(Cell cell) implements ICell {
 
     /** {@inheritDoc} */
     @Override

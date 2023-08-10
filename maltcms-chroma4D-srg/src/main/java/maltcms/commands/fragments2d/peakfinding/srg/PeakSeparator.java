@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IChromatogram2D;
 import maltcms.datastructures.peak.PeakArea2D;
 import maltcms.math.functions.IScalarArraySimilarity;
@@ -42,6 +42,7 @@ import maltcms.math.functions.ProductSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
 import maltcms.tools.ArrayTools;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -53,10 +54,12 @@ import ucar.ma2.ArrayDouble;
  *
  * @since 1.3.2
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = IPeakSeparator.class)
 public class PeakSeparator implements IPeakSeparator {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PeakSeparator.class);
 
     private double minDist = 0.995;
     private IScalarArraySimilarity separationSimilarity;

@@ -38,13 +38,14 @@ import cross.tools.StringTools;
 import java.io.File;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools;
 import maltcms.ui.charts.EPlotRunner;
 import maltcms.ui.charts.PlotRunner;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
@@ -55,7 +56,7 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.scan_acquisition_time_1d",
     "var.modulation_time", "var.scan_rate", "var.second_column_time",
@@ -64,6 +65,8 @@ import ucar.ma2.IndexIterator;
     "var.boundary_index_list"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class DTW2DPeakAreaVisualizer extends DTW2DTicVisualizer {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DTW2DPeakAreaVisualizer.class);
 
     @Configurable(name = "var.boundary_index_list",
             value = "boundary_index_list")

@@ -35,7 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.Array;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.Sparse;
@@ -48,8 +49,10 @@ import ucar.ma2.Sparse;
  * @deprecated You can use the usual array operations on Sparse array instances.
  * 
  */
-@Slf4j
+
 public class SparseTools {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SparseTools.class);
 
     /** Constant <code>es</code> */
     protected static final ExecutorService es = Executors.newFixedThreadPool(4);

@@ -32,7 +32,7 @@ import java.awt.Point;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.dtwng.AlignmentFactory;
 import maltcms.commands.distances.dtwng.FeatureVectorDtwSimilarity;
 import maltcms.commands.distances.dtwng.IAlignment;
@@ -42,6 +42,7 @@ import maltcms.datastructures.constraint.ConstraintFactory;
 import maltcms.datastructures.feature.FeatureVectorFactory;
 import maltcms.math.functions.DtwPairwiseSimilarity;
 import maltcms.math.functions.similarities.ArrayCos;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 
@@ -52,8 +53,10 @@ import ucar.ma2.ArrayDouble;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 public class DTWTest {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DTWTest.class);
 
     /**
      * <p>

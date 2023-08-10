@@ -52,12 +52,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.ms.IAnchor;
 import maltcms.io.csv.CSVReader;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
@@ -76,10 +77,11 @@ import ucar.ma2.MAMath;
 @RequiresVariables(names = {"var.multiple_alignment",
     "var.multiple_alignment_names", "var.multiple_alignment_type",
     "var.multiple_alignment_creator"})
-@Slf4j
 @Data
 //@ServiceProvider(service = AFragmentCommand.class)
 public class PolynomialRtWarp extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PolynomialRtWarp.class);
 
     private final String description = "Warps Chromatograms to a given reference, according to alignment paths.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.WARPING;

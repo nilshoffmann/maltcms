@@ -37,7 +37,8 @@ import java.util.zip.Inflater;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * dhmay changing 2009/10/21, incorporating Vagisha's changes and rebuilding my
@@ -53,8 +54,10 @@ import lombok.extern.slf4j.Slf4j;
  * accession numbers since those are stable.
  *
  */
-@Slf4j
+
 public class MLScanAndHeaderParser {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MLScanAndHeaderParser.class);
 
     public ScanHeader tmpScanHeader;
     public Scan tmpScan;

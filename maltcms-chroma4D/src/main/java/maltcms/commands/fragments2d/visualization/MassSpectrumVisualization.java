@@ -37,7 +37,7 @@ import cross.datastructures.workflow.WorkflowSlot;
 import cross.tools.StringTools;
 import java.io.File;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.caches.IScanLine;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ImageTools;
@@ -48,6 +48,7 @@ import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 import ucar.ma2.MAMath;
@@ -58,7 +59,7 @@ import ucar.ma2.MAMath;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.mass_values", "var.intensity_values",
     "var.scan_index", "var.mass_range_min", "var.mass_range_max",
@@ -66,6 +67,8 @@ import ucar.ma2.MAMath;
     "var.scan_rate"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class MassSpectrumVisualization extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MassSpectrumVisualization.class);
 
     @Configurable(name = "var.modulation_time", value = "modulation_time")
     private String modulationVar = "modulation_time";

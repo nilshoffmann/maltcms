@@ -29,11 +29,13 @@ package maltcms.ui.charts;
 
 import cross.datastructures.tools.EvalTools;
 import java.util.ArrayList;
-import lombok.extern.slf4j.Slf4j;
+
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYBlockRenderer;
 import org.jfree.data.xy.DefaultXYZDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
 
@@ -44,8 +46,10 @@ import ucar.ma2.Index;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class XYZChart extends AChart<XYPlot> {
+    
+    private static Logger log = LoggerFactory.getLogger(XYZChart.class);
 
     private Array x = null;
     private ArrayList<Array> y = null;

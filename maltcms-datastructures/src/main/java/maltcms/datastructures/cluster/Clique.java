@@ -32,9 +32,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.datastructures.array.IFeatureVector;
 import maltcms.datastructures.array.IMutableFeatureVector;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>Clique class.</p>
@@ -42,8 +43,10 @@ import maltcms.datastructures.array.IMutableFeatureVector;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class Clique<T extends IFeatureVector> implements IClique<T> {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Clique.class);
 
     private static long CLIQUEID = 0;
     private long id = -1;

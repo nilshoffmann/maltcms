@@ -40,7 +40,7 @@ import cross.exception.ResourceNotAvailableException;
 import java.io.File;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.filters.array.AdditionFilter;
 import maltcms.commands.filters.array.NormalizationFilter;
 import maltcms.tools.ArrayTools;
@@ -50,6 +50,7 @@ import maltcms.ui.charts.XYChart;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
@@ -60,10 +61,12 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 public class Array1DVisualizer extends AFragmentCommand {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Array1DVisualizer.class);
 
     private final String description = "Creates plots of 1-dimensional variables.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.VISUALIZATION;

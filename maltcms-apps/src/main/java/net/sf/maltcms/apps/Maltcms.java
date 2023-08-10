@@ -51,7 +51,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import lombok.extern.slf4j.Slf4j;
+
 import net.sf.maltcms.apps.util.FragmentCommandDocGenerator;
 import net.sf.maltcms.apps.util.ThreadTimer;
 import org.apache.commons.cli.CommandLine;
@@ -70,6 +70,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -81,8 +82,10 @@ import org.slf4j.Logger;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 public class Maltcms implements Thread.UncaughtExceptionHandler {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Maltcms.class);
 
     static Maltcms mcms;
     private boolean runGui = false;

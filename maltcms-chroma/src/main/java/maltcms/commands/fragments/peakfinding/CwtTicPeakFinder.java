@@ -40,13 +40,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments.peakfinding.cwtPeakFinder.CwtTicPeakFinderCallable;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.PeakFinderWorkerResult;
 import maltcms.commands.fragments.peakfinding.ticPeakFinder.WorkflowResult;
 import maltcms.datastructures.peak.normalization.IPeakNormalizer;
 import net.sf.mpaxs.api.ICompletionService;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -55,11 +56,13 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 @Data
 @ServiceProvider(service = AFragmentCommand.class)
 @RequiresVariables(names = {"var.total_intensity"})
 public class CwtTicPeakFinder extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(CwtTicPeakFinder.class);
 
     private final String description = "Finds TIC peaks using Continuous Wavelet Transform.";
     private final WorkflowSlot workflowSlot = WorkflowSlot.PEAKFINDING;

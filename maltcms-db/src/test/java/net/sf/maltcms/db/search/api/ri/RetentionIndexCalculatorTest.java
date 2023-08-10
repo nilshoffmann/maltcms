@@ -28,18 +28,21 @@
 package net.sf.maltcms.db.search.api.ri;
 
 import java.util.Arrays;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.tools.ArrayTools;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class RetentionIndexCalculatorTest {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(RetentionIndexCalculatorTest.class);
 
     @Test
     public void testSameNumberOfRisAndCompounds() {

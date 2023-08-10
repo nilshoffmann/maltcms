@@ -37,7 +37,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 import ucar.ma2.Array;
 import ucar.ma2.MAMath;
 
@@ -47,9 +48,11 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class MinMaxMassFinderWorker implements Callable<double[]>, Serializable {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MinMaxMassFinderWorker.class);
 
     private URI fileToLoad;
     private boolean ignoreMinMaxMassArrays = false;

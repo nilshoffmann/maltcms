@@ -29,7 +29,8 @@ package maltcms.io.csv;
 
 import cross.datastructures.tuple.Tuple2D;
 import java.util.Vector;
-import lombok.extern.slf4j.Slf4j;
+import static org.slf4j.LoggerFactory.getLogger;
+
 
 /**
  * Reads in custom color ramps.
@@ -37,8 +38,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ColorRampReader {
+    
+    private static final org.slf4j.Logger log = getLogger(CSVReader.class);
 
     private static int[][] defaultRamp = {{0, 0, 255}, {0, 3, 255},
     {0, 7, 255}, {0, 11, 255}, {0, 15, 255}, {0, 19, 255},

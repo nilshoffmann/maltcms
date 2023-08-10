@@ -41,7 +41,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * <p>
@@ -50,8 +51,10 @@ import lombok.extern.slf4j.Slf4j;
  * @author Nils Hoffmann
  *
  */
-@Slf4j
+
 public class JoinScans {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(JoinScans.class);
 
     /**
      * <p>

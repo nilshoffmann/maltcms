@@ -30,18 +30,22 @@ package maltcms.test;
 import cross.test.SetupLogging;
 import java.io.File;
 import java.io.IOException;
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Nils Hoffmann
  */
-@Slf4j
+
 public class ZipResourceExtractorTest {
+    
+    private static final Logger log = LoggerFactory.getLogger(ZipResourceExtractorTest.class);
 
     @Rule
     public TemporaryFolder tf = new TemporaryFolder();

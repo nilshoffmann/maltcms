@@ -45,7 +45,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments2d.testing.Visualization2D;
 import maltcms.commands.fragments2d.warp.visualization.Default2DTWVisualizer;
 import maltcms.commands.fragments2d.warp.visualization.IVisualization;
@@ -58,6 +58,7 @@ import maltcms.ui.charts.PlotRunner;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.JFreeChart;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.Index;
@@ -68,7 +69,7 @@ import ucar.ma2.Index;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.scan_acquisition_time_1d",
     "var.modulation_time", "var.scan_rate",
@@ -78,6 +79,8 @@ import ucar.ma2.Index;
 @RequiresOptionalVariables(names = {"var.v_total_intensity"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class DTW2DTicVisualizer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(DTW2DTicVisualizer.class);
 
     @Configurable(name = "var.warp_path_i", value = "warp_path_i")
     private String warpPathi = "warp_path_i";

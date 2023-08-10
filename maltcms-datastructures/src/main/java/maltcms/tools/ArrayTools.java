@@ -44,8 +44,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
-import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayBoolean;
 import ucar.ma2.ArrayByte;
@@ -68,8 +69,10 @@ import ucar.ma2.Sparse;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 public class ArrayTools {
+        
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ArrayTools.class);
 
     private static Random random;
 

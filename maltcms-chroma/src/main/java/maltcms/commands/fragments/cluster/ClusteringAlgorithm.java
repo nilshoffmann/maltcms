@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.commands.distances.dtw.MZIDynamicTimeWarp;
 import maltcms.commands.fragments.warp.PathWarp;
@@ -62,6 +62,7 @@ import maltcms.datastructures.fragments.PairwiseDistances;
 import maltcms.io.misc.StatsWriter;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -73,10 +74,11 @@ import ucar.ma2.ArrayInt;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
 @Data
 public abstract class ClusteringAlgorithm extends AFragmentCommand implements
         IClusteringAlgorithm {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ClusteringAlgorithm.class);
 
     /** {@inheritDoc} */
     @Override

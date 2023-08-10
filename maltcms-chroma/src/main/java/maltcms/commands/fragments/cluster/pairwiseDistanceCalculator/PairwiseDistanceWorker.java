@@ -41,10 +41,11 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.concurrent.Callable;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.PairwiseFeatureSequenceSimilarity;
 import maltcms.io.misc.StatsWriter;
 import maltcms.tools.MaltcmsTools;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>PairwiseDistanceWorker class.</p>
@@ -52,10 +53,12 @@ import maltcms.tools.MaltcmsTools;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
+
 @Data
 public class PairwiseDistanceWorker implements
         Callable<PairwiseDistanceResult>, Serializable {
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(PairwiseDistanceWorker.class);
 
     private static final long serialVersionUID = 4556712389798130L;
     private PairwiseFeatureSequenceSimilarity similarity;

@@ -36,10 +36,11 @@ import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.tuple.Tuple2D;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.distances.dtw.ADynamicTimeWarp;
 import maltcms.tools.ArrayTools2;
 import org.apache.commons.configuration.Configuration;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 
 /**
@@ -49,13 +50,15 @@ import ucar.ma2.Array;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.second_column_scan_index",
     "var.total_intensity"})
 @RequiresOptionalVariables(names = {"var.v_total_intensity"})
 @ProvidesVariables(names = {"var.warp_path_i", "var.warp_path_j"})
 public class ScanlineFilterTicWarp extends ADynamicTimeWarp {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(ScanlineFilterTicWarp.class);
 
     @Configurable(name = "var.total_intensity", value = "total_intensity")
     private String totalIntensity = "total_intensity";

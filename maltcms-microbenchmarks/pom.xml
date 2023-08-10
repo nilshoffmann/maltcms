@@ -9,6 +9,33 @@
     <artifactId>maltcms-microbenchmarks</artifactId>
     <name>Maltcms Microbenchmarks</name>
     <description>Testing Module for Performance Evaluation of Similarity Functions.</description>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+            </plugin>  
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jub.consumers>CONSOLE,H2</jub.consumers>
+                        <jub.db.file>.benchmarks</jub.db.file>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <jub.consumers>CONSOLE,H2</jub.consumers>
+                        <jub.db.file>.benchmarks</jub.db.file>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -84,29 +111,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <jub.consumers>CONSOLE,H2</jub.consumers>
-                        <jub.db.file>.benchmarks</jub.db.file>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <systemPropertyVariables>
-                        <jub.consumers>CONSOLE,H2</jub.consumers>
-                        <jub.db.file>.benchmarks</jub.db.file>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

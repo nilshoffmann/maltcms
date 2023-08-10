@@ -43,7 +43,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments2d.tools.ArrayTools;
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ArrayTools2;
@@ -55,6 +55,7 @@ import maltcms.ui.charts.XYChart;
 import org.apache.commons.configuration.Configuration;
 import org.jfree.chart.plot.XYPlot;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;
@@ -66,7 +67,7 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  *
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.mean_ms_intensity", "var.var_ms_intensity",
     "var.sd_ms_intensity", "var.v_total_intensity_1d",
@@ -78,6 +79,8 @@ import ucar.ma2.IndexIterator;
     "var.scan_acquisition_time_1d"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class MeanVarVis extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MeanVarVis.class);
 
     @Configurable(name = "var.var_intensity_values", value = "var_intensity_values")
     private String varMSIntensityVar = "var_intensity_values";

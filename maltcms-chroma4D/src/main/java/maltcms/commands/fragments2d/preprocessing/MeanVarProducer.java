@@ -45,14 +45,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.commands.fragments2d.tools.ArrayTools;
 import maltcms.datastructures.caches.IScanLine;
+import maltcms.datastructures.caches.ScanLineCache;
 import maltcms.datastructures.caches.ScanLineCacheFactory;
 import maltcms.tools.ArrayTools2;
 import maltcms.tools.MaltcmsTools;
 import org.apache.commons.configuration.Configuration;
 import org.openide.util.lookup.ServiceProvider;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
@@ -64,7 +66,7 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.modulation_time", "var.scan_rate"})
 @ProvidesVariables(names = {"var.mean_ms_intensity", "var.var_ms_intensity",
@@ -76,6 +78,8 @@ import ucar.ma2.IndexIterator;
     "var.maxms_1d_vertical_index", "var.maxms_1d_vertical"})
 @ServiceProvider(service = AFragmentCommand.class)
 public class MeanVarProducer extends AFragmentCommand {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(MeanVarProducer.class);
 
     @Configurable(name = "var.mean_intensity_values", value = "mean_intensity_values")
     private String meanMSIntensityVar = "mean_intensity_values";

@@ -52,9 +52,10 @@ import java.util.Formatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import org.jdom2.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
 import ucar.ma2.ArrayChar.StringIterator;
@@ -68,9 +69,9 @@ import ucar.ma2.MAMath;
  * @author Nils Hoffmann
  * 
  */
-@Slf4j
-@Data
 public class CSVWriter implements IWorkflowElement {
+    
+    private static final Logger log = LoggerFactory.getLogger(CSVWriter.class);
 
     private String fieldSeparator = "\t";
     private IWorkflow workflow = null;
@@ -807,4 +808,23 @@ public class CSVWriter implements IWorkflowElement {
         }
         pw.write(row.toString());
     }
+
+    public String getFieldSeparator() {
+        return fieldSeparator;
+    }
+
+    public void setFieldSeparator(String fieldSeparator) {
+        this.fieldSeparator = fieldSeparator;
+    }
+
+    @Override
+    public IWorkflow getWorkflow() {
+        return workflow;
+    }
+
+    @Override
+    public void setWorkflow(IWorkflow workflow) {
+        this.workflow = workflow;
+    }
+    
 }

@@ -42,7 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.ColorRampReader;
 import maltcms.tools.ArrayTools2;
 import org.apache.commons.configuration.Configuration;
@@ -57,7 +57,7 @@ import ucar.ma2.IndexIterator;
  * @author Mathias Wilhelm
  * 
  */
-@Slf4j
+
 @Data
 @RequiresVariables(names = {"var.v_mass_values", "var.meanms_1d_horizontal", "var.meanms_1d_horizontal_index"})
 @ServiceProvider(service = AFragmentCommand.class)

@@ -37,7 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+
 import maltcms.io.csv.CSVWriter;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
@@ -49,7 +49,7 @@ import ucar.ma2.Array;
  * 
  */
 @Data
-@Slf4j
+
 @ServiceProvider(service = AFragmentCommand.class)
 public class VariableDataExporter extends AFragmentCommand {
 
