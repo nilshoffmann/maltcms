@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/license-LGPL--3.0-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 [![License](https://img.shields.io/badge/license-EPL--1.0-blue.svg)](https://www.eclipse.org/legal/epl-v10.html)
 
-[:blue_book: Documentation](http://nilshoffmann.github.io/maltcms/)
+[:blue_book: Documentation](docs/index.md)
 
 Maltcms is a JAVA framework for preprocessing, alignment, analysis and visualization of data stored in open file formats used in proteomics, metabolomics, and analytical chemistry research.
 
@@ -62,12 +62,16 @@ Maltcms is dual licensed under either the Lesser General Public License (L-GPL v
 * Java JDK / JRE 17 https://www.oracle.com/technetwork/java/javase/downloads/index.html
 
 ## Prerequisites for Maltcms Development
-* Java JDK 17 https://www.oracle.com/technetwork/java/javase/downloads/index.html
-* Maven 3 https://maven.apache.org/download.html
-* Any IDE supporting maven 2/3 integration and subversion support
-  * NetBeans 8.+ https://netbeans.org/
-  * Eclipse 4.+ https://eclipse.org/ (requires additional m2e plugin and subclipse/subversive plugins)
-  * IntelliJ Idea 14 CE https://www.jetbrains.com/idea/
+
+* [Git](https://git-scm.com) (for source code access)
+* [Java JDK 17](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* [Maven 3](https://maven.apache.org/download.html)
+* Any IDE supporting maven 3 integration and subversion support
+    * [NetBeans 8.+](https://netbeans.org/)
+    * [Eclipse 4.+](https://eclipse.org/)
+    (requires additional m2e plugin and 
+     git plugins)
+    * [IntelliJ Idea 10.5](https://www.jetbrains.com/idea/)
 
 Within this directory, you will find all the submodules, which 
 make up Maltcms. General configuration for all modules can be found within the 
