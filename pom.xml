@@ -634,7 +634,7 @@
         <module>maltcms-xml-annotation</module>
         <module>maltcms-resources</module>
         <module>maltcms-cv</module>
-        <!--<module>maltcms-ap</module>-->
+        <module>maltcms-ap</module>
         <module>maltcms-microbenchmarks</module>
         <module>distributions</module>
         <module>maltcms-io-providers</module>
