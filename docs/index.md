@@ -5,6 +5,7 @@ Maltcms is implemented in the platform-independent JAVA programming language.
 The individual modules of Maltcms are managed and built using [Maven](https://maven.apache.org).
 
 If you want to use Maltcms in your own projects, please see the [Getting Started](gettingStarted.md) page for more details.
+More details about Maltcms modules and configuration is linked from the [Documentation](documentation/index.md) page.
 
 Maltcms is <a href="https://github.com/nilshoffmann/maltcms/blob/master/maltcms-resources/src/main/resources/licenses/LICENSE.maltcms.txt">dual licensed</a> under either the Lesser General Public License (L-GPL v3), or, at the licensees discretion, under the terms of the Eclipse Public License (EPL v1).
 
