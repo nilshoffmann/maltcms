@@ -1,5 +1,19 @@
 # Release Notes
 
+## Changes for version 2.0.0
+### Improvements
+* Maltcms now requires Java 17 to compile and run
+
+### API Changes
+* Some modules have been removed due to library incompatibilities:
+  * mz5 IO Provider
+  * maltcms-experimental has been merged into the main line
+* MPAXs is now part of maltcms-cross
+* all maltcms-cross and maltcms artifacts now have the **new** groupId io.github.nilshoffmann
+
+### Other
+* The website is no longer built using the Maven site plugin, but rather uses plain Markdown
+
 ## Changes for version 1.4.0
 ### Improvements
 * Maltcms is now compiled using Java 8. It also requires Java 8 to run.

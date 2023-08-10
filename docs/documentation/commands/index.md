@@ -2,73 +2,73 @@
 
 ## ALIGNMENT commands
 
-* [CenterStarAlignment](./alignment/CenterStarAlignment.html)
-* [PeakCliqueAlignment](./alignment/PeakCliqueAlignment.html)
-* [ProgressiveTreeAlignment](./alignment/ProgressiveTreeAlignment.html)
-* [SymbolicRepresentationAlignment](./alignment/SymbolicRepresentationAlignment.html)
+* [CenterStarAlignment](./alignment/CenterStarAlignment.md)
+* [PeakCliqueAlignment](./alignment/PeakCliqueAlignment.md)
+* [ProgressiveTreeAlignment](./alignment/ProgressiveTreeAlignment.md)
+* [SymbolicRepresentationAlignment](./alignment/SymbolicRepresentationAlignment.md)
 
 ## CLUSTERING commands
-* [CompleteLinkageAlgorithm](./clustering/CompleteLinkageAlgorithm.html)
+* [CompleteLinkageAlgorithm](./clustering/CompleteLinkageAlgorithm.md)
 
 ## FILECONVERSION commands
-* [ANDIChromImporter](./fileconversion/ANDIChromImporter.html)
-* [ANDIMSExporter](./fileconversion/ANDIMSExporter.html)
-* [Data1Dto2DConverter](./fileconversion/Data1Dto2DConverter.html)
-* [DefaultVarLoader](./fileconversion/DefaultVarLoader.html)
-* [GcImagePeak2DImporter](./fileconversion/GcImagePeak2DImporter.html)
-* [MZMLExporter](./fileconversion/MZMLExporter.html)
-* [ObiWarplmataExporter](./fileconversion/ObiWarplmataExporter.html)
+* [ANDIChromImporter](./fileconversion/ANDIChromImporter.md)
+* [ANDIMSExporter](./fileconversion/ANDIMSExporter.md)
+* [Data1Dto2DConverter](./fileconversion/Data1Dto2DConverter.md)
+* [DefaultVarLoader](./fileconversion/DefaultVarLoader.md)
+* [GcImagePeak2DImporter](./fileconversion/GcImagePeak2DImporter.md)
+* [MZMLExporter](./fileconversion/MZMLExporter.md)
+* [ObiWarplmataExporter](./fileconversion/ObiWarplmataExporter.md)
 
 ## FILEIO commands
-* [CSVAnchorReader](./fileio/CSVAnchorReader.html)
-* [DataFileVariablePrinter](./fileio/DataFileVariablePrinter.html)
-* [TICPeakListImporter](./fileio/TICPeakListImporter.html)
-* [VariableDataExporter](./fileio/VariableDataExporter.html)
+* [CSVAnchorReader](./fileio/CSVAnchorReader.md)
+* [DataFileVariablePrinter](./fileio/DataFileVariablePrinter.md)
+* [TICPeakListImporter](./fileio/TICPeakListImporter.md)
+* [VariableDataExporter](./fileio/VariableDataExporter.md)
 
 ## GENERAL_PREPROCESSING commands
-* [CreateHorizontalTicVector](./general_preprocessing/CreateHorizontalTicVector.html)
-* [Data2DNormalizer](./general_preprocessing/Data2DNormalizer.html)
-* [Default2DVarLoader](./general_preprocessing/Default2DVarLoader.html)
-* [DenseArrayProducer](./general_preprocessing/DenseArrayProducer.html)
-* [GCGCToGCMSConverter](./general_preprocessing/GCGCToGCMSConverter.html)
-* [MassFilter](./general_preprocessing/MassFilter.html)
-* [MeanVarProducer](./general_preprocessing/MeanVarProducer.html)
-* [ModulationExtractor](./general_preprocessing/ModulationExtractor.html)
-* [ScanExtractor](./general_preprocessing/ScanExtractor.html)
+* [CreateHorizontalTicVector](./general_preprocessing/CreateHorizontalTicVector.md)
+* [Data2DNormalizer](./general_preprocessing/Data2DNormalizer.md)
+* [Default2DVarLoader](./general_preprocessing/Default2DVarLoader.md)
+* [DenseArrayProducer](./general_preprocessing/DenseArrayProducer.md)
+* [GCGCToGCMSConverter](./general_preprocessing/GCGCToGCMSConverter.md)
+* [MassFilter](./general_preprocessing/MassFilter.md)
+* [MeanVarProducer](./general_preprocessing/MeanVarProducer.md)
+* [ModulationExtractor](./general_preprocessing/ModulationExtractor.md)
+* [ScanExtractor](./general_preprocessing/ScanExtractor.md)
 
 ## IDENTIFICATION commands
-* [EIMSDBMetaboliteAssignment](./identification/EIMSDBMetaboliteAssignment.html)
+* [EIMSDBMetaboliteAssignment](./identification/EIMSDBMetaboliteAssignment.md)
 
 ## PEAKFINDING commands
-* [CwtEicPeakFinder](./peakfinding/CwtEicPeakFinder.html)
-* [CwtPeakFinder](./peakfinding/CwtPeakFinder.html)
-* [CwtTicPeakFinder](./peakfinding/CwtTicPeakFinder.html)
-* [PeakAreaNormalizer](./peakfinding/PeakAreaNormalizer.html)
-* [SeededRegionGrowing](./peakfinding/SeededRegionGrowing.html)
-* [TICPeakFinder](./peakfinding/TICPeakFinder.html)
+* [CwtEicPeakFinder](./peakfinding/CwtEicPeakFinder.md)
+* [CwtPeakFinder](./peakfinding/CwtPeakFinder.md)
+* [CwtTicPeakFinder](./peakfinding/CwtTicPeakFinder.md)
+* [PeakAreaNormalizer](./peakfinding/PeakAreaNormalizer.md)
+* [SeededRegionGrowing](./peakfinding/SeededRegionGrowing.md)
+* [TICPeakFinder](./peakfinding/TICPeakFinder.md)
 
 ## STATISTICS commands
-* [PairwiseDistanceCalculator](./statistics/PairwiseDistanceCalculator.html)
+* [PairwiseDistanceCalculator](./statistics/PairwiseDistanceCalculator.md)
 
 ## VISUALIZATION commands
-* [Array1DVisualizer](./visualization/Array1DVisualizer.html)
-* [Chromatogram2DVisualizer](./visualization/Chromatogram2DVisualizer.html)
-* [ChromatogramVisualizer](./visualization/ChromatogramVisualizer.html)
-* [DTW2DPeakAreaVisualizer](./visualization/DTW2DPeakAreaVisualizer.html)
-* [DTW2DTicVisualizer](./visualization/DTW2DTicVisualizer.html)
-* [DeltaMasses](./visualization/DeltaMasses.html)
-* [EICHeatmapCoplot](./visualization/EICHeatmapCoplot.html)
-* [GradientVisualizer](./visualization/GradientVisualizer.html)
-* [MZIDistributionVisualizer](./visualization/MZIDistributionVisualizer.html)
-* [MassSpectrumVisualization](./visualization/MassSpectrumVisualization.html)
-* [MeanVarVis](./visualization/MeanVarVis.html)
-* [PairwiseAlignmentMatrixVisualizer](./visualization/PairwiseAlignmentMatrixVisualizer.html)
-* [PairwiseAlignmentVisualizer](./visualization/PairwiseAlignmentVisualizer.html)
-* [ScoreDistributionVisualizer](./visualization/ScoreDistributionVisualizer.html)
-* [TICHeatmapCoplot](./visualization/TICHeatmapCoplot.html)
+* [Array1DVisualizer](./visualization/Array1DVisualizer.md)
+* [Chromatogram2DVisualizer](./visualization/Chromatogram2DVisualizer.md)
+* [ChromatogramVisualizer](./visualization/ChromatogramVisualizer.md)
+* [DTW2DPeakAreaVisualizer](./visualization/DTW2DPeakAreaVisualizer.md)
+* [DTW2DTicVisualizer](./visualization/DTW2DTicVisualizer.md)
+* [DeltaMasses](./visualization/DeltaMasses.md)
+* [EICHeatmapCoplot](./visualization/EICHeatmapCoplot.md)
+* [GradientVisualizer](./visualization/GradientVisualizer.md)
+* [MZIDistributionVisualizer](./visualization/MZIDistributionVisualizer.md)
+* [MassSpectrumVisualization](./visualization/MassSpectrumVisualization.md)
+* [MeanVarVis](./visualization/MeanVarVis.md)
+* [PairwiseAlignmentMatrixVisualizer](./visualization/PairwiseAlignmentMatrixVisualizer.md)
+* [PairwiseAlignmentVisualizer](./visualization/PairwiseAlignmentVisualizer.md)
+* [ScoreDistributionVisualizer](./visualization/ScoreDistributionVisualizer.md)
+* [TICHeatmapCoplot](./visualization/TICHeatmapCoplot.md)
 
 ## WARPING commands
-* [ChromatogramWarp2](./warping/ChromatogramWarp2.html)
-* [PathWarp](./warping/PathWarp.html)
+* [ChromatogramWarp2](./warping/ChromatogramWarp2.md)
+* [PathWarp](./warping/PathWarp.md)
 
 

@@ -74,5 +74,5 @@ the build in order to generate complete sourcecode for those classes that use th
 The following pages give a more detailed overview of different aspects when developing 
 with Maltcms.
 
-- [Maven](./maven.html)
-- [Custom Workflow Elements](./customWorkflowElements.html)
+- [Maven](./maven.md)
+- [Custom Workflow Elements](./customWorkflowElements.md)

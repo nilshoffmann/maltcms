@@ -5,7 +5,7 @@
     operating system from 
     [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
-2. Then [download Maltcms](https://sourceforge.net/projects/maltcms/files/maltcms/maltcms-${project.version}) and follow the installation instructions.
+2. Then [download Maltcms](https://github.com/nilshoffmann/maltcms/releases) and follow the installation instructions.
 
 # Installation Instructions
 
@@ -267,9 +267,8 @@ pipeline are located in the respective xml file below
     cfg/pipelines/xml/
 
 An overview of the available parameters for each pipeline element
-is available at [SourceForge](http://maltcms.sourceforge.net/maven/maltcms/${project.version})
-for releases and at [Maltcms.de](http://maltcms.de/staging/maltcms) for the latest development
-version.
+is available at [GitHub](https://github.com/nilshoffmann/maltcms/)
+for releases.
 
 Custom configuration files can be provided to maltcms.sh/maltcms.bat,
 as well as to maltcms.jar using the -c option. Those custom options
@@ -281,11 +280,7 @@ supplied and default configurations.
 # Example data
 
 Example data for maltcms in netcdf format along with alignment
-anchors can be downloaded individually from
-[BiBiServ](http://bibiserv.techfak.uni-bielefeld.de/chroma/download.html).
-
-Alternatively, 1D and 2D chromatogram data can be downloaded from
-[SourceForge](http://sourceforge.net/projects/maltcms/files/maltcms/example-data/).
+anchors can be downloaded individually from [GitHub](https://github.com/nilshoffmann/maltcms/tree/master/maltcms-test-tools/maltcms-test-data/src/main/resources).
 
 # File format for Anchors
 

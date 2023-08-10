@@ -1,6 +1,6 @@
 ## Workflow Configuration
-Before continuing, please check that [Maltcms is correctly installed and working](../gettingStarted.html)!
-You may also like to [create your own custom pipeline](../documentation/fragmentCommands.html).
+Before continuing, please check that [Maltcms is correctly installed and working](../gettingStarted.md)!
+You may also like to [create your own custom pipeline](../documentation/fragmentCommands.md).
 
 We will use the pipeline definition at `cfg/pipelines/xml/bipace.xml` for the following examples.
 

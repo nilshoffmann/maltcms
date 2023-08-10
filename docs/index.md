@@ -4,9 +4,9 @@ Maltcms is a JAVA framework for preprocessing, alignment, analysis and visualiza
 Maltcms is implemented in the platform-independent JAVA programming language. 
 The individual modules of Maltcms are managed and built using [Maven](https://maven.apache.org).
 
-If you want to use Maltcms in your own projects, please see the <a href="gettingStarted.html">Getting Started</a> page for more details.
+If you want to use Maltcms in your own projects, please see the [Getting Started](gettingStarted.md) page for more details.
 
-Maltcms is <a href="https://maltcms.sourceforge.net/info/license.html">dual licensed</a> under either the Lesser General Public License (L-GPL v3), or, at the licensees discretion, under the terms of the Eclipse Public License (EPL v1).
+Maltcms is <a href="https://github.com/nilshoffmann/maltcms/blob/master/maltcms-resources/src/main/resources/licenses/LICENSE.maltcms.txt">dual licensed</a> under either the Lesser General Public License (L-GPL v3), or, at the licensees discretion, under the terms of the Eclipse Public License (EPL v1).
 
 ## Open Data Formats
 * supports chromatography and mass-spectral data from netcdf (ANDI-MS/-Chrom), mzXML, mzData and mzML formats

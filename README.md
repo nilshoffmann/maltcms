@@ -11,7 +11,7 @@ Maltcms is a JAVA framework for preprocessing, alignment, analysis and visualiza
 
 Maltcms is implemented in the platform-independent JAVA programming language. The individual modules of Maltcms are managed and built using Maven.
 
-If you want to use Maltcms in your own projects, please see the [Getting Started page](https://nilshoffmann.github.io/maltcms/gettingStarted.html) for more details.
+If you want to use Maltcms in your own projects, please see the [Getting Started page](docs/gettingStarted.md) for more details.
 
 Maltcms is dual licensed under either the Lesser General Public License (L-GPL v3), or, at the licensees discretion, under the terms of the Eclipse Public License (EPL v1).
 
