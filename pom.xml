@@ -280,7 +280,8 @@
                             </manifestEntries>
                         </archive>
                         <sourcepath>${basedir}/src/main/java</sourcepath>
-                        <!--<sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>-->
+                        <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
+                        <sourcepath>${basedir}/target/generated-sources/xjc</sourcepath>
                         <doclint>none</doclint>
                     </configuration>
                 </plugin>
