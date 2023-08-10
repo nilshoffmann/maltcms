@@ -14,7 +14,7 @@
         <module>maltcms-io-csv</module>
         <module>maltcms-io-mzdata</module>
         <module>maltcms-io-mzml</module>
-        <module>maltcms-io-mztab</module>
+        <!--<module>maltcms-io-mztab</module>-->
         <module>maltcms-io-mzxml</module>
         <module>maltcms-io-netcdf</module>
         <module>maltcms-io-openms-featurexml</module>
