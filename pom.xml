@@ -237,7 +237,7 @@
                         </execution>
                     </executions>-->
                 </plugin>
-                <plugin>
+<!--                <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
                     <version>${version.lombok.maven}</version>
@@ -253,7 +253,7 @@
                         <addOutputDirectory>false</addOutputDirectory>
                         <sourceDirectory>src/main/java</sourceDirectory>
                     </configuration>
-                </plugin>
+                </plugin>-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>

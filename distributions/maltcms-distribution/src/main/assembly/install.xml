@@ -10,8 +10,14 @@
     <includeSiteDirectory>false</includeSiteDirectory>
     <files>
         <file>
-            <source>../../src/site/markdown/gettingStarted.md</source>
+            <source>../../docs/documentation/gettingStarted.md</source>
             <destName>GETTINGSTARTED</destName>
+            <fileMode>0644</fileMode>
+            <outputDirectory>/</outputDirectory>
+        </file>
+        <file>
+            <source>../../README.md</source>
+            <destName>README.md</destName>
             <fileMode>0644</fileMode>
             <outputDirectory>/</outputDirectory>
         </file>
@@ -47,7 +53,6 @@
                     <include>**/bin/**</include>
                     <include>**/res/**</include>
                     <include>**/licenses/**</include>
-                    <include>README</include>
                     <include>LICENSE</include>
                 </includes>
             </unpackOptions>
