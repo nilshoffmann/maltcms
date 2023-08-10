@@ -237,7 +237,7 @@
                         </execution>
                     </executions>-->
                 </plugin>
-<!--                <plugin>
+                <!--                <plugin>
                     <groupId>org.projectlombok</groupId>
                     <artifactId>lombok-maven-plugin</artifactId>
                     <version>${version.lombok.maven}</version>
@@ -279,10 +279,11 @@
                                 <Built-By>${user.name}</Built-By>
                             </manifestEntries>
                         </archive>
-                        <sourcepath>${basedir}/src/main/java</sourcepath>
+                        <!--                        <sourcepath>${basedir}/src/main/java</sourcepath>
                         <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
-                        <sourcepath>${basedir}/target/generated-sources/xjc</sourcepath>
+                        <sourcepath>${basedir}/target/generated-sources/xjc</sourcepath>-->
                         <doclint>none</doclint>
+                        <failOnError>false</failOnError>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -525,7 +526,8 @@
                                 </goals>
                                 <configuration>
                                     <detectJavaApiLink>false</detectJavaApiLink>
-                                    <doclint>none</doclint>
+                                    <!--<doclint>none</doclint>-->
+                                    <failOnError>false</failOnError>
                                     <docfilessubdirs>true</docfilessubdirs>
                                 </configuration>
                             </execution>
@@ -576,8 +578,9 @@
                                 </goals>
                                 <configuration>
                                     <detectJavaApiLink>false</detectJavaApiLink>
-                                    <doclint>none</doclint>
+                                    <!--<doclint>none</doclint>-->
                                     <docfilessubdirs>true</docfilessubdirs>
+                                    <failOnError>false</failOnError>
                                 </configuration>
                             </execution>
                         </executions>
@@ -660,6 +663,10 @@
                         <artifactId>slf4j-jdk14</artifactId>
                         <groupId>org.slf4j</groupId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-1.2-api</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -674,6 +681,14 @@
                     <exclusion>
                         <artifactId>log4j</artifactId>
                         <groupId>log4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-jdk14</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.logging.log4j</groupId>
+                        <artifactId>log4j-1.2-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -785,8 +800,8 @@
             </dependency>-->
             <dependency>
                 <groupId>edu.ucar</groupId>
-                <artifactId>netcdf</artifactId>
-                <version>4.3.23</version>
+                <artifactId>netcdfAll</artifactId>
+                <version>4.6.21</version>
             </dependency>
             <!--            <dependency>
                 <groupId>edu.ucar</groupId>

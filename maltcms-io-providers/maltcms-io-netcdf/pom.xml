@@ -50,7 +50,7 @@
         </dependency>
         <dependency>
             <groupId>edu.ucar</groupId>
-            <artifactId>netcdf</artifactId>
+            <artifactId>netcdfAll</artifactId>
         </dependency>
     </dependencies>
     <packaging>jar</packaging>
