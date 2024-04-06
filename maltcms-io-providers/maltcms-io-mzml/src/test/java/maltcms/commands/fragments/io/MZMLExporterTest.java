@@ -81,7 +81,7 @@ public class MZMLExporterTest extends AFragmentCommandTest {
     @Test
     public void testEmptyScan() {
         FileFragment tf = new FileFragment();
-        Array massValues = Array.factory(MathTools.seq(50.0d, 550.0d, 1.0d));
+        Array massValues = Array.makeFromJavaArray(MathTools.seq(50.0d, 550.0d, 1.0d));
 
     }
 

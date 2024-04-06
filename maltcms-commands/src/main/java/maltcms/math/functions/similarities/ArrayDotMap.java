@@ -27,11 +27,11 @@
  */
 package maltcms.math.functions.similarities;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.tools.ArrayTools;
 import maltcms.tools.ArrayTools2;
-import net.jcip.annotations.NotThreadSafe;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.IndexIterator;

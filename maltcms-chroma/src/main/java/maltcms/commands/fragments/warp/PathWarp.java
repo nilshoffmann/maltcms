@@ -187,7 +187,7 @@ public class PathWarp extends AFragmentCommand {
             vf.setDimensions(new Dimension[]{new Dimension(srcd.getName(), m
                 .getPath().size(), srcd.isShared(), srcd.isUnlimited(),
                 srcd.isVariableLength())});
-            final Array warped = Array.factory(r.getElementType(),
+            final Array warped = Array.factory(r.getDataType(),
                     new int[]{m.getPath().size()});
             EvalTools.eqI(r.getRank(), 1, this);
             EvalTools.eqI(warped.getRank(), 1, this);
@@ -288,7 +288,7 @@ public class PathWarp extends AFragmentCommand {
         } else {
             indexVar = new VariableFragment(tf, this.indexVar);
         }
-        final ArrayInt.D1 index = new ArrayInt.D1(mergedMasses.size());
+        final ArrayInt.D1 index = new ArrayInt.D1(mergedMasses.size(), false);
         int offset = 0;
         for (int i = 0; i < mergedMasses.size(); i++) {
             index.set(i, offset);
@@ -384,7 +384,7 @@ public class PathWarp extends AFragmentCommand {
                 idx++;
             }
             if (ri.size() > 0) {
-                final ArrayInt.D1 target = new ArrayInt.D1(ri.size());
+                final ArrayInt.D1 target = new ArrayInt.D1(ri.size(), false);
                 int i = 0;
                 for (final Integer itg : ri) {
                     target.set(i++, itg);

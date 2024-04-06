@@ -121,7 +121,7 @@ public class DenseArray implements IArrayD2Double {
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         final ArrayDouble.D1 arr = new ArrayDouble.D1(
                 getNumberOfStoredElements());
-        final ArrayInt.D1 si = new ArrayInt.D1(rows());
+        final ArrayInt.D1 si = new ArrayInt.D1(rows(), false);
         int offset = 0;
         for (int i = 0; i < rows(); i++) {
             si.set(i, 0 + offset);

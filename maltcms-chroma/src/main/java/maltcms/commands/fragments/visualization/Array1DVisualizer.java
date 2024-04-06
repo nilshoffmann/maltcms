@@ -330,7 +330,7 @@ public class Array1DVisualizer extends AFragmentCommand {
                 final Array maxA = (values[0].getShape()[0] > values[1].getShape()[0]) ? values[0] : values[1];
                 final Array minA = (values[0].getShape()[0] <= values[1].
                         getShape()[0]) ? values[0] : values[1];
-                final Array res = Array.factory(maxA.getElementType(),
+                final Array res = Array.factory(maxA.getDataType(),
                         new int[]{maxA.getShape()[0]});
                 Array.arraycopy(minA, 0, res, 0, minA.getShape()[0]);
 

@@ -103,7 +103,7 @@ public final class Sparse extends Array {
      */
     public Sparse(Array indices, Array values, int minindex1,
             int maxindex1, int nbins, double massBinResolution) {
-        super(Index.factory(new int[]{maxindex1 - minindex1}));
+        super(values.getDataType(), Index.factory(new int[]{maxindex1 - minindex1}));
         if (indices.getShape()[0] != values.getShape()[0]) {
             throw new IllegalArgumentException(
                     "Length of input arrays differs!");
@@ -130,13 +130,13 @@ public final class Sparse extends Array {
     /**
      * <p>Constructor for Sparse.</p>
      *
-     * @param arg0 a int.
+     * @param bins a int.
      * @param minindex1 a int.
      * @param maxindex1 a int.
      */
-    public Sparse(int arg0, int minindex1, int maxindex1) {
-        super(Index.factory(new int[]{maxindex1 - minindex1}));
-        this.bins = arg0;
+    public Sparse(DataType dataType, int bins, int minindex1, int maxindex1) {
+        super(dataType, Index.factory(new int[]{maxindex1 - minindex1}));
+        this.bins = bins;
         this.indToVal = new SparseDoubleMatrix1D(this.bins);
         this.minindex = minindex1;
         this.maxindex = maxindex1;
@@ -148,7 +148,7 @@ public final class Sparse extends Array {
      * @param sparse a {@link ucar.ma2.Sparse} object.
      */
     public Sparse(Sparse sparse) {
-        super(Index.factory(new int[]{sparse.maxindex - sparse.minindex}));
+        super(sparse.getDataType(), Index.factory(new int[]{sparse.maxindex - sparse.minindex}));
         this.bins = sparse.bins;
         this.indToVal = (SparseDoubleMatrix1D) sparse.indToVal.clone();
         this.minindex = sparse.minindex;
@@ -184,12 +184,6 @@ public final class Sparse extends Array {
     @Override
     public float getFloat(Index arg0) {
         return (float) getDouble(arg0);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public IndexIterator getIndexIteratorFast() {
-        return getIndexIterator();
     }
 
     /** {@inheritDoc} */

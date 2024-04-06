@@ -181,7 +181,7 @@ public class PairwiseDistances implements IFileFragmentModifier, IConfigurable,
         na.setArray(this.names);
         final IVariableFragment minimizing = new VariableFragment(f,
                 this.minArrayComp);
-        final ArrayInt.D0 ab = new ArrayInt.D0();
+        final ArrayInt.D0 ab = new ArrayInt.D0(false);
         ab.set(this.minimize ? 1 : 0);
         minimizing.setArray(ab);
         final IVariableFragment alignments = new VariableFragment(f,

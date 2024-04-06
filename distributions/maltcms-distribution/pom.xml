@@ -4,7 +4,7 @@
     <parent>
         <artifactId>maltcms-distributions</artifactId>
         <groupId>io.github.nilshoffmann</groupId>
-        <version>2.0.0</version>
+        <version>2.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>maltcms-distribution</artifactId>
@@ -44,9 +44,13 @@
                         </goals>
                         <configuration>
                             <resources>
-                                <resource>
+                                <!--                                <resource>
                                     <directory>src/main/resources/META-INF</directory>
                                     <targetPath>classes/META-INF</targetPath>
+                                </resource>-->
+                                <resource>
+                                    <directory>src/main/resources/</directory>
+                                    <targetPath>classes/</targetPath>
                                 </resource>
                             </resources>
                             <outputDirectory>${project.build.directory}/</outputDirectory>
@@ -55,12 +59,20 @@
                 </executions>
             </plugin>
             <!-- Jar plugin -->
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
+                    <executions>
+                        <execution>
+                            <id>default-jar</id>
+                            <configuration>
+                                <classifier>task</classifier>
+                            </configuration>
+                        </execution>
+                    </executions>
                     <execution>
-                        <id>create-cp-jar</id>
+                        <id>default-jar</id>
                         <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
@@ -68,10 +80,11 @@
                         <configuration combine.self="override">
                             <includes>
                                 <include>META-INF/*</include>
+                                <include>logback.xml</include>
                             </includes>
                             <skipIfEmpty>false</skipIfEmpty>
                             <archive>
-                                <!--<index>true</index>-->
+                                <index>true</index>
                                 <manifest>
                                     <useUniqueVersions>false</useUniqueVersions>
                                     <mainClass>net.sf.maltcms.apps.Maltcms</mainClass>
@@ -87,7 +100,20 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
+<!--            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>    
+                    <mainClass>net.sf.maltcms.apps.Maltcms</mainClass>
+                    <layout>JAR</layout>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                    </execution>
+                </executions>
+            </plugin>-->
             <!-- Assembly plugin -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -127,7 +153,7 @@
                                 <copy file="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms.sh" toFile="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/maltcms.command" />
                                 <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/" perm="ugo+rx" />
                                 <chmod includes="*.sh,*.command,*.bat,*.jar" dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin" perm="ugo+rx" />
-                                <copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${distributionName}-bin/${distributionName}/" />
+                                <!--<copy file="${project.build.directory}/maltcms.jar" toDir="${project.build.directory}/${distributionName}-bin/${distributionName}/" />-->
                                 <zip destfile="${project.build.directory}/${distributionName}-bin.zip">
                                     <zipfileset dir="${project.build.directory}/${distributionName}-bin/${distributionName}/bin/" prefix="${distributionName}/bin" filemode="755">
                                         <include name="*.sh" />
@@ -173,99 +199,10 @@
             </plugin>-->
         </plugins>
     </build>
-    
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-chroma4D</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-chroma4D-srg</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-chroma4D-cwt</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-apps</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-chroma</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>slf4j-jdk14</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-filters</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-commands</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-datastructures</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-execution</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>chardet</artifactId>
-                    <groupId>org.mozilla.intl</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-ui</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-db</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-statistics</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-sralign</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-xml-alignment</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-xml-annotation</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -275,136 +212,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-netcdf</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mzxml</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xxindex</artifactId>
-                    <groupId>psidev.psi.tools</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mzdata</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mzml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!--        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-mz5</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-csv</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-openms-featurexml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-io-xlsx</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>xml-apis</artifactId>
-                    <groupId>xml-apis</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>stax-api</artifactId>
-                    <groupId>stax</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!--        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-evaluation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>maltcms-spectratyping</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>maltcms-cv</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <artifactId>cross-main</artifactId>
-            <groupId>io.github.nilshoffmann</groupId>
-            <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <artifactId>com.springsource.org.apache.tools.ant</artifactId>
-                    <groupId>org.apache.ant</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>poi</artifactId>
-            <groupId>org.apache.poi</groupId>
-            <type>jar</type>
-            <version>5.2.3</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>poi</artifactId>
-                    <groupId>org.apache.poi</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>poi-ooxml</artifactId>
-                    <groupId>org.apache.poi</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>poi-ooxml-schemas</artifactId>
-                    <groupId>org.apache.poi</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>jfreechart</artifactId>
-            <groupId>org.jfree</groupId>
-            <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jcommon</artifactId>
-                    <groupId>org.jfree</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jfreechart</artifactId>
-                    <groupId>org.jfree</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <artifactId>jxl</artifactId>
-            <groupId>net.sourceforge.jexcelapi</groupId>
-            <type>jar</type>
-            <version>2.6.12</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jxl</artifactId>
-                    <groupId>net.sourceforge.jexcelapi</groupId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>edu.ucar</groupId>
+            <artifactId>netcdfAll</artifactId>
+            <version>4.6.21</version>
         </dependency>
     </dependencies>
     <properties>

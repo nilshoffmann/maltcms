@@ -497,7 +497,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
             secondRetTime[i] = secondRetTime[i - 1] + (float)(chrom.getModulationDuration() / (float) chrom.getNumberOfScansPerModulation());
         }
         final Tuple2D<Array, Array> times = new Tuple2D<>(
-                Array.factory(firstRetTime), Array.factory(secondRetTime));
+                Array.makeFromJavaArray(firstRetTime), Array.makeFromJavaArray(secondRetTime));
         return times;
     }
 
@@ -566,7 +566,7 @@ public class SeededRegionGrowing extends AFragmentCommand {
             final IFileFragment fret, final List<Peak2D> peaklist,
             final int[][] colorRamp) {
         log.info("Saving areas");
-        final ArrayInt.D1 peakindex = new ArrayInt.D1(peaklist.size());
+        final ArrayInt.D1 peakindex = new ArrayInt.D1(peaklist.size(), false);
         final IndexIterator iter = peakindex.getIndexIterator();
         for (final Peak2D pa : peaklist) {
             iter.setIntNext(idx(pa.getPeakArea().getSeedPoint().x, pa.getPeakArea().getSeedPoint().y));

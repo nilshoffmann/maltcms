@@ -75,7 +75,7 @@ public final class SparseArray implements IArrayD2Double {
     /** {@inheritDoc} */
     @Override
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
-        ArrayInt.D1 nelems = new ArrayInt.D1(rows());
+        ArrayInt.D1 nelems = new ArrayInt.D1(rows(), false);
         ArrayDouble.D1 data = new ArrayDouble.D1(getNumberOfStoredElements());
         int dtidx = 0;
         for (int i = 0; i < rows(); i++) {

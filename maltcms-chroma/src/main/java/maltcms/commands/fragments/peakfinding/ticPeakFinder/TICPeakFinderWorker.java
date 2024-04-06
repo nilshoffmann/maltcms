@@ -129,7 +129,7 @@ public class TICPeakFinderWorker implements Callable<PeakFinderWorkerResult>, Se
     private ArrayInt.D1 createPeakCandidatesArray(final Array tic,
             final ArrayList<Integer> ts) {
         EvalTools.notNull(ts, this);
-        final ArrayInt.D1 extr = new ArrayInt.D1(ts.size());
+        final ArrayInt.D1 extr = new ArrayInt.D1(ts.size(), false);
         // checkUniformDistribution(tic.getShape()[0], ts);
         for (int i = 0; i < ts.size(); i++) {
             extr.set(i, ts.get(i));
@@ -522,7 +522,7 @@ public class TICPeakFinderWorker implements Callable<PeakFinderWorkerResult>, Se
         }
         final ArrayDouble.D1 posx = new ArrayDouble.D1(peaks.getShape()[0]);
         final ArrayDouble.D1 posy = new ArrayDouble.D1(peaks.getShape()[0]);
-        final Array snrEstimate = Array.factory(snr);
+        final Array snrEstimate = Array.makeFromJavaArray(snr);
         final Array threshold = new ArrayDouble.D1(snr.length);
         final Array baseline = new ArrayDouble.D1(snr.length);
         for (int i = 0; i < snr.length; i++) {

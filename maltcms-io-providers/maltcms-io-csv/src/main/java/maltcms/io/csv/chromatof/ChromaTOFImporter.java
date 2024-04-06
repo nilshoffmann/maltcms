@@ -155,8 +155,8 @@ public class ChromaTOFImporter {
                 name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
                 peakType(PeakType.EIC_FILTERED).
                 build();
-        Assert.isTrue(!Double.isNaN(p1.getArea()));
-        Assert.isTrue(!Double.isNaN(p1.getApexIntensity()));
+        Assert.isTrue(!Double.isNaN(p1.getArea()), "Area was NaN");
+        Assert.isTrue(!Double.isNaN(p1.getApexIntensity()), "Apex Intensity was NaN");
         return p1;
     }
 
@@ -173,8 +173,8 @@ public class ChromaTOFImporter {
                 name(tr.getValueForName(ChromaTOFParser.ColumnName.NAME)).
                 peakType(PeakType.EIC_FILTERED).
                 build();
-        Assert.isTrue(!Double.isNaN(p2.getArea()));
-        Assert.isTrue(!Double.isNaN(p2.getApexIntensity()));
+        Assert.isTrue(!Double.isNaN(p2.getArea()), "Area was NaN");
+        Assert.isTrue(!Double.isNaN(p2.getApexIntensity()), "Apex Intensity was NaN");
         return p2;
     }
 
@@ -204,9 +204,9 @@ public class ChromaTOFImporter {
         List<Array> masses = new ArrayList<>();
         List<Array> intensities = new ArrayList<>();
         Array sat = new ArrayDouble.D1(peaks.size());
-        ArrayInt.D1 originalIndex = new ArrayInt.D1(peaks.size());
-        ArrayInt.D1 scanIndex = new ArrayInt.D1(peaks.size());
-        ArrayInt.D1 tic = new ArrayInt.D1(peaks.size());
+        ArrayInt.D1 originalIndex = new ArrayInt.D1(peaks.size(), false);
+        ArrayInt.D1 scanIndex = new ArrayInt.D1(peaks.size(), false);
+        ArrayInt.D1 tic = new ArrayInt.D1(peaks.size(), false);
         ArrayDouble.D1 massMin = new ArrayDouble.D1(peaks.size());
         ArrayDouble.D1 massMax = new ArrayDouble.D1(peaks.size());
         ArrayDouble.D1 firstColumnElutionTime = new ArrayDouble.D1(peaks.size());
@@ -221,8 +221,8 @@ public class ChromaTOFImporter {
             maxMass = Math.max(maxMass, MathTools.max(ms.getFirst()));
             massMin.set(i, minMass);
             massMax.set(i, maxMass);
-            masses.add(Array.factory(ms.getFirst()));
-            Array intensA = Array.factory(ms.getSecond());
+            masses.add(Array.makeFromJavaArray(ms.getFirst()));
+            Array intensA = Array.makeFromJavaArray(ms.getSecond());
             intensities.add(intensA);
             scanIndex.set(i, scanOffset);
             tic.setDouble(i, MAMath.sumDouble(intensA));

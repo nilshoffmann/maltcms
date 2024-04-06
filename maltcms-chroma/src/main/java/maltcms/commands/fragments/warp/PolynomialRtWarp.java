@@ -469,7 +469,7 @@ public class PolynomialRtWarp extends AFragmentCommand {
             } else {
                 indexVar = new VariableFragment(warpedB, this.indexVar);
             }
-            final ArrayInt.D1 index = new ArrayInt.D1(tbwa1.size());
+            final ArrayInt.D1 index = new ArrayInt.D1(tbwa1.size(), false);
             int offset = 0;
             for (int i = 0; i < tbwa1.size(); i++) {
                 index.set(i, offset);
@@ -567,7 +567,7 @@ public class PolynomialRtWarp extends AFragmentCommand {
      */
     public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
             final Array rhs, final boolean average) {
-        final Array rhsm = Array.factory(lhs.getElementType(), lhs.getShape());
+        final Array rhsm = Array.factory(lhs.getDataType(), lhs.getShape());
         final Index rhsmi = rhsm.getIndex();
         final Index lhsi = lhs.getIndex();
         for (final Tuple2DI tpl : al) {
@@ -588,7 +588,7 @@ public class PolynomialRtWarp extends AFragmentCommand {
      */
     public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
             final Array lhs, final boolean average) {
-        final Array lhsm = Array.factory(rhs.getElementType(), rhs.getShape());
+        final Array lhsm = Array.factory(rhs.getDataType(), rhs.getShape());
         final Index lhsmi = lhsm.getIndex();
         final Index rhsi = rhs.getIndex();
         for (final Tuple2DI tpl : al) {
@@ -616,7 +616,7 @@ public class PolynomialRtWarp extends AFragmentCommand {
         if (l.isEmpty()) {
             return;
         }
-        final ArrayInt.D1 anchPos = new ArrayInt.D1(l.size());
+        final ArrayInt.D1 anchPos = new ArrayInt.D1(l.size(), false);
         final ArrayChar.D2 anchNames = cross.datastructures.tools.ArrayTools.
                 createStringArray(l.size(), 1024);
         for (int j = 0; j < l.size(); j++) {

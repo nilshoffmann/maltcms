@@ -11,7 +11,13 @@
     <files>
         <file>
             <source>../../docs/gettingStarted.md</source>
-            <destName>GETTINGSTARTED</destName>
+            <destName>GETTINGSTARTED.md</destName>
+            <fileMode>0644</fileMode>
+            <outputDirectory>/</outputDirectory>
+        </file>
+        <file>
+            <source>../../docs/releaseNotes.md</source>
+            <destName>RELEASENOTES.md</destName>
             <fileMode>0644</fileMode>
             <outputDirectory>/</outputDirectory>
         </file>
@@ -24,7 +30,7 @@
     </files>
     <dependencySets>
         <!-- Inclusion of all dependencies -->
-        <dependencySet>
+<!--        <dependencySet>
             <unpack>false</unpack>
             <useTransitiveDependencies>true</useTransitiveDependencies>
             <excludes>
@@ -35,6 +41,17 @@
             <fileMode>0644</fileMode>
             <directoryMode>0755</directoryMode>
             <outputDirectory>lib/</outputDirectory>
+        </dependencySet>-->
+        <dependencySet>
+            <unpack>false</unpack>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <includes>
+                <include>io.github.nilshoffmann:maltcms-apps:jar</include>
+            </includes>
+            <outputFileNameMapping>maltcms.${artifact.extension}</outputFileNameMapping>
+            <fileMode>0644</fileMode>
+            <directoryMode>0755</directoryMode>
+            <outputDirectory>/</outputDirectory>
         </dependencySet>
 
         <dependencySet>

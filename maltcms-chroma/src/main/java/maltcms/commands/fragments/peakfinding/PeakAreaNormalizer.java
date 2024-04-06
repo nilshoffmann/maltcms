@@ -84,7 +84,7 @@ public class PeakAreaNormalizer extends AFragmentCommand {
             final Dimension _1024_byte_string = new Dimension("_1024_byte_string", 1024, true, false, false);
             final Dimension peak_normalizers = new Dimension("peak_normalizer_count", peakNormalizers.isEmpty() ? 1 : peakNormalizers.size(), true, false, false);
             //set names of normalization methods
-            Array normalizedAreaArray = Array.factory(DataType.getType(area.getElementType()), area.getShape());
+            Array normalizedAreaArray = Array.factory(area.getDataType(), area.getShape());
             ArrayChar.D2 normalizationMethodArray = cross.datastructures.tools.ArrayTools.createStringArray(
                     Math.max(1, peakNormalizers.size()), 1024);
             if (peakNormalizers.isEmpty()) {

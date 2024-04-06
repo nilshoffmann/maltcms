@@ -392,7 +392,7 @@ public class ScanLineCache implements IScanLine {
     public Tuple2D<Array, Array> getSparseMassSpectrum(int x, int y) {
         final Array intensities = getMassSpectrum(x, y);
         if (intensities != null) {
-            final ArrayInt.D1 mz = new ArrayInt.D1(intensities.getShape()[0]);
+            final ArrayInt.D1 mz = new ArrayInt.D1(intensities.getShape()[0], false);
             for (int i = 0; i < intensities.getShape()[0]; i++) {
                 mz.set(i, i);
             }

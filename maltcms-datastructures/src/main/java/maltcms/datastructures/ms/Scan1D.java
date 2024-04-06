@@ -143,28 +143,28 @@ public class Scan1D implements IScan1D {
             case "intensity_values":
                 return this.intensities;
             case "scan_index":
-                return Array.factory(new int[]{this.scanNumber});
+                return Array.makeFromJavaArray(new int[]{this.scanNumber});
             case "scan_acquisition_time":
-                return Array.factory(new double[]{this.scanAcquisitionTime});
+                return Array.makeFromJavaArray(new double[]{this.scanAcquisitionTime});
             case "total_intensity":
-                return Array.factory(new double[]{this.total_intensity});
+                return Array.makeFromJavaArray(new double[]{this.total_intensity});
             case "ms_level":
-                return Array.factory(new short[]{this.msLevel});
+                return Array.makeFromJavaArray(new short[]{this.msLevel});
             case "precursor_charge":
                 if (Double.isNaN(precursorCharge)) {
                     throw new ResourceNotAvailableException("precursor_charge not available!");
                 }
-                return Array.factory(new int[]{(int) this.precursorCharge});
+                return Array.makeFromJavaArray(new int[]{(int) this.precursorCharge});
             case "precursor_intensity":
                 if (Double.isNaN(precursorIntensity)) {
                     throw new ResourceNotAvailableException("precursor_intensity not available!");
                 }
-                return Array.factory(new double[]{this.precursorIntensity});
+                return Array.makeFromJavaArray(new double[]{this.precursorIntensity});
             case "precursor_mz":
                 if (Double.isNaN(precursorMz)) {
                     throw new ResourceNotAvailableException("precursor_mz not available!");
                 }
-                return Array.factory(new double[]{this.precursorMz});
+                return Array.makeFromJavaArray(new double[]{this.precursorMz});
         }
         throw new IllegalArgumentException("Feature name " + name + " unknown!");
     }

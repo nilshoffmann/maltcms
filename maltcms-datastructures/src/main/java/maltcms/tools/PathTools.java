@@ -227,8 +227,8 @@ public class PathTools implements IConfigurable {
      * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Array> toArrays(final List<Tuple2DI> al) {
-        final ArrayInt.D1 js = new ArrayInt.D1(al.size());
-        final ArrayInt.D1 is = new ArrayInt.D1(al.size());
+        final ArrayInt.D1 js = new ArrayInt.D1(al.size(), false);
+        final ArrayInt.D1 is = new ArrayInt.D1(al.size(), false);
         final IndexIterator jiter = js.getIndexIterator();
         final IndexIterator iiter = is.getIndexIterator();
         final Iterator<Tuple2DI> iter = al.iterator();
@@ -247,8 +247,8 @@ public class PathTools implements IConfigurable {
      * @return a {@link cross.datastructures.tuple.Tuple2D} object.
      */
     public static Tuple2D<Array, Array> pointListToArrays(final List<Point> al) {
-        final ArrayInt.D1 js = new ArrayInt.D1(al.size());
-        final ArrayInt.D1 is = new ArrayInt.D1(al.size());
+        final ArrayInt.D1 js = new ArrayInt.D1(al.size(), false);
+        final ArrayInt.D1 is = new ArrayInt.D1(al.size(), false);
         final IndexIterator jiter = js.getIndexIterator();
         final IndexIterator iiter = is.getIndexIterator();
         final Iterator<Point> iter = al.iterator();

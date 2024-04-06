@@ -443,7 +443,7 @@ public class MeanVarProducer extends AFragmentCommand {
             final IScanLine slc) {
         final ArrayDouble.D1 mean = new ArrayDouble.D1(slc.getBinsSize());
         final ArrayDouble.D1 var = new ArrayDouble.D1(slc.getBinsSize());
-        final ArrayInt.D1 nn = new ArrayInt.D1(slc.getBinsSize());
+        final ArrayInt.D1 nn = new ArrayInt.D1(slc.getBinsSize(), false);
 
         int n = 0;
         double delta = 0, meanCurrent = 0, x = 0, v = 0;

@@ -460,7 +460,7 @@ public class ChromatogramWarp extends AFragmentCommand {
             } else {
                 indexVar = new VariableFragment(warpedB, this.indexVar);
             }
-            final ArrayInt.D1 index = new ArrayInt.D1(tbwa1.size());
+            final ArrayInt.D1 index = new ArrayInt.D1(tbwa1.size(), false);
             int offset = 0;
             for (int i = 0; i < tbwa1.size(); i++) {
                 index.set(i, offset);
@@ -520,7 +520,7 @@ public class ChromatogramWarp extends AFragmentCommand {
         if (l.isEmpty()) {
             return;
         }
-        final ArrayInt.D1 anchPos = new ArrayInt.D1(l.size());
+        final ArrayInt.D1 anchPos = new ArrayInt.D1(l.size(), false);
         final ArrayChar.D2 anchNames = cross.datastructures.tools.ArrayTools.
                 createStringArray(l.size(), 1024);
         for (int j = 0; j < l.size(); j++) {

@@ -275,7 +275,7 @@ public class PeakCliqueAlignment extends AFragmentCommand {
             hm.put(ff.getName(), ff);
             final int size = getNumberOfPeaksWithinCliques(ff, cliques);
             if (size > 0) {
-                final ArrayInt.D1 anchors = new ArrayInt.D1(size);
+                final ArrayInt.D1 anchors = new ArrayInt.D1(size, false);
                 ArrayTools.fillArray(anchors, Integer.valueOf(-1));
                 final IVariableFragment ri = ff.hasChild(ri_scans) ? ff.getChild(
                         ri_scans) : new VariableFragment(ff, ri_scans);

@@ -130,8 +130,8 @@ public class GcImageBlobImporter {
             peakType(PeakType.TIC_FILTERED).
             apexIndex(chromatogram.getIndexFor(rt1 + rt2)).
         build();
-        Assert.isTrue(!Double.isNaN(peak2d.getArea()));
-        Assert.isTrue(!Double.isNaN(peak2d.getApexIntensity()));
+        Assert.isTrue(!Double.isNaN(peak2d.getArea()), "Area was NaN");
+        Assert.isTrue(!Double.isNaN(peak2d.getApexIntensity()), "Apex Intensity was NaN");
         return peak2d;
     }
 
@@ -146,9 +146,9 @@ public class GcImageBlobImporter {
         List<Array> masses = new ArrayList<>();
         List<Array> intensities = new ArrayList<>();
         Array sat = new ArrayDouble.D1(peaks.size());
-        ArrayInt.D1 originalIndex = new ArrayInt.D1(peaks.size());
-        ArrayInt.D1 scanIndex = new ArrayInt.D1(peaks.size());
-        ArrayInt.D1 tic = new ArrayInt.D1(peaks.size());
+        ArrayInt.D1 originalIndex = new ArrayInt.D1(peaks.size(), false);
+        ArrayInt.D1 scanIndex = new ArrayInt.D1(peaks.size(), false);
+        ArrayInt.D1 tic = new ArrayInt.D1(peaks.size(), false);
         ArrayDouble.D1 massMin = new ArrayDouble.D1(peaks.size());
         ArrayDouble.D1 massMax = new ArrayDouble.D1(peaks.size());
         ArrayDouble.D1 firstColumnElutionTime = new ArrayDouble.D1(peaks.size());

@@ -72,7 +72,7 @@ public class MovingAverageFilter extends AArrayFilter {
         Array arr = super.apply(a);
         if (arr.getRank() == 1) {
             final double[] d = (double[]) arr.get1DJavaArray(double.class);
-            arr = Array.factory(MathTools.weightedAverage(this.window, d));
+            arr = Array.makeFromJavaArray(MathTools.weightedAverage(this.window, d));
         } else {
             throw new IllegalArgumentException(
                     "Can only work on arrays of dimension 1");

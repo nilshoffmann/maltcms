@@ -32,15 +32,19 @@ import cross.annotations.Configurable;
 import cross.datastructures.fragments.FileFragment;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
+import cross.datastructures.tools.ArrayTools;
 import cross.datastructures.tools.EvalTools;
 import cross.datastructures.tools.FileTools;
 import cross.exception.ConstraintViolationException;
+import cross.exception.ExitVmException;
 import cross.exception.ResourceNotAvailableException;
 import cross.tools.StringTools;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -48,7 +52,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Formatter;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -68,6 +74,7 @@ import static ucar.ma2.DataType.INT;
 import static ucar.ma2.DataType.LONG;
 import ucar.ma2.MAMath;
 import ucar.ma2.MAMath.MinMax;
+import uk.ac.ebi.jmzml.model.mzml.AnalyzerComponent;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
 import uk.ac.ebi.jmzml.model.mzml.CV;
@@ -76,8 +83,10 @@ import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.CachedSpectrumList;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.model.mzml.ChromatogramList;
+import uk.ac.ebi.jmzml.model.mzml.ComponentList;
 import uk.ac.ebi.jmzml.model.mzml.DataProcessing;
 import uk.ac.ebi.jmzml.model.mzml.DataProcessingList;
+import uk.ac.ebi.jmzml.model.mzml.DetectorComponent;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.InstrumentConfiguration;
 import uk.ac.ebi.jmzml.model.mzml.InstrumentConfigurationList;
@@ -90,6 +99,7 @@ import uk.ac.ebi.jmzml.model.mzml.Scan;
 import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.Software;
 import uk.ac.ebi.jmzml.model.mzml.SoftwareList;
+import uk.ac.ebi.jmzml.model.mzml.SourceComponent;
 import uk.ac.ebi.jmzml.model.mzml.SourceFile;
 import uk.ac.ebi.jmzml.model.mzml.SourceFileList;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
@@ -100,12 +110,11 @@ import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
  * Worker implementation for writing of mzML files.
  *
  * @author Nils Hoffmann
- * 
+ *
  */
-
 @Data
 public class MZMLExporterWorker implements Callable<URI>, Serializable {
-    
+
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(MZMLExporterWorker.class);
 
     @Configurable(description = "The input file URI to read from. May be remote.")
@@ -135,12 +144,21 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     private String secondColumnElutionTimeVariable = "second_column_elution_time";
     private String msLevelVariable = "ms_level";
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public URI call() throws Exception {
         log.info("Creating mzML file for {}", inputFile);
         String inputFileName = StringTools.removeFileExt(FileTools.getFilename(inputFile));
         FileFragment inputFileFragment = new FileFragment(inputFile);
+        try {
+            inputFileFragment.getChild(scanIndexVariable);
+        } catch(ResourceNotAvailableException rnae) {
+            String exceptionMsg = "Could not locate variable scan_index. If you are trying to export a chromatography file, please use the ANDIChromImporter as the first pipeline command!";
+            log.error(exceptionMsg, rnae);
+            throw new ExitVmException(exceptionMsg, rnae);
+        }
         FileFragment outputFileFragment = new FileFragment(outputFile);
         MzML mzML = new MzML();
         mzML.setVersion(mzMLVersion);
@@ -166,12 +184,170 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         InstrumentConfiguration instrumentConfiguration = new InstrumentConfiguration();
         instrumentConfiguration.setId("instrument_configuration");
         instrumentConfiguration.setSoftwareRef("maltcms");
+        ComponentList componentList = new ComponentList();
+        instrumentConfiguration.setComponentList(componentList);
+        // Ion Source
+        SourceComponent source = new SourceComponent();
+        source.setOrder(1);
+        CVParam sourceParam = new CVParam();
+        sourceParam.setCvRef("MS");
+        if (inputFileFragment.hasAttribute("test_ionization_mode")) {
+            String ionizationModeValue = inputFileFragment.getAttribute("test_ionization_mode").getStringValue();
+            if (ionizationModeValue != null) {
+                log.debug("Using ionization mode: {}", ionizationModeValue);
+                switch (ionizationModeValue) {
+                    case "Electron Impact":
+                        sourceParam.setAccession("MS:1000389");
+                        sourceParam.setName("electron ionization");
+                        break;
+                    case "Electrospray":
+                        sourceParam.setAccession("MS:1000073");
+                        sourceParam.setName("electrospray ionization");
+                        break;
+                    default:
+                        log.warn("Unsupported test_ionization_mode: '{}'", ionizationModeValue);
+                        sourceParam.setAccession("MS:1000008");
+                        sourceParam.setName("ionization type");
+                }
+            } else {
+                sourceParam.setAccession("MS:1000008");
+                sourceParam.setName("ionization type");
+//                sourceParam.setValue("Unknown");
+            }
+        } else {
+            sourceParam.setAccession("MS:1000008");
+            sourceParam.setName("ionization type");
+//            sourceParam.setValue("Unknown");
+        }
+
+        source.getCvParam().add(sourceParam);
+        componentList.getComponents().add(source);
+        // Mass Analyzer
+        AnalyzerComponent analyzer = new AnalyzerComponent();
+        analyzer.setOrder(2);
+        CVParam analyzerParam = new CVParam();
+        analyzerParam.setCvRef("MS");
+        // TODO check ANDI MS for mass analyzer definition
+        // TODO allow override of CVParams via configuration file / environment variables
+        analyzerParam.setAccession("MS:1000451");
+        analyzerParam.setName("mass analyzer");
+//        if (inputFileFragment.hasAttribute("test_ionization_mode")) {
+//            String ionizationModeValue = inputFileFragment.getAttribute("test_ionization_mode").getStringValue();
+//            if (ionizationModeValue != null) {
+//                switch (ionizationModeValue) {
+//                    case "Electron Impact":
+//                        analyzerParam.setAccession("MS:1000389");
+//                        break;
+//                    case "Electrospray":
+//                        analyzerParam.setAccession("MS:1000073");
+//                        break;
+//                    default:
+//                        log.warn("Unsupported test_ionization_mode: '{}'", ionizationModeValue);
+//                }
+//            } else {
+//                analyzerParam.setAccession("MS:1000451");
+////                sourceParam.setValue("Unknown");
+//            }
+//        } else {
+//            analyzerParam.setAccession("MS:1000451");
+////            sourceParam.setValue("Unknown");
+//        }
+
+        analyzer.getCvParam().add(analyzerParam);
+        componentList.getComponents().add(analyzer);
+        // Ion Detector
+        DetectorComponent detector = new DetectorComponent();
+        detector.setOrder(3);
+        CVParam detectorParam = new CVParam();
+        detectorParam.setCvRef("MS");
+        if (inputFileFragment.hasAttribute("test_detector_type")) {
+            String detectorTypeValue = inputFileFragment.getAttribute("test_detector_type").getStringValue();
+            if (detectorTypeValue != null) {
+                log.debug("Using detector type: {}", detectorTypeValue);
+                switch (detectorTypeValue) {
+                    case "Electron Multiplier":
+                        detectorParam.setAccession("MS:1000253");
+                        detectorParam.setName("electron multiplier");
+                        break;
+                    default:
+                        log.warn("Unsupported test_detector_type: '{}'", detectorTypeValue);
+                        detectorParam.setAccession("MS:1000026");
+                        detectorParam.setName("detector type");
+                }
+            } else {
+                detectorParam.setAccession("MS:1000026");
+                detectorParam.setName("detector type");
+            }
+        } else {
+            detectorParam.setAccession("MS:1000026");
+            detectorParam.setName("detector type");
+        }
+        detector.getCvParam().add(detectorParam);
+        componentList.getComponents().add(detector);
+        componentList.setCount(3);
         icl.getInstrumentConfiguration().add(instrumentConfiguration);
-        icl.setCount(0);
+        icl.setCount(1);
         mzML.setInstrumentConfigurationList(icl);
 
+        try {
+            IVariableFragment instrumentName = inputFileFragment.getChild("instrument_name");
+            Collection<String> instrumentNames = ArrayTools.getStringsFromArray(instrumentName.getArray());
+            log.debug("File: {}; Instrument Name: {}", inputFileFragment.getName(), instrumentNames);
+            if (instrumentNames.size() > 1) {
+                log.warn("Detected {} instrument names in file! Only up to 1 is currently supported!");
+            }
+            if (instrumentNames.size() == 1) {
+                String instrumentNameValue = instrumentNames.iterator().next();
+                switch (instrumentNameValue) {
+                    case "LCQ" -> {
+                        CVParam instrumentModel = new CVParam();
+                        instrumentModel.setCvRef("MS");
+                        instrumentModel.setAccession("MS:1000125");
+                        instrumentModel.setName("Thermo Finnigan instrument model");
+                        instrumentConfiguration.getCvParam().add(instrumentModel);
+                    }
+                    default ->
+                        log.warn("Unknown instrument name: '{}'", instrumentName);
+
+                }
+            }
+        } catch (ResourceNotAvailableException rnae) {
+            log.debug("Failed to locate instrument_name", rnae);
+        }
+        try {
+            IVariableFragment instrumentId = inputFileFragment.getChild("instrument_id");
+            log.debug("File: {}; Instrument Id: {}", inputFileFragment.getName(), ArrayTools.getStringsFromArray(instrumentId.getArray()));
+        } catch (ResourceNotAvailableException rnae) {
+            log.debug("Failed to locate instrument_id", rnae);
+        }
+        try {
+            IVariableFragment instrumentMfr = inputFileFragment.getChild("instrument_mfr");
+            log.debug("File: {}; Instrument Manufacturer: {}", inputFileFragment.getName(), ArrayTools.getStringsFromArray(instrumentMfr.getArray()));
+        } catch (ResourceNotAvailableException rnae) {
+            log.debug("Failed to locate instrument_mfr", rnae);
+        }
+        try {
+            IVariableFragment instrumentModel = inputFileFragment.getChild("instrument_model");
+            log.debug("File: {}; Instrument Model: {}", inputFileFragment.getName(), ArrayTools.getStringsFromArray(instrumentModel.getArray()));
+        } catch (ResourceNotAvailableException rnae) {
+            log.debug("Failed to locate instrument_model", rnae);
+        }
+        try {
+            IVariableFragment instrumentSwVersion = inputFileFragment.getChild("instrument_sw_version");
+            log.debug("File: {}; Instrument Software Version: {}", inputFileFragment.getName(), ArrayTools.getStringsFromArray(instrumentSwVersion.getArray()));
+        } catch (ResourceNotAvailableException rnae) {
+            log.debug("Failed to locate instrument_sw_version", rnae);
+        }
+        try {
+            IVariableFragment instrumentOsVersion = inputFileFragment.getChild("instrument_os_version");
+            log.debug("File: {}; Instrument Operating System Version: {}", inputFileFragment.getName(), ArrayTools.getStringsFromArray(instrumentOsVersion.getArray()));
+        } catch (ResourceNotAvailableException rnae) {
+            log.debug("Failed to locate instrument_os_version", rnae);
+        }
+
         SourceFile sourceFile = new SourceFile();
-        sourceFile.setLocation(inputFileFragment.getUri().toString());
+        File absoluteInputFile = new File(inputFile).getAbsoluteFile();
+        sourceFile.setLocation(absoluteInputFile.toURI().toASCIIString());
         sourceFile.setName(inputFileName);
         sourceFile.setId("source_file_1");
         String hash = sha1Hash(inputFile);
@@ -212,6 +388,32 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         mzML.setRun(runBuilder.build());
         MzMLMarshaller mzmlMarshaller = new MzMLMarshaller();
         String basename = StringTools.removeFileExt(outputFileFragment.getName());
+        File attributesFile = new File(new File(outputFileFragment.getUri()).getParentFile(), basename + ".attrs.properties");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(attributesFile))) {
+            inputFileFragment.getAttributes().stream().sorted((o1, o2) -> o1.getFullName().compareTo(o2.getFullName())).forEach((a) -> {
+                if (a.isArray()) {
+                    log.warn("Writing of array attributes is currently not supported!");
+                } else {
+                    if (a.getDataType().isNumeric()) {
+                        try {
+                            writer.write(a.getFullName() + "=" + a.getNumericValue());
+                            writer.newLine();
+                        } catch (IOException ex) {
+                            log.error(ex.getLocalizedMessage(), ex);
+                        }
+                    } else if (a.getDataType().isString()) {
+                        try {
+                            writer.write(a.getFullName() + "=" + a.getStringValue());
+                            writer.newLine();
+                        } catch (IOException ex) {
+                            log.error(ex.getLocalizedMessage(), ex);
+                        }
+                    } else {
+                        log.warn("Unsupported attribute data type: {} for attribute: {}", a.getDataType(), a.getFullName());
+                    }
+                }
+            });
+        }
         File f = new File(new File(outputFileFragment.getUri()).getParentFile(), basename + ".mzml");
         log.info("Storing mzML file {}", f);
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f))) {
@@ -235,7 +437,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     }
 
     /**
-     * <p>createDataProcessingList.</p>
+     * <p>
+     * createDataProcessingList.</p>
      *
      * @return a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessingList} object.
      * @since 1.3.2
@@ -269,7 +472,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     }
 
     /**
-     * <p>sha1Hash.</p>
+     * <p>
+     * sha1Hash.</p>
      *
      * @param file a {@link java.net.URI} object.
      * @return a {@link java.lang.String} object.
@@ -321,7 +525,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     }
 
     /**
-     * <p>createSoftwareList.</p>
+     * <p>
+     * createSoftwareList.</p>
      *
      * @return a {@link uk.ac.ebi.jmzml.model.mzml.SoftwareList} object.
      * @since 1.3.2
@@ -344,13 +549,15 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     }
 
     /**
-     * <p>createBinaryDataArray.</p>
+     * <p>
+     * createBinaryDataArray.</p>
      *
      * @param massIntensityMode a boolean.
      * @param a a {@link ucar.ma2.Array} object.
      * @param dataType a {@link ucar.ma2.DataType} object.
      * @param compress a boolean.
-     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing} object.
+     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing}
+     * object.
      * @param cv a {@link uk.ac.ebi.jmzml.model.mzml.CV} object.
      * @return a {@link uk.ac.ebi.jmzml.model.mzml.BinaryDataArray} object.
      * @since 1.3.2
@@ -405,16 +612,25 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
         if (dataProcessing != null) {
             bda.setDataProcessing(dataProcessing);
         }
+        // TODO check why compression if set to true results in arrays being annotated with no compression
+//        e.g.: MS:1000574 (zlib compression)
+//  e.g.: MS:1000576 (no compression)
+//        if (compress) {
+//            bda.getCvParam().stream().filter(predicate)
+//        }
         return bda;
     }
 
     /**
-     * <p>createChromatogramList.</p>
+     * <p>
+     * createChromatogramList.</p>
      *
-     * @param inputFileFragment a {@link cross.datastructures.fragments.FileFragment} object.
+     * @param inputFileFragment a
+     * {@link cross.datastructures.fragments.FileFragment} object.
      * @param psiMs a {@link uk.ac.ebi.jmzml.model.mzml.CV} object.
      * @param compress a boolean.
-     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing} object.
+     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing}
+     * object.
      * @return a {@link uk.ac.ebi.jmzml.model.mzml.ChromatogramList} object.
      * @throws cross.exception.ResourceNotAvailableException if any.
      */
@@ -469,7 +685,8 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     }
 
     /**
-     * <p>getEncodedLength.</p>
+     * <p>
+     * getEncodedLength.</p>
      *
      * @param binaryData an array of byte.
      * @return a int.
@@ -480,12 +697,15 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
     }
 
     /**
-     * <p>createSpectraList.</p>
+     * <p>
+     * createSpectraList.</p>
      *
      * @param inputFileName a {@link java.lang.String} object.
-     * @param inputFileFragment a {@link cross.datastructures.fragments.FileFragment} object.
+     * @param inputFileFragment a
+     * {@link cross.datastructures.fragments.FileFragment} object.
      * @param psiMs a {@link uk.ac.ebi.jmzml.model.mzml.CV} object.
-     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing} object.
+     * @param dataProcessing a {@link uk.ac.ebi.jmzml.model.mzml.DataProcessing}
+     * object.
      * @return a {@link uk.ac.ebi.jmzml.model.mzml.SpectrumList} object.
      * @throws cross.exception.ResourceNotAvailableException if any.
      */
@@ -522,7 +742,10 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
             IVariableFragment msLevel = inputFileFragment.getChild(msLevelVariable);
             msLevelArray = msLevel.getArray();
         } catch (ResourceNotAvailableException ex) {
-            log.debug("Not writing msLevel. Not present in source file!");
+            log.warn("msLevel not present in source file {}, assuming level 1!", inputFileFragment.getName());
+            int[] msLevels = new int[scans];
+            Arrays.fill(msLevels, 1);
+            msLevelArray = Array.makeFromJavaArray(msLevels);
         }
         int skippedScans = 0;
         for (int i = 0; i < scans; i++) {
@@ -651,8 +874,53 @@ public class MZMLExporterWorker implements Callable<URI>, Serializable {
                         throw new IllegalStateException("Unhandled binary data array format: " + dataType);
                 }
 
+//            <cvParam cvRef="MS" accession="MS:1000129" name="negative scan" value=""/>
 //            <cvParam cvRef="MS" accession="MS:1000130" name="positive scan" value=""/>
+                if (inputFileFragment.hasAttribute("test_ionization_polarity")) {
+                    String scanIonizationPolarity = inputFileFragment.getAttribute("test_ionization_polarity").getStringValue();
+                    log.debug("Handling scan polarity: {}", scanIonizationPolarity);
+                    switch (scanIonizationPolarity) {
+                        case "Negative Polarity" -> {
+                            CVParam spectrumType = new CVParam();
+                            spectrumType.setCvRef("MS");
+                            spectrumType.setAccession("MS:1000129");
+                            spectrumType.setName("negative scan");
+                            s.getCvParam().add(spectrumType);
+                        }
+                        case "Positive Polarity" -> {
+                            CVParam spectrumType = new CVParam();
+                            spectrumType.setCvRef("MS");
+                            spectrumType.setAccession("MS:1000130");
+                            spectrumType.setName("positive scan");
+                            s.getCvParam().add(spectrumType);
+                        }
+                        default ->
+                            log.warn("Unsupported value '{}' for attribute '{}'", scanIonizationPolarity, "test_ionization_polarity");
+                    }
+                }
 //          <cvParam cvRef="MS" accession="MS:1000128" name="profile spectrum" value=""/>
+                if (inputFileFragment.hasAttribute("experiment_type")) {
+                    String experimentType = inputFileFragment.getAttribute("experiment_type").getStringValue();
+                    log.debug("Handling mass spectrum representation: {}", experimentType);
+                    switch (experimentType) {
+                        case "Centroided Mass Spectrum" -> {
+                            CVParam spectrumType = new CVParam();
+                            spectrumType.setCvRef("MS");
+                            spectrumType.setAccession("MS:1000127");
+                            spectrumType.setName("centroid spectrum");
+                            s.getCvParam().add(spectrumType);
+                        }
+                        case "Profile Mass Spectrum" -> {
+                            CVParam spectrumType = new CVParam();
+                            spectrumType.setCvRef("MS");
+                            spectrumType.setAccession("MS:1000128");
+                            spectrumType.setName("profile spectrum");
+                            s.getCvParam().add(spectrumType);
+                        }
+                        default ->
+                            log.warn("Unsupported value '{}' for attribute '{}'", experimentType, "experiment_type");
+                    }
+                }
 //          <cvParam cvRef="MS" accession="MS:1000504" name="base peak m/z" value="810.415283203125" unitCvRef="MS" unitAccession="MS:1000040" unitName="m/z"/>
 //          <cvParam cvRef="MS" accession="MS:1000505" name="base peak intensity" value="1471973.875" unitCvRef="MS" unitAccession="MS:1000131" unitName="number of counts"/>
 //            minMaxMasses

@@ -61,7 +61,8 @@ import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
 import ucar.nc2.Dimension;
-import ucar.nc2.NetcdfFileWriteable;
+import ucar.nc2.Group;
+import ucar.nc2.NetcdfFileWriter;
 
 /**
  * Implementation of {@link cross.io.IDataSource} for csv files containing
@@ -93,7 +94,7 @@ public class FsaTxtDataSource implements IDataSource {
     private NetcdfDataSource ndf = null;
     private int dataFieldToRead = 3;
 
-    private Dimension addDimension(final NetcdfFileWriteable nfw,
+    private Dimension addDimension(final NetcdfFileWriter nfw,
             final HashMap<String, Dimension> dimensions,
             final IVariableFragment vf, final Dimension element) {
 
@@ -119,9 +120,8 @@ public class FsaTxtDataSource implements IDataSource {
             log.debug("Dimension {} already known!", dimensions.get(dimname));
             d = dimensions.get(dimname);
         } else {
-
-            d = nfw.addDimension(dimname, element.getLength(),
-                    element.isShared(), element.isUnlimited(), element.
+            Group rootGroup = nfw.addGroup(null, "variables");
+            d = nfw.addDimension(dimname, element.getLength(), element.isUnlimited(), element.
                     isVariableLength());
             dimensions.put(dimname, d);
         }
@@ -209,7 +209,7 @@ public class FsaTxtDataSource implements IDataSource {
             case "scan_index": {
                 Array data = getDataEntry(f.getParent().getUri(),
                         dataFieldToRead);
-                Array scanIndex = new ArrayInt.D1(data.getShape()[0]);
+                Array scanIndex = new ArrayInt.D1(data.getShape()[0], false);
                 for (int i = 0; i < data.getShape()[0]; i++) {
                     scanIndex.setInt(i, i);
                 }

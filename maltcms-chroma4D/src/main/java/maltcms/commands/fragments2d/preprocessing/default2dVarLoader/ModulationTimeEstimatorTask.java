@@ -172,7 +172,7 @@ public class ModulationTimeEstimatorTask implements Callable<Double>,
                 }
             }
         }
-        final ArrayInt.D1 maximaDiff = new ArrayInt.D1(maximaIndices.size());
+        final ArrayInt.D1 maximaDiff = new ArrayInt.D1(maximaIndices.size(), false);
         int lastI = 0;
         int cnt = 0;
         for (final Integer maxI : maximaIndices) {

@@ -290,7 +290,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         MaltcmsAnnotation ma = maf.createNewMaltcmsAnnotationType(f.getUri());
         // List<Scan2D> scans = new ArrayList<Scan2D>();
         log.info("Building scans");
-        final ArrayInt.D1 peakindex = new ArrayInt.D1(l.size());
+        final ArrayInt.D1 peakindex = new ArrayInt.D1(l.size(), false);
         final IndexIterator iter = peakindex.getIndexIterator();
         for (Peak2D p : l) {
             maf.addPeakAnnotation(ma, CwtPeakFinder.class.getName(), p);
@@ -454,7 +454,7 @@ public class CwtRunnable implements Callable<File>, IPeakPicking, Serializable {
         double[] scaleResponse = (double[]) scaleogram.slice(1, row).
                 get1DJavaArray(double.class);
         FirstDerivativeFilter fdf = new FirstDerivativeFilter();
-        double[] res = (double[]) fdf.apply(Array.factory(scaleResponse)).
+        double[] res = (double[]) fdf.apply(Array.makeFromJavaArray(scaleResponse)).
                 get1DJavaArray(double.class);
         List<Integer> peakMaxima = new LinkedList<>();
         for (int i = 1; i < scaleResponse.length - 1; i++) {

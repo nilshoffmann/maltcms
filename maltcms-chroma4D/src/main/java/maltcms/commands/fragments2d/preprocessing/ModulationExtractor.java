@@ -152,7 +152,7 @@ public class ModulationExtractor extends AFragmentCommand {
         log.info("number of modulations: {}", modulations);
         int elements = modulations * elementsPerModulation;
         log.info("number of total elements: {}", elements);
-        Array ret = Array.factory(a.getElementType(), new int[]{elements});
+        Array ret = Array.factory(a.getDataType(), new int[]{elements});
         int targetOffset = 0;
         for (int i = 0; i < modulations; i++) {
             int currentModulation = modulationStart + i;

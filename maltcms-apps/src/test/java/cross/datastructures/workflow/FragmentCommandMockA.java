@@ -54,9 +54,9 @@ public class FragmentCommandMockA extends AFragmentCommand {
         TupleND<IFileFragment> out = createWorkFragments(in);
         for (IFileFragment ff : out) {
             VariableFragment vf1 = new VariableFragment(ff, "variable1");
-            vf1.setArray(new ArrayInt.D1(10));
+            vf1.setArray(new ArrayInt.D1(10, false));
             VariableFragment vf2 = new VariableFragment(ff, "variable2");
-            vf2.setArray(new ArrayShort.D2(100, 10));
+            vf2.setArray(new ArrayShort.D2(100, 10, false));
             ff.save();
         }
         return out;

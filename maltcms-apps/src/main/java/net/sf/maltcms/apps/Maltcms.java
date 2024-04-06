@@ -36,6 +36,7 @@ import cross.datastructures.workflow.IWorkflow;
 import cross.exception.ConstraintViolationException;
 import cross.exception.ExitVmException;
 import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
@@ -47,7 +48,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -68,9 +68,10 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
  * Main Application Hook, starts with setting allowed command-line parameters.
@@ -82,9 +83,8 @@ import org.slf4j.LoggerFactory;
  * @author Nils Hoffmann
  *
  */
-
 public class Maltcms implements Thread.UncaughtExceptionHandler {
-        
+
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(Maltcms.class);
 
     static Maltcms mcms;
@@ -122,7 +122,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         return Maltcms.mcms;
     }
 
-    private static void handleExitVmException(final Logger log,
+    static void handleExitVmException(final Logger log,
             final ExitVmException npe) {
         int ecode;
         Maltcms.shutdown(1, log);
@@ -131,7 +131,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         System.exit(ecode);
     }
 
-    private static void handleRuntimeException(final Logger log,
+    static void handleRuntimeException(final Logger log,
             final Throwable npe, final ICommandSequence ics) {
         int ecode;
         Maltcms.shutdown(1, log);
@@ -142,7 +142,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         ics.getWorkflow().getFactory().
                 dumpConfig("runtime.properties",
                         ics.getWorkflow().
-                        getStartupDate());
+                                getStartupDate());
         System.exit(ecode);
     }
 
@@ -154,41 +154,41 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
     public static void main(final String[] args) {
         ThreadTimer tt = new ThreadTimer(5000);
         tt.start();
-        URL log4jConfiguration = null;
-        try {
-            String resource = System.getProperty("log4j.configuration");
-            if (resource != null) {
-                log4jConfiguration = new URL(resource);
-            } else {
-                log4jConfiguration = Maltcms.class.getResource(
-                        "/cfg/log4j.properties");
-            }
-        } catch (MalformedURLException ex) {
-        }
-        if (log4jConfiguration != null) {
-            PropertyConfigurator.configure(log4jConfiguration);
-        } else {
-            Properties props = new Properties();
-            props.setProperty("log4j.rootLogger", "INFO, A1");
-            props.setProperty("log4j.appender.A1",
-                    "org.apache.log4j.ConsoleAppender");
-            props.setProperty("log4j.appender.A1.layout",
-                    "org.apache.log4j.PatternLayout");
-            props.setProperty("log4j.appender.A1.layout.ConversionPattern",
-                    "%m%n");
-            props.setProperty("log4j.category.cross", "WARN");
-            props.setProperty("log4j.category.cross.datastructures.pipeline",
-                    "INFO");
-            props.setProperty("log4j.category.maltcms.commands.fragments",
-                    "INFO");
-            props.setProperty("log4j.category.maltcms.commands.fragments2d",
-                    "INFO");
-            props.setProperty("log4j.category.maltcms", "WARN");
-            props.setProperty("log4j.category.ucar", "WARN");
-            props.setProperty("log4j.category.smueller", "WARN");
-            props.setProperty("log4j.category.org.springframework.beans.factory", "WARN");
-            PropertyConfigurator.configure(props);
-        }
+//        URL log4jConfiguration = null;
+//        try {
+//            String resource = System.getProperty("log4j2.configuration");
+//            if (resource != null) {
+//                log4jConfiguration = new URL(resource);
+//            } else {
+//                log4jConfiguration = Maltcms.class.getResource(
+//                        "/cfg/log4j2.properties");
+//            }
+//        } catch (MalformedURLException ex) {
+//        }
+//        if (log4jConfiguration != null) {
+//            PropertyConfigurator.configure(log4jConfiguration);
+//        } else {
+//            Properties props = new Properties();
+//            props.setProperty("log4j.rootLogger", "INFO, A1");
+//            props.setProperty("log4j.appender.A1",
+//                    "org.apache.log4j.ConsoleAppender");
+//            props.setProperty("log4j.appender.A1.layout",
+//                    "org.apache.log4j.PatternLayout");
+//            props.setProperty("log4j.appender.A1.layout.ConversionPattern",
+//                    "%m%n");
+//            props.setProperty("log4j.category.cross", "WARN");
+//            props.setProperty("log4j.category.cross.datastructures.pipeline",
+//                    "INFO");
+//            props.setProperty("log4j.category.maltcms.commands.fragments",
+//                    "INFO");
+//            props.setProperty("log4j.category.maltcms.commands.fragments2d",
+//                    "INFO");
+//            props.setProperty("log4j.category.maltcms", "WARN");
+//            props.setProperty("log4j.category.ucar", "WARN");
+//            props.setProperty("log4j.category.smueller", "WARN");
+//            props.setProperty("log4j.category.org.springframework.beans.factory", "WARN");
+//            PropertyConfigurator.configure(props);
+//        }
 
         //final Logger log = cross.Logging.getLogger(Maltcms.class);
         final int ecode = 0;
@@ -234,7 +234,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    private static void addVmStats(ThreadTimer tt, File outputDirectory) {
+    static void addVmStats(ThreadTimer tt, File outputDirectory) {
         tt.interrupt();
         List<MemoryPoolMXBean> mbeans = ManagementFactory.getMemoryPoolMXBeans();
         long maxUsedHeap = 0L;
@@ -303,7 +303,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         sb.append("# If the message does not give hints on how to avoid the exception,\n");
         sb.append("# please submit a bug report including this output to:\n");
         sb.append(
-                "# http://sf.net/p/maltcms/maltcms-bugs\n");
+                "# https://github.com/nilshoffmann/maltcms/issues\n");
         sb.append("#");
         sb.append("# Please attach Maltcms' log file (maltcms.log) and the runtime\n");
         sb.append("# properties and pipeline configuration to your report. \n");
@@ -318,7 +318,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         log.error(sb.toString());
     }
 
-    private static void shutdown(final long seconds, final Logger log) {
+    static void shutdown(final long seconds, final Logger log) {
         // Shutdown application thread
         try {
             Factory.getInstance().shutdown();
@@ -401,6 +401,11 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 "class1,class2, ...", false));
         this.o.addOption(addBooleanOption("m", null,
                 "Creates a markdown file for all cross.commands.fragments.AFragmentCommand.", false));
+        this.o.addOption(addOption(
+                "scl", 
+                "spring.config.location", 
+                "Set the spring.config.location to locate application.properties. Only long option works!",
+                true, ',', true, true, 0, false, false, 0, "file:cfg/", false));
     }
 
     /**
@@ -457,10 +462,13 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             } else {
                 log.warn("Could not locate default.properties, using defaults from classpath!");
                 try {
-                    cfg = new PropertiesConfiguration(getClass().getClassLoader().getResource("cfg/default.properties"));
+                    Resource defaultCfg = new ClassPathResource("cfg/default.properties", getClass().getClassLoader());
+                    cfg = new PropertiesConfiguration(defaultCfg.getURL());
                     log.info("Using default.properties from class path at {}", cfg.getPath());
                 } catch (ConfigurationException ex) {
                     log.warn("Configuration Exception for class path resource \"cfg/default.properties\":", ex);
+                } catch (IOException ex) {
+                    log.warn("IO Exception for class path resource \"cfg/default.properties\":", ex);
                 }
             }
         }
@@ -632,7 +640,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
                 cmdLineCfg.setProperty("anchors.use", "true");
                 cmdLineCfg.setProperty("anchors.location",
                         cl.getOptionValues("a"));
-                log.info("Using anchors from location: {}", (java.lang.Object[])cl.getOptionValues("a"));
+                log.info("Using anchors from location: {}", (java.lang.Object[]) cl.getOptionValues("a"));
             }
             if (cl.hasOption("e")) {
                 initClassLoader(cl.getOptionValues("e"));
@@ -730,9 +738,9 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             File userConfigLocation = new File(cfgOptionValue);
             // we want an absolute path in the end to be independent from our current location
             if (!userConfigLocation.isAbsolute()) {
-                userConfigLocation = checkConfigLocations(cfgOptionValue, 
-                    new File(System.getProperty("user.dir")), 
-                    new File(System.getProperty("user.dir")+File.separator+"cfg"+File.separator+"pipelines"));
+                userConfigLocation = checkConfigLocations(cfgOptionValue,
+                        new File(System.getProperty("user.dir")),
+                        new File(System.getProperty("user.dir") + File.separator + "cfg" + File.separator + "pipelines"));
             }
             cfg.setProperty("pipeline.properties", userConfigLocation.getAbsolutePath());
             cfg.setProperty("config.basedir", userConfigLocation.getParentFile().getAbsoluteFile().toURI().getPath());
@@ -742,12 +750,12 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
             this.log.error(e.getLocalizedMessage());
         }
     }
-    
-    private File checkConfigLocations(String cfgOptionValue, File...baseDirs) {
-        for(File baseDir:baseDirs) {
+
+    private File checkConfigLocations(String cfgOptionValue, File... baseDirs) {
+        for (File baseDir : baseDirs) {
             File configFile = new File(baseDir, cfgOptionValue);
             log.debug("Checking config file location: {}", configFile);
-            if(configFile.isFile() && configFile.exists()) {
+            if (configFile.isFile() && configFile.exists()) {
                 log.debug("Using configFile: {}", configFile);
                 return configFile;
             }
@@ -839,7 +847,7 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
         }
         System.exit(0);
     }
-    
+
 //    /**
 //     * @param optionValues
 //     */
@@ -866,7 +874,6 @@ public class Maltcms implements Thread.UncaughtExceptionHandler {
 //        }
 //        System.exit(0);
 //    }
-
     /**
      * Print help on command line options.
      *

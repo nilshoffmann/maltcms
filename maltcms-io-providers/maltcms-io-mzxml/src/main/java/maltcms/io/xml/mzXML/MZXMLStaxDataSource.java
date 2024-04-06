@@ -617,7 +617,7 @@ public class MZXMLStaxDataSource implements IDataSource {
             scans = r[0].length();
         }
         log.debug("Creating index array with {} elements", levelnscans);
-        final ArrayInt.D1 scan_index = new ArrayInt.D1(levelnscans);
+        final ArrayInt.D1 scan_index = new ArrayInt.D1(levelnscans, false);
         int cnt = 0;
         for (int i = start; i < scans; i++) {
             final Scan s = mp.rap((i + 1));

@@ -92,8 +92,8 @@ public class ArrayTools {
             }
         });
 
-        final ArrayInt.D1 h = new ArrayInt.D1(stdL.size());
-        final ArrayInt.D1 g = new ArrayInt.D1(stdL.size());
+        final ArrayInt.D1 h = new ArrayInt.D1(stdL.size(), false);
+        final ArrayInt.D1 g = new ArrayInt.D1(stdL.size(), false);
         c = 0;
         double tSum = 0;
         double[] position = new double[quantil.length];

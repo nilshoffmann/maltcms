@@ -163,7 +163,7 @@ public class MassFilter extends AFragmentCommand {
 
                 // create a new array for the tic
                 final ArrayDouble.D1 newTic = new ArrayDouble.D1(scans);
-                final ArrayInt.D1 newSidx = new ArrayInt.D1(scans);
+                final ArrayInt.D1 newSidx = new ArrayInt.D1(scans, false);
                 // create lists for mass and intensity values
                 final ArrayList<Array> newMassesList = new ArrayList<>(
                         scans);

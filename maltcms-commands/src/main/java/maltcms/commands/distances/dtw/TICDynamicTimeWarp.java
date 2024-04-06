@@ -85,14 +85,14 @@ public class TICDynamicTimeWarp extends ADynamicTimeWarp {
         IndexIterator iref = ticRef.getIndexIterator();
         final Index idx = Index.scalarIndexImmutable;
         while (iref.hasNext()) {
-            final Array a = Array.factory(ticRef.getElementType(),
+            final Array a = Array.factory(ticRef.getDataType(),
                     new int[]{1});
             a.setObject(idx, iref.next());
             ref.add(a);
         }
         iref = queryRef.getIndexIterator();
         while (iref.hasNext()) {
-            final Array a = Array.factory(queryRef.getElementType(),
+            final Array a = Array.factory(queryRef.getDataType(),
                     new int[]{1});
             a.setObject(idx, iref.next());
             query.add(a);

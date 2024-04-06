@@ -48,7 +48,7 @@ public class SavitzkyGolayFilterTest {
      */
     @Test
     public void testApply() throws IOException {
-        Array tic = Array.factory(TestArray.TIC);
+        Array tic = Array.makeFromJavaArray(TestArray.TIC);
         SavitzkyGolayFilter instance = new SavitzkyGolayFilter();
         instance.setWindow(2);
         instance.setPolynomialDegree(2);

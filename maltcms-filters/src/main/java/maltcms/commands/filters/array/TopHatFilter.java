@@ -73,7 +73,7 @@ public class TopHatFilter extends AArrayFilter {
         if (arr.getRank() == 1) {
             final double[] d = (double[]) arr.get1DJavaArray(double.class);
             final double[] th = MathTools.topHat(this.window, d);
-            arr = Array.factory(th);
+            arr = Array.makeFromJavaArray(th);
         } else {
             throw new IllegalArgumentException(
                     "Can only work on arrays of dimension 1");

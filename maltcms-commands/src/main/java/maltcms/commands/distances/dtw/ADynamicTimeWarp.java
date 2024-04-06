@@ -643,7 +643,7 @@ public abstract class ADynamicTimeWarp implements IDynamicTimeWarp {
         this.alignment = parts1;
         final IArrayD2Double parts2 = f.createSharedLayout(parts1);
         this.distance = parts2;
-        this.predecessors = new ArrayByte.D2(rows, cols);
+        this.predecessors = new ArrayByte.D2(rows, cols, false);
         log.debug("Alignment matrix has {} rows and {} columns",
                 parts1.rows(), parts2.columns());
         final long time = System.currentTimeMillis() - start;

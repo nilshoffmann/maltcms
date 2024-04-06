@@ -217,7 +217,7 @@ public class Peak1DUtilities implements Serializable {
         String x_label = "time [s]";
         final ArrayDouble.D1 posx = new ArrayDouble.D1(peaks.getShape()[0]);
         final ArrayDouble.D1 posy = new ArrayDouble.D1(peaks.getShape()[0]);
-        final Array snrEstimate = Array.factory(snr);
+        final Array snrEstimate = Array.makeFromJavaArray(snr);
         final Array threshold = new ArrayDouble.D1(snr.length);
         final Array baseline = new ArrayDouble.D1(snr.length);
         for (int i = 0; i < snr.length; i++) {

@@ -60,7 +60,8 @@ import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
-import ucar.nc2.NetcdfFileWriteable;
+import ucar.nc2.Dimension;
+import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.Variable;
 
 /**
@@ -132,12 +133,12 @@ public class Data1Dto2DConverter extends AFragmentCommand {
         log.info("Found {} total ion current chromatogram scans", ticChromScanCount);
         try {
             log.info("Creating output file!");
-            NetcdfFileWriteable nfw = NetcdfFileWriteable.createNew(f.getAbsolutePath(), true);
+            NetcdfFileWriter nfw = NetcdfFileWriter.createNew(f.getAbsolutePath(), true);
             nfw.setLargeFile(true);
-            nfw.addDimension("scan_number", scanCount, true, false, false);
-            nfw.addDimension("point_number", pointCount, true, false, false);
-            nfw.addDimension("total_ion_current_chromatogram_scan_number", ticChromScanCount, true, false, false);
-            nfw.addDimension("modulation_time", 1, true, false, false);
+            Dimension scan_number = nfw.addDimension("scan_number", scanCount, false, false);
+            Dimension point_number = nfw.addDimension("point_number", pointCount, false, false);
+            Dimension total_ion_current_chromatogram_scan_number = nfw.addDimension("total_ion_current_chromatogram_scan_number", ticChromScanCount, false, false);
+            Dimension modulation_time = nfw.addDimension("modulation_time", 1, false, false);
             Variable nfwScanIndex = nfw.addVariable("scan_index", DataType.INT, "scan_number");
             Variable nfwMassValues = nfw.addVariable("mass_values", DataType.DOUBLE, "point_number");
             Variable nfwIntensityValues = nfw.addVariable("intensity_values", DataType.INT, "point_number");
@@ -153,7 +154,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
             log.info("Creating output file structure!");
             nfw.create();
             nfw.close();
-            nfw = NetcdfFileWriteable.openExisting(f.getAbsolutePath());
+            nfw = NetcdfFileWriter.openExisting(f.getAbsolutePath());
 
 //			nfw = NetcdfFileWriteable.open(f.getAbsolutePath(), 129472, null);
             Collections.sort(inSorted, new NaturalSortOrderComparator());
@@ -275,14 +276,14 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 //				file++;
             }
             nfw.close();
-            nfw = NetcdfFileWriteable.openExisting(f.getAbsolutePath());
+            nfw = NetcdfFileWriter.openExisting(f.getAbsolutePath());
             scanIndexOffset = 0;
             log.info("Writing mass values");
             writeArrayList("mass_values", massValuesCache, nfw);
             nfw.close();
             massValuesCache.clear();
             massValuesCache = null;
-            nfw = NetcdfFileWriteable.openExisting(f.getAbsolutePath());
+            nfw = NetcdfFileWriter.openExisting(f.getAbsolutePath());
             log.info("Writing intensity values");
             writeArrayList("intensity_values", intensityValuesCache, nfw);
             nfw.close();
@@ -420,7 +421,7 @@ public class Data1Dto2DConverter extends AFragmentCommand {
 
     }
 
-    private void writeArrayList(String variableName, List<Array> valuesCache, NetcdfFileWriteable nfw) throws IOException {
+    private void writeArrayList(String variableName, List<Array> valuesCache, NetcdfFileWriter nfw) throws IOException {
         int scanIndexOffset = 0;
         int combineScans = 1000;
         ArrayList<Array> scans = new ArrayList<>(combineScans);

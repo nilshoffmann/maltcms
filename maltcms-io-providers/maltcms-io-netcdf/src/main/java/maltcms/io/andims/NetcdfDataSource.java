@@ -27,6 +27,7 @@
  */
 package maltcms.io.andims;
 
+import cross.datastructures.fragments.FileFragmentFactory;
 import cross.datastructures.fragments.IFileFragment;
 import cross.datastructures.fragments.IVariableFragment;
 import cross.datastructures.fragments.ImmutableVariableFragment2;
@@ -60,8 +61,9 @@ import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import ucar.nc2.Group;
 import ucar.nc2.NetcdfFile;
-import ucar.nc2.NetcdfFileWriteable;
+import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.Variable;
+import ucar.nc2.dataset.DatasetUrl;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /**
@@ -89,14 +91,13 @@ public class NetcdfDataSource implements IDataSource {
     private List<String> pointDimensionVars = Collections.emptyList();
     private String pointDimensionName = "point_number";
 
-    private Dimension addDimension(final NetcdfFileWriteable nfw,
+    private Dimension addDimension(final NetcdfFileWriter nfw,
             final HashMap<String, Dimension> dimensions,
             final IVariableFragment vf, final Dimension element) {
 
         String dimname = element.getName();
 
         if (this.pointDimensionVars.contains(vf.getName())) {
-            dimname = this.pointDimensionName;
             log.debug("Renaming dimension {} to {} for variable {}",
                     new Object[]{element.getName(), dimname,
                         vf.getName()});
@@ -112,7 +113,7 @@ public class NetcdfDataSource implements IDataSource {
         return d;
     }
 
-    private Dimension addDimension(final HashMap<String, Dimension> dimensions, String dimname, final NetcdfFileWriteable nfw, final Dimension element) {
+    private Dimension addDimension(final HashMap<String, Dimension> dimensions, String dimname, final NetcdfFileWriter nfw, final Dimension element) {
         Dimension d;
         if (dimensions.containsKey(dimname)) {
             log.debug("Dimension {} already known, updating!", dimensions.get(dimname));
@@ -143,7 +144,7 @@ public class NetcdfDataSource implements IDataSource {
                 }
             }
         } else {
-            d = nfw.addDimension(dimname, element.getLength(), element.isShared(), element.isUnlimited(), element.isVariableLength());
+            d = nfw.addDimension(dimname, element.getLength(), element.isUnlimited(), element.isVariableLength());
             dimensions.put(dimname, d);
         }
         return d;
@@ -302,7 +303,7 @@ public class NetcdfDataSource implements IDataSource {
      * @param nf a {@link ucar.nc2.NetcdfFile} object.
      */
     protected void loadAttributes(final IFileFragment ff, final NetcdfFile nf) {
-        final List<?> attrs = nf.getGlobalAttributes();
+        final List<Attribute> attrs = nf.getGlobalAttributes();
         if (!ff.getAttributes().isEmpty()) {
             log.debug(
                     "IFileFragment {} already has Attributes, updating!", ff.getUri());
@@ -310,18 +311,17 @@ public class NetcdfDataSource implements IDataSource {
         if (!attrs.isEmpty()) {
             log.debug("Loading Attributes for {}", ff.getUri());
         }
-        for (final Object o : attrs) {
-            if (ff.hasAttribute((Attribute) o)) {
+        for (final Attribute a : attrs) {
+            if (ff.hasAttribute(a)) {
                 if (this.updateAttributes) {
-                    log.debug("Updating Attribute {}", ((Attribute) o).getName());
-                    ff.setAttributes((Attribute) o);
+                    log.debug("Updating Attribute {}", a.toString());
+                    ff.addAttribute(a);
                 } else {
-                    log.debug("Attribute {} already exists, ",
-                            ((Attribute) o).getName());
+                    log.debug("Attribute {} already exists, ", a.toString());
                 }
             } else {
-                log.debug("Setting Attribute {}", ((Attribute) o).getName());
-                ff.setAttributes((Attribute) o);
+                log.debug("Setting Attribute {}", a.toString());
+                ff.addAttribute(a);
             }
         }
     }
@@ -337,7 +337,7 @@ public class NetcdfDataSource implements IDataSource {
         URI u = ff.getUri();
         String filepath = u.toString();
         log.info("Opening netcdf file {}", filepath);
-        return NetcdfDataset.acquireFile(filepath, null);
+        return NetcdfDataset.acquireFile(DatasetUrl.findDatasetUrl(filepath), null);
 //		return NetcdfFile.open(filepath);
     }
 
@@ -476,7 +476,7 @@ public class NetcdfDataSource implements IDataSource {
         // read in the full index_array
         log.debug("Reading index array {}", index);
         Array index_array = readSingle(index);
-        switch (DataType.getType(index_array.getElementType())) {
+        switch (index_array.getDataType()) {
             case LONG:
                 log.warn("Index array contains long values, this is currently only supported up to Integer.MAX_VALUE");
                 break;
@@ -739,8 +739,8 @@ public class NetcdfDataSource implements IDataSource {
      * @param parent a {@link cross.datastructures.fragments.IFileFragment} object.
      * @return a {@link ucar.nc2.NetcdfFileWriteable} object.
      */
-    protected NetcdfFileWriteable structureWrite(final IFileFragment parent) {
-        NetcdfFileWriteable nfw = null;
+    protected NetcdfFileWriter structureWrite(final IFileFragment parent) {
+        NetcdfFileWriter nfw = null;
         try {
             String filename = null;
             if (parent.getSize() == 0) {
@@ -755,7 +755,7 @@ public class NetcdfDataSource implements IDataSource {
                 filename = parent.getUri().toString();
             }
             log.debug("Trying to create NetcdfFileWritable {}", filename);
-            nfw = NetcdfFileWriteable.createNew(
+            nfw = NetcdfFileWriter.createNew(
                     filename, false);
             nfw.setLargeFile(true);
 
@@ -845,7 +845,7 @@ public class NetcdfDataSource implements IDataSource {
                     log.debug("Defined dimensions: {}", Arrays.deepToString(dim));
                     if (!skipVarForMissingData) {
                         // HANDLE GROUPS
-                        final Group rootGroup = nfw.getRootGroup();
+                        final Group rootGroup = nfw.addGroup(null, filename);
                         // TODO Group handling loses data!!!
                         // IGroupFragment parentGroup =
                         // t.getFirst().getGroup().getParent();
@@ -878,28 +878,21 @@ public class NetcdfDataSource implements IDataSource {
                         // }
                         // }
 
-                        // CREATE VARIABLE
-                        final Variable v = new Variable(nfw, variableGroup,
-                                null, vf.getName());
-                        nfw.addVariable(variableGroup, v);
-
                         // SET DIMENSIONS
                         final List<Dimension> l = Arrays.asList(dim);
-                        v.setDimensions(l);
-//                        vf.setDimensions(dim);
-
                         // SET DATA TYPE
                         DataType dt = null;
                         if (vf.getDataType() == null) {
                             if (vf.getIndex() != null) {
-                                dt = DataType.getType(vf.getIndexedArray().get(0).getElementType());
+                                dt = vf.getIndexedArray().get(0).getDataType();
                             } else {
-                                dt = DataType.getType(vf.getArray().getElementType());
+                                dt = vf.getArray().getDataType();
                             }
                         } else {
                             dt = vf.getDataType();
                         }
-                        v.setDataType(dt);
+                        // CREATE VARIABLE
+                        final Variable v = nfw.addVariable(variableGroup, vf.getName(), dt, l);
 
                         // SET ATTRIBUTES
                         final List<Attribute> attrs = vf.getAttributes();
@@ -967,7 +960,7 @@ public class NetcdfDataSource implements IDataSource {
         log.debug("{}", f.toString());
         log.debug("Saving {} with NetcdfDataSource", f.getUri());
         EvalTools.notNull(f, this);
-        final NetcdfFileWriteable nfw = structureWrite(f);
+        final NetcdfFileWriter nfw = structureWrite(f);
         EvalTools.notNull(nfw, this);
         try {
             int cnt = 0;
@@ -1005,13 +998,13 @@ public class NetcdfDataSource implements IDataSource {
                     cnt++;
                 }
             }
-            nfw.finish();
-            log.info("Wrote " + cnt + " records to " + nfw.getLocation());
+            nfw.getNetcdfFile().finish();
+            log.info("Wrote " + cnt + " records to " + nfw.getNetcdfFile().getLocation());
             if (this.saveNCML) {
-                final String ncmlFile = StringTools.removeFileExt(nfw.getLocation())
+                final String ncmlFile = StringTools.removeFileExt(nfw.getNetcdfFile().getLocation())
                         + ".ncml";
                 try {
-                    nfw.writeNcML(new BufferedOutputStream(new FileOutputStream(
+                    nfw.getNetcdfFile().writeNcML(new BufferedOutputStream(new FileOutputStream(
                             ncmlFile)), null);
                 } catch (final FileNotFoundException e1) {
                     log.error(e1.getLocalizedMessage());

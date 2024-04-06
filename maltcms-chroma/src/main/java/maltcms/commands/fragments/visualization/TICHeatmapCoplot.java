@@ -306,7 +306,7 @@ public class TICHeatmapCoplot extends AFragmentCommand {
                     getShape()[0]);
             final ucar.ma2.Index idx = a.get(i).getSecond().getIndex();
             for (int j = 0; j < a.get(i).getSecond().getShape()[0]; j++) {
-                final ArrayInt.D1 b = new ArrayInt.D1(heightPerTIC);
+                final ArrayInt.D1 b = new ArrayInt.D1(heightPerTIC, false);
                 ArrayTools.fill(b, a.get(i).getSecond().getDouble(idx.set(j)));
                 al.add(b);
             }
@@ -453,7 +453,7 @@ public class TICHeatmapCoplot extends AFragmentCommand {
                 k = i;
             }
             final List<IAnchor> l1 = MaltcmsTools.prepareAnchors(t.get(i));
-            final ArrayInt.D1 anchPos1 = new ArrayInt.D1(l1.size());
+            final ArrayInt.D1 anchPos1 = new ArrayInt.D1(l1.size(), false);
             final List<String> anchNames = new ArrayList<>(l1.size());
             for (int j = 0; j < l1.size(); j++) {
                 final int anchor = l1.get(j).getScanIndex();

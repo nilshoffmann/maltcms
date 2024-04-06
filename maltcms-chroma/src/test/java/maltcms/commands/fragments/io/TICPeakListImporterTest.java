@@ -78,7 +78,7 @@ public class TICPeakListImporterTest extends AFragmentCommandTest {
         IWorkflow w = createWorkflow(outputBase, commands, testFiles.getFiles());
         IFileFragment f = testWorkflow(w).get(0);
         Array ticPeaks = f.getChild("tic_peaks").getArray();
-        Array refTicPeaks = Array.factory(new int[]{5, 10, 862});
+        Array refTicPeaks = Array.makeFromJavaArray(new int[]{5, 10, 862});
         Assert.assertEquals(3, ticPeaks.getShape()[0]);
         for (int i = 0; i < ticPeaks.getShape()[0]; i++) {
             Assert.assertEquals(refTicPeaks.getInt(i), ticPeaks.getInt(i));
@@ -112,7 +112,7 @@ public class TICPeakListImporterTest extends AFragmentCommandTest {
         IWorkflow w = createWorkflow(outputBase, commands, testFiles.getFiles());
         IFileFragment f = testWorkflow(w).get(0);
         Array ticPeaks = f.getChild("tic_peaks").getArray();
-        Array refTicPeaks = Array.factory(new int[]{4, 9, 861});
+        Array refTicPeaks = Array.makeFromJavaArray(new int[]{4, 9, 861});
         Assert.assertEquals(3, ticPeaks.getShape()[0]);
         for (int i = 0; i < ticPeaks.getShape()[0]; i++) {
             Assert.assertEquals(refTicPeaks.getInt(i), ticPeaks.getInt(i));

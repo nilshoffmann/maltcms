@@ -78,18 +78,18 @@ public class Scan2DTest {
         IScan[] scans = {
             //default scan
             new Scan2D(
-            Array.factory(new double[]{50.213, 58.997, 82.786}),
-            Array.factory(new int[]{9870, 988, 76234}),
+            Array.makeFromJavaArray(new double[]{50.213, 58.997, 82.786}),
+            Array.makeFromJavaArray(new int[]{9870, 988, 76234}),
             0,
             782.24, -1, -1, 21.532, 3.13),
             new Scan2D(
-            Array.factory(new double[]{50.213, 58.997, 82.786}),
-            Array.factory(new int[]{9870, 988, 76234}),
+            Array.makeFromJavaArray(new double[]{50.213, 58.997, 82.786}),
+            Array.makeFromJavaArray(new int[]{9870, 988, 76234}),
             1,
             783.24, -1, -1, 23.123, 1.24, (short) 1),
             new Scan2D(
-            Array.factory(new double[]{14.57, 24.13, 42.778}),
-            Array.factory(new int[]{972, 2788, 145}),
+            Array.makeFromJavaArray(new double[]{14.57, 24.13, 42.778}),
+            Array.makeFromJavaArray(new int[]{972, 2788, 145}),
             2,
             783.24, -1, -1, 23.123, 1.24, (short) 2, 1, 82.786, 76234)
         };

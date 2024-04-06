@@ -88,7 +88,7 @@ public class RawMSQuery implements IDBQuery<MSimilarityPredicate, IMetabolite> {
         //dblocation = "http://default@127.0.0.1:8888";
         String serverfile = "/Users/nilshoffmann/Documents/workspace/MetaboliteDBRolf/res/db4o/db_new.db4o";
         Array masses = ArrayTools.indexArray(701, 0);
-        Array intensities = new ArrayInt.D1(701);
+        Array intensities = new ArrayInt.D1(701, false);
         Index intIdx = intensities.getIndex();
         intensities.setInt(intIdx.set(72), 2000230);
         intensities.setInt(intIdx.set(73), 1213231);

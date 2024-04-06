@@ -93,7 +93,6 @@ public class CwtEicPeakFinder extends AFragmentCommand {
         for (IFileFragment f : t) {
             CwtEicPeakFinderCallable cwt = new CwtEicPeakFinderCallable();
             cwt.setInput(f.getUri());
-            cwt.setInput(f.getUri());
             cwt.setOutput(createWorkFragment(f).getUri());
             cwt.setMinScale(minScale);
             cwt.setMaxScale(maxScale);

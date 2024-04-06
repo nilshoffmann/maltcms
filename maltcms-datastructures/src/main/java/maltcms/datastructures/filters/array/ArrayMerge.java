@@ -61,10 +61,15 @@ public class ArrayMerge extends AArrayFilter {
         final IndexIterator ii2 = b[1].getIndexIterator();
         Array ret = null;
         if ((b[0] instanceof Sparse) && (b[1] instanceof Sparse)) {
-            ret = new Sparse(((Sparse) b[0]).getNumKeys(), ((Sparse) b[0])
-                    .getMinIndex(), ((Sparse) b[0]).getMaxIndex());
+            Sparse b0 = (Sparse) b[0];
+            ret = new Sparse(
+                b0.getDataType(), 
+                b0.getNumKeys(), 
+                b0.getMinIndex(), 
+                b0.getMaxIndex()
+            );
         } else {
-            ret = Array.factory(b[0].getElementType(), b[0].getShape());
+            ret = Array.factory(b[0].getDataType(), b[0].getShape());
         }
         final IndexIterator iir = ret.getIndexIterator();
         while (ii1.hasNext() && ii2.hasNext() && iir.hasNext()) {

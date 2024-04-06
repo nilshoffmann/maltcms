@@ -469,7 +469,7 @@ public class MZDataDataSource implements IDataSource {
             scans = r[0].length();
         }
         log.debug("Creating index array with {} elements", scans);
-        final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
+        final ArrayInt.D1 scan_index = new ArrayInt.D1(scans, false);
         for (int i = start; i < scans; i++) {
             final int peaks = getNumPeaks(mp, i);
             // current npeaks is index into larger arrays for current scan
@@ -591,7 +591,7 @@ public class MZDataDataSource implements IDataSource {
             final double v = MAMath.sumDouble(a);
             d[i] = v;
         }
-        return Array.factory(d);
+        return Array.makeFromJavaArray(d);
     }
 
     /** {@inheritDoc} */

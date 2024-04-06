@@ -57,18 +57,18 @@ public class Scan1DTest {
         IScan[] scans = {
             //default scan
             new Scan1D(
-            Array.factory(new double[]{50.213, 58.997, 82.786}),
-            Array.factory(new int[]{9870, 988, 76234}),
+            Array.makeFromJavaArray(new double[]{50.213, 58.997, 82.786}),
+            Array.makeFromJavaArray(new int[]{9870, 988, 76234}),
             0,
             782.24),
             new Scan1D(
-            Array.factory(new double[]{50.213, 58.997, 82.786}),
-            Array.factory(new int[]{9870, 988, 76234}),
+            Array.makeFromJavaArray(new double[]{50.213, 58.997, 82.786}),
+            Array.makeFromJavaArray(new int[]{9870, 988, 76234}),
             1,
             783.24, (short) 1),
             new Scan1D(
-            Array.factory(new double[]{14.57, 24.13, 42.778}),
-            Array.factory(new int[]{972, 2788, 145}),
+            Array.makeFromJavaArray(new double[]{14.57, 24.13, 42.778}),
+            Array.makeFromJavaArray(new int[]{972, 2788, 145}),
             2,
             783.24, (short) 2, 1, 82.786, 76234)
         };
@@ -79,8 +79,8 @@ public class Scan1DTest {
     public void testConstraintViolation() {
         try {
             Scan1D badScan1 = new Scan1D(
-                    Array.factory(new double[]{50.213, 58.997, 82.786}),
-                    Array.factory(new int[]{9870, 988, 76234}),
+                    Array.makeFromJavaArray(new double[]{50.213, 58.997, 82.786}),
+                    Array.makeFromJavaArray(new int[]{9870, 988, 76234}),
                     -5,
                     782.24);
             Assert.fail();
@@ -88,8 +88,8 @@ public class Scan1DTest {
         }
         try {
             Scan1D badScan2 = new Scan1D(
-                    Array.factory(new double[]{50.213, 58.997, 82.786}),
-                    Array.factory(new int[]{9870, 988, 76234}),
+                    Array.makeFromJavaArray(new double[]{50.213, 58.997, 82.786}),
+                    Array.makeFromJavaArray(new int[]{9870, 988, 76234}),
                     1,
                     783.24, (short) 0);
             Assert.fail();
@@ -97,8 +97,8 @@ public class Scan1DTest {
         }
         try {
             Scan1D badScan3 = new Scan1D(
-                    Array.factory(new double[]{14.57, 24.13, 42.778}),
-                    Array.factory(new int[]{972, 2788, 145}),
+                    Array.makeFromJavaArray(new double[]{14.57, 24.13, 42.778}),
+                    Array.makeFromJavaArray(new int[]{972, 2788, 145}),
                     2,
                     783.24, (short) 1, 1, 82.786, 76234);
             Assert.fail();

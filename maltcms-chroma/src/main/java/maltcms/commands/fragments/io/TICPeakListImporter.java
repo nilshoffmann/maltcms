@@ -146,7 +146,7 @@ public class TICPeakListImporter extends AFragmentCommand {
                                 table);
                         Vector<String> peakScanIndex = hm.get(
                                 scanIndexColumnName);
-                        ArrayInt.D1 extr = new ArrayInt.D1(peakScanIndex.size());
+                        ArrayInt.D1 extr = new ArrayInt.D1(peakScanIndex.size(), false);
                         for (int i = 0; i < peakScanIndex.size(); i++) {
                             extr.set(i,
                                     Integer.parseInt(peakScanIndex.get(i)) + scanIndexOffset);

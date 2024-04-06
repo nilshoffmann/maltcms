@@ -60,7 +60,7 @@ public class ArrayTools2 {
      * @return intarray
      */
     public static ArrayInt.D1 createIntegerArray(final Array array) {
-        final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0]);
+        final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0], false);
         final IndexIterator iter = intarray.getIndexIterator();
         final IndexIterator arrayIter = array.getIndexIterator();
         while (iter.hasNext()) {
@@ -81,7 +81,7 @@ public class ArrayTools2 {
      */
     public static ArrayInt.D1 createIntegerArray(final Array array,
             final List<Integer> masqMasses) {
-        final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0]);
+        final ArrayInt.D1 intarray = new ArrayInt.D1(array.getShape()[0], false);
         final IndexIterator iter = intarray.getIndexIterator();
         final IndexIterator arrayIter = array.getIndexIterator();
         int i = 0;
@@ -105,7 +105,7 @@ public class ArrayTools2 {
      * @return {@link ucar.ma2.ArrayInt}
      */
     public static ArrayInt.D1 createIntegerArray(final Vector<Integer> list) {
-        final ArrayInt.D1 array = new ArrayInt.D1(list.size());
+        final ArrayInt.D1 array = new ArrayInt.D1(list.size(), false);
         final IndexIterator iter = array.getIndexIterator();
         for (final Integer i : list) {
             iter.setDoubleNext(i);
@@ -220,7 +220,7 @@ public class ArrayTools2 {
             }
             return ret;
         } else {
-            final Array ret = Array.factory(a.getElementType(), a.getShape());
+            final Array ret = Array.factory(a.getDataType(), a.getShape());
             final Array aa = a.copy();
             for (final Integer i : list) {
                 ret.setDouble(i, aa.getDouble(i));
@@ -479,8 +479,8 @@ public class ArrayTools2 {
     public static Array normalize(final Array massValuesA,
             final Array massIntensitiesA, final double massResolution, final Logger log, double minMass, double maxMass) {
         int bins = MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, massResolution);
-        Array targetMasses = Array.factory(massValuesA.getElementType(), new int[]{bins});
-        Array targetIntensities = Array.factory(massIntensitiesA.getElementType(), new int[]{bins});
+        Array targetMasses = Array.factory(massValuesA.getDataType(), new int[]{bins});
+        Array targetIntensities = Array.factory(massIntensitiesA.getDataType(), new int[]{bins});
         ArrayTools.createDenseArray(massValuesA, massIntensitiesA,
                 new Tuple2D<>(targetMasses, targetIntensities), ((int) Math.floor(minMass)), ((int) Math.ceil(maxMass)),
                 bins, massResolution, 0.0d);
@@ -539,8 +539,8 @@ public class ArrayTools2 {
      */
     protected static Tuple2D<Array, Array> getWarpPath(
             final List<Point> warpPath) {
-        final ArrayInt.D1 pathi = new ArrayInt.D1(warpPath.size());
-        final ArrayInt.D1 pathj = new ArrayInt.D1(warpPath.size());
+        final ArrayInt.D1 pathi = new ArrayInt.D1(warpPath.size(), true);
+        final ArrayInt.D1 pathj = new ArrayInt.D1(warpPath.size(), true);
 
         int c = 0;
         for (Point p : warpPath) {
@@ -598,7 +598,7 @@ public class ArrayTools2 {
      * @return a {@link ucar.ma2.Array} object.
      */
     public static Array getIndexArray(final List<Array> data) {
-        final Array index = new ArrayInt.D1(data.size());
+        final Array index = new ArrayInt.D1(data.size(), true);
 
         final IndexIterator iter = index.getIndexIterator();
         int s = 0;
@@ -630,7 +630,7 @@ public class ArrayTools2 {
         }
 
         Tuple2D<Array, Array> newms = new Tuple2D<Array, Array>(
-                new ArrayInt.D1(c), new ArrayDouble.D1(c));
+                new ArrayInt.D1(c, false), new ArrayDouble.D1(c));
         final IndexIterator iter1 = ms.getFirst().getIndexIterator(), iter2 = ms
                 .getSecond().getIndexIterator();
         final IndexIterator siter1 = newms.getFirst().getIndexIterator(), siter2 = newms
@@ -659,7 +659,7 @@ public class ArrayTools2 {
             int scansPerModulation) {
         List<Array> mzs = new ArrayList<>();
         List<Array> inten = new ArrayList<>();
-        ArrayInt.D1 scanIndex = new ArrayInt.D1(scansPerModulation);
+        ArrayInt.D1 scanIndex = new ArrayInt.D1(scansPerModulation, false);
         final IndexIterator iter = scanIndex.getIndexIterator();
         iter.setIntNext(0);
         int off = 0;

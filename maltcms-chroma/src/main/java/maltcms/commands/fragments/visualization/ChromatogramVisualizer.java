@@ -239,9 +239,9 @@ public class ChromatogramVisualizer extends AFragmentCommand {
         final Index ind = tic.getIndex();
         final MinMax mm = MAMath.getMinMax(tic);
         // a.getShape()
-        final Array sortedtic = Array.factory(tic.getElementType(),
+        final Array sortedtic = Array.factory(tic.getDataType(),
                 tic.getShape());
-        final Array correctedtic = Array.factory(tic.getElementType(), tic.
+        final Array correctedtic = Array.factory(tic.getDataType(), tic.
                 getShape());
         final Index cind = correctedtic.getIndex();
         MAMath.copy(sortedtic, tic);

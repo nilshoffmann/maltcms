@@ -222,12 +222,12 @@ public class Scan2D extends Scan1D implements IScan2D {
     public Array getFeature(final String name) {
         switch (name) {
             case "first_column_scan_index": {
-                ArrayInt.D0 a = new ArrayInt.D0();
+                ArrayInt.D0 a = new ArrayInt.D0(false);
                 a.set(this.fcind);
                 return a;
             }
             case "second_column_scan_index": {
-                ArrayInt.D0 a = new ArrayInt.D0();
+                ArrayInt.D0 a = new ArrayInt.D0(false);
                 a.set(this.scind);
                 return a;
             }

@@ -254,7 +254,7 @@ public class MaltcmsTools {
         final List<Array> intensities = chrom.getIntensities();
         final List<Array> masses = chrom.getMasses();
         EvalTools.eqI(intensities.size(), masses.size(), chrom);
-        final ArrayInt.D1 indices = new ArrayInt.D1(masses.size());
+        final ArrayInt.D1 indices = new ArrayInt.D1(masses.size(), false);
         final int size = cross.datastructures.tools.ArrayTools.getSizeForFlattenedArrays(masses);
         final ArrayDouble.D1 ms = new ArrayDouble.D1(size);
         final ArrayDouble.D1 is = new ArrayDouble.D1(size);
@@ -284,7 +284,7 @@ public class MaltcmsTools {
             final Integer[] eics) {
         final ArrayList<Array> al = new ArrayList<>(intensities.size());
         for (Array aorig : intensities) {
-            final Array a = Array.factory(aorig.getElementType(),
+            final Array a = Array.factory(aorig.getDataType(),
                     new int[]{eics.length});
             final Index ai = a.getIndex();
             final Index aorigi = aorig.getIndex();
@@ -333,7 +333,7 @@ public class MaltcmsTools {
                 "var.binned_mass_values", "binned_mass_values"));
         // int var_size = refA.size();
 
-        final ArrayInt.D1 scan_indexa = new ArrayInt.D1(intensities.size());
+        final ArrayInt.D1 scan_indexa = new ArrayInt.D1(intensities.size(), false);
 
         int si = 0;
         for (int i = 0; i < intensities.size(); i++) {
@@ -423,8 +423,8 @@ public class MaltcmsTools {
         }
         final ArrayDouble.D1 minmass = new ArrayDouble.D1(scans.size());
         final ArrayDouble.D1 maxmass = new ArrayDouble.D1(scans.size());
-        final IndexIterator minmassiter = minmass.getIndexIteratorFast();
-        final IndexIterator maxmassiter = maxmass.getIndexIteratorFast();
+        final IndexIterator minmassiter = minmass.getIndexIterator();
+        final IndexIterator maxmassiter = maxmass.getIndexIterator();
         while (minmassiter.hasNext() && maxmassiter.hasNext()) {
             minmassiter.setDoubleNext(minmassv);
             maxmassiter.setDoubleNext(maxmassv);
@@ -687,7 +687,7 @@ public class MaltcmsTools {
 //			scans = Math.min(mass1.size(), Math.min(intens1.size(), nscans));
 //		}
             final ArrayDouble.D1 eic = new ArrayDouble.D1(scans);
-            final ArrayInt.D1 eicbinCnt = new ArrayInt.D1(scans);
+            final ArrayInt.D1 eicbinCnt = new ArrayInt.D1(scans, false);
             for (int i = 0; i < scans; i++) {
                 final Array massesArray = mass1.get(i);
                 final Index mind = massesArray.getIndex();
@@ -755,7 +755,7 @@ public class MaltcmsTools {
         int maxScans = MaltcmsTools.getNumberOfScans(f);
         int scans = Math.min(maxScans, nscans);
         int massBins = MaltcmsTools.getNumberOfIntegerMassBins(minMass, maxMass, resolution);
-        Array binnedMassValues = Array.factory(MathTools.seq(minMass, maxMass, 1.0d / resolution));
+        Array binnedMassValues = Array.makeFromJavaArray(MathTools.seq(minMass, maxMass, 1.0d / resolution));
         try {
             MaltcmsTools.log.info(
                     "Retrieving EIC from {}, scan start {}, stop {}, mz start {}, stop {}",
@@ -803,7 +803,7 @@ public class MaltcmsTools {
                     int idx = MaltcmsTools.binMZ(m, minMass, maxMass, resolution);
                     Array eicArray = eicCache.get(idx);
                     if (eicArray == null) {
-                        eicArray = Array.factory(intensitiesArray.getElementType(), new int[]{scans});
+                        eicArray = Array.makeFromJavaArray(new int[]{scans});
                         eicCache.set(idx, eicArray);
                     }
                     // in range
@@ -1728,7 +1728,7 @@ public class MaltcmsTools {
         MaltcmsTools.log.debug("Creating dense arrays with " + size
                 + " elements and resolution of {}!", massBinResolution);
         // Create new index array with size = number of scans
-        final ArrayInt.D1 binnedScanIndexArray = new ArrayInt.D1(massValuesList.size());
+        final ArrayInt.D1 binnedScanIndexArray = new ArrayInt.D1(massValuesList.size(), false);
         int points = 0;
         int scans = 0;
         List<Array> binnedMassValuesList = new ArrayList<>(massValuesList.size());
@@ -1949,7 +1949,7 @@ public class MaltcmsTools {
         int bins = arrays.get(0).getShape()[0];
         ArrayDouble.D1 mean = new ArrayDouble.D1(bins);
         final ArrayDouble.D1 var = new ArrayDouble.D1(bins);
-        final ArrayInt.D1 nn = new ArrayInt.D1(bins);
+        final ArrayInt.D1 nn = new ArrayInt.D1(bins, false);
 
         int n = 0;
         double delta = 0, meanCurrent = 0, x = 0, v = 0;
@@ -2344,7 +2344,7 @@ public class MaltcmsTools {
         MaltcmsTools.unique(l);
         double[] d = new double[]{50.03023, 50.05032, 50.9, 50.995, 51.234,
             51.934, 52.2};
-        Array a = Array.factory(d);
+        Array a = Array.makeFromJavaArray(d);
         List<Double> masked = Arrays.asList(49.9, 51.2, 52.0);
         double epsilon = 1;
         for (int i = 0; i < 10; i++) {

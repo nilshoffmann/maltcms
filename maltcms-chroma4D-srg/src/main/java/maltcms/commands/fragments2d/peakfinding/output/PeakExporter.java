@@ -251,7 +251,7 @@ public class PeakExporter implements IPeakExporter {
                 Array denseIntensities = p.getPeakArea().getSeedMS();
 
                 final ArrayInt.D1 mz = new ArrayInt.D1(
-                        denseIntensities.getShape()[0]);
+                        denseIntensities.getShape()[0], false);
                 for (int i = 0; i < denseIntensities.getShape()[0]; i++) {
                     mz.set(i, i);
                 }
@@ -269,7 +269,7 @@ public class PeakExporter implements IPeakExporter {
                     ArrayDouble.D1 masses = new ArrayDouble.D1(t.getFirst().
                             getShape()[0]);
                     ArrayInt.D1 intensities = new ArrayInt.D1(t.getSecond().
-                            getShape()[0]);
+                            getShape()[0], false);
                     MAMath.copyDouble(masses, t.getFirst());
                     MAMath.copyInt(intensities, t.getSecond());
                     Metabolite2D m = new Metabolite2D(pname, pname,

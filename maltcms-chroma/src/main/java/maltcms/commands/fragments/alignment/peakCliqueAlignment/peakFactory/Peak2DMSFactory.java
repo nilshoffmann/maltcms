@@ -237,8 +237,8 @@ public class Peak2DMSFactory implements IPeakFactory {
         Peak2D provide(int scanIndex) {
             Point pt = scanLineCache.mapIndex(scanIndex);
             Tuple2D<Array, Array> t = scanLineCache.getSparseMassSpectrum(pt);
-            Array mz = Array.factory(t.getFirst().getElementType(), new int[]{size});
-            Array intens = Array.factory(t.getSecond().getElementType(), new int[]{size});
+            Array mz = Array.factory(t.getFirst().getDataType(), new int[]{size});
+            Array intens = Array.factory(t.getSecond().getDataType(), new int[]{size});
             ArrayTools.createDenseArray(t.getFirst(), t.getSecond(), new Tuple2D<>(mz, intens), ((int) Math.floor(minMaxMassRange.getFirst())), ((int) Math.ceil(minMaxMassRange.getSecond())), size, massBinResolution, 0.0d);
             Peak2D p = new Peak2D(scanIndex, intens,
                     satArray.getDouble(scanIndex), sourceFile.getName(), associationId);

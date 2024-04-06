@@ -99,7 +99,7 @@ public class SavitzkyGolayFilter extends AArrayFilter {
         for (int j = 0; j < filtered.length; j++) {
             filtered[j] /= (double) norms[index];
         }
-        return Array.factory(filtered);
+        return Array.makeFromJavaArray(filtered);
     }
 
     private Array applyQuadraticCubic(final Array a) {

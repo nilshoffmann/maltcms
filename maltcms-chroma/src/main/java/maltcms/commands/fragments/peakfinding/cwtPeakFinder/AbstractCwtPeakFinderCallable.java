@@ -147,7 +147,7 @@ public abstract class AbstractCwtPeakFinderCallable implements Callable<PeakFind
         double[] scaleResponse = (double[]) scaleogram.slice(1, row).
                 get1DJavaArray(double.class);
         FirstDerivativeFilter fdf = new FirstDerivativeFilter();
-        double[] res = (double[]) fdf.apply(Array.factory(scaleResponse)).
+        double[] res = (double[]) fdf.apply(Array.makeFromJavaArray(scaleResponse)).
                 get1DJavaArray(double.class);
         List<Integer> peakMaxima = new LinkedList<>();
         for (int i = 1; i < scaleResponse.length - 1; i++) {

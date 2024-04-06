@@ -82,9 +82,9 @@ public class Peak2D extends PeakNG {
     public Array getFeature(String name) {
         switch (name) {
             case "first_column_elution_time":
-                return Array.factory(this.firstColumnElutionTime);
+                return Array.makeFromJavaArray(this.firstColumnElutionTime);
             case "second_column_elution_time":
-                return Array.factory(this.secondColumnElutionTime);
+                return Array.makeFromJavaArray(this.secondColumnElutionTime);
         }
         Array retVal = super.getFeature(name);
         if (retVal != null) {

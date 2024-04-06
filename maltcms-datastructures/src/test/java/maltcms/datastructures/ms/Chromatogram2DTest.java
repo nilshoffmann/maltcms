@@ -85,28 +85,28 @@ public class Chromatogram2DTest {
     private Chromatogram2D createTestChromatogram2D(File file) {
         FileFragment f = new FileFragment(file);
         f.addChild("first_column_elution_time").setArray(
-                Array.factory(new double[]{240, 240, 245, 245, 250, 255, 255})
+                Array.makeFromJavaArray(new double[]{240, 240, 245, 245, 250, 255, 255})
         );
         f.addChild("second_column_elution_time").setArray(
-                Array.factory(new double[]{0, 2.0, 0.25, 3.2, 4.6, 3.5, 4.9})
+                Array.makeFromJavaArray(new double[]{0, 2.0, 0.25, 3.2, 4.6, 3.5, 4.9})
         );
         IVariableFragment sat = f.addChild("scan_acquisition_time");
         double[] sats = new double[]{240 + 0, 240 + 2.0, 245 + 0.25, 245 + 3.2, 250 + 4.6, 255 + 3.5, 255 + 4.9};
-        sat.setArray(Array.factory(sats));
+        sat.setArray(Array.makeFromJavaArray(sats));
         IVariableFragment modTime = f.addChild("modulation_time");
-        modTime.setArray(Array.factory(new double[]{5.0d}));
+        modTime.setArray(Array.makeFromJavaArray(new double[]{5.0d}));
         IVariableFragment scanRate = f.addChild("scan_rate");
-        scanRate.setArray(Array.factory(new double[]{100.0d}));
+        scanRate.setArray(Array.makeFromJavaArray(new double[]{100.0d}));
         IVariableFragment si = f.addChild("scan_index");
         int[] sis = new int[]{0, 1, 2, 3, 4, 5, 6};
-        si.setArray(Array.factory(sis));
+        si.setArray(Array.makeFromJavaArray(sis));
         IVariableFragment ms = f.addChild("mass_values");
         double[] mvs = new double[]{74.241, 74.521, 70.4214, 75.869, 90.421, 61.515, 89.124};
-        ms.setArray(Array.factory(mvs));
+        ms.setArray(Array.makeFromJavaArray(mvs));
         IVariableFragment is = f.addChild("intensity_values");
         int[] ivs = new int[]{896, 89613, 8979694, 78585, 89563, 56704, 76124};
-        is.setArray(Array.factory(ivs));
-        f.addChild("total_intensity").setArray(Array.factory(ivs));
+        is.setArray(Array.makeFromJavaArray(ivs));
+        f.addChild("total_intensity").setArray(Array.makeFromJavaArray(ivs));
         f.save();
         Chromatogram2D chrom = new Chromatogram2D(f);
         return chrom;
@@ -115,28 +115,28 @@ public class Chromatogram2DTest {
     private Chromatogram2D createDenseTestChromatogram2D(File file) {
         FileFragment f = new FileFragment(file);
         f.addChild("first_column_elution_time").setArray(
-                Array.factory(new double[]{240, 240, 245, 245, 250, 250, 255, 255})
+                Array.makeFromJavaArray(new double[]{240, 240, 245, 245, 250, 250, 255, 255})
         );
         f.addChild("second_column_elution_time").setArray(
-                Array.factory(new double[]{0, 2.5, 0, 2.5, 0, 2.5, 0, 2.5})
+                Array.makeFromJavaArray(new double[]{0, 2.5, 0, 2.5, 0, 2.5, 0, 2.5})
         );
         IVariableFragment sat = f.addChild("scan_acquisition_time");
         double[] sats = new double[]{240 + 0, 240 + 2.5, 245 + 0, 245 + 2.5, 250 + 0, 250 + 2.5, 255 + 0, 255 + 2.5};
-        sat.setArray(Array.factory(sats));
+        sat.setArray(Array.makeFromJavaArray(sats));
         IVariableFragment modTime = f.addChild("modulation_time");
-        modTime.setArray(Array.factory(new double[]{5.0d}));
+        modTime.setArray(Array.makeFromJavaArray(new double[]{5.0d}));
         IVariableFragment scanRate = f.addChild("scan_rate");
-        scanRate.setArray(Array.factory(new double[]{0.4}));
+        scanRate.setArray(Array.makeFromJavaArray(new double[]{0.4}));
         IVariableFragment si = f.addChild("scan_index");
         int[] sis = new int[]{0, 1, 2, 3, 4, 5, 6, 7};
-        si.setArray(Array.factory(sis));
+        si.setArray(Array.makeFromJavaArray(sis));
         IVariableFragment ms = f.addChild("mass_values");
         double[] mvs = new double[]{74.241, 74.521, 70.4214, 75.869, 90.421, 61.515, 89.124, 98.872};
-        ms.setArray(Array.factory(mvs));
+        ms.setArray(Array.makeFromJavaArray(mvs));
         IVariableFragment is = f.addChild("intensity_values");
         int[] ivs = new int[]{896, 89613, 8979694, 78585, 89563, 56704, 76124, 962132};
-        is.setArray(Array.factory(ivs));
-        f.addChild("total_intensity").setArray(Array.factory(ivs));
+        is.setArray(Array.makeFromJavaArray(ivs));
+        f.addChild("total_intensity").setArray(Array.makeFromJavaArray(ivs));
         f.save();
         Chromatogram2D chrom = new Chromatogram2D(f);
         return chrom;

@@ -147,7 +147,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
             }
 
             if (this.substractMean) {
-                ArrayInt.D1 means = new ArrayInt.D1(intensities.size());
+                ArrayInt.D1 means = new ArrayInt.D1(intensities.size(), false);
                 IndexIterator iter;
                 int sum;
                 int i = 0;
@@ -204,7 +204,7 @@ public class Chromatogram2DVisualizer extends AFragmentCommand {
 //                    getWorkflow().getOutputDirectory(this));
 //            pl.configure(Factory.getInstance().getConfiguration());
 //            Factory.getInstance().submitJob(pl);
-            final ArrayInt.D1 histo = new ArrayInt.D1(256);
+            final ArrayInt.D1 histo = new ArrayInt.D1(256, false);
             int[] a = new int[3];
             for (int i = 0; i < bi.getWidth(); i++) {
                 for (int j = 0; j < bi.getHeight(); j++) {

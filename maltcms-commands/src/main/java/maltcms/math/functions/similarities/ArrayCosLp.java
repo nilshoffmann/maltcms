@@ -30,7 +30,7 @@ package maltcms.math.functions.similarities;
 import lombok.Data;
 import maltcms.math.functions.IArraySimilarity;
 import maltcms.tools.ArrayTools;
-import net.jcip.annotations.NotThreadSafe;
+import javax.annotation.concurrent.NotThreadSafe;
 import org.openide.util.lookup.ServiceProvider;
 import ucar.ma2.Array;
 import ucar.ma2.MAVector;

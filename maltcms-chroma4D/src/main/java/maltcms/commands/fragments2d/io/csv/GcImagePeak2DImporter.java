@@ -189,7 +189,7 @@ public class GcImagePeak2DImporter extends AFragmentCommand {
                     new File(getWorkflow().getOutputDirectory(this),
                             iff.getParent().getName()));
             List<Peak2D> peaks = gci.importPeaks(chromToFileMap.get(iff), iff);
-            final ArrayInt.D1 peakindex = new ArrayInt.D1(peaks.size());
+            final ArrayInt.D1 peakindex = new ArrayInt.D1(peaks.size(), false);
             final IndexIterator iter = peakindex.getIndexIterator();
             for (Peak2D p : peaks) {
                 iter.setIntNext(p.getApexIndex());

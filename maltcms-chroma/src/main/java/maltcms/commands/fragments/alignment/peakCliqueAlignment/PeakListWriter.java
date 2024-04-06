@@ -91,8 +91,8 @@ public class PeakListWriter {
                         mzList.add(massVal);
                     }
                 }
-                ArrayInt.D1 intens = (ArrayInt.D1) Array.factory(intensList.toArray());
-                ArrayDouble.D1 massArray = (ArrayDouble.D1) Array.factory(mzList.toArray());
+                ArrayInt.D1 intens = (ArrayInt.D1) Array.makeFromJavaArray(intensList.toArray());
+                ArrayDouble.D1 massArray = (ArrayDouble.D1) Array.makeFromJavaArray(mzList.toArray());
                 String name = p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime();
                 IMetabolite im = new Metabolite(p.getName().isEmpty() ? name : p.getName(), p.getAssociation() + "-IDX_" + p.getScanIndex() + "-RT_" + p.getScanAcquisitionTime(), getClass().getSimpleName() + "-" + type, i++, "", "", "", Double.NaN, p.getScanAcquisitionTime(), "sec", -1, "", p.getName(), massArray, intens);
                 bw.write(im.toString());

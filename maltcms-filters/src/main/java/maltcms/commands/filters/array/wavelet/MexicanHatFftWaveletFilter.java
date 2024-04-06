@@ -106,7 +106,7 @@ public class MexicanHatFftWaveletFilter extends AArrayFilter {
         Array arr = super.apply(a);
 
         if (arr.getRank() == 1) {
-            return Array.factory(cwt.apply((double[]) arr
+            return Array.makeFromJavaArray(cwt.apply((double[]) arr
                     .get1DJavaArray(double.class), this.scale, this.variance));
         } else {
             throw new IllegalArgumentException(getClass().getSimpleName()

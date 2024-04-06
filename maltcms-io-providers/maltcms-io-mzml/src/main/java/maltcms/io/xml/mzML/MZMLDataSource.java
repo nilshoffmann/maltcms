@@ -819,7 +819,7 @@ public class MZMLDataSource implements IDataSource {
             start = Math.max(0, r[0].first());
             scans = Math.min(scans, r[0].length());
         }
-        Array a = new ArrayInt.D1(scans);
+        Array a = new ArrayInt.D1(scans, false);
         log.debug("Reading from {} to {} (inclusive)", start, start + scans - 1);
         MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         int i = 0;
@@ -910,7 +910,7 @@ public class MZMLDataSource implements IDataSource {
             scans = Math.min(scans, r[0].length());
         }
         log.debug("Creating index array with {} elements", scans);
-        final ArrayInt.D1 scan_index = new ArrayInt.D1(scans);
+        final ArrayInt.D1 scan_index = new ArrayInt.D1(scans, false);
         MzMLObjectIterator<Spectrum> spectrumIterator = um.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         int i = 0;
         while (spectrumIterator.hasNext()) {

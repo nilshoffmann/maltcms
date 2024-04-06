@@ -324,9 +324,9 @@ public class PeakNG extends DefaultFeatureVector implements IBipacePeak {
     public Array getFeature(String name) {
         switch (name) {
             case "scan_acquisition_time":
-                return Array.factory(this.sat);
+                return Array.makeFromJavaArray(this.sat);
             case "scan_index":
-                return Array.factory(this.scanIndex);
+                return Array.makeFromJavaArray(this.scanIndex);
             case "binned_intensity_values":
                 return getMsIntensities();
         }

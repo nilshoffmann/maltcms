@@ -112,10 +112,10 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
             IFileFragment retF = new FileFragment(getWorkflow().getOutputDirectory(this), ff.getName());
             ArrayStatsScanner ass = new ArrayStatsScanner();
             Chromatogram2D c2 = new Chromatogram2D(ff);
-            ArrayInt.D1 tic = new ArrayInt.D1(c2.getNumberOfModulations());
+            ArrayInt.D1 tic = new ArrayInt.D1(c2.getNumberOfModulations(), false);
             ArrayDouble.D1 sat = new ArrayDouble.D1(c2.getNumberOfModulations());
             List<Tuple2D<Array, Array>> milist = new ArrayList<>(c2.getNumberOfModulations());
-            ArrayInt.D1 scanIndex = new ArrayInt.D1(c2.getNumberOfModulations());
+            ArrayInt.D1 scanIndex = new ArrayInt.D1(c2.getNumberOfModulations(), false);
             int offset = 0;
             log.info("Loading scans");
             Array osat = ff.getChild("scan_acquisition_time").getArray();
@@ -150,7 +150,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
                     }
                 }
                 Array massValues = new ArrayDouble.D1(modulationMS.keySet().size());
-                Array intenValues = new ArrayInt.D1(modulationMS.keySet().size());
+                Array intenValues = new ArrayInt.D1(modulationMS.keySet().size(), false);
                 scanIndex.set(k, offset);
                 int i = 0;
                 for (Double d : modulationMS.keySet()) {
@@ -180,7 +180,7 @@ public class GCGCToGCMSConverter extends AFragmentCommand {
             }
 
             Array massVals = new ArrayDouble.D1(offset);
-            Array intenVals = new ArrayInt.D1(offset);
+            Array intenVals = new ArrayInt.D1(offset, false);
             offset = 0;
             log.info("Setting mass and intensity values");
             for (Tuple2D<Array, Array> tpl : milist) {

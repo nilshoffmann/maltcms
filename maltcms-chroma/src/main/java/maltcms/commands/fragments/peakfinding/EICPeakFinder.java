@@ -496,7 +496,7 @@ public class EICPeakFinder extends AFragmentCommand {
     private ArrayInt.D1 createPeakCandidatesArray(final Array tic,
             final ArrayList<Integer> ts) {
         EvalTools.notNull(ts, this);
-        final ArrayInt.D1 extr = new ArrayInt.D1(ts.size());
+        final ArrayInt.D1 extr = new ArrayInt.D1(ts.size(), false);
         // checkUniformDistribution(tic.getShape()[0], ts);
         for (int i = 0; i < ts.size(); i++) {
             extr.set(i, ts.get(i));

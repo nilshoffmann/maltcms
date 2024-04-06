@@ -38,6 +38,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.LoggerFactory;
 
 import ucar.ma2.Array;
+import ucar.ma2.DataType;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.Sparse;
 
@@ -49,7 +50,7 @@ import ucar.ma2.Sparse;
  * @deprecated You can use the usual array operations on Sparse array instances.
  * 
  */
-
+@Deprecated
 public class SparseTools {
         
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(SparseTools.class);
@@ -166,7 +167,7 @@ public class SparseTools {
      */
     public static Sparse randomGaussian(final int minindex, final int size,
             final double mean, final double stddev) {
-        final Sparse s = new Sparse(size, minindex, minindex + size - 1);
+        final Sparse s = new Sparse(DataType.DOUBLE, size, minindex, minindex + size - 1);
         for (int i = 0; i < size; i++) {
             s.set(i, (ArrayTools.nextGaussian() - mean) * stddev);
         }
@@ -184,7 +185,7 @@ public class SparseTools {
      */
     public static Sparse randomUniform(final int minindex, final int size,
             final double mean, final double scale) {
-        final Sparse s = new Sparse(size, minindex, minindex + size - 1);
+        final Sparse s = new Sparse(DataType.DOUBLE, size, minindex, minindex + size - 1);
         for (int i = 0; i < size; i++) {
             s.set(i, (ArrayTools.nextUniform() - mean) * scale);
         }

@@ -99,10 +99,10 @@ public class FileCopy {
             final Range[] index_range = index_fragment.getRange();
             try {
                 index_array = (ArrayInt.D1) index_fragment.getArray().section(
-                        Range.toList(index_range));
+                        List.of(index_range));
                 if ((index_range != null) && (index_range[0] != null)) {
                     final ArrayInt.D1 new_index = new ArrayInt.D1(index_array.
-                            getShape()[0]);
+                            getShape()[0], false);
                     for (int i = 0; i < new_index.getShape()[0]; i++) {
                         // log.info("i: {}, index_start: {}, index_end: {}",new
                         // Object[]{i,index_start,index_end});

@@ -117,11 +117,11 @@ public class PartitionedArray implements IArrayD2Double {
      */
     public static PartitionedArray create(final int rows, final int cols,
             final double defaultValue, final Area shape) {
-        final ArrayInt.D1 colStart = new ArrayInt.D1(rows);// first valid index
+        final ArrayInt.D1 colStart = new ArrayInt.D1(rows, false);// first valid index
         // of each row
-        final ArrayInt.D1 rowLength = new ArrayInt.D1(rows);// last valid index
+        final ArrayInt.D1 rowLength = new ArrayInt.D1(rows, false);// last valid index
         // of each row
-        final ArrayInt.D1 rowOffset = new ArrayInt.D1(rows);// offsets of row
+        final ArrayInt.D1 rowOffset = new ArrayInt.D1(rows, false);// offsets of row
         // storage in
         final ArrayDouble.D1 dataArray = PartitionedArray.initArrays(rows,
                 cols, shape, colStart, rowLength, rowOffset);
@@ -442,7 +442,7 @@ public class PartitionedArray implements IArrayD2Double {
     public Tuple2D<D1, ucar.ma2.ArrayDouble.D1> flatten() {
         final ArrayDouble.D1 arr = new ArrayDouble.D1(
                 getNumberOfStoredElements());
-        final ArrayInt.D1 si = new ArrayInt.D1(rows());
+        final ArrayInt.D1 si = new ArrayInt.D1(rows(), false);
         int offset = 0;
         for (int i = 0; i < rows(); i++) {
             si.set(i, 0 + offset);

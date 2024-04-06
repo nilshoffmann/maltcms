@@ -124,8 +124,8 @@ public class GcImageBlobParserTest {
         File subFolder = tf.newFolder("gcImageRefTestFolder");
         FileFragment tmpFrag = new FileFragment(subFolder, sourceFile.getName());
         tmpFrag.addSourceFile(new FileFragment(sourceFile));
-        tmpFrag.addChild("modulation_time").setArray(Array.factory(new double[]{5}));
-        tmpFrag.addChild("scan_rate").setArray(Array.factory(new double[]{100}));
+        tmpFrag.addChild("modulation_time").setArray(Array.makeFromJavaArray(new double[]{5}));
+        tmpFrag.addChild("scan_rate").setArray(Array.makeFromJavaArray(new double[]{100}));
         Chromatogram2D chrom = new Chromatogram2D(tmpFrag);
         Assert.assertEquals(375, chrom.getNumberOfScans());
         Assert.assertEquals(500, chrom.getNumberOfScansPerModulation());

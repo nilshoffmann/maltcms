@@ -52,6 +52,7 @@ import org.openide.util.lookup.ServiceProvider;
 import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayChar;
+import ucar.ma2.DataType;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 
@@ -194,7 +195,7 @@ public class ANDIMSExporter extends AFragmentCommand {
                 for (IVariableFragment ivf : FragmentTools.getAggregatedVariables(f)) {
                     try {
                         copyData(f, outf, ivf.getName(), ivf.getDataType().
-                                getClassType(), ivf.getDimensions());
+                                getPrimitiveClassType(), ivf.getDimensions());
                     } catch (IllegalArgumentException iae) {
                         log.warn("Exception while trying to add Variable " + ivf.
                                 getName() + " to FileFragment " + f.getName(),
@@ -291,7 +292,7 @@ public class ANDIMSExporter extends AFragmentCommand {
                 a = arr;
                 log.info("Shape of char array: {}", Arrays.toString(a.getShape()));
             } else {
-                a = Array.factory(elementType, shape);
+                a = Array.factory(DataType.getType(elementType, false), shape);
             }
             targetV.setDimensions(d);
             targetV.setArray(a);

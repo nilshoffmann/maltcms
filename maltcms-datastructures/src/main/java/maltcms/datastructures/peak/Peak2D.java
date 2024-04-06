@@ -375,7 +375,7 @@ public class Peak2D extends Peak1D implements Serializable {
         try {
             peakHeight = ff.getChild("peak_height").getArray();
         } catch (ResourceNotAvailableException rnae) {
-            peakHeight = Array.factory(area.getElementType(), area.getShape());
+            peakHeight = Array.factory(area.getDataType(), area.getShape());
             ArrayTools.fill(peakHeight, Double.NaN);
         }
         Array baseLineStartRT = ff.getChild("baseline_start_time").getArray();
@@ -488,9 +488,9 @@ public class Peak2D extends Peak1D implements Serializable {
             baseLineStartValue.setDimensions(new Dimension[]{peak_number});
             IVariableFragment baseLineStopValue = new VariableFragment(ff, "baseline_stop_value");
             baseLineStopValue.setDimensions(new Dimension[]{peak_number});
-            Array peakPositions = new ArrayInt.D1(peaklist.size());
-            ArrayInt.D1 peakStartIndexArray = new ArrayInt.D1(peaklist.size());
-            ArrayInt.D1 peakEndIndexArray = new ArrayInt.D1(peaklist.size());
+            Array peakPositions = new ArrayInt.D1(peaklist.size(), false);
+            ArrayInt.D1 peakStartIndexArray = new ArrayInt.D1(peaklist.size(), false);
+            ArrayInt.D1 peakEndIndexArray = new ArrayInt.D1(peaklist.size(), false);
             ArrayChar.D2 names = cross.datastructures.tools.ArrayTools.createStringArray(
                     peaklist.size(), 1024);
             ArrayChar.D2 peakTypeArray = cross.datastructures.tools.ArrayTools.createStringArray(

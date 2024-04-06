@@ -136,7 +136,7 @@ public class ArrayTools {
      * @return a {@link ucar.ma2.ArrayDouble.D1} object.
      */
     public static ArrayDouble.D1 factory(double... d) {
-        return (ArrayDouble.D1) Array.factory(d);
+        return (ArrayDouble.D1) Array.makeFromJavaArray(d);
     }
 
     /**
@@ -146,7 +146,7 @@ public class ArrayTools {
      * @return a {@link ucar.ma2.ArrayInt.D1} object.
      */
     public static ArrayInt.D1 factory(int... d) {
-        return (ArrayInt.D1) Array.factory(d);
+        return (ArrayInt.D1) Array.makeFromJavaArray(d);
     }
 
     /**
@@ -156,7 +156,7 @@ public class ArrayTools {
      * @return a {@link ucar.ma2.ArrayFloat.D1} object.
      */
     public static ArrayFloat.D1 factory(float... d) {
-        return (ArrayFloat.D1) Array.factory(d);
+        return (ArrayFloat.D1) Array.makeFromJavaArray(d);
     }
 
     /**
@@ -175,7 +175,7 @@ public class ArrayTools {
         }
 
         if (o.getClass().isArray()) {
-            return Array.factory(o);
+            return Array.makeFromJavaArray(o);
         }
         if (o.getClass().isPrimitive()) {
             //this will probably never be called due to autoboxing of the Object o parameter!
@@ -188,19 +188,19 @@ public class ArrayTools {
                 a.set((Float) o);
                 return a;
             } else if (o.getClass().equals(Long.TYPE)) {
-                ArrayLong.D0 a = new ArrayLong.D0();
+                ArrayLong.D0 a = new ArrayLong.D0(false);
                 a.set((Long) o);
                 return a;
             } else if (o.getClass().equals(Integer.TYPE)) {
-                ArrayInt.D0 a = new ArrayInt.D0();
+                ArrayInt.D0 a = new ArrayInt.D0(false);
                 a.set((Integer) o);
                 return a;
             } else if (o.getClass().equals(Short.TYPE)) {
-                ArrayShort.D0 a = new ArrayShort.D0();
+                ArrayShort.D0 a = new ArrayShort.D0(false);
                 a.set((Short) o);
                 return a;
             } else if (o.getClass().equals(Byte.TYPE)) {
-                ArrayByte.D0 a = new ArrayByte.D0();
+                ArrayByte.D0 a = new ArrayByte.D0(false);
                 a.set((Byte) o);
                 return a;
             } else if (o.getClass().equals(Boolean.TYPE)) {
@@ -220,19 +220,19 @@ public class ArrayTools {
             a.set((Float) o);
             return a;
         } else if (o instanceof Long) {
-            ArrayLong.D0 a = new ArrayLong.D0();
+            ArrayLong.D0 a = new ArrayLong.D0(false);
             a.set((Long) o);
             return a;
         } else if (o instanceof Integer) {
-            ArrayInt.D0 a = new ArrayInt.D0();
+            ArrayInt.D0 a = new ArrayInt.D0(false);
             a.set((Integer) o);
             return a;
         } else if (o instanceof Short) {
-            ArrayShort.D0 a = new ArrayShort.D0();
+            ArrayShort.D0 a = new ArrayShort.D0(false);
             a.set((Short) o);
             return a;
         } else if (o instanceof Byte) {
-            ArrayByte.D0 a = new ArrayByte.D0();
+            ArrayByte.D0 a = new ArrayByte.D0(false);
             a.set((Byte) o);
             return a;
         } else if (o instanceof Boolean) {
@@ -388,7 +388,7 @@ public class ArrayTools {
     public static Tuple2D<Array, Tuple2D<Array, Array>> createCombinedArray(
             final List<Sparse> al) {
         final int size = ArrayTools.getRequiredSize(al);
-        final ArrayInt.D1 scanIndices = new ArrayInt.D1(al.size());
+        final ArrayInt.D1 scanIndices = new ArrayInt.D1(al.size(), false);
         final ArrayDouble.D1 targetIndices = new ArrayDouble.D1(size);
         final ArrayDouble.D1 targetValues = new ArrayDouble.D1(size);
         int i = 0;
@@ -434,11 +434,11 @@ public class ArrayTools {
         final Index vii = source_val.getIndex();
         ArrayTools.log.debug("Size of new arrays {}", (nbins));
         if (tiv.getFirst() == null) {
-            tiv.setFirst(Array.factory(source_ind.getElementType(),
+            tiv.setFirst(Array.factory(source_ind.getDataType(),
                     new int[]{nbins}));
         }
         if (tiv.getSecond() == null) {
-            tiv.setSecond(Array.factory(source_val.getElementType(),
+            tiv.setSecond(Array.factory(source_val.getDataType(),
                     new int[]{nbins}));
         }
         final Array target_ind = tiv.getFirst();
@@ -460,7 +460,7 @@ public class ArrayTools {
         final boolean average = Factory.getInstance().getConfiguration().
                 getBoolean("ArrayTools.createDenseArray.average_bins", true);
         MaltcmsTools.setBinMZbyConfig();
-        final ArrayInt.D1 overlapCounter = new ArrayInt.D1(nbins);
+        final ArrayInt.D1 overlapCounter = new ArrayInt.D1(nbins, false);
         for (int i = 0; i < source_ind.getShape()[0]; i++) {// fill in real
             // masses
             final double d = source_ind.getDouble(nii.set(i));
@@ -850,7 +850,7 @@ public class ArrayTools {
      * @return a {@link ucar.ma2.ArrayInt.D1} object.
      */
     public static ArrayInt.D1 indexArray(final int size, final int begin_index) {
-        final ArrayInt.D1 arr = new ArrayInt.D1(size);
+        final ArrayInt.D1 arr = new ArrayInt.D1(size, false);
         for (int i = 0; i < size; i++) {
             arr.set(i, i + begin_index);
         }
@@ -1088,7 +1088,7 @@ public class ArrayTools {
      */
     public static Array pow(final Array a, final double exp) {
         final IndexIterator ii1 = a.getIndexIterator();
-        final Array ret = Array.factory(a.getElementType(), a.getShape());
+        final Array ret = Array.factory(a.getDataType(), a.getShape());
         final IndexIterator reti = ret.getIndexIterator();
         // Iterators should be conformable, so only check one
         while (ii1.hasNext()) {
@@ -1232,8 +1232,8 @@ public class ArrayTools {
      */
     public static Array projectToLHS(final Array lhs, final List<Tuple2DI> al,
             final Array rhs, final boolean average) {
-        final Array rhsm = Array.factory(lhs.getElementType(), lhs.getShape());
-        final Array binCounter = Array.factory(lhs.getElementType(), lhs.
+        final Array rhsm = Array.factory(lhs.getDataType(), lhs.getShape());
+        final Array binCounter = Array.factory(lhs.getDataType(), lhs.
                 getShape());
         final Index bci = binCounter.getIndex();
         final Index rhsi = rhs.getIndex();
@@ -1271,8 +1271,8 @@ public class ArrayTools {
      */
     public static Array projectToRHS(final Array rhs, final List<Tuple2DI> al,
             final Array lhs, final boolean average) {
-        final Array lhsm = Array.factory(rhs.getElementType(), rhs.getShape());
-        final Array binCounter = Array.factory(rhs.getElementType(), rhs.
+        final Array lhsm = Array.factory(rhs.getDataType(), rhs.getShape());
+        final Array binCounter = Array.factory(rhs.getDataType(), rhs.
                 getShape());
         final Index bci = binCounter.getIndex();
         final Index lhsi = lhs.getIndex();
@@ -1447,7 +1447,7 @@ public class ArrayTools {
      */
     public static Array sq(final Array a) {
         final IndexIterator ii1 = a.getIndexIterator();
-        final Array ret = Array.factory(a.getElementType(), a.getShape());
+        final Array ret = Array.factory(a.getDataType(), a.getShape());
         final IndexIterator reti = ret.getIndexIterator();
         double tmp = 0;
         // Iterators should be conformable, so only check one
@@ -1469,7 +1469,7 @@ public class ArrayTools {
         if (MAMath.conformable(a, b)) {
             final IndexIterator ii1 = a.getIndexIterator();
             final IndexIterator ii2 = b.getIndexIterator();
-            final Array ret = Array.factory(a.getElementType(), a.getShape());
+            final Array ret = Array.factory(a.getDataType(), a.getShape());
             final IndexIterator reti = ret.getIndexIterator();
             // Iterators should be conformable, so only check one
             while (ii1.hasNext()) {
@@ -1519,7 +1519,7 @@ public class ArrayTools {
             @Override
             public Array get(int index) {
                 final int nscans = originalList.size();
-                Array ret = Array.factory(al.get(0).getElementType(),
+                Array ret = Array.factory(al.get(0).getDataType(),
                         new int[]{nscans});
                 for (int scans = 0; scans < nscans; scans++) {
                     final Array source = al.get(scans);
@@ -1544,7 +1544,7 @@ public class ArrayTools {
                 final int nscans = originalList.size();
                 // initialize new arrays
                 for (int i = 0; i < stop - start; i++) {
-                    ret.add(Array.factory(al.get(0).getElementType(),
+                    ret.add(Array.factory(al.get(0).getDataType(),
                             new int[]{nscans}));
                 }
                 for (int scans = 0; scans < nscans; scans++) {
@@ -1629,7 +1629,7 @@ public class ArrayTools {
         final int elems = s.size();
         ArrayTools.log.debug("Number of elems in scan {}", elems);
         final ArrayDouble.D1 masses = new ArrayDouble.D1(elems);
-        final ArrayInt.D1 intens = new ArrayInt.D1(elems);
+        final ArrayInt.D1 intens = new ArrayInt.D1(elems, false);
         final ArrayList<Double> keys = new ArrayList<>(s.keySet());
         Collections.sort(keys);
         final Iterator<Double> iter = keys.iterator();
@@ -1721,7 +1721,7 @@ public class ArrayTools {
         int shape = a.getShape()[0];// - removeIndices.size();
         ArrayTools.log.debug("a:" + a.getShape()[0] + " removeIndices:"
                 + removeIndices.size() + " new size:" + shape);
-        Array b = Array.factory(DataType.getType(a.getElementType()),
+        Array b = Array.factory(DataType.getType(a.getElementType(), false),
                 new int[]{shape});
         Index ib = b.getIndex();
         Index ia = a.getIndex();

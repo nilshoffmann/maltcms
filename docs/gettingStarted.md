@@ -1,9 +1,9 @@
 # Download
 
 1. Please download and install Java Runtime Environment (JRE) or 
-    JDK version 1.8.0 or newer for your specific platform and 
+    JDK version 17 or newer for your specific platform and 
     operating system from 
-    [Oracle](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+    [Oracle](https://www.oracle.com/technetwork/java/javase/downloads/index.html).
 
 2. Then [download Maltcms](https://github.com/nilshoffmann/maltcms/releases) and follow the installation instructions.
 
@@ -137,6 +137,14 @@ To execute the available pipelines for GCxGC-MS, use
 
     >maltcms.sh -c cfg/pipelines/chroma4D.mpl -i INPUTDIR -o OUTPUTDIR -f FILES
 
+## MzMLExporter
+
+To convert an input file into MzML (with varying levels of metadata completeness), use
+
+    >maltcms.sh -c cfg/pipelines/mzmlExport.mpl -i INPUTDIR -o OUTPUTDIR -f FILES
+
+## Help
+
 If you do not supply any arguments, Maltcms will print all available 
 arguments with a short explanation.
 
@@ -145,17 +153,6 @@ arguments with a short explanation.
 prints command-line options for the script with explanations.
 
 ## Advanced Usage
-    
-You can start the 32 bit commandline version by typing
-
-    >maltcms.sh
-
-within the bin dir below your Maltcms installation directory, which will
-print out the input options that you can supply.
-
-Alternatively, on a 64 bit system and with 64 bit VM you can call
-
-    >maltcms.sh -d64 ...
 
 Sometimes, the default amount of memory used by the JAVA VM is 
 not sufficient. You can then call
@@ -256,10 +253,9 @@ alternatives, consult the properties files in cfg/, especially
 * graphics.properties
 * io.properties
 
-and for logging options
+and for logging options, following the Spring Boot configuration syntax:
 
-* log4j.properties
-* logging.properties
+* application.properties
 
 Properties and settings for individual commands in a processing
 pipeline are located in the respective xml file below 

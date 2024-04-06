@@ -397,7 +397,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
     private Array createScanIndex(IFileFragment f, IWorkbook w) {
         addIfNew("scan_acquisition_time", f);
         int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
-        Array a = Array.factory(MathTools.seq(0, scanNumber - 1, 1));
+        Array a = Array.makeFromJavaArray(MathTools.seq(0, scanNumber - 1, 1));
         EvalTools.eqI(scanNumber, a.getShape()[0], this);
         return a;
     }
@@ -407,7 +407,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
         double[] mv = new double[scanNumber];
         Arrays.fill(mv, 0);
-        Array a = Array.factory(mv);
+        Array a = Array.makeFromJavaArray(mv);
         EvalTools.eqI(scanNumber, a.getShape()[0], this);
         return a;
     }
@@ -422,7 +422,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
         int scanNumber = getNumberOfPeaks(w, getMapping(f.getChild("scan_acquisition_time")));
         double[] mass_range_max = new double[scanNumber];
         Arrays.fill(mass_range_max, 1.0d);
-        return Array.factory(mass_range_max);
+        return Array.makeFromJavaArray(mass_range_max);
     }
 
     /** {@inheritDoc} */
@@ -433,7 +433,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
                 Array a = readSingle(f);
                 ArrayList<Array> al = new ArrayList<>();
                 for (int i = 0; i < a.getShape()[0]; i++) {
-                    Array arr = Array.factory(DataType.getType(a.getElementType()), new int[]{1});
+                    Array arr = Array.factory(a.getDataType(), new int[]{1});
                     arr.setDouble(0, a.getDouble(i));
                     al.add(arr);
                 }
@@ -443,7 +443,7 @@ public final class AgilentPeakReportDataSource implements IXLSDataSource {
                 Array a = readSingle(f);
                 ArrayList<Array> al = new ArrayList<>();
                 for (int i = 0; i < a.getShape()[0]; i++) {
-                    Array arr = Array.factory(DataType.getType(a.getElementType()), new int[]{1});
+                    Array arr = Array.factory(a.getDataType(), new int[]{1});
                     arr.setDouble(0, a.getDouble(i));
                     al.add(arr);
                 }

@@ -149,7 +149,7 @@ public class SparseScanLineCache implements IScanLine {
         final Integer scanspermodulation = getScansPerModulation();
         int nscans = iff.getChild(totalIntensityVar, true).getDimensions()[0].getLength();
         Integer modulationCnt = (nscans / scanspermodulation) + (nscans % scanspermodulation == 0 ? 0 : 1);
-        final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt);
+        final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt, false);
         for (int i = 0; i < modulationCnt; i++) {
             secondColumnIndex.set(i, scanspermodulation * i);
         }

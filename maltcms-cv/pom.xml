@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.github.nilshoffmann</groupId>
         <artifactId>maltcms-modules</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>maltcms-cv</artifactId>
     <name>Maltcms Controlled Vocabulary</name>

@@ -29,6 +29,7 @@ package maltcms.io.andims;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
 import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
-import ucar.nc2.NetcdfFileWriteable;
+import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.Variable;
 
 /**
@@ -69,7 +70,7 @@ public class NetcdfJavaTest {
         File outputFolder = tf.newFolder("testOutput");
         File testCdf = new File(outputFolder, "testCdf.cdf");
         try {
-            NetcdfFileWriteable nfw = NetcdfFileWriteable.createNew(testCdf.getAbsolutePath());
+            NetcdfFileWriter nfw = NetcdfFileWriter.createNew(testCdf.getAbsolutePath(), false);
 
             Attribute a1 = new Attribute("software", "maltcms");
             Attribute a2 = new Attribute("purpose", "testing");
@@ -78,27 +79,17 @@ public class NetcdfJavaTest {
             nfw.addGlobalAttribute(a2);
             nfw.addGlobalAttribute(a3);
 
-            Map<String, Dimension> dimensions = new HashMap<>();
-            dimensions.put("dim1", new Dimension("dim1", 15));
-            dimensions.put("dim2", new Dimension("dim2", 8));
-            dimensions.put("dim3", new Dimension("dim3", 10));
-            Dimension dim1 = dimensions.get("dim1");
-            Dimension dim2 = dimensions.get("dim2");
-            Variable ivf1 = nfw.addVariable("variable1", DataType.DOUBLE, new Dimension[]{dim1, dim2});
-            nfw.addDimension(nfw.getRootGroup(), dim1);
-            nfw.addDimension(nfw.getRootGroup(), dim2);
-//            nfw.addDimension(nfw.getRootGroup(), dimensions.get("dim1"));
-//            nfw.addDimension(nfw.getRootGroup(), dimensions.get("dim2"));
-//            nfw.addDimension(nfw.getRootGroup(), dimensions.get("dim3"));
+            Dimension dim1 = nfw.addDimension("dim1", 15);
+            Dimension dim2 = nfw.addDimension("dim2", 8);
+            Dimension dim3 = nfw.addDimension("dim3", 10);
+            Variable ivf1 = nfw.addVariable("variable1", DataType.DOUBLE, Arrays.asList(dim1, dim2));
+
             ivf1.addAttribute(new Attribute("description", "two-dimensional array"));
             ArrayDouble.D2 arr1 = new ArrayDouble.D2(dim1.getLength(), dim2.getLength());
-            Dimension dim3 = dimensions.get("dim3");
-            Variable ivf2 = nfw.addVariable("variable2", DataType.INT, new Dimension[]{dim3});
-            nfw.addDimension(nfw.getRootGroup(), dim3);
-            ArrayInt.D1 arr2 = new ArrayInt.D1(dim3.getLength());
+            Variable ivf2 = nfw.addVariable("variable2", DataType.INT, Arrays.asList(dim3));
+            ArrayInt.D1 arr2 = new ArrayInt.D1(dim3.getLength(), false);
             //unused dimension 
-            Dimension dim4 = new Dimension("dim4", 214);
-            nfw.addDimension(nfw.getRootGroup(), dim4);
+            Dimension dim4 = nfw.addDimension("dim4", 214);
 
             nfw.create();
             try {

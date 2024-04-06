@@ -237,7 +237,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
      */
     protected void checkDeltas(final ArrayList<Tuple2D<Integer, Double>> al) {
         Tuple2D<Integer, Double> tple = al.remove(0);
-        final ArrayInt.D1 deltas = new ArrayInt.D1(al.size() - 1);
+        final ArrayInt.D1 deltas = new ArrayInt.D1(al.size() - 1, false);
         int i = 0;
         for (final Tuple2D<Integer, Double> t : al) {
             final int d = t.getFirst() - tple.getFirst();
@@ -315,7 +315,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
                 }
             }
         }
-        final ArrayInt.D1 maximaDiff = new ArrayInt.D1(maximaIndices.size());
+        final ArrayInt.D1 maximaDiff = new ArrayInt.D1(maximaIndices.size(), false);
         int lastI = 0;
         int cnt = 0;
         for (final Integer maxI : maximaIndices) {
@@ -391,7 +391,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         // ArrayList<Tuple2D<Integer, Double>>();
         // double min = Double.POSITIVE_INFINITY;
         // int minindex = 0;
-        final ArrayInt.D1 domain = new ArrayInt.D1(ubound);
+        final ArrayInt.D1 domain = new ArrayInt.D1(ubound, false);
         final int dindex = 0;
         // double current, next, prev;
         // for (int lag = 1; lag < ubound; lag++) {
@@ -531,7 +531,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         final ArrayDouble.D1 modtimes = new ArrayDouble.D1(maximaDiff
                 .getShape()[0] + 1);
         final ArrayInt.D1 modindex = new ArrayInt.D1(
-                maximaDiff.getShape()[0] + 1);
+                maximaDiff.getShape()[0] + 1, false);
         for (int i = 0; i < maximaDiff.getShape()[0] + 1; i++) {
             time = 0.0d;
             // int nscans = maximaDiff.get(i);
@@ -558,7 +558,7 @@ public class ModulationTimeEstimator extends AFragmentCommand {
         modulationScanIndex.setArray(modindex);
         final IVariableFragment scansPerModulation = new VariableFragment(fret,
                 "scans_per_modulation");
-        final ArrayInt.D0 spm = new ArrayInt.D0();
+        final ArrayInt.D0 spm = new ArrayInt.D0(false);
         spm.set((int) diffMax);
         scansPerModulation.setArray(spm);
         return new Tuple2D<>(modtimes, sctimes);

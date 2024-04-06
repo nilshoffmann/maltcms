@@ -368,7 +368,7 @@ public class MSPFormatMetaboliteParser {
             this.masses = new ArrayDouble.D1(this.npeaks);
         }
         if (this.intensities == null) {
-            this.intensities = new ArrayInt.D1(this.npeaks);
+            this.intensities = new ArrayInt.D1(this.npeaks, false);
         }
         // log.info(data);
         if (data.contains(";")) {

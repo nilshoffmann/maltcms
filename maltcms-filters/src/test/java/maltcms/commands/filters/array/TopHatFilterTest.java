@@ -44,7 +44,7 @@ public class TopHatFilterTest {
      */
     @Test
     public void testApply() throws IOException {
-        Array tic = Array.factory(TestArray.TIC);
+        Array tic = Array.makeFromJavaArray(TestArray.TIC);
         double ticSum = MAMath.sumDouble(tic);
         Assert.assertEquals(1.881895164E9, ticSum, 0.0d);
         TopHatFilter filter = new TopHatFilter();

@@ -58,6 +58,7 @@ import org.slf4j.LoggerFactory;
 import ucar.ma2.Array;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.ArrayInt;
+import ucar.ma2.DataType;
 import ucar.ma2.Index;
 import ucar.ma2.IndexIterator;
 import ucar.ma2.InvalidRangeException;
@@ -279,7 +280,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         final List<Array> sat = buildIndexedArray(scanspermodulation, source.
                 getChild(this.scanAcquisitionTimeVar).getArray());
         log.info("Number of scans in list: {}", tic.size());
-        final Array tic1d = Array.factory(totalIntensityArray.getElementType(), new int[]{tic.
+        final Array tic1d = Array.factory(totalIntensityArray.getDataType(), new int[]{tic.
             size()});
         Index tic1dIndex = tic1d.getIndex();
         final ArrayDouble.D1 sat1d = new ArrayDouble.D1(tic.size());
@@ -342,7 +343,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         final Index idx = Index.scalarIndexImmutable;
         final IVariableFragment modulationvar = new VariableFragment(parent,
                 this.modulationTimeVar);
-        final Array modulationArray = Array.factory(Double.class,
+        final Array modulationArray = Array.factory(DataType.DOUBLE,
                 new int[]{1});
         if (estimateModulationTime) {
             ICompletionService<Double> mcs = createCompletionService(
@@ -406,7 +407,7 @@ public class Default2DVarLoader extends AFragmentCommand {
                 if (satArray.getShape()[0] >= 2) {
                     double t0 = satArray.getDouble(0);
                     double t1;
-                    Array deltas = Array.factory(satArray.getElementType(), new int[]{satArray.getShape()[0] - 1});
+                    Array deltas = Array.factory(satArray.getDataType(), new int[]{satArray.getShape()[0] - 1});
                     for (int i = 1; i < satArray.getShape()[0]; i++) {
                         t1 = satArray.getDouble(i);
                         double currentDelta = t1 - t0;
@@ -442,7 +443,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         final Index idx = Index.scalarIndexImmutable;
         final IVariableFragment scanratevar = new VariableFragment(parent,
                 this.scanRateVar);
-        final Array scanRateArray = Array.factory(Double.class, new int[]{1});
+        final Array scanRateArray = Array.factory(DataType.DOUBLE, new int[]{1});
         scanRateArray.setDouble(idx, this.scanRate);
         scanratevar.setArray(scanRateArray);
         scanratevar.setDimensions(new Dimension[]{new Dimension(scanRateDimension, 1, true)});
@@ -480,7 +481,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         // } else {
         // scancount = (ticcount / scanspermodulation) + 1;
         // }
-        final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt);
+        final ArrayInt.D1 secondColumnIndex = new ArrayInt.D1(modulationCnt, false);
         for (int i = 0; i < modulationCnt; i++) {
             secondColumnIndex.set(i, scanspermodulation * i);
         }
@@ -508,7 +509,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         }
         final IVariableFragment originalTICVar = parent.getChild(
                 this.totalIntensityVar);
-        final Array firstRetTimeArray = Array.factory(Double.class, originalTICVar.
+        final Array firstRetTimeArray = Array.factory(DataType.DOUBLE, originalTICVar.
                 getArray().getShape());
         final IndexIterator timeiter = firstRetTimeArray.getIndexIterator();
 
@@ -546,7 +547,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         }
         final IVariableFragment originalTICVar = parent.getChild(
                 this.totalIntensityVar);
-        final Array secondRetTimeArray = Array.factory(Double.class, originalTICVar.
+        final Array secondRetTimeArray = Array.factory(DataType.DOUBLE, originalTICVar.
                 getArray().getShape());
 
 //		final IndexIterator ticiter = source.getChild(this.totalIntensityVar)
@@ -587,7 +588,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         }
         final IVariableFragment originalTICVar = parent.getChild(
                 this.totalIntensityVar);
-        final Array secondRetTimeArray = Array.factory(Double.class, originalTICVar.
+        final Array secondRetTimeArray = Array.factory(DataType.DOUBLE, originalTICVar.
                 getArray().getShape());
 
 //		final IndexIterator ticiter = source.getChild(this.totalIntensityVar)
@@ -622,7 +623,7 @@ public class Default2DVarLoader extends AFragmentCommand {
         final List<Array> tic = buildIndexedArray(scanspermodulation, parent.
                 getChild(this.totalIntensityVar).getArray());
         log.info("Number of scans in list: {}", tic.size());
-        final Array tic2d = Array.factory(tic.get(0).getElementType(), new int[]{tic.
+        final Array tic2d = Array.factory(tic.get(0).getDataType(), new int[]{tic.
             size(), scanspermodulation});
         final Index idx2d = tic2d.getIndex();
         int slcount = 0;

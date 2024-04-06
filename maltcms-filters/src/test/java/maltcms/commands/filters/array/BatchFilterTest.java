@@ -40,7 +40,7 @@ public class BatchFilterTest {
 
     @Test
     public void testNormalization() {
-        Array intensities = Array.factory(new float[]{0, 200, 3023, 214, 97324, 977213, 23, 325});
+        Array intensities = Array.makeFromJavaArray(new float[]{0, 200, 3023, 214, 97324, 977213, 23, 325});
         MAMath.MinMax mmi = MAMath.getMinMax(intensities);
         MultiplicationFilter mf1 = new MultiplicationFilter(999.0 / (mmi.max - mmi.min));
         Array normalizedIntensities = mf1.apply(intensities);

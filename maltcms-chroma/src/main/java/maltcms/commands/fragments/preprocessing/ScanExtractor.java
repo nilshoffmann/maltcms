@@ -268,7 +268,7 @@ public class ScanExtractor extends AFragmentCommand {
                     EvalTools.eqI(scanDim, tic.getShape()[0], this);
 
                     //correct the index array for new offset
-                    ArrayInt.D1 scanIndexArray = new ArrayInt.D1(intensSubset.size());
+                    ArrayInt.D1 scanIndexArray = new ArrayInt.D1(intensSubset.size(), false);
                     int offset = 0;
                     for (int i = 0; i < intensSubset.size(); i++) {
                         scanIndexArray.set(i, offset);

@@ -61,7 +61,7 @@ public class FirstDerivativeFilter extends AArrayFilter {
         final Array arr = super.apply(a);
         Double last = 0.0d, current = 0.0d, next = 0.0d, derivative = 0.0d;
         final IndexIterator ii = arr.getIndexIterator();
-        final Array der = Array.factory(DataType.getType(arr.getElementType()), arr.getShape());
+        final Array der = Array.factory(arr.getDataType(), arr.getShape());
         final IndexIterator derii = der.getIndexIterator();
         long cnt = 0;
         while (ii.hasNext() && derii.hasNext()) {
