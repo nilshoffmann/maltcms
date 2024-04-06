@@ -56,8 +56,8 @@ ARRAY=("${@}")
 ELEMENTS=${#ARRAY[@]}
 
 JVMARGS=()
-MALTCMSARGS=()
-EXECARGS=("net.sf.maltcms.apps.Maltcms")
+MALTCMSARGS=("--spring.config.location=file:cfg/application.properties")
+EXECARGS=("-jar" "maltcms.jar")
 
 #define some common variables
 USRCLSPATH=()
@@ -184,8 +184,8 @@ fi
 
 
 #environment arguments to java and maltcms, e.g. -DsomeOption=someValue
-JVMARGS+=("-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties")
-JVMARGS+=("-Djava.util.logging.config.file=$MALTCMSUSRDIR/cfg/logging.properties")
+#JVMARGS+=("-Dlog4j.configuration=file://$MALTCMSUSRDIR/cfg/log4j.properties")
+#JVMARGS+=("-Djava.util.logging.config.file=$MALTCMSUSRDIR/cfg/logging.properties")
 JVMARGS+=("-Dmaltcms.home=$MALTCMSUSRDIR")
 JVMARGS+=("--add-opens=java.base/java.net=ALL-UNNAMED")
 JVMARGS+=("--add-opens=java.base/java.lang.ref=ALL-UNNAMED")
@@ -210,12 +210,15 @@ fi
 #            USRCLSPATH="$USRCLSPATH:$i";
 #    fi
 #done
-USRCLASSPATH="$MALTCMSUSRDIR/maltcms.jar"
+#USRCLASSPATH="$MALTCMSUSRDIR/maltcms.jar"
+USRCLASSPATH=""
 if [ -n "$CLASSPATH" ]; then
     USRCLASSPATH="$CLASSPATH:$USRCLSPATH"
 fi
 #add the classpath
-JVMARGS+=("-cp" "${USRCLASSPATH}")
+if [ -n "$USRCLASSPATH" ]; then
+    JVMARGS+=("-cp" "${USRCLASSPATH}")
+fi
 #set up arguments
 CMDLINE=("$JAVA_LOCATION")
 CMDLINE+=("${JVMARGS[@]}")

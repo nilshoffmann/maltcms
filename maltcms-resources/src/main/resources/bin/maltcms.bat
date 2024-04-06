@@ -70,11 +70,12 @@ set CMD_LINE_ARGS=%$
 @rem Setup the command line
 
 set CLASSPATH=%APP_HOME%\maltcms.jar
-set ENVARGS=-Dlog4j.configuration="file:/%APP_HOME%/cfg/log4j.properties" -Djava.util.logging.config.file="%APP_HOME%/cfg/logging.properties" -Dmaltcms.home="%APP_HOME%"
+@rem set ENVARGS=-Dmaltcms.home="%APP_HOME%"
+set ENVARGS=-Dmaltcms.home="%APP_HOME%"
 
-echo Excuting "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ENVARGS% -classpath "%CLASSPATH%" net.sf.maltcms.apps.Maltcms %CMD_LINE_ARGS%
+echo Excuting "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ENVARGS% -jar maltcms.jar %CMD_LINE_ARGS%
 @rem Execute Maltcms
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ENVARGS% -classpath "%CLASSPATH%" net.sf.maltcms.apps.Maltcms %CMD_LINE_ARGS%
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %ENVARGS% -jar maltcms.jar --spring.config.location=file:cfg/application.properties %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
