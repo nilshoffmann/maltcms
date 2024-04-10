@@ -863,7 +863,7 @@
         <skipITs>true</skipITs>
         <project.build.sourceLevel>17</project.build.sourceLevel>
         <project.build.targetLevel>17</project.build.targetLevel>
-        <version.cross>2.0.2-SNAPSHOT</version.cross>
+        <version.cross>2.0.2</version.cross>
         <version.slf4j>2.0.7</version.slf4j>
         <version.junit>4.13.1</version.junit>
         <version.lombok>1.18.28</version.lombok>
